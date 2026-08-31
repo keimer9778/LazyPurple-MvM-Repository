@@ -1,0 +1,2351 @@
+#base robot_giant.pop
+#base robot_standard.pop
+#base robot_gatebot.pop
+#base robot_atomicascent.pop
+// =============================
+// Atomic Ascent Specific Notes
+// =============================
+//
+// Use the following spawnnames:
+//
+// 	* spawnbot		 -- will dynamically match the arrows or forward spawn
+// 	* spawnbot_giant -- always on the road until forward spawn opens
+//  		 -- you can use this for any bots you want to spawn on the road
+//  * spawnbot_invasion -- random between carrier & road until forward opens
+// 
+// 	* spawnbot_buster is the same as spawnbot_mission_buster
+// 	* spawnbot_mission_sniper
+// 	* spawnbot_mission_spy
+//
+// =============================
+WaveSchedule
+{
+	StartingCurrency 500
+	RespawnWaveTime 3
+	CanBotsAttackWhileInSpawnRoom no
+	Advanced 1
+	Mission
+	{
+		Where spawnbot_buster
+		Objective DestroySentries
+		InitialCooldown 5
+		BeginAtWave 1
+		RunForThisManyWaves 7
+		CooldownTime 50
+		TFBot
+		{
+			Template T_TFBot_SentryBuster
+		}
+	}
+	Mission
+	{
+		Where spawnbot_mission_spy
+		Objective Spy
+		InitialCooldown 25
+		BeginAtWave 4
+		RunForThisManyWaves 1
+		CooldownTime 35
+		DesiredCount 2
+		TFBot
+		{
+			Template T_TFBot_Spy
+		}
+	}
+	Mission
+	{
+		Where spawnbot_mission_sniper
+		Objective Sniper
+		InitialCooldown 25
+		BeginAtWave 3
+		RunForThisManyWaves 1
+		CooldownTime 35
+		DesiredCount 2
+		TFBot
+		{
+			Template T_TFBot_Sniper
+		}
+	}
+	Mission
+	{
+		Where spawnbot_mission_sniper
+		Objective Sniper
+		InitialCooldown 20
+		BeginAtWave 7
+		RunForThisManyWaves 1
+		CooldownTime 35
+		DesiredCount 2
+		TFBot
+		{
+			Template T_TFBot_Sniper_Sydney_Sleeper
+		}
+	}
+	Wave
+	{
+		InitWaveOutput
+		{
+			Target atomicRobots
+			Action RunScriptFile
+			Param "atomicsands/atomicsands_specials.nut"
+		}
+		StartWaveOutput
+		{
+			Target wave_start_relay
+			Action Trigger
+		}
+		DoneOutput
+		{
+			Target wave_finished_relay
+			Action Trigger
+		}
+		WaitWhenDone 65
+		Checkpoint Yes
+		WaveSpawn
+		{
+			Where spawnbot
+			Name "fodder_w1"
+			TotalCount 40
+			MaxActive 10
+			SpawnCount 10
+			WaitBeforeStarting 0
+			WaitBetweenSpawns 15
+			TotalCurrency 200
+			Squad {
+				TFBot
+				{
+					Template T_AtomicAscent_BombBat_Scout_Hard
+				}
+				TFBot
+				{
+					Template T_AtomicAscent_BombBat_Scout_Hard
+				}
+				TFBot
+				{
+					Template T_AtomicAscent_BombBat_Scout_Hard
+				}
+				TFBot
+				{
+					Template T_AtomicAscent_BombBat_Scout_Hard
+				}
+				TFBot
+				{
+					Template T_AtomicAscent_Radioactive_Scout
+				}
+			}
+		}
+        WaveSpawn
+        {
+            Where spawnbot
+            Name "pyro_flares_w1"
+            TotalCount 10
+            MaxActive 10
+            SpawnCount 5
+            WaitBeforeStarting 0
+            WaitBetweenSpawns 15
+            TotalCurrency 50
+            Squad {
+                TFBot
+                {
+                    Template T_TFBot_Radioactive_Flare_Pyro
+                }
+                TFBot
+                {
+                    Template T_TFBot_Pyro_Flaregun
+                }
+                TFBot
+                {
+                    Template T_TFBot_Pyro_Flaregun
+                }
+                TFBot
+                {
+                    Template T_TFBot_Pyro_Flaregun
+                }
+                TFBot
+                {
+                    Template T_TFBot_Pyro_Flaregun
+                }
+            }
+        }
+        WaveSpawn
+        {
+            Where spawnbot
+            Name "pyro_flares_w1_b"
+            TotalCount 10
+            MaxActive 10
+            SpawnCount 10
+            WaitForAllDead "pyro_flares_w1"
+            WaitBetweenSpawns 15
+            TotalCurrency 50
+            Squad {
+                TFBot
+                {
+                    Template T_TFBot_Radioactive_Flare_Pyro
+                }
+                TFBot
+                {
+                    Template T_TFBot_Pyro_Flaregun
+                }
+                TFBot
+                {
+                    Template T_TFBot_Pyro_Flaregun
+                }
+                TFBot
+                {
+                    Template T_TFBot_Pyro_Flaregun
+                }
+                TFBot
+                {
+                    Template T_TFBot_Pyro_Flaregun
+                }
+            }
+        }
+        WaveSpawn
+        {
+            Where spawnbot_giant
+            Name "giant_gas_sweeper_w1_a"
+            TotalCount 5
+            MaxActive 5
+            SpawnCount 5
+            WaitBeforeStarting 0
+            WaitBetweenSpawns 15
+            TotalCurrency 100
+            Squad {
+                TFBot
+                {
+                    Template T_TFBot_Plodder_Pyro
+                    Tag "gas_station"
+                }
+                TFBot
+                {
+                    Template T_TFBot_Radioactive_Pyro
+                }
+                TFBot
+                {
+                    Template T_TFBot_Radioactive_Pyro
+                }
+                TFBot
+                {
+                    Template T_TFBot_Radioactive_Pyro
+                }
+                TFBot
+                {
+                    Template T_TFBot_Radioactive_Pyro
+                }
+            }
+        }
+        WaveSpawn
+        {
+            Where spawnbot
+            Name "heavy_gates_w1"
+            TotalCount 12
+            MaxActive 3
+            SpawnCount 3
+            WaitBeforeStarting 0
+            WaitForAllDead "giant_gas_sweeper_w1_a"
+            WaitBetweenSpawns 20
+            TotalCurrency 100
+            Squad {
+                TFBot
+                {
+                    Template T_TFGateBot_Heavy_Radioactive
+                }
+                TFBot
+                {
+                    Template T_TFBot_Medic_QuickFix
+                }
+                TFBot
+                {
+                    Template T_TFBot_Medic_QuickFix
+                }
+            }
+        }
+        WaveSpawn
+        {
+            Where spawnbot_giant
+            Name "giant_gas_sweeper_w1_b"
+            TotalCount 5
+            MaxActive 5
+            SpawnCount 5
+            WaitBeforeStarting 0
+            WaitForAllDead "giant_gas_sweeper_w1_a"
+            WaitBetweenSpawns 20
+            TotalCurrency 50
+            Squad {
+                TFBot
+                {
+                    Template T_TFBot_Plodder_Pyro
+                    Tag "gas_station"
+                }
+                TFBot
+                {
+                    Template T_TFBot_Radioactive_Pyro
+                }
+                TFBot
+                {
+                    Template T_TFBot_Radioactive_Pyro
+                }
+                TFBot
+                {
+                    Template T_TFBot_Radioactive_Pyro
+                }
+                TFBot
+                {
+                    Template T_TFBot_Radioactive_Pyro
+                }
+            }
+        }
+        WaveSpawn
+        {
+            Where spawnbot_giant
+            Name "giant_gas_sweeper_w1_c"
+            TotalCount 5
+            MaxActive 5
+            SpawnCount 5
+            WaitBeforeStarting 0
+            WaitForAllDead "giant_gas_sweeper_w1_b"
+            WaitBetweenSpawns 20
+            TotalCurrency 50
+            Squad {
+                TFBot
+                {
+                    Template T_TFBot_Plodder_Pyro
+                    Tag "gas_station"
+                }
+                TFBot
+                {
+                    Template T_TFBot_Radioactive_Pyro
+                }
+                TFBot
+                {
+                    Template T_TFBot_Radioactive_Pyro
+                }
+                TFBot
+                {
+                    Template T_TFBot_Radioactive_Pyro
+                }
+                TFBot
+                {
+                    Template T_TFBot_Radioactive_Pyro
+                }
+            }
+        }
+        WaveSpawn
+        {
+            Where spawnbot_giant
+            Name "final_subwave_w1"
+            TotalCount 10
+            MaxActive 5
+            SpawnCount 5
+            WaitBeforeStarting 0
+            WaitForAllDead "giant_gas_sweeper_w1_c"
+            WaitBetweenSpawns 20
+            TotalCurrency 100
+            Squad {
+                TFBot
+                {
+                    Template T_TFBot_Plodder_Demo_Hard
+                }
+                TFBot
+                {
+                    Template T_TFBot_Radioactive_Pyro
+                }
+                TFBot
+                {
+                    Template T_TFBot_Radioactive_Pyro
+                }
+                TFBot
+                {
+                    Template T_TFBot_Medic_QuickFix
+                }
+                TFBot
+                {
+                    Template T_TFBot_Medic_QuickFix
+                }
+            }
+        }
+    }
+	Wave
+	{
+		InitWaveOutput
+		{
+			Target atomicRobots
+			Action RunScriptCode
+			Param "IncludeScript(`atomicsands/atomicsands_specials.nut`)
+				   TankExtPacked.AddTankIcon(1, `tank_radioactive`, `Radioactive Tank`)
+				   TankExtPacked.AddTankIcon(3, `tank_spam`, `Spammer Tank`)
+				  "
+		}
+		WaveSpawn
+		{
+			Where spawnbot
+			Name "fodder_w2"
+			TotalCount 15
+			MaxActive 5
+			SpawnCount 5
+			WaitBeforeStarting 0
+			WaitBetweenSpawns 5
+			TotalCurrency 100
+			Squad {
+				TFBot
+				{
+					Template T_AtomicAscent_BombBat_Scout_Expert
+				}
+				TFBot
+				{
+					Template T_AtomicAscent_BombBat_Scout_Expert
+				}
+				TFBot
+				{
+					Template T_AtomicAscent_BombBat_Scout_Expert
+				}
+				TFBot
+				{
+					Template T_AtomicAscent_BombBat_Scout_Expert
+				}
+				TFBot
+				{
+					Template T_AtomicAscent_Radioactive_Scout
+				}
+			}
+		}
+		WaveSpawn
+		{
+			Name "tank_w2_1"
+			TotalCount 1
+			//WaitForAllDead "baby_w3"
+			WaitBeforeStarting 0
+			TotalCurrency 100
+			FirstSpawnOutput
+			{
+				Target boss_spawn_relay
+				Action Trigger
+			}
+
+			Tank
+			{
+				Speed 75
+				Health 10000  // these are lightweight tanks
+				Name "atomicsands_radioactivetank"
+				//ClassIcon tank_radioactive  // just for the purposes of the preview
+				StartingPathTrackNode tank_path_b_1
+				OnKilledOutput
+				{
+					Target boss_dead_relay
+					Action Trigger
+				}
+				OnBombDroppedOutput
+				{
+					Target boss_deploy_relay
+					Action Trigger
+				}
+			}
+		}
+		WaveSpawn
+		{
+			Name "tank_w2_2"
+			TotalCount 1
+			WaitBeforeStarting 25
+            WaitBetweenSpawns 25
+			TotalCurrency 100
+			FirstSpawnOutput
+			{
+				Target boss_spawn_relay
+				Action Trigger
+			}
+
+			Tank
+			{
+				Speed 75
+				Health 10000  // these are lightweight tanks
+				Name "atomicsands_spamtank"
+				//ClassIcon tank_spam  // just for the purposes of the preview
+				StartingPathTrackNode tank_path_b_1
+				OnKilledOutput
+				{
+					Target boss_dead_relay
+					Action Trigger
+				}
+				OnBombDroppedOutput
+				{
+					Target boss_deploy_relay
+					Action Trigger
+				}
+			}
+		}
+		WaveSpawn
+		{
+			Name "tank_w2_2b"
+			TotalCount 2
+			WaitBeforeStarting 50
+            WaitBetweenSpawns 25
+			TotalCurrency 100
+			FirstSpawnOutput
+			{
+				Target boss_spawn_relay
+				Action Trigger
+			}
+
+			Tank
+			{
+				Speed 75
+				Health 10000  // these are lightweight tanks
+				Name "atomicsands_spamtank"
+				//ClassIcon tank_spam  // just for the purposes of the preview
+				StartingPathTrackNode tank_path_b_1
+				OnKilledOutput
+				{
+					Target boss_dead_relay
+					Action Trigger
+				}
+				OnBombDroppedOutput
+				{
+					Target boss_deploy_relay
+					Action Trigger
+				}
+			}
+		}
+        WaveSpawn
+        {
+            Where spawnbot
+            Name "gatebots_w2"
+            TotalCount 25
+            MaxActive 5
+            SpawnCount 5
+            WaitBeforeStarting 0
+            WaitForAllSpawned "tank_w2_2"  // wait for the first spammer tank to spawn
+            WaitBetweenSpawns 30
+            TotalCurrency 50
+            Squad {
+                TFBot
+                {
+                    Template T_TFGateBot_AtomicAscent_Scout
+                }
+                TFBot
+                {
+                    Template T_TFGateBot_AtomicAscent_Scout
+                }
+                TFBot
+                {
+                    Template T_TFGateBot_AtomicAscent_Scout
+                }
+                TFBot
+                {
+                    Template T_TFGateBot_AtomicAscent_Scout
+                }
+                TFBot
+                {
+                    Template T_TFGateBot_AtomicAscent_Scout_Radioactive
+                }
+            }
+        }
+        WaveSpawn
+        {
+            Where spawnbot_giant
+            Name "big_heavy_w2"
+            TotalCount 5
+            MaxActive 5
+            SpawnCount 5
+            WaitBeforeStarting 0
+            WaitForAllDead "tank_w2_2b"  // spawn after all tanks are dead
+            WaitBetweenSpawns 20
+            TotalCurrency 100
+            Squad {
+                TFBot
+                {
+                    Template T_TFBot_Plodder_Heavy
+                }
+                TFBot
+                {
+                    Template T_TFBot_Radioactive_Pyro
+                }
+                TFBot
+                {
+                    Template T_TFBot_Radioactive_Pyro
+                }
+                TFBot
+                {
+                    Template T_TFBot_Medic_QuickFix
+                }
+                TFBot
+                {
+                    Template T_TFBot_Medic_QuickFix
+                }
+            }
+        }
+		WaveSpawn
+		{
+			Where spawnbot
+			Name "fodder_w2_b"
+			TotalCount 25
+			MaxActive 5
+			SpawnCount 5
+			WaitBeforeStarting 0
+			WaitBetweenSpawns 5
+            WaitForAllDead "tank_w2_2b"
+			TotalCurrency 50
+			Squad {
+				TFBot
+				{
+					Template T_AtomicAscent_BombBat_Scout_Expert
+				}
+				TFBot
+				{
+					Template T_AtomicAscent_BombBat_Scout_Expert
+				}
+				TFBot
+				{
+					Template T_AtomicAscent_BombBat_Scout_Expert
+				}
+				TFBot
+				{
+					Template T_AtomicAscent_BombBat_Scout_Expert
+				}
+				TFBot
+				{
+					Template T_AtomicAscent_Radioactive_Scout
+				}
+			}
+		}
+        WaveSpawn
+        {
+            Where spawnbot
+            Name "big_demo_w2"
+            TotalCount 15
+            MaxActive 5
+            SpawnCount 5
+            WaitBeforeStarting 25
+            WaitForAllDead "tank_w2_2b"
+            WaitBetweenSpawns 25
+            TotalCurrency 100
+            Squad {
+                TFBot
+                {
+                    Template T_TFBot_Plodder_Demo_Hard
+                }
+                TFBot
+                {
+                    Template T_TFBot_Radioactive_Pyro
+                }
+                TFBot
+                {
+                    Template T_TFBot_Radioactive_Pyro
+                }
+                TFBot
+                {
+                    Template T_TFBot_Medic_QuickFix
+                }
+                TFBot
+                {
+                    Template T_TFBot_Medic_QuickFix
+                }
+            }
+        }
+	}
+	Wave
+	{
+		InitWaveOutput
+		{
+			Target atomicRobots
+			Action RunScriptCode
+			Param "IncludeScript(`atomicsands/atomicsands_specials.nut`)
+				  "
+		}
+		WaveSpawn
+		{
+			Where spawnbot
+			Name "fodder_w3"
+			TotalCount 15
+			MaxActive 10
+			SpawnCount 5
+			WaitBeforeStarting 5
+			WaitBetweenSpawns 5
+			TotalCurrency 50
+			Squad {
+				TFBot
+				{
+					Template T_AtomicAscent_BombBat_Scout_Expert
+				}
+				TFBot
+				{
+					Template T_AtomicAscent_BombBat_Scout_Expert
+				}
+				TFBot
+				{
+					Template T_AtomicAscent_BombBat_Scout_Expert
+				}
+				TFBot
+				{
+					Template T_AtomicAscent_BombBat_Scout_Expert
+				}
+				TFBot
+				{
+					Template T_AtomicAscent_Radioactive_Scout
+				}
+			}
+		}
+        WaveSpawn
+        {
+            Where spawnbot  // this one grabs the bomb
+            Name "big_demo_w3"
+            TotalCount 5
+            MaxActive 5
+            SpawnCount 5
+            WaitBeforeStarting 0
+            WaitBetweenSpawns 25
+            TotalCurrency 100
+            Squad {
+                TFBot
+                {
+                    Template T_TFBot_Plodder_Demo_Hard
+                }
+                TFBot
+                {
+                    Template T_TFBot_Radioactive_Pyro
+                }
+                TFBot
+                {
+                    Template T_TFBot_Radioactive_Pyro
+                }
+                TFBot
+                {
+                    Template T_TFBot_Medic_QuickFix
+                }
+                TFBot
+                {
+                    Template T_TFBot_Medic_QuickFix
+                }
+            }
+        }
+        WaveSpawn
+        {
+            Where spawnbot
+            Name "big_demo_w3_b"
+            TotalCount 5
+            MaxActive 5
+            SpawnCount 5
+            WaitBeforeStarting 5
+            WaitBetweenSpawns 25
+            TotalCurrency 100
+            Squad {
+                TFBot
+                {
+                    Template T_TFBot_Plodder_Demo_Hard
+                }
+                TFBot
+                {
+                    Template T_TFBot_Radioactive_Pyro
+                }
+                TFBot
+                {
+                    Template T_TFBot_Radioactive_Pyro
+                }
+                TFBot
+                {
+                    Template T_TFBot_Medic_QuickFix
+                }
+                TFBot
+                {
+                    Template T_TFBot_Medic_QuickFix
+                }
+            }
+        }
+        WaveSpawn
+        {
+            Where spawnbot_giant
+            Name "flank_baby_w3"
+            TotalCount 5
+            MaxActive 5
+            SpawnCount 5
+            WaitBeforeStarting 5
+            WaitBetweenSpawns 25
+            TotalCurrency 50
+            Squad {
+                TFBot
+                {
+                    Template T_TFBot_Baby_Kaiju_Pyro
+                    Tag "gas_station"
+                }
+                TFBot
+                {
+                    Template T_TFBot_Radioactive_Pyro
+                }
+                TFBot
+                {
+                    Template T_TFBot_Radioactive_Pyro
+                }
+                TFBot
+                {
+                    Template T_TFBot_Medic_QuickFix
+                }
+                TFBot
+                {
+                    Template T_TFBot_Medic_QuickFix
+                }
+            }
+        }
+		WaveSpawn
+		{
+			Where spawnbot
+			Name "gates_w3"
+			TotalCount 15
+			MaxActive 10
+			SpawnCount 5
+			WaitBeforeStarting 0
+            WaitForAllDead "fodder_w3"
+			WaitBetweenSpawns 5
+			TotalCurrency 50
+			Squad {
+				TFBot
+				{
+					Template T_TFGateBot_AtomicAscent_Scout
+				}
+				TFBot
+				{
+					Template T_TFGateBot_AtomicAscent_Scout
+				}
+				TFBot
+				{
+					Template T_TFGateBot_AtomicAscent_Scout
+				}
+				TFBot
+				{
+					Template T_TFGateBot_AtomicAscent_Scout
+				}
+				TFBot
+				{
+					Template T_TFGateBot_AtomicAscent_Scout_Radioactive
+				}
+			}
+		}
+        WaveSpawn
+        {
+            Where spawnbot_giant
+            Name "soldier_spam_w3"
+            TotalCount 5
+            MaxActive 5
+            SpawnCount 5
+            WaitBeforeStarting 5
+            WaitForAllDead "big_demo_w3"
+            WaitBetweenSpawns 25
+            TotalCurrency 100
+            Squad {
+                TFBot
+                {
+                    Template T_TFBot_Giant_Soldier_Radioactive_Spammer
+                }
+                TFBot
+                {
+                    Template T_TFBot_Radioactive_Direct_Hit
+                }
+                TFBot
+                {
+                    Template T_TFBot_Radioactive_Direct_Hit
+                }
+                TFBot
+                {
+                    Template T_TFBot_Medic_QuickFix
+                }
+                TFBot
+                {
+                    Template T_TFBot_Medic_QuickFix
+                }
+            }
+        }
+        WaveSpawn
+        {
+            Where spawnbot_giant
+            Name "soldier_spam_w3_b"
+            TotalCount 5
+            MaxActive 5
+            SpawnCount 5
+            WaitBeforeStarting 5
+            WaitForAllDead "big_demo_w3_b"
+            WaitBetweenSpawns 25
+            TotalCurrency 100
+            Squad {
+                TFBot
+                {
+                    Template T_TFBot_Giant_Soldier_Radioactive_Spammer
+                }
+                TFBot
+                {
+                    Template T_TFBot_Radioactive_Direct_Hit
+                }
+                TFBot
+                {
+                    Template T_TFBot_Radioactive_Direct_Hit
+                }
+                TFBot
+                {
+                    Template T_TFBot_Medic_QuickFix
+                }
+                TFBot
+                {
+                    Template T_TFBot_Medic_QuickFix
+                }
+            }
+        }
+        WaveSpawn
+        {
+            Where spawnbot_giant
+            Name "flank_baby_w3_b"
+            TotalCount 5
+            MaxActive 5
+            SpawnCount 5
+            WaitForAllDead "big_demo_w3_b"
+            WaitBeforeStarting 5
+            WaitBetweenSpawns 25
+            TotalCurrency 50
+            Squad {
+                TFBot
+                {
+                    Template T_TFBot_Baby_Kaiju_Pyro
+                    Tag "gas_station"
+                }
+                TFBot
+                {
+                    Template T_TFBot_Radioactive_Pyro
+                }
+                TFBot
+                {
+                    Template T_TFBot_Radioactive_Pyro
+                }
+                TFBot
+                {
+                    Template T_TFBot_Medic_QuickFix
+                }
+                TFBot
+                {
+                    Template T_TFBot_Medic_QuickFix
+                }
+            }
+        }
+		WaveSpawn
+		{
+			Where spawnbot
+			Name "gates_w3_b"
+			TotalCount 10
+			MaxActive 10
+			SpawnCount 5
+			WaitBeforeStarting 15
+            WaitForAllDead "gates_w3"
+			WaitBetweenSpawns 5
+			TotalCurrency 50
+			Squad {
+				TFBot
+				{
+					Template T_TFGateBot_AtomicAscent_Scout
+				}
+				TFBot
+				{
+					Template T_TFGateBot_AtomicAscent_Scout
+				}
+				TFBot
+				{
+					Template T_TFGateBot_AtomicAscent_Scout
+				}
+				TFBot
+				{
+					Template T_TFGateBot_AtomicAscent_Scout
+				}
+				TFBot
+				{
+					Template T_TFGateBot_AtomicAscent_Scout_Radioactive
+				}
+			}
+		}
+        WaveSpawn
+        {
+            Where spawnbot
+            Name "big_demo_w3_c"
+            TotalCount 5
+            MaxActive 5
+            SpawnCount 5
+            WaitForAllDead "soldier_spam_w3_b"
+            WaitBeforeStarting 5
+            WaitBetweenSpawns 25
+            TotalCurrency 100
+            Squad {
+                TFBot
+                {
+                    Template T_TFBot_Plodder_Demo_Hard
+                }
+                TFBot
+                {
+                    Template T_TFBot_Plodder_Demo_Hard
+                }
+                TFBot
+                {
+                    Template T_TFBot_Plodder_Demo_Hard
+                }
+                TFBot
+                {
+                    Template T_TFBot_Medic_QuickFix
+                }
+                TFBot
+                {
+                    Template T_TFBot_Medic_QuickFix
+                }
+            }
+        }
+		WaveSpawn
+		{
+			Where spawnbot
+			Name "fodder_w3"
+			TotalCount 25
+			MaxActive 15
+			SpawnCount 5
+            WaitForAllDead "soldier_spam_w3_b"
+			WaitBeforeStarting 5
+			WaitBetweenSpawns 5
+			TotalCurrency 50
+			Squad {
+				TFBot
+				{
+					Template T_AtomicAscent_BombBat_Scout_Expert
+				}
+				TFBot
+				{
+					Template T_AtomicAscent_BombBat_Scout_Expert
+				}
+				TFBot
+				{
+					Template T_AtomicAscent_BombBat_Scout_Expert
+				}
+				TFBot
+				{
+					Template T_AtomicAscent_BombBat_Scout_Expert
+				}
+				TFBot
+				{
+					Template T_AtomicAscent_Radioactive_Scout
+				}
+			}
+		}
+    }
+	Wave
+	{
+		InitWaveOutput
+		{
+			Target atomicRobots
+			Action RunScriptCode
+			Param "IncludeScript(`atomicsands/atomicsands_specials.nut`)
+				   TankExtPacked.AddTankIcon(2, `tank_spam`, `Spammer Tank`)
+				  "
+		}
+		WaveSpawn
+		{
+			Where spawnbot
+			Name "fodder_w4"
+			TotalCount 40
+			MaxActive 5
+			SpawnCount 5
+			WaitBeforeStarting 5
+			WaitBetweenSpawns 20
+            Support 1
+			Squad {
+				TFBot
+				{
+					Template T_AtomicAscent_BombBat_Scout_Expert
+				}
+				TFBot
+				{
+					Template T_AtomicAscent_BombBat_Scout_Expert
+				}
+				TFBot
+				{
+					Template T_AtomicAscent_BombBat_Scout_Expert
+				}
+				TFBot
+				{
+					Template T_AtomicAscent_BombBat_Scout_Expert
+				}
+				TFBot
+				{
+					Template T_AtomicAscent_Radioactive_Scout
+				}
+			}
+		}
+		WaveSpawn
+		{
+			Where spawnbot
+			Name "gatebots_w4"
+			TotalCount 20
+			MaxActive 5
+			SpawnCount 5
+			WaitBeforeStarting 5
+			WaitBetweenSpawns 25
+            TotalCurrency 100
+			Squad {
+				TFBot
+				{
+					Template T_TFGateBot_AtomicAscent_Scout
+				}
+				TFBot
+				{
+					Template T_TFGateBot_AtomicAscent_Scout
+				}
+				TFBot
+				{
+					Template T_TFGateBot_AtomicAscent_Scout
+				}
+				TFBot
+				{
+					Template T_TFGateBot_AtomicAscent_Scout
+				}
+				TFBot
+				{
+					Template T_TFGateBot_AtomicAscent_Scout_Radioactive
+				}
+			}
+		}
+        WaveSpawn
+        {
+            Where spawnbot
+            Name "heavy_plodder_w4"
+            TotalCount 5
+            MaxActive 5
+            SpawnCount 5
+            WaitBeforeStarting 0
+            WaitBetweenSpawns 25
+            TotalCurrency 100
+            Squad {
+                TFBot
+                {
+                    Template T_TFBot_Plodder_Heavy
+                }
+                TFBot
+                {
+                    Template T_TFBot_Plodder_Demo_Hard
+                }
+                TFBot
+                {
+                    Template T_TFBot_Plodder_Demo_Hard
+                }
+                TFBot
+                {
+                    Template T_TFBot_Medic_QuickFix
+                }
+                TFBot
+                {
+                    Template T_TFBot_Medic_QuickFix
+                }
+            }
+        }
+        WaveSpawn
+        {
+            Where spawnbot
+            Name "heavy_plodder_w4_b"
+            TotalCount 10
+            MaxActive 5
+            SpawnCount 5
+            WaitForAllDead "heavy_plodder_w4"
+            WaitBeforeStarting 0
+            WaitBetweenSpawns 25
+            TotalCurrency 100
+            Squad {
+                TFBot
+                {
+                    Template T_TFBot_Plodder_Heavy
+                }
+                TFBot
+                {
+                    Template T_TFBot_Plodder_Demo_Hard
+                }
+                TFBot
+                {
+                    Template T_TFBot_Plodder_Demo_Hard
+                }
+                TFBot
+                {
+                    Template T_TFBot_Medic_QuickFix
+                }
+                TFBot
+                {
+                    Template T_TFBot_Medic_QuickFix
+                }
+            }
+        }
+        WaveSpawn
+        {
+            Where spawnbot_giant
+            Name "killsquad_w4"
+            TotalCount 15
+            MaxActive 5
+            SpawnCount 5
+            WaitForAllDead "heavy_plodder_w4"
+            WaitBeforeStarting 5
+            WaitBetweenSpawns 25
+            TotalCurrency 150
+            Squad {
+                TFBot
+                {
+                    Template T_TFBot_Plodder_Pyro_Sweeper
+                    Tag "gas_station"
+                }
+                TFBot
+                {
+                    Template T_TFBot_Heavyweapons_Radioactive_Normal
+                }
+                TFBot
+                {
+                    Template T_TFBot_Heavyweapons_Radioactive_Normal
+                }
+                TFBot
+                {
+                    Template T_TFBot_Medic_QuickFix
+                }
+                TFBot
+                {
+                    Template T_TFBot_Medic_QuickFix
+                }
+            }
+        }
+		WaveSpawn
+		{
+			Where spawnbot
+			Name "gatebots_w4"
+			TotalCount 20
+			MaxActive 5
+			SpawnCount 5
+            WaitForAllDead "heavy_plodder_w4_b"
+			WaitBeforeStarting 5
+			WaitBetweenSpawns 25
+            TotalCurrency 100
+			Squad {
+				TFBot
+				{
+					Template T_TFGateBot_AtomicAscent_Scout
+				}
+				TFBot
+				{
+					Template T_TFGateBot_AtomicAscent_Scout
+				}
+				TFBot
+				{
+					Template T_TFGateBot_AtomicAscent_Scout
+				}
+				TFBot
+				{
+					Template T_TFGateBot_AtomicAscent_Scout
+				}
+				TFBot
+				{
+					Template T_TFGateBot_AtomicAscent_Scout_Radioactive
+				}
+			}
+		}
+		WaveSpawn
+		{
+			Name "tank_w4"
+			TotalCount 1
+            WaitForAllDead "heavy_plodder_w4_b"
+			WaitBeforeStarting 25
+            WaitBetweenSpawns 25
+			TotalCurrency 75
+			FirstSpawnOutput
+			{
+				Target boss_spawn_relay
+				Action Trigger
+			}
+
+			Tank
+			{
+				Speed 75
+				Health 25000
+				Name "atomicsands_spamtank"
+				//ClassIcon tank_spam  // just for the purposes of the preview
+				StartingPathTrackNode tank_path_b_1
+				OnKilledOutput
+				{
+					Target boss_dead_relay
+					Action Trigger
+				}
+				OnBombDroppedOutput
+				{
+					Target boss_deploy_relay
+					Action Trigger
+				}
+			}
+		}
+		WaveSpawn
+		{
+			Name "tank_w4_b"
+			TotalCount 1
+            WaitForAllSpawned "tank_w4"
+			WaitBeforeStarting 15
+			TotalCurrency 75
+			FirstSpawnOutput
+			{
+				Target boss_spawn_relay
+				Action Trigger
+			}
+
+			Tank
+			{
+				Speed 75
+				Health 25000
+				Name "atomicsands_spamtank"
+				//ClassIcon tank_spam  // just for the purposes of the preview
+				StartingPathTrackNode tank_path_a_1
+				OnKilledOutput
+				{
+					Target boss_dead_relay
+					Action Trigger
+				}
+				OnBombDroppedOutput
+				{
+					Target boss_deploy_relay
+					Action Trigger
+				}
+			}
+		}
+        WaveSpawn
+        {
+            Where spawnbot
+            Name "heavy_gates_w1"
+            TotalCount 18
+            MaxActive 6
+            SpawnCount 6
+            WaitBeforeStarting 0
+            WaitForAllDead "tank_w4_b"
+            WaitBetweenSpawns 10
+            TotalCurrency 50
+            Squad {
+                TFBot
+                {
+                    Template T_TFGateBot_Heavy_Radioactive
+                }
+                TFBot
+                {
+                    Template T_TFBot_Medic_QuickFix
+                }
+                TFBot
+                {
+                    Template T_TFBot_Medic_QuickFix
+                }
+            }
+        }
+        WaveSpawn
+        {
+            Where spawnbot_giant
+            Name "heavy_plodder_w4_c"
+            TotalCount 5
+            MaxActive 5
+            SpawnCount 5
+            WaitForAllDead "tank_w4_b"
+            WaitBeforeStarting 0
+            WaitBetweenSpawns 25
+            TotalCurrency 50
+            Squad {
+                TFBot
+                {
+                    Template T_TFBot_Plodder_Heavy
+                }
+                TFBot
+                {
+                    Template T_TFBot_Heavyweapons_Radioactive_Hard
+                }
+                TFBot
+                {
+                    Template T_TFBot_Heavyweapons_Radioactive_Hard
+                }
+                TFBot
+                {
+                    Template T_TFBot_Medic_QuickFix
+                }
+                TFBot
+                {
+                    Template T_TFBot_Medic_QuickFix
+                }
+            }
+        }
+        WaveSpawn
+        {
+            Where spawnbot
+            Name "heavy_plodder_w4_d"
+            TotalCount 6
+            MaxActive 6
+            SpawnCount 6
+            WaitForAllDead "heavy_plodder_w4_c"
+            WaitBeforeStarting 0
+            WaitBetweenSpawns 25
+            TotalCurrency 100
+            Squad {
+                TFBot
+                {
+                    Template T_TFBot_Plodder_Heavy
+                }
+                TFBot
+                {
+                    Template T_TFBot_Plodder_Heavy
+                }
+                TFBot
+                {
+                    Template T_TFBot_Medic_QuickFix
+                }
+                TFBot
+                {
+                    Template T_TFBot_Medic_QuickFix
+                }
+                TFBot
+                {
+                    Template T_TFBot_Medic_QuickFix
+                }
+                TFBot
+                {
+                    Template T_TFBot_Medic_QuickFix
+                }
+            }
+        }
+    }
+	Wave
+	{
+		InitWaveOutput
+		{
+			Target atomicRobots
+			Action RunScriptCode
+			Param "IncludeScript(`atomicsands/atomicsands_specials.nut`)
+				   TankExtPacked.AddTankIcon(1, `tank_radioactive`, `Radioactive Tank`)
+				   TankExtPacked.AddTankIcon(2, `tank_spam`, `Spammer Tank`)
+				  "
+		}
+		WaveSpawn
+		{
+			Where spawnbot
+			Name "fodder_w4"
+			TotalCount 40
+			MaxActive 5
+			SpawnCount 5
+			WaitBeforeStarting 0
+			WaitBetweenSpawns 10
+			Support 1
+			Squad {
+				TFBot
+				{
+					Template T_AtomicAscent_BombBat_Scout_Expert
+				}
+				TFBot
+				{
+					Template T_AtomicAscent_BombBat_Scout_Expert
+				}
+				TFBot
+				{
+					Template T_AtomicAscent_BombBat_Scout_Expert
+				}
+				TFBot
+				{
+					Template T_AtomicAscent_BombBat_Scout_Expert
+				}
+				TFBot
+				{
+					Template T_AtomicAscent_Radioactive_Scout
+				}
+			}
+		}
+		WaveSpawn
+		{
+			Where spawnbot
+			Name "gatebots_w5"
+			TotalCount 40
+			MaxActive 5
+			SpawnCount 5
+			WaitBeforeStarting 5
+			WaitBetweenSpawns 30
+            Support Limited
+			Squad {
+				TFBot
+				{
+					Template T_TFGateBot_AtomicAscent_Scout
+				}
+				TFBot
+				{
+					Template T_TFGateBot_AtomicAscent_Scout
+				}
+				TFBot
+				{
+					Template T_TFGateBot_AtomicAscent_Scout
+				}
+				TFBot
+				{
+					Template T_TFGateBot_AtomicAscent_Scout
+				}
+				TFBot
+				{
+					Template T_TFGateBot_AtomicAscent_Scout_Radioactive
+				}
+			}
+		}
+		WaveSpawn
+		{
+			Name "tank_w5_1"
+			TotalCount 1
+			WaitBeforeStarting 0
+			TotalCurrency 100
+			FirstSpawnOutput
+			{
+				Target boss_spawn_relay
+				Action Trigger
+			}
+
+			Tank
+			{
+				Speed 75
+				Health 28000  // between a light tank and dps check
+				Name "atomicsands_radioactivetank"
+				//ClassIcon tank_radioactive  // just for the purposes of the preview
+				StartingPathTrackNode tank_path_a_1
+				OnKilledOutput
+				{
+					Target boss_dead_relay
+					Action Trigger
+				}
+				OnBombDroppedOutput
+				{
+					Target boss_deploy_relay
+					Action Trigger
+				}
+			}
+		}
+		WaveSpawn
+		{
+			Name "tank_w5_2"
+			TotalCount 2
+            WaitForAllSpawned "tank_w5_1"
+			WaitBeforeStarting 15
+			TotalCurrency 200
+            WaitBetweenSpawns 30
+			FirstSpawnOutput
+			{
+				Target boss_spawn_relay
+				Action Trigger
+			}
+
+			Tank
+			{
+				Speed 75
+				Health 22500  // lightweight-ish tanks
+				Name "atomicsands_spamtank"
+				//ClassIcon tank_spam  // just for the purposes of the preview
+				StartingPathTrackNode tank_path_a_1
+				OnKilledOutput
+				{
+					Target boss_dead_relay
+					Action Trigger
+				}
+				OnBombDroppedOutput
+				{
+					Target boss_deploy_relay
+					Action Trigger
+				}
+			}
+		}
+        WaveSpawn
+        {
+            Where spawnbot
+            Name "soldier_spam_w5_a"
+            TotalCount 5
+            MaxActive 5
+            SpawnCount 5
+            WaitForAllSpawned "tank_w5_1"
+            WaitBeforeStarting 20
+            WaitBetweenSpawns 25
+            TotalCurrency 100
+            Squad {
+                TFBot
+                {
+                    Template T_TFBot_Giant_Soldier_Radioactive_Spammer
+                }
+                TFBot
+                {
+                    Template T_TFBot_Radioactive_Direct_Hit
+                }
+                TFBot
+                {
+                    Template T_TFBot_Radioactive_Direct_Hit
+                }
+                TFBot
+                {
+                    Template T_TFBot_Medic_QuickFix
+                }
+                TFBot
+                {
+                    Template T_TFBot_Medic_QuickFix
+                }
+            }
+        }
+        WaveSpawn
+        {
+            Where spawnbot
+            Name "soldier_spam_w5_b"
+            TotalCount 21
+            MaxActive 7
+            SpawnCount 7
+            WaitForAllSpawned "soldier_spam_w5_a"
+            WaitBeforeStarting 20
+            WaitBetweenSpawns 10
+            TotalCurrency 100
+            Squad {
+                TFBot
+                {
+                    Template T_TFBot_Giant_Soldier_Radioactive_Spammer
+                }
+                TFBot
+                {
+                    Template T_TFBot_Radioactive_Direct_Hit
+                }
+                TFBot
+                {
+                    Template T_TFBot_Radioactive_Direct_Hit
+                }
+                TFBot
+                {
+                    Template T_TFBot_Radioactive_Direct_Hit
+                }
+                TFBot
+                {
+                    Template T_TFBot_Radioactive_Direct_Hit
+                }
+                TFBot
+                {
+                    Template T_TFBot_Medic_QuickFix
+                }
+                TFBot
+                {
+                    Template T_TFBot_Medic_QuickFix
+                }
+            }
+        }
+        WaveSpawn
+        {
+            Where spawnbot
+            Name "demospam_w5"
+            TotalCount 2
+            MaxActive 2
+            SpawnCount 2
+            WaitForAllDead "soldier_spam_w5_b"
+            WaitBeforeStarting 10
+            WaitBetweenSpawns 20
+            TotalCurrency 100
+            Squad {
+                TFBot
+                {
+                    Template T_TFBot_Plodder_Demo_Hard
+                }
+                TFBot
+                {
+                    Template T_TFBot_Plodder_Demo_Hard
+                }
+            }
+        }
+        WaveSpawn
+        {
+            Where spawnbot
+            Name "demospam_w5_b"
+            TotalCount 2
+            MaxActive 2
+            SpawnCount 2
+            WaitForAllDead "demospam_w5"
+            WaitBeforeStarting 10
+            WaitBetweenSpawns 20
+            TotalCurrency 100
+            Squad {
+                TFBot
+                {
+                    Template T_TFBot_Plodder_Demo_Hard
+                }
+                TFBot
+                {
+                    Template T_TFBot_Plodder_Demo_Hard
+                }
+            }
+        }
+        WaveSpawn
+        {
+            Where spawnbot
+            Name "demospam_w5_c"
+            TotalCount 2
+            MaxActive 2
+            SpawnCount 2
+            WaitForAllDead "demospam_w5_b"
+            WaitBeforeStarting 10
+            WaitBetweenSpawns 20
+            TotalCurrency 100
+            Squad {
+                TFBot
+                {
+                    Template T_TFBot_Plodder_Demo_Hard
+                }
+                TFBot
+                {
+                    Template T_TFBot_Plodder_Demo_Hard
+                }
+            }
+        }
+        WaveSpawn
+        {
+            Where spawnbot
+            Name "demospam_w5_d"
+            TotalCount 2
+            MaxActive 2
+            SpawnCount 2
+            WaitForAllDead "demospam_w5_c"
+            WaitBeforeStarting 10
+            WaitBetweenSpawns 20
+            TotalCurrency 100
+            Squad {
+                TFBot
+                {
+                    Template T_TFBot_Plodder_Demo_Hard
+                }
+                TFBot
+                {
+                    Template T_TFBot_Plodder_Demo_Hard
+                }
+            }
+        }
+        WaveSpawn
+        {
+            Where spawnbot_giant
+            Name "deflector_w5"
+            TotalCount 8
+            MaxActive 8
+            SpawnCount 8
+            WaitForAllDead "demospam_w5"
+            WaitBeforeStarting 0
+            WaitBetweenSpawns 20
+            TotalCurrency 200
+            Squad {
+                TFBot
+                {
+                    Template T_TFBot_Giant_Heavyweapons_Atomic_Deflector
+                }
+                TFBot
+                {
+                    Template T_TFBot_Plodder_Kaiju_Sweeper
+                }
+                TFBot
+                {
+                    Template T_TFBot_Plodder_Kaiju_Sweeper
+                }
+                TFBot
+                {
+                    Template T_TFBot_Medic_QuickFix
+                }
+                TFBot
+                {
+                    Template T_TFBot_Medic_QuickFix
+                }
+                TFBot
+                {
+                    Template T_TFBot_Medic_QuickFix
+                }
+                TFBot
+                {
+                    Template T_TFBot_Medic_QuickFix
+                }
+                TFBot
+                {
+                    Template T_TFBot_Medic_QuickFix
+                }
+            }
+        }
+        WaveSpawn
+        {
+            Where spawnbot
+            Name "deflector_w5_b"
+            TotalCount 8
+            MaxActive 8
+            SpawnCount 8
+            WaitForAllSpawned "deflector_w5"
+            WaitBeforeStarting 10
+            WaitBetweenSpawns 20
+            TotalCurrency 100
+            Squad {
+                TFBot
+                {
+                    Template T_TFBot_Giant_Heavyweapons_Atomic_Deflector
+                }
+                TFBot
+                {
+                    Template T_TFBot_Plodder_Kaiju_Sweeper
+                }
+                TFBot
+                {
+                    Template T_TFBot_Plodder_Kaiju_Sweeper
+                }
+                TFBot
+                {
+                    Template T_TFBot_Medic_QuickFix
+                }
+                TFBot
+                {
+                    Template T_TFBot_Medic_QuickFix
+                }
+                TFBot
+                {
+                    Template T_TFBot_Medic_QuickFix
+                }
+                TFBot
+                {
+                    Template T_TFBot_Medic_QuickFix
+                }
+                TFBot
+                {
+                    Template T_TFBot_Medic_QuickFix
+                }
+            }
+        }
+    }
+	Wave
+	{
+		InitWaveOutput
+		{
+			Target atomicRobots
+			Action RunScriptCode
+			Param "IncludeScript(`atomicsands/atomicsands_specials.nut`)
+				  "
+		}
+		WaveSpawn
+		{
+			Where spawnbot
+			Name "fodder_w6"
+			TotalCount 40
+			MaxActive 5
+			SpawnCount 5
+			WaitBeforeStarting 0
+			WaitBetweenSpawns 10
+			Support 1
+			Squad {
+				TFBot
+				{
+					Template T_AtomicAscent_BombBat_Scout_Expert
+				}
+				TFBot
+				{
+					Template T_AtomicAscent_BombBat_Scout_Expert
+				}
+				TFBot
+				{
+					Template T_AtomicAscent_BombBat_Scout_Expert
+				}
+				TFBot
+				{
+					Template T_AtomicAscent_BombBat_Scout_Expert
+				}
+				TFBot
+				{
+					Template T_AtomicAscent_Radioactive_Scout
+				}
+			}
+		}
+		WaveSpawn
+		{
+			Where spawnbot
+			Name "gatebots_w6"
+			TotalCount 40
+			MaxActive 5
+			SpawnCount 5
+            WaitForAllDead "heavy_gate_w6_b"
+			WaitBeforeStarting 15
+			WaitBetweenSpawns 30
+            Support Limited
+			Squad {
+				TFBot
+				{
+					Template T_TFGateBot_AtomicAscent_Scout
+				}
+				TFBot
+				{
+					Template T_TFGateBot_AtomicAscent_Scout
+				}
+				TFBot
+				{
+					Template T_TFGateBot_AtomicAscent_Scout
+				}
+				TFBot
+				{
+					Template T_TFGateBot_AtomicAscent_Scout
+				}
+				TFBot
+				{
+					Template T_TFGateBot_AtomicAscent_Scout_Radioactive
+				}
+			}
+		}
+        WaveSpawn
+        {
+            Where spawnbot
+            Name "heavy_gate_w6"
+            TotalCount 8
+            MaxActive 8
+            SpawnCount 8
+            WaitBeforeStarting 0
+            WaitBetweenSpawns 20
+            TotalCurrency 100
+            Squad {
+                TFBot
+                {
+                    Template T_TFGateBot_Giant_Radioactive_Heavy_Heater
+                }
+                TFBot
+                {
+                    Template T_TFBot_Plodder_Kaiju_Sweeper
+                }
+                TFBot
+                {
+                    Template T_TFBot_Plodder_Kaiju_Sweeper
+                }
+                TFBot
+                {
+                    Template T_TFBot_Medic_QuickFix
+                }
+                TFBot
+                {
+                    Template T_TFBot_Medic_QuickFix
+                }
+                TFBot
+                {
+                    Template T_TFBot_Medic_QuickFix
+                }
+                TFBot
+                {
+                    Template T_TFBot_Medic_QuickFix
+                }
+                TFBot
+                {
+                    Template T_TFBot_Medic_QuickFix
+                }
+            }
+        }
+        WaveSpawn
+        {
+            Where spawnbot
+            Name "heavy_gate_w6_b"
+            TotalCount 8
+            MaxActive 8
+            SpawnCount 8
+            WaitBeforeStarting 0
+            WaitForAllDead "heavy_gate_w6"
+            WaitBetweenSpawns 20
+            TotalCurrency 100
+            Squad {
+                TFBot
+                {
+                    Template T_TFGateBot_Giant_Radioactive_Heavy_Heater
+                }
+                TFBot
+                {
+                    Template T_TFBot_Plodder_Demo_Hard
+                }
+                TFBot
+                {
+                    Template T_TFBot_Plodder_Demo_Hard
+                }
+                TFBot
+                {
+                    Template T_TFBot_Medic_QuickFix
+                }
+                TFBot
+                {
+                    Template T_TFBot_Medic_QuickFix
+                }
+                TFBot
+                {
+                    Template T_TFBot_Medic_QuickFix
+                }
+                TFBot
+                {
+                    Template T_TFBot_Medic_QuickFix
+                }
+                TFBot
+                {
+                    Template T_TFBot_Medic_QuickFix
+                }
+            }
+        }       
+        WaveSpawn
+        {
+            Where spawnbot
+            Name "deflector_w6"
+            TotalCount 8
+            MaxActive 8
+            SpawnCount 8
+            WaitBeforeStarting 0
+            WaitForAllDead "heavy_gate_w6_b"
+            WaitBetweenSpawns 20
+            TotalCurrency 100
+            Squad {
+                TFBot
+                {
+                    Template T_TFBot_Giant_Heavyweapons_Deflector_Plodder
+                }
+                TFBot
+                {
+                    Template T_TFBot_Radioactive_Kaiju_Pyro
+                }
+                TFBot
+                {
+                    Template T_TFBot_Radioactive_Kaiju_Pyro
+                }
+                TFBot
+                {
+                    Template T_TFBot_Giant_Medic
+                }
+                TFBot
+                {
+                    Template T_TFBot_Medic_QuickFix
+                }
+                TFBot
+                {
+                    Template T_TFBot_Medic_QuickFix
+                }
+                TFBot
+                {
+                    Template T_TFBot_Medic_QuickFix
+                }
+                TFBot
+                {
+                    Template T_TFBot_Medic_QuickFix
+                }
+            }
+        }    
+        WaveSpawn
+        {
+            Where spawnbot_giant
+            Name "sweeper_w6"
+            TotalCount 5
+            MaxActive 5
+            SpawnCount 5
+            WaitBeforeStarting 15
+            WaitForAllDead "heavy_gate_w6_b"
+            WaitBetweenSpawns 20
+            TotalCurrency 100
+            Squad {
+                TFBot
+                {
+                    Template T_TFBot_Plodder_Pyro_Sweeper
+                    Tag "gas_station"
+                }
+                TFBot
+                {
+                    Template T_TFBot_Medic_QuickFix
+                }
+                TFBot
+                {
+                    Template T_TFBot_Medic_QuickFix
+                }
+                TFBot
+                {
+                    Template T_TFBot_Medic_QuickFix
+                }
+                TFBot
+                {
+                    Template T_TFBot_Medic_QuickFix
+                }
+            }
+        }
+        WaveSpawn
+        {
+            Where spawnbot
+            Name "soldier_spam_w6"
+            TotalCount 6
+            MaxActive 6
+            SpawnCount 6
+            WaitForAllDead "deflector_w6"
+            WaitBeforeStarting 5
+            WaitBetweenSpawns 10
+            TotalCurrency 100
+            Squad {
+                TFBot
+                {
+                    Template T_TFBot_Giant_Soldier_Radioactive_Spammer
+                }
+                TFBot
+                {
+                    Template T_TFBot_Medic_QuickFix
+                }
+                TFBot
+                {
+                    Template T_TFBot_Medic_QuickFix
+                }
+                TFBot
+                {
+                    Template T_TFBot_Medic_QuickFix
+                }
+                TFBot
+                {
+                    Template T_TFBot_Medic_QuickFix
+                }
+            }
+        }
+        WaveSpawn
+        {
+            Where spawnbot
+            Name "deflector_w6_b"
+            TotalCount 8
+            MaxActive 8
+            SpawnCount 8
+            WaitBeforeStarting 0
+            WaitForAllDead "soldier_spam_w6"
+            WaitBetweenSpawns 20
+            TotalCurrency 100
+            Squad {
+                TFBot
+                {
+                    Template T_TFBot_Giant_Heavyweapons_Deflector_Plodder
+                }
+                TFBot
+                {
+                    Template T_TFBot_Radioactive_Kaiju_Pyro
+                }
+                TFBot
+                {
+                    Template T_TFBot_Radioactive_Kaiju_Pyro
+                }
+                TFBot
+                {
+                    Template T_TFBot_Giant_Medic
+                }
+                TFBot
+                {
+                    Template T_TFBot_Medic_QuickFix
+                }
+                TFBot
+                {
+                    Template T_TFBot_Medic_QuickFix
+                }
+                TFBot
+                {
+                    Template T_TFBot_Medic_QuickFix
+                }
+                TFBot
+                {
+                    Template T_TFBot_Medic_QuickFix
+                }
+            }
+        }
+        WaveSpawn
+        {
+            Where spawnbot
+            Name "soldier_spam_w6_c"
+            TotalCount 6
+            MaxActive 6
+            SpawnCount 6
+            WaitForAllDead "deflector_w6_b"
+            WaitBeforeStarting 5
+            WaitBetweenSpawns 10
+            TotalCurrency 100
+            Squad {
+                TFBot
+                {
+                    Template T_TFBot_Giant_Soldier_Radioactive_Spammer
+                }
+                TFBot
+                {
+                    Template T_TFBot_Medic_QuickFix
+                }
+                TFBot
+                {
+                    Template T_TFBot_Medic_QuickFix
+                }
+                TFBot
+                {
+                    Template T_TFBot_Medic_QuickFix
+                }
+                TFBot
+                {
+                    Template T_TFBot_Medic_QuickFix
+                }
+            }
+        }
+        WaveSpawn
+        {
+            Where spawnbot
+            Name "deflector_w6_c"
+            TotalCount 8
+            MaxActive 8
+            SpawnCount 8
+            WaitBeforeStarting 0
+            WaitForAllDead "soldier_spam_w6_c"
+            WaitBetweenSpawns 20
+            TotalCurrency 200
+            Squad {
+                TFBot
+                {
+                    Template T_TFBot_Giant_Heavyweapons_Deflector_Plodder
+                }
+                TFBot
+                {
+                    Template T_TFBot_Giant_Heavyweapons_Deflector_Plodder
+                }
+                TFBot
+                {
+                    Template T_TFBot_Plodder_Demo_Hard
+                }
+                TFBot
+                {
+                    Template T_TFBot_Plodder_Demo_Hard
+                }
+                TFBot
+                {
+                    Template T_TFBot_Giant_Medic
+                }
+                TFBot
+                {
+                    Template T_TFBot_Medic_QuickFix
+                }
+                TFBot
+                {
+                    Template T_TFBot_Medic_QuickFix
+                }
+                TFBot
+                {
+                    Template T_TFBot_Medic_QuickFix
+                }
+            }
+        }
+    }
+	Wave
+	{
+		InitWaveOutput
+		{
+			Target atomicRobots
+			Action RunScriptCode
+			Param "IncludeScript(`atomicsands/atomicsands_specials.nut`)
+				  "
+		}
+		WaveSpawn
+		{
+			Where spawnbot
+			Name "fodder_w7"
+			TotalCount 40
+			MaxActive 5
+			SpawnCount 5
+			WaitBeforeStarting 0
+			WaitBetweenSpawns 10
+			Support 1
+			Squad {
+				TFBot
+				{
+					Template T_AtomicAscent_BombBat_Scout_Expert
+				}
+				TFBot
+				{
+					Template T_AtomicAscent_BombBat_Scout_Expert
+				}
+				TFBot
+				{
+					Template T_AtomicAscent_BombBat_Scout_Expert
+				}
+				TFBot
+				{
+					Template T_AtomicAscent_BombBat_Scout_Expert
+				}
+				TFBot
+				{
+					Template T_AtomicAscent_Radioactive_Scout
+				}
+			}
+		}
+		WaveSpawn
+		{
+			Where spawnbot_giant
+			Name "boss_protector_1"
+			TotalCount 5
+			MaxActive 5
+			SpawnCount 5
+			WaitBeforeStarting 0
+			WaitBetweenSpawns 10
+			TotalCurrency 500
+			Squad {
+				TFBot
+				{
+					Template T_TFBot_Giant_Heavyweapons_Atomic_Deflector
+				}
+				TFBot
+				{
+					Template T_TFBot_Giant_Soldier_Radioactive_Spammer
+				}
+				TFBot
+				{
+					Template T_TFBot_Giant_Soldier_Radioactive_Spammer
+				}
+				TFBot
+				{
+					Template T_TFBot_Giant_Medic
+				}
+				TFBot
+				{
+					Template T_TFBot_Giant_Medic
+				}
+			}
+		}
+		WaveSpawn
+		{
+			Where spawnbot_giant
+			Name "boss_protector_2"
+			TotalCount 5
+			MaxActive 5
+			SpawnCount 5
+            WaitForAllSpawned "boss_protector_1"
+			WaitBeforeStarting 30
+			WaitBetweenSpawns 0
+			TotalCurrency 500
+			Squad {
+				TFBot
+				{
+					Template T_TFBot_Giant_Heavyweapons_Atomic_Deflector
+				}
+				TFBot
+				{
+					Template T_TFBot_Giant_Soldier_Radioactive_Spammer
+				}
+				TFBot
+				{
+					Template T_TFBot_Giant_Soldier_Radioactive_Spammer
+				}
+				TFBot
+				{
+					Template T_TFBot_Giant_Medic
+				}
+				TFBot
+				{
+					Template T_TFBot_Giant_Medic
+				}
+			}
+		}
+		WaveSpawn
+		{
+			Where spawnbot_giant
+			Name "pyrothraxxus_3"
+			TotalCount 5
+			MaxActive 5
+			SpawnCount 5
+			WaitForAllSpawned "boss_protector_2"
+			WaitBetweenSpawns 30
+			TotalCurrency 500
+			Squad {
+				TFBot
+				{
+					Template T_TFBot_Radioactive_Kaiju_Pyro_Boss_III
+				}
+				TFBot
+				{
+					Template T_TFBot_Plodder_Demo
+				}
+				TFBot
+				{
+					Template T_TFBot_Plodder_Demo
+				}
+				TFBot
+				{
+					Template T_TFBot_Giant_Medic
+				}
+				TFBot
+				{
+					Template T_TFBot_Giant_Medic
+				}
+			}
+		}
+    }
+}
