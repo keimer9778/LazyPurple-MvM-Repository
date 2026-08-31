@@ -1,0 +1,972 @@
+//mission by randomguy									  
+#base robot_randomguy.pop
+#base robot_gatebot_randomguy.pop
+
+WaveSchedule
+{
+	CanBotsAttackWhileInSpawnRoom no
+	RespawnWaveTime	1
+	StartingCurrency 0
+	Advanced 1
+	AddSentryBusterWhenDamageDealtExceeds 6000
+	AddSentryBusterWhenKillCountExceeds	30
+	// EventPopFile Halloween
+	Templates
+	{
+	T_TFBot_EXPRESS_man
+		{
+			Class Soldier
+			Skill Easy
+			Name "Mannure"
+			ClassIcon soldier_rocketrain
+			Health 3000
+			Attributes MiniBoss
+			Attributes AlwaysCrit
+			Attributes HoldFireUntilFullReload
+			ItemAttributes
+			{
+				ItemName "The Patriot Peak"
+				"set item tint rgb" 6535423
+			}
+			ItemAttributes
+			{
+				ItemName "TF_WEAPON_ROCKETLAUNCHER"
+				"no self blast dmg" 2
+				"faster reload rate" 0.35
+				"fire rate bonus" 0.1
+				"clip size upgrade atomic" 8
+				"Projectile speed increased" 0.2
+				"projectile spread angle penalty" 3
+			}
+			CharacterAttributes
+			{
+				"move speed bonus"	0.7
+				"damage force reduction" 0.4
+				"airblast vulnerability multiplier" 0.4
+				"override footstep sound set" 3
+			}
+		}
+		
+	T_TFBot_EXPRESS_rodeo
+		{
+			Class Scout
+			Name "Rodeotron"
+			ClassIcon scout_stun_giant_armored
+			Skill Expert
+			Health 2500
+			Item "The Sandman"
+			WeaponRestrictions MeleeOnly
+			Attributes MiniBoss
+			ItemAttributes
+			{
+				ItemName "The Sandman"
+				"effect bar recharge rate increased" 0.05
+				"max health additive penalty" -0
+			}
+			CharacterAttributes
+			{
+				"damage force reduction" 0.7
+				"airblast vulnerability multiplier" 0.7
+				"override footstep sound set" 5
+				"move speed penalty" 0.75
+			}
+		}
+	}
+	
+	Mission
+	{
+		Objective Spy
+
+		InitialCooldown 15
+		Where spawnbot
+		BeginAtWave 0
+		RunForThisManyWaves 1
+		CooldownTime 40
+		DesiredCount 2
+
+		TFBot
+		{
+			Template T_TFBot_Spy
+		}
+	}
+	
+	Mission
+	{
+		Objective Sniper
+		
+		Where spawnbot_mission_sniper
+		BeginAtWave 0
+		RunForThisManyWaves 1
+		InitialCooldown 25
+		CooldownTime 40
+		DesiredCount 1
+		TFBot
+		{
+			Template T_TFBot_Sniper
+		}
+	}
+	
+	Mission
+	{
+		Objective Engineer
+		
+		Where spawnbot
+		BeginAtWave 0
+		RunForThisManyWaves 1
+		InitialCooldown 1
+		CooldownTime 1
+		DesiredCount 1
+		TFBot
+		{
+			Template T_TFBot_Engineer_Sentry_Teleporter
+		}
+	}
+	
+	Mission
+	{
+		Objective	DestroySentries
+		
+		Where spawnbot
+		InitialCooldown 30
+		CooldownTime 30
+		BeginAtWave 1
+		RunForThisManyWaves 10
+		TFBot
+		{
+			Template T_TFBot_SentryBuster
+		}
+	}
+	
+//WAVE 1 //////////CURRENCY 1000/////////////////////////////////// hellmet's missions in MM
+	Wave
+	{
+		StartWaveOutput
+		{
+			Target wave_start_relay
+			Action Trigger
+		}
+		DoneOutput
+		{
+			Target wave_finished_relay
+			Action trigger
+		}
+		
+		WaveSpawn
+		{
+			Name EXPRESS
+			Where spawnbot
+			TotalCount 1
+			MaxActive 1
+			SpawnCount 1
+			WaitBeforeStarting 0
+			WaitBetweenSpawns 0
+			TotalCurrency 0
+			RandomSpawn 1
+			
+			
+				TFBot
+				{
+					Template T_TFBot_EXPRESS_rodeo
+				}
+				FirstSpawnOutput
+				{
+					Target wave_close_pit
+					Action Trigger
+				}
+		}
+		
+		WaveSpawn
+		{
+			Name EXPRESS
+			Where spawnbot_house
+			TotalCount 1
+			MaxActive 1
+			SpawnCount 1
+			WaitBeforeStarting 2
+			WaitBetweenSpawns 0
+			TotalCurrency 0
+			RandomSpawn 1
+			
+			
+				TFBot
+				{
+					Template T_TFBot_EXPRESS_man
+				}
+		}
+		
+		WaveSpawn
+		{
+			Name stage1
+			WaitForAllDead EXPRESS
+			Where spawnbot
+			TotalCount 24
+			MaxActive 12
+			SpawnCount 6
+			WaitBeforeStarting 0
+			WaitBetweenSpawns 20
+			TotalCurrency 240
+			RandomSpawn 1
+			
+			
+				TFBot
+				{
+					Template T_TFBot_Soldier_Direct_Hit
+					Name "Rodeotron wave 1"
+					Attributes AlwaysCrit
+					ClassIcon soldier
+					Skill Expert
+					BehaviorModifiers Push
+					Attributes IgnoreFlag
+				}
+				FirstSpawnOutput
+				{
+					Target wave_open_pit
+					Action Trigger
+				}
+		}
+		
+		WaveSpawn
+		{
+			Name stage1
+			WaitForAllDead EXPRESS
+			Where spawnbot
+			TotalCount 40
+			MaxActive 10
+			SpawnCount 5
+			WaitBeforeStarting 0
+			WaitBetweenSpawns 4
+			TotalCurrency 260
+			RandomSpawn 1
+			
+				TFBot
+				{
+					Class Heavy
+					Skill Expert
+					ClassIcon heavy_apocofist
+					Name "DoG sHiT iCoN"
+					WeaponRestrictions MeleeOnly
+					Item "Apoco-Fists"
+					ItemAttributes
+					{
+						Itemname "Apoco-Fists"
+						"damage causes airblast" 1
+						"apply z velocity on damage" -1337
+						"dmg bonus vs buildings" 100
+					}
+				}
+		}
+		
+		WaveSpawn
+		{
+			Name stage2
+			WaitForAllDead stage1
+			Where spawnbot_house
+			TotalCount 4
+			MaxActive 4
+			SpawnCount 1
+			WaitBeforeStarting 5
+			WaitBetweenSpawns 25
+			TotalCurrency 100
+			RandomSpawn 1
+			
+			
+				TFBot
+				{
+					Template T_TFBot_Giant_Heavyweapons_Shotgun
+					Health 3500
+					Skill Easy
+					Name "Mannure"
+				}
+		}
+		
+		WaveSpawn
+		{
+			Name stage2
+			WaitForAllDead stage1
+			Where spawnbot
+			TotalCount 4
+			MaxActive 4
+			SpawnCount 1
+			WaitBeforeStarting 0
+			WaitBetweenSpawns 20
+			TotalCurrency 100
+			RandomSpawn 1
+			
+			
+					TFBot
+					{
+					Class Pyro
+					Name "BrushFire"
+					WeaponRestrictions PrimaryOnly
+					Attributes MiniBoss
+					Classicon pyro_giant
+					Skill Expert
+					Health 4200
+					Item "The Nostromo Napalmer"
+					ItemAttributes
+					{
+						ItemName "The Nostromo Napalmer"
+						"weapon burn time increased" 0.0001
+						"airblast pushback scale" 0
+						"mult airblast refire time" 0.01
+						"damage bonus" 0.5
+						"deflection size multiplier" 2
+					}
+					CharacterAttributes
+					{
+						"move speed bonus"	0.5
+						"damage force reduction" 0.6
+						"airblast vulnerability multiplier" 0.6
+						"override footstep sound set" 6
+					}
+					}
+		}
+		
+		WaveSpawn
+		{
+			Name support
+			WaitForAllDead stage1
+			Where spawnbot
+			TotalCount 50
+			MaxActive 12
+			SpawnCount 1
+			WaitBeforeStarting 10
+			WaitBetweenSpawns 2
+			TotalCurrency 300
+			RandomSpawn 1
+			Support 1
+			
+			
+				TFBot
+				{
+					Template T_TFBot_Scout_Crit_Cola
+					Name "COOL COLA FOR SALE!"
+				}
+		}
+	}
+	
+	//WAVE 2 //////////CURRENCY 1000/////////////////////////////////// rome total war 
+	Wave
+	{
+		StartWaveOutput
+		{
+			Target wave_start_relay
+			Action Trigger
+		}
+		DoneOutput
+		{
+			Target wave_finished_relay
+			Action trigger
+		}
+		
+		WaveSpawn
+		{
+			Name EXPRESS
+			Where spawnbot
+			TotalCount 2
+			MaxActive 2
+			SpawnCount 2
+			WaitBeforeStarting 0
+			WaitBetweenSpawns 0
+			TotalCurrency 0
+			RandomSpawn 1
+			
+			
+				TFBot
+				{
+					Template T_TFBot_EXPRESS_rodeo
+					Name "garbage general unit"
+				}
+				FirstSpawnOutput
+				{
+					Target wave_close_pit
+					Action Trigger
+				}
+		}
+		
+		WaveSpawn
+		{
+			Name EXPRESS
+			Where spawnbot_house
+			TotalCount 2
+			MaxActive 2
+			SpawnCount 2
+			WaitBeforeStarting 2
+			WaitBetweenSpawns 0
+			TotalCurrency 0
+			RandomSpawn 1
+			
+			
+				TFBot
+				{
+					Template T_TFBot_EXPRESS_man
+					Name "garbage general unit"
+				}
+		}
+		
+		WaveSpawn
+		{
+			Name stage1
+			WaitForAllDead EXPRESS
+			Where spawnbot
+			TotalCount 60
+			MaxActive 15
+			SpawnCount 1
+			WaitBeforeStarting 0
+			WaitBetweenSpawns 0.1
+			TotalCurrency 300
+			RandomSpawn 1
+			
+			
+				TFBot
+				{
+					Class Scout
+					WeaponRestrictions MeleeOnly
+					Item "Three-Rune Blade"
+					Name "shit cavalry"
+					ClassIcon scout_threerune_daan
+				}
+				FirstSpawnOutput
+				{
+					Target wave_open_pit
+					Action Trigger
+				}
+		}
+		
+		WaveSpawn
+		{
+			Name stage1
+			WaitForAllDead EXPRESS
+			Where spawnbot_house
+			TotalCount 30
+			MaxActive 5
+			SpawnCount 5
+			WaitBeforeStarting 0
+			WaitBetweenSpawns 0
+			TotalCurrency 150
+			RandomSpawn 1
+			
+			
+				TFBot
+				{
+					Class Demoman
+					WeaponRestrictions MeleeOnly
+					Item "The Eyelander"
+					Name "town guard"
+					ClassIcon demoknight
+					CharacterAttributes
+					{
+						"damage penalty" 0.5
+						"dmg taken increased" 0.5
+					}
+				}
+		}
+		
+		WaveSpawn
+		{
+			Name stage2
+			WaitForAllDead stage1
+			Where spawnbot
+			TotalCount 100
+			MaxActive 15
+			SpawnCount 2
+			WaitBeforeStarting 0
+			WaitBetweenSpawns 1
+			TotalCurrency 200
+			RandomSpawn 1
+			
+			
+				TFBot
+				{
+					Class Sniper
+					WeaponRestrictions PrimaryOnly
+					Item "The Huntsman"
+					Name "trash archer"
+					ClassIcon sniper_bow
+					MaxVisionRange 800
+					ItemAttributes
+					{
+						ItemName "The Huntsman"
+						"damage penalty" 1
+						"dmg penalty vs players" 0.25
+						"dmg penalty vs buildings" 0.25
+					}
+				}
+		}
+		
+		WaveSpawn
+		{
+			Name stage2
+			WaitForAllDead stage1
+			Where spawnbot
+			TotalCount 5
+			MaxActive 5
+			SpawnCount 1
+			WaitBeforeStarting 0
+			WaitBetweenSpawns 15
+			TotalCurrency 200
+			RandomSpawn 1
+			
+			
+				TFBot
+				{
+					Class Scout
+					WeaponRestrictions MeleeOnly
+					Item "Three-Rune Blade"
+					Name "heavy cavalry"
+					ClassIcon scout_threerune_daan_giant
+					Attributes miniboss
+					Health 3500
+					Scale 2
+					CharacterAttributes
+					{
+						"move speed bonus" 0.5
+						"damage bonus" 3
+						"damage force reduction" 0.4
+						"airblast vulnerability multiplier" 0.4
+						"airblast vertical vulnerability multiplier" 0.4
+						"override footstep sound set" 5
+					}
+				}
+		}
+		
+		WaveSpawn
+		{
+			Name boss
+			WaitForAllDead stage2
+			Where spawnbot
+			TotalCount 1
+			MaxActive 1
+			SpawnCount 1
+			WaitBeforeStarting 0
+			WaitBetweenSpawns 2
+			TotalCurrency 150
+			RandomSpawn 1
+			
+			
+				TFBot
+				{
+					Class Demoman 
+					Health 80000
+					WeaponRestrictions MeleeOnly
+					Item "The Eyelander"
+					Name "G R E E K   P H A L I N X"
+					ClassIcon demoknight_giant
+					Attributes miniboss
+					Attributes AlwaysCrit
+					Attributes UseBossHealthBar
+					Scale 2.3
+					ItemAttributes
+					{
+						ItemName "The Eyelander"
+						"damage bonus" 10000
+					}
+					CharacterAttributes
+					{
+						"move speed bonus" 0.25
+						"damage force reduction" 0.4
+						"airblast vulnerability multiplier" 0.4
+						"airblast vertical vulnerability multiplier" 0.4
+						"override footstep sound set" 5
+					}
+				}
+		}
+	}
+	
+	//WAVE 3 //////////CURRENCY 750/////////////////////////////////// bison
+	Wave
+	{
+		StartWaveOutput
+		{
+			Target wave_start_relay
+			Action Trigger
+		}
+		DoneOutput
+		{
+			Target wave_finished_relay
+			Action trigger
+		}
+		
+		WaveSpawn
+		{
+			Name EXPRESS
+			Where spawnbot
+			TotalCount 3
+			MaxActive 3
+			SpawnCount 3
+			WaitBeforeStarting 0
+			WaitBetweenSpawns 0
+			TotalCurrency 0
+			RandomSpawn 1
+			
+			
+				TFBot
+				{
+					Template T_TFBot_Soldier_Bison_Giant
+					ClassIcon scout_stun_giant_armored
+					Name "Bye, Son."
+				}
+				FirstSpawnOutput
+				{
+					Target wave_close_pit
+					Action Trigger
+				}
+		}
+		
+		WaveSpawn
+		{
+			Name EXPRESS
+			Where spawnbot_house
+			TotalCount 3
+			MaxActive 3
+			SpawnCount 3
+			WaitBeforeStarting 2
+			WaitBetweenSpawns 0
+			TotalCurrency 0
+			RandomSpawn 1
+			
+			
+				TFBot
+				{
+					Template T_TFBot_Soldier_Bison_Giant
+					ClassIcon soldier_rocketrain
+					Attributes AlwaysCrit
+					Name "''best weapon''"
+				}
+		}
+		
+		WaveSpawn
+		{
+			Name stage1
+			WaitForAllDead EXPRESS
+			Where spawnbot
+			TotalCount 35
+			MaxActive 10
+			SpawnCount 5
+			WaitBeforeStarting 0
+			WaitBetweenSpawns 8
+			TotalCurrency 200
+			RandomSpawn 1
+			
+			
+			RandomChoice
+			{
+				TFBot
+				{
+					Template T_TFBot_Soldier_Bison
+					ClassIcon scout
+					Name "sans"
+				}
+				
+				TFBot
+				{
+					Template T_TFBot_Soldier_Bison
+					ClassIcon scout
+					Name "Kip"
+				}
+				
+				TFBot
+				{
+					Template T_TFBot_Soldier_Bison
+					ClassIcon scout
+					Name "Inky"
+				}
+				
+				TFBot
+				{
+					Template T_TFBot_Soldier_Bison
+					ClassIcon scout
+					Name "Aist"
+				}
+				
+				TFBot
+				{
+					Template T_TFBot_Soldier_Bison
+					ClassIcon scout
+					Name "Lamiiku"
+				}
+			}
+			
+				FirstSpawnOutput
+				{
+					Target wave_open_pit
+					Action Trigger
+				}
+		}
+		
+		WaveSpawn
+		{
+			Name stage1
+			WaitForAllDead EXPRESS
+			Where spawnbot_house
+			TotalCount 3
+			MaxActive 3
+			SpawnCount 1
+			WaitBeforeStarting 5
+			WaitBetweenSpawns 25
+			TotalCurrency 150
+			RandomSpawn 1
+			
+			
+			RandomChoice
+			{
+				TFBot
+				{
+					Template T_TFBot_Soldier_Bison_Giant
+					ClassIcon soldier_spammer
+					Name "sans"
+				}
+				
+				TFBot
+				{
+					Template T_TFBot_Soldier_Bison_Giant
+					ClassIcon soldier_spammer
+					Name "Kip"
+				}
+				
+				TFBot
+				{
+					Template T_TFBot_Soldier_Bison_Giant
+					ClassIcon soldier_spammer
+					Name "Inky"
+				}
+				
+				TFBot
+				{
+					Template T_TFBot_Soldier_Bison_Giant
+					ClassIcon soldier_spammer
+					Name "Aist"
+				}
+				
+				TFBot
+				{
+					Template T_TFBot_Soldier_Bison_Giant
+					ClassIcon soldier_spammer
+					Name "Lamiiku"
+				}
+			}
+		}
+		
+		WaveSpawn
+		{
+			Name stage2
+			WaitForAllDead stage1
+			Where spawnbot_house
+			TotalCount 4
+			MaxActive 4
+			SpawnCount 1
+			WaitBeforeStarting 5
+			WaitBetweenSpawns 30
+			TotalCurrency 200
+			RandomSpawn 1
+			
+			
+			RandomChoice
+			{
+				TFBot
+				{
+					Template T_TFBot_Soldier_Bison_Giant
+					ClassIcon heavy_shotgun
+					Name "sans"
+				}
+				
+				TFBot
+				{
+					Template T_TFBot_Soldier_Bison_Giant
+					ClassIcon heavy_shotgun
+					Name "Kip"
+				}
+				
+				TFBot
+				{
+					Template T_TFBot_Soldier_Bison_Giant
+					ClassIcon heavy_shotgun
+					Name "Inky"
+				}
+				
+				TFBot
+				{
+					Template T_TFBot_Soldier_Bison_Giant
+					ClassIcon heavy_shotgun
+					Name "Aist"
+				}
+				
+				TFBot
+				{
+					Template T_TFBot_Soldier_Bison_Giant
+					ClassIcon heavy_shotgun
+					Name "Lamiiku"
+				}
+			}
+		}
+		
+		WaveSpawn
+		{
+			Name stage2
+			WaitForAllDead stage1
+			Where spawnbot
+			TotalCount 40
+			MaxActive 10
+			SpawnCount 5
+			WaitBeforeStarting 0
+			WaitBetweenSpawns 8
+			TotalCurrency 200
+			RandomSpawn 1
+			
+			
+			RandomChoice
+			{
+				TFBot
+				{
+					Template T_TFBot_Soldier_Bison
+					ClassIcon pyro
+					Name "sans"
+				}
+				
+				TFBot
+				{
+					Template T_TFBot_Soldier_Bison
+					ClassIcon pyro
+					Name "Kip"
+				}
+				
+				TFBot
+				{
+					Template T_TFBot_Soldier_Bison
+					ClassIcon pyro
+					Name "Inky"
+				}
+				
+				TFBot
+				{
+					Template T_TFBot_Soldier_Bison
+					ClassIcon pyro
+					Name "Aist"
+				}
+				
+				TFBot
+				{
+					Template T_TFBot_Soldier_Bison
+					ClassIcon pyro
+					Name "Lamiiku"
+				}
+			}
+		}
+	}
+	
+	Wave //WAVE 4 //////////CURRENCY 600/////////////////////////////////// my exps
+	{
+	WaveSpawn
+		{
+			Name EXPRESS
+			Where spawnbot
+			TotalCount 4
+			MaxActive 4
+			SpawnCount 4
+			WaitBeforeStarting 0
+			WaitBetweenSpawns 0
+			TotalCurrency 0
+			RandomSpawn 1
+			
+			
+				TFBot
+				{
+					Template T_TFBot_EXPRESS_rodeo
+				}
+				FirstSpawnOutput
+				{
+					Target wave_close_pit
+					Action Trigger
+				}
+		}
+		
+		WaveSpawn
+		{
+			Name EXPRESS
+			Where spawnbot_house
+			TotalCount 4
+			MaxActive 4
+			SpawnCount 4
+			WaitBeforeStarting 2
+			WaitBetweenSpawns 0
+			TotalCurrency 0
+			RandomSpawn 1
+			
+			
+				TFBot
+				{
+					Template T_TFBot_EXPRESS_man
+				}
+		}
+		
+		WaveSpawn
+		{
+			Name stage1
+			WaitForAllDead EXPRESS
+			Where spawnbot
+			TotalCount 5
+			MaxActive 5
+			SpawnCount 5
+			WaitBeforeStarting 0
+			WaitBetweenSpawns 0.1
+			TotalCurrency 150
+			RandomSpawn 1
+			
+			
+				TFBot
+				{
+					Template T_TFBot_Giant_Soldier_RocketShotgun
+					Attributes AlwaysCrit
+					Name "Randomguy's expert experience"
+				}
+				FirstSpawnOutput
+				{
+					Target wave_open_pit
+					Action Trigger
+				}
+		}
+		
+		WaveSpawn
+		{
+			Name stage1
+			WaitForAllDead EXPRESS
+			Where spawnbot
+			TotalCount 45
+			MaxActive 15
+			SpawnCount 3
+			WaitBeforeStarting 0
+			WaitBetweenSpawns 2
+			TotalCurrency 150
+			RandomSpawn 1
+			
+			
+				TFBot
+				{
+					Template T_TFBot_Sniper_Huntsman
+					Name "Randomguy's intermediate experience"
+				}
+		}
+		
+		WaveSpawn
+		{
+			Name stage2
+			WaitForAllDead stage1
+			Where spawnbot
+			TotalCount 90
+			MaxActive 21
+			SpawnCount 3
+			WaitBeforeStarting 0
+			WaitBetweenSpawns 3
+			TotalCurrency 300
+			RandomSpawn 1
+			
+			
+				TFBot
+				{
+					Class Scout
+					Skill Normal
+					Name "Randomguy's endurance experience"
+				}
+		}
+	}
+}

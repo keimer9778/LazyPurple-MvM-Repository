@@ -1,0 +1,2186 @@
+#base robot_giant.pop
+#base robot_standard.pop
+#base robot_click.pop
+#base robot_click_giant.pop
+#base robot_lazypurple.pop
+
+WaveSchedule
+{
+	// A reference list for spawn locations and the starting tank path.
+	// ----------------------------------------------------------------
+    // flankers (left)
+    // spawnbot (right)
+    // spawnbot_tank
+	// tank_path_a1 (only 1 path)
+
+	// Basic mission definitions
+	StartingCurrency				900
+	RespawnWaveTime 				2
+	FixedRespawnWaveTime			Yes
+	CanBotsAttackWhileInSpawnRoom	No
+	RobotLimit 22 [$SIGSEGV]
+
+	// This section uses PointTemplates to utilize TankExtensions
+	// throughout the mission without needing to call it each wave.
+	PointTemplates [$SIGSEGV]
+	{
+		Scripts
+		{
+			OnSpawnOutput
+			{
+				Target bignet
+				Action RunScriptCode
+				Param
+					"IncludeScript(`tankextensions_main`)
+					IncludeScript(`tankextensions/combattank`)
+					IncludeScript(`tankextensions/combattank_weapons/minigun`)
+					IncludeScript(`tankextensions/combattank_weapons/rocketpod`)
+					IncludeScript(`tankextensions/combattank_weapons/railgun`)
+					IncludeScript(`tankextensions/combattank_weapons/fireball`)
+				"
+			}
+		}
+	}
+	// Directly call the script when the mission loads.
+	SpawnTemplate Scripts [$SIGSEGV]
+
+	Mission
+	{
+		Objective			Spy
+		InitialCooldown		30
+		Where				spawnbot_mission_spy
+		BeginAtWave			4
+		RunForThisManyWaves	1
+		CooldownTime		30
+		DesiredCount		2
+
+		TFBot
+		{
+			Template	T_TFBot_Spy
+		}
+	}
+	Mission
+	{
+		Objective	DestroySentries
+		BeginAtWave 1
+		RunForThisManyWaves	5
+		InitialCooldown	5
+		CooldownTime	60
+		DesiredCount	1
+		Where spawnbot
+		TFBot
+		{
+			Template	T_TFBot_SentryBuster
+		}
+	}
+
+	Wave
+	{
+		StartWaveOutput
+		{
+			Target wave_start_relay
+			Action Trigger
+		}
+		DoneOutput
+		{
+			Target wave_finished_relay
+			Action Trigger
+		}
+		// Bots will take the upper path.
+		// When the wave starts, stop playing the radio.
+		// Disable player gibbing once the mission begins.
+			// (You can still explode during 1st wave setup for fun)
+		InitWaveOutput
+		{
+			Target bignet
+    		Action RunScriptCode
+			Param "
+					EntFire(`wave_a_init`, `Trigger`)
+					EntFire(`radio_music_stop`, `Trigger`)
+					Convars.SetValue(`tf_playergib`, 0)
+				"
+		}
+		WaitWhenDone 65
+		Checkpoint Yes
+
+		// Subwave 1 (maxActive = 20 - 22)
+		// Giant Crit Battleaxe Demoknight (4 - 6)
+		// Giant Rapid Fire Soldier + Uber Medic (6 - 9)
+		// Standard Tank
+		// Conch Soldier (4)
+		// Crit Pyro (6)
+
+		// This subwave is very HP-heavy and is intended to exhaust
+		// the team's resources. The Giant Battleaxe Demoknight
+		// and Pyros make holding the funnel choke very risky, and
+		// the Uber Medics allow the Giant Rapid Fire Soldiers to push
+		// in for ranged damage. In order to lessen the significant
+		// impact an experienced Spy player can have, the Uber Medics
+		// and Giant Rapid Fire Soldiers alternate spawns to approach
+		// from different angles. The tank serves as a physical obstacle
+		// for RED such that the robots take less gunfire.
+
+		WaveSpawn	// 
+		{
+			Name "wave01aGiant"
+			Where flankers
+			TotalCount 1
+			MaxActive 1
+			SpawnCount 1
+			WaitBeforeStarting 0
+			WaitBetweenSpawns 0
+			TotalCurrency 10
+		
+			TFBot
+            {
+                Template T_TFBot_Giant_DemoKnight_BattleAxe
+				Attributes	AlwaysCrit
+				CharacterAttributes
+				{
+					"damage force reduction" 0.25
+					"airblast vulnerability multiplier" 0.25
+					"airblast vertical vulnerability multiplier" 0.25
+				}
+            }
+		}
+        WaveSpawn	// 
+		{
+			Name "wave01aGiant"
+			Where spawnbot
+			TotalCount 1
+			MaxActive 1
+			SpawnCount 1
+			WaitBeforeStarting 0
+			WaitBetweenSpawns 0
+			TotalCurrency 10
+		
+			TFBot
+            {
+                Template T_TFBot_Giant_DemoKnight_BattleAxe
+				Attributes	AlwaysCrit
+				CharacterAttributes
+				{
+					"damage force reduction" 0.25
+					"airblast vulnerability multiplier" 0.25
+					"airblast vertical vulnerability multiplier" 0.25
+				}
+			}
+		}
+        WaveSpawn	// 
+		{
+			Name "wave01aGiant"
+			Where spawnbot_tank
+			TotalCount 3
+			MaxActive 3
+			SpawnCount 3
+			WaitBeforeStarting 0
+			WaitBetweenSpawns 0
+			TotalCurrency 15
+		
+			Squad
+			{
+				TFBot
+				{
+					Template T_TFBot_Giant_Soldier_Spammer
+					CharacterAttributes
+					{
+						"damage force reduction" 0.25
+						"airblast vulnerability multiplier" 0.25
+						"airblast vertical vulnerability multiplier" 0.25
+					}
+				}
+				TFBot
+				{
+					Template T_TFBot_Medic_QuickUber
+				}
+				TFBot
+				{
+					Template T_TFBot_Medic_QuickUber
+				}
+			}
+		}
+		WaveSpawn	// 
+		{
+			Name "wave01aGiant"
+			Where flankers
+			TotalCount 3
+			MaxActive 3
+			SpawnCount 3
+			WaitBeforeStarting 7
+			WaitBetweenSpawns 0
+			TotalCurrency 25
+		
+			Squad
+			{
+				TFBot
+				{
+					Template T_TFBot_Giant_Soldier_Spammer
+					CharacterAttributes
+					{
+						"damage force reduction" 0.25
+						"airblast vulnerability multiplier" 0.25
+						"airblast vertical vulnerability multiplier" 0.25
+					}
+				}
+				TFBot
+				{
+					Template T_TFBot_Medic_QuickUber
+				}
+				TFBot
+				{
+					Template T_TFBot_Medic_QuickUber
+				}
+			}
+		}
+		WaveSpawn	// 
+		{
+			Name "wave01aGiant"
+			Where spawnbot
+			TotalCount 1
+			MaxActive 1
+			SpawnCount 1
+			WaitBeforeStarting 7
+			WaitBetweenSpawns 0
+			TotalCurrency 10
+		
+			TFBot
+            {
+                Template T_TFBot_Giant_DemoKnight_BattleAxe
+				Attributes	AlwaysCrit
+				CharacterAttributes
+				{
+					"damage force reduction" 0.25
+					"airblast vulnerability multiplier" 0.25
+					"airblast vertical vulnerability multiplier" 0.25
+				}
+            }
+		}
+        WaveSpawn	// 
+		{
+			Name "wave01aGiant"
+			Where flankers
+			TotalCount 1
+			MaxActive 1
+			SpawnCount 1
+			WaitBeforeStarting 7
+			WaitBetweenSpawns 0
+			TotalCurrency 10
+		
+			TFBot
+            {
+                Template T_TFBot_Giant_DemoKnight_BattleAxe
+				Attributes	AlwaysCrit
+				CharacterAttributes
+				{
+					"damage force reduction" 0.25
+					"airblast vulnerability multiplier" 0.25
+					"airblast vertical vulnerability multiplier" 0.25
+				}
+			}
+		}
+		WaveSpawn
+		{
+			Name "wave01aTank"
+			WaitForAllSpawned wave01aGiant
+			TotalCount 1
+			WaitBeforeStarting 5
+			TotalCurrency 150
+			
+			FirstSpawnOutput
+			{
+				Target boss_spawn_relay
+				Action Trigger
+			}
+
+			Tank
+			{
+				Health 35000
+				Speed 75
+				Name "tankboss"
+				StartingPathTrackNode "boss_path_a1"
+
+				OnKilledOutput
+				{
+					Target boss_dead_relay
+					Action Trigger
+				}
+				
+				OnBombDroppedOutput
+				{
+					Target boss_deploy_relay 
+					Action Trigger
+				}
+			}
+		}
+		WaveSpawn	// 
+		{
+			Name "wave01aGiant2"
+			Where flankers
+			TotalCount 1
+			MaxActive 1
+			SpawnCount 1
+			WaitForAllSpawned wave01aTank
+			WaitBeforeStarting 6
+			WaitBetweenSpawns 0
+			TotalCurrency 10
+		
+			TFBot
+            {
+                Template T_TFBot_Giant_DemoKnight_BattleAxe
+				Attributes	AlwaysCrit
+				CharacterAttributes
+				{
+					"damage force reduction" 0.25
+					"airblast vulnerability multiplier" 0.25
+					"airblast vertical vulnerability multiplier" 0.25
+				}
+            }
+		}
+		WaveSpawn	// 
+		{
+			Name "wave01aGiant2"
+			Where spawnbot
+			TotalCount 3
+			MaxActive 3
+			SpawnCount 3
+			WaitForAllSpawned wave01aTank
+			WaitBeforeStarting 6
+			WaitBetweenSpawns 0
+			TotalCurrency 25
+		
+			Squad
+			{
+				TFBot
+				{
+					Template T_TFBot_Giant_Soldier_Spammer
+					CharacterAttributes
+					{
+						"damage force reduction" 0.25
+						"airblast vulnerability multiplier" 0.25
+						"airblast vertical vulnerability multiplier" 0.25
+					}
+				}
+				TFBot
+				{
+					Template T_TFBot_Medic_QuickUber
+				}
+				TFBot
+				{
+					Template T_TFBot_Medic_QuickUber
+				}
+			}
+		}
+        WaveSpawn	// 
+		{
+			Name "wave01aGiant2"
+			Where spawnbot
+			TotalCount 1
+			MaxActive 1
+			SpawnCount 1
+			WaitForAllSpawned wave01aTank
+			WaitBeforeStarting 6
+			WaitBetweenSpawns 0
+			TotalCurrency 10
+		
+			TFBot
+            {
+                Template T_TFBot_Giant_DemoKnight_BattleAxe
+				Attributes	AlwaysCrit
+				CharacterAttributes
+				{
+					"damage force reduction" 0.25
+					"airblast vulnerability multiplier" 0.25
+					"airblast vertical vulnerability multiplier" 0.25
+				}
+			}
+		}
+		WaveSpawn	// 
+		{
+			Name "wave01aGiant2"
+			Where spawnbot
+			TotalCount 1
+			MaxActive 1
+			SpawnCount 1
+			WaitForAllSpawned wave01aTank
+			WaitBeforeStarting 12
+			WaitBetweenSpawns 0
+			TotalCurrency 10
+		
+			TFBot
+            {
+                Template T_TFBot_Giant_DemoKnight_BattleAxe
+				Attributes	AlwaysCrit
+				CharacterAttributes
+				{
+					"damage force reduction" 0.25
+					"airblast vulnerability multiplier" 0.25
+					"airblast vertical vulnerability multiplier" 0.25
+				}
+            }
+		}
+		WaveSpawn	// 
+		{
+			Name "wave01aGiant2"
+			Where flankers
+			TotalCount 3
+			MaxActive 3
+			SpawnCount 3
+			WaitForAllSpawned wave01aTank
+			WaitBeforeStarting 12
+			WaitBetweenSpawns 0
+			TotalCurrency 25
+		
+			Squad
+			{
+				TFBot
+				{
+					Template T_TFBot_Giant_Soldier_Spammer
+					CharacterAttributes
+					{
+						"damage force reduction" 0.25
+						"airblast vulnerability multiplier" 0.25
+						"airblast vertical vulnerability multiplier" 0.25
+					}
+				}
+				TFBot
+				{
+					Template T_TFBot_Medic_QuickUber
+				}
+				TFBot
+				{
+					Template T_TFBot_Medic_QuickUber
+				}
+			}
+		}
+        WaveSpawn	// 
+		{
+			Name "wave01aGiant2"
+			Where flankers
+			TotalCount 1
+			MaxActive 1
+			SpawnCount 1
+			WaitForAllSpawned wave01aTank
+			WaitBeforeStarting 12
+			WaitBetweenSpawns 0
+			TotalCurrency 10
+		
+			TFBot
+            {
+                Template T_TFBot_Giant_DemoKnight_BattleAxe
+				Attributes	AlwaysCrit
+				CharacterAttributes
+				{
+					"damage force reduction" 0.25
+					"airblast vulnerability multiplier" 0.25
+					"airblast vertical vulnerability multiplier" 0.25
+				}
+			}
+		}
+
+
+
+
+		WaveSpawn	// 
+		{
+			Name "wave01a"
+			Where spawnbot_tank
+			TotalCount 12
+			MaxActive 4
+			SpawnCount 2
+			WaitBeforeStarting 0
+			WaitBetweenSpawns 3
+			TotalCurrency 25
+		
+			TFBot
+            {
+                Template T_TFBot_Soldier_Extended_Concheror
+				// Attributes	AlwaysCrit
+            }
+		}
+		WaveSpawn	// 
+		{
+			Name "wave01a"
+			Where spawnbot_tank
+			TotalCount 10
+			MaxActive 2
+			SpawnCount 1
+			WaitBeforeStarting 0
+			WaitBetweenSpawns 2
+			TotalCurrency 25
+		
+			TFBot
+            {
+                Class	Pyro
+				Skill	Expert
+				WeaponRestrictions	PrimaryOnly
+				Attributes	AlwaysCrit
+            }
+		}
+		WaveSpawn	// 
+		{
+			Name "wave01a"
+			Where flankers
+			TotalCount 10
+			MaxActive 4
+			SpawnCount 2
+			WaitBeforeStarting 5
+			WaitBetweenSpawns 2
+			TotalCurrency 30
+		
+			TFBot
+            {
+                Class	Pyro
+				Skill	Expert
+				WeaponRestrictions	PrimaryOnly
+				Attributes	AlwaysCrit
+            }
+		}
+
+		// Subwave 3 (maxActive = 21)
+		// Giant Soldier / Giant Heavy + Uber Medic (12)
+		// Soldier [5]
+		// Rapid Fire Scout [4]
+
+		// This subwave uses the tank that spawned in the preceding subwave
+		// as an opportunity to push up without losing significant amounts of
+		// HP. These giants are not particularly noteworthy, but are split
+		// between burst and sustained damage output types, covering both
+		// close and mid-range combat for the bots. The Uber Medics help
+		// prolong the general longevity of these giants, while the Support
+		// bots here add additional attackers to pester RED and drag some
+		// attention away from the giants.
+
+		WaveSpawn	// 
+		{
+			Name "wave01bGiant"
+			Where spawnbot
+			TotalCount 6
+			MaxActive 3
+			SpawnCount 3
+			WaitForAllSpawned wave01aGiant2
+			WaitBeforeStarting 5
+			WaitBetweenSpawns 8
+			TotalCurrency 100
+		
+			Squad
+			{
+				TFBot
+				{
+					Template T_TFBot_Giant_Soldier_Spammer
+					CharacterAttributes
+					{
+						"damage force reduction" 0.25
+						"airblast vulnerability multiplier" 0.25
+						"airblast vertical vulnerability multiplier" 0.25
+					}
+				}
+				TFBot
+				{
+					Template T_TFBot_Medic_QuickUber
+				}
+				TFBot
+				{
+					Template T_TFBot_Medic_QuickUber
+				}
+			}
+		}
+		WaveSpawn	// 
+		{
+			Name "wave01bGiant2"
+			Where spawnbot_tank
+			TotalCount 9
+			MaxActive 9
+			SpawnCount 2
+			WaitForAllSpawned wave01aGiant2
+			WaitBeforeStarting 8
+			WaitBetweenSpawns 4
+			TotalCurrency 100
+		
+			Squad
+			{
+				TFBot
+				{
+					Template T_TFBot_Giant_Heavyweapons
+					CharacterAttributes
+					{
+						"damage force reduction" 0.25
+						"airblast vulnerability multiplier" 0.25
+						"airblast vertical vulnerability multiplier" 0.25
+					}
+				}
+				TFBot
+				{
+					Template T_TFBot_Medic_QuickUber
+				}
+				TFBot
+				{
+					Template T_TFBot_Medic_QuickUber
+				}
+			}
+		}
+		WaveSpawn	// 
+		{
+			Name "wave01bSupport"
+			Where spawnbot_tank
+			MaxActive 4
+			SpawnCount 2
+			WaitForAllSpawned "wave01bGiant"
+			WaitBeforeStarting 10
+			WaitBetweenSpawns 2
+			TotalCurrency 50
+			Support 1
+
+			TFBot
+			{
+				Class Soldier
+				WeaponRestrictions PrimaryOnly
+				Skill Expert
+			}
+		}
+		WaveSpawn	// 
+		{
+			Name "wave01cSupportPostGiant"
+			Where flankers
+			MaxActive 4
+			SpawnCount 2
+			WaitForAllDead "wave01bGiant"
+			WaitBeforeStarting 10
+			WaitBetweenSpawns 2
+			TotalCurrency 50
+			Support 1
+
+			TFBot
+			{
+				Class Soldier
+				WeaponRestrictions PrimaryOnly
+				Skill Expert
+			}
+		}
+		WaveSpawn	// 
+		{
+			Name "wave01bSupport"
+			Where flankers
+			MaxActive 4
+			SpawnCount 2
+			WaitForAllSpawned wave01a
+			WaitBeforeStarting 15
+			WaitBetweenSpawns 3
+			TotalCurrency 50
+			Support 1
+		
+			TFBot
+			{
+				Template T_TFBot_Scout_Spammer
+				Skill	Expert
+			}
+		}
+	}
+	Wave
+	{
+		StartWaveOutput
+		{
+			Target wave_start_relay
+			Action Trigger
+		}
+		DoneOutput
+		{
+			Target wave_finished_relay
+			Action Trigger
+		}
+		InitWaveOutput
+		{
+			Target wave_a_init
+			Action Trigger
+		}
+		
+		WaitWhenDone 65
+		Checkpoint Yes
+
+		// Subwave 1 (maxActive: 22)
+		// Giant Crit Rapid Demo + Uber Medic (2)
+		// Crit Fast Bonk Scout (4)
+		// Backburner Pyro (14)
+
+		// This first subwave is a doomstack (i.e. made with very
+		// strong robots relative to the cash payout at that point).
+		// The Giant Fast Pyro and Armored Uber Medic quickly rush
+		// to the defending line to try and force a quick retreat. If
+		// they are unsuccessful, the Rapid Demo and Giant Uber Medic
+		// will generally force RED out of the first choke. The
+		// small Fast Bonk Scouts force shield uptime if a Backup is
+		// not already popped, and Fast Pyros are a nudge to try and
+		// get Medic players to retreat, pushing the defending line
+		// back if DPS is not high enough.
+
+		WaveSpawn
+		{
+			Name "wave02aGiant"
+			Where spawnbot
+			TotalCount 2
+			MaxActive 2
+			SpawnCount 2
+			WaitBeforeStarting 6
+			WaitBetweenSpawns 0
+			TotalCurrency 25
+		
+			Squad
+			{
+				TFBot
+				{
+					Template T_TFBot_Giant_Demo_Spammer
+					Attributes	AlwaysCrit
+					CharacterAttributes
+					{
+						"damage force reduction" 0.25
+						"airblast vulnerability multiplier" 0.25
+						"airblast vertical vulnerability multiplier" 0.25
+					}
+				}
+				TFBot
+				{
+					Template T_TFBot_Giant_Medic_Uber
+					CharacterAttributes
+					{
+						"bot medic uber health threshold" 300
+					}
+				}
+			}
+		}
+		WaveSpawn
+		{
+			Name "wave02aGiant"
+			Where spawnbot_tank
+			TotalCount 2
+			MaxActive 2
+			SpawnCount 2
+			WaitBeforeStarting 0
+			WaitBetweenSpawns 0
+			TotalCurrency 25
+		
+			Squad
+			{
+				TFBot
+				{
+					Template T_TFBot_Giant_Pyro_Fast
+					Attributes AlwaysCrit
+					CharacterAttributes
+					{
+						"damage force reduction" 0.25
+						"airblast vulnerability multiplier" 0.25
+						"airblast vertical vulnerability multiplier" 0.25
+					}
+				}
+				TFBot
+				{
+					Template T_TFBot_Medic_Armored
+				}
+			}
+		}
+		WaveSpawn
+		{
+			Name "wave02aBonk"
+			Where spawnbot_tank
+			TotalCount 16
+			MaxActive 4
+			SpawnCount 1
+			WaitBeforeStarting 0
+			WaitBetweenSpawns 2
+			TotalCurrency 50
+			Support Limited
+		
+			TFBot
+			{
+				Template T_TFBot_Scout_Bonk_Fast
+				Attributes AlwaysCrit
+			}
+		}
+		WaveSpawn
+		{
+			Name "wave02a"
+			Where spawnbot
+			TotalCount 30
+			MaxActive 14
+			SpawnCount 2
+			WaitBeforeStarting 0
+			WaitBetweenSpawns 1
+			TotalCurrency 100
+		
+			TFBot
+			{
+				Template T_TFBot_Pyro_Fast
+				Skill Hard
+			}
+		}
+
+		// Subwave 2 (maxActive: 18)
+		// Combat Tank: Railgun
+		// Giant Black Box Soldier + Armored Uber Medic (4)
+		// Giant Crit Rapid Fire Demo + Giant Uber Shield Medic (2)
+		// Steel Gauntlet (10)
+		// Chain -> Giant Ancored FaN Scout (2)
+
+		// The focal pushing force this wave is the combat tank.
+		// The Giant Black Box Soldier and Armored Uber Medic mostly
+		// serve as additional HP walls to keep any backlining players
+		// occupied. They last much longer when part of the team is
+		// focused on the tank, and take the bomb a fair distance.
+		// The second Giant Rapid Demo + Giant Uber Medic pair are the
+		// main source of damage output here and push RED even further.
+		// Steel Gauntlets serve as additional sponges to increase the
+		// longevity of the giants on this subwave. A Giant Anchored
+		// FaN Scout will accompany these giants, chained into the
+		// third subwave.
+
+		WaveSpawn
+		{
+			Name	"wave02bTank"
+			WaitForAllSpawned	wave02aGiant
+			TotalCount 1
+			MaxActive 1
+			SpawnCount 1
+			WaitBeforeStarting 5
+			WaitBetweenSpawns 0
+			TotalCurrency 50
+			Where	spawnbot
+			Tank
+			{
+				Health	35000
+				Name	combattank_bomb|railgun|railgun
+				ClassIcon tank_combat_railgun_better [$SIGSEGV]
+				Speed	75
+				StartingPathTrackNode "boss_path_a1"
+				OnKilledOutput
+				{
+					Target	boss_dead_relay
+					Action	Trigger
+				}
+				OnBombDroppedOutput
+				{
+					Target	boss_deploy_relay
+					Action	Trigger
+				}
+			}
+		}
+
+		WaveSpawn
+		{
+			Name "wave02bGiant"
+			Where flankers
+			TotalCount 2
+			MaxActive 2
+			SpawnCount 2
+			WaitForAllSpawned wave02bTank
+			WaitBeforeStarting 20
+			WaitBetweenSpawns 0
+			TotalCurrency 50
+		
+			Squad
+			{
+				TFBot
+				{
+					Template T_TFBot_Giant_Soldier_RocketShotgun
+					CharacterAttributes
+					{
+						"damage force reduction" 0.25
+						"airblast vulnerability multiplier" 0.25
+						"airblast vertical vulnerability multiplier" 0.25
+					}
+				}
+				TFBot
+				{
+					Template T_TFBot_Medic_Armored
+				}
+			}
+		}
+		WaveSpawn
+		{
+			Name "wave02bGiant"	
+			Where spawnbot
+			TotalCount 2
+			MaxActive 2
+			SpawnCount 2
+			WaitForAllSpawned wave02bTank
+			WaitBeforeStarting 25
+			WaitBetweenSpawns 0
+			TotalCurrency 50
+		
+			Squad
+			{
+				TFBot
+				{
+					Template T_TFBot_Giant_Soldier_RocketShotgun
+					CharacterAttributes
+					{
+						"damage force reduction" 0.25
+						"airblast vulnerability multiplier" 0.25
+						"airblast vertical vulnerability multiplier" 0.25
+					}
+				}
+				TFBot
+				{
+					Template T_TFBot_Medic_Armored
+				}
+			}
+		}
+		WaveSpawn
+		{
+			Name "wave02bGiant"
+			Where spawnbot_tank
+			TotalCount 2
+			MaxActive 2
+			SpawnCount 2
+			WaitForAllSpawned wave02bTank
+			WaitBeforeStarting 40
+			WaitBetweenSpawns 8
+			TotalCurrency 25
+		
+			Squad
+			{
+				TFBot
+				{
+					Template T_TFBot_Giant_Demo_Spammer
+					Attributes	AlwaysCrit
+					CharacterAttributes
+					{
+						"damage force reduction" 0.25
+						"airblast vulnerability multiplier" 0.25
+						"airblast vertical vulnerability multiplier" 0.25
+					}
+				}
+				TFBot
+				{
+					Template T_TFBot_Giant_Medic_Uber
+					CharacterAttributes
+					{
+						"bot medic uber health threshold" 300
+					}
+				}
+			}
+		}
+		WaveSpawn
+		{
+			Name "wave02b"
+			Where flankers
+			TotalCount 8
+			MaxActive 6
+			SpawnCount 2
+			WaitForAllSpawned wave02aGiant
+			WaitBeforeStarting 14
+			WaitBetweenSpawns 6
+			TotalCurrency 25
+		
+			TFBot
+			{
+				Template T_TFBot_Heavyweapons_Fist
+			}
+		}
+		WaveSpawn
+		{
+			Name "wave02b"
+			Where spawnbot
+			TotalCount 4
+			MaxActive 4
+			SpawnCount 4
+			WaitForAllSpawned wave02aGiant
+			WaitBeforeStarting 14
+			WaitBetweenSpawns 6
+			TotalCurrency 25
+		
+			TFBot
+			{
+				Template T_TFBot_Heavyweapons_Fist
+			}
+		}
+
+		// Subwave 3 (maxActive: 22 - 24)
+		// Giant Anchored FaN Scout (2)
+		// Giant Crit Fast Pyro + Armored Uber Medic (4)
+		// Crit Fast Bonk Scout [4]
+		// Stun Soldier [14]
+
+		// The Giant Fast Pyro chains off of the Giant Rapid Fire
+		// Demo and acts as the final pushing force. Fast Bonk
+		// Scouts and Stun Soldiers come in as supporting units
+		// and deal ranged damage, whereas any remaining giants
+		// can afford to get in close.
+		
+		WaveSpawn
+		{
+			Name "wave02c"
+			Where spawnbot
+			TotalCount 3
+			MaxActive 2
+			SpawnCount 1
+			WaitForAllSpawned wave02bGiant
+			WaitBeforeStarting 0
+			WaitBetweenSpawns 12
+			TotalCurrency 25
+		
+			TFBot
+			{
+				Template T_TFBot_Giant_Scout_FAN_Anchored
+				ClassIcon	scout_fan_anchored
+				Attributes AlwaysCrit
+			}
+		}
+		WaveSpawn
+		{
+			Name "wave02cGiant"
+			Where spawnbot
+			TotalCount 4
+			MaxActive 4
+			SpawnCount 4
+			WaitForAllSpawned wave02bGiant
+			WaitBeforeStarting 8
+			WaitBetweenSpawns 0
+			TotalCurrency 50
+		
+			Squad
+			{
+				TFBot
+				{
+					Template T_TFBot_Giant_Pyro_Fast
+					Attributes AlwaysCrit
+					CharacterAttributes
+					{
+						"damage force reduction" 0.25
+						"airblast vulnerability multiplier" 0.25
+						"airblast vertical vulnerability multiplier" 0.25
+					}
+				}
+				TFBot
+				{
+					Template T_TFBot_Medic_Armored
+				}
+				TFBot
+				{
+					Template T_TFBot_Medic_Armored
+				}
+				TFBot
+				{
+					Template T_TFBot_Medic_Armored
+				}
+			}
+		}
+		WaveSpawn
+		{
+			Name "wave02cSupport"
+			Where flankers
+			MaxActive 4
+			SpawnCount 2
+			WaitForAllSpawned wave02cGiant
+			WaitBeforeStarting 6
+			WaitBetweenSpawns 3
+			TotalCurrency 50
+			Support 1
+		
+			TFBot
+			{
+				Template T_TFBot_Scout_Bonk_Fast
+				Attributes	AlwaysCrit
+			}
+		}
+		WaveSpawn
+		{
+			Name "wave02b"
+			Where spawnbot
+			MaxActive 14
+			SpawnCount 2
+			WaitForAllSpawned wave02cGiant
+			WaitBeforeStarting 6
+			WaitBetweenSpawns 2
+			TotalCurrency 100
+			Support 1
+		
+			TFBot
+			{
+				Template T_TFBot_Soldier_Stun
+			}
+		}
+	}
+	Wave
+	{
+		StartWaveOutput
+		{
+			Target wave_start_relay
+			Action Trigger
+		}
+		DoneOutput
+		{
+			Target wave_finished_relay
+			Action Trigger
+		}
+		InitWaveOutput	// Take bridge path
+		{
+			Target wave_a_init
+    		Action Trigger
+		}
+		WaitWhenDone 65
+		Checkpoint Yes
+
+		// Subwave 1 (maxActive: 18)
+		// Giant Crit Fast Pyro + Giant Armored Medic (4)
+		// Crit Burst Demo (10)
+		// Armored Blaster Pusher Scout (4)
+
+		// This subwave is designed to forcibly pop shields
+		// while also making an attempt to force RED to fall
+		// back past the arch. This chains and mixes into
+		// Subwave 2.
+
+		WaveSpawn	// 
+		{
+			Name "wave03aGiant"
+			Where spawnbot_tank
+			TotalCount 4
+			MaxActive 4
+			SpawnCount 2
+			WaitBeforeStarting 0
+			WaitBetweenSpawns 10
+			TotalCurrency 25
+			
+			Squad
+			{
+				TFBot
+				{
+					Template T_TFBot_Giant_Pyro_Fast
+					Attributes AlwaysCrit
+					CharacterAttributes
+					{
+						"damage force reduction" 0.25
+						"airblast vulnerability multiplier" 0.25
+						"airblast vertical vulnerability multiplier" 0.25
+					}
+				}
+				TFBot
+				{
+					Template T_TFBot_Giant_Medic_Armored
+					CharacterAttributes
+					{
+						"damage force reduction" 0.25
+						"airblast vulnerability multiplier" 0.25
+						"airblast vertical vulnerability multiplier" 0.25
+					}
+				}
+			}
+		}
+		WaveSpawn	// 
+		{
+			Name "wave03a"
+			Where flankers
+			TotalCount 18
+			MaxActive 6
+			SpawnCount 3
+			WaitBeforeStarting 6
+			WaitBetweenSpawns 2
+			TotalCurrency 50
+		
+			TFBot
+			{
+				Template T_TFBot_Demo_Burst
+				Attributes	AlwaysCrit
+			}
+		}
+		WaveSpawn	// 
+		{
+			Name "wave03a"
+			Where spawnbot
+			TotalCount 12
+			MaxActive 4
+			SpawnCount 4
+			WaitBeforeStarting 6
+			WaitBetweenSpawns 0
+			TotalCurrency 50
+		
+			TFBot
+			{
+				Template T_TFBot_Demo_Burst
+				Attributes	AlwaysCrit
+			}
+		}
+		WaveSpawn	// 
+		{
+			Name "wave03a"
+			Where spawnbot
+			TotalCount 20
+			MaxActive 4
+			SpawnCount 4
+			WaitBeforeStarting 4
+			WaitBetweenSpawns 0
+			TotalCurrency 50
+			Support Limited
+		
+			TFBot
+			{
+				Template T_TFBot_Scout_Blaster_Pusher_Armored
+				
+				ItemAttributes
+				{
+					ItemName	"Baby Face's Blaster"
+					"bullets per shot bonus" 2
+					"scattergun has knockback" 2
+				}
+			}
+		}
+
+		// Subwave 2 (maxActive: 22)
+		// Colonel Barrage + Armored Kritzkrieg Medic (9)
+		// Giant Brass Heavy + Shield Uber Medic (4)
+		// Extended Backup Soldier + Shield Uber Medic (8)
+		
+		// Colonel Barrages with Armored Kritzkrieg Medics make up the bulk of the
+		// ranged damage in this subwave. While a Spy can significantly hamper the
+		// extremely high DPS this subwave can dish out, the +50% damage increase
+		// on Colonel Barrage still creates a hazardous wall that can push teams
+		// back. The Giant Brass Heavy and Extended Backup Soldiers create
+		// additional obstacles, while the Shield Uber Medics allow this subwave
+		// to survive for much longer without having them instakill players on sight.
+
+		WaveSpawn	// 
+		{
+			Name "wave03bGiant"
+			Where spawnbot_tank
+			TotalCount 12
+			MaxActive 9
+			SpawnCount 1
+			WaitForAllSpawned "wave03aGiant"
+			WaitBeforeStarting 5
+			WaitBetweenSpawns 10
+			TotalCurrency 50
+		
+			Squad
+			{
+				TFBot
+				{
+					Template T_TFBot_Giant_Soldier_SlowBarrage
+					CharacterAttributes
+					{
+						"damage force reduction" 0.25
+						"airblast vulnerability multiplier" 0.25
+						"airblast vertical vulnerability multiplier" 0.25
+					}
+				}
+				TFBot
+				{
+					Template T_TFBot_Medic_Kritzkrieg_Armored
+				}
+				TFBot
+				{
+					Template T_TFBot_Medic_Kritzkrieg_Armored
+				}
+			}
+			
+		}
+		WaveSpawn	// 
+		{
+			Name "wave03bGiant"
+			Where spawnbot
+			TotalCount 8
+			MaxActive 4
+			SpawnCount 1
+			WaitForAllSpawned "wave03aGiant"
+			WaitBeforeStarting 18
+			WaitBetweenSpawns 0
+			TotalCurrency 50
+		
+			Squad
+			{
+				TFBot
+				{
+					Template T_TFBot_Giant_Heavy_Brassbeast
+					CharacterAttributes
+					{
+						"damage force reduction" 0.25
+						"airblast vulnerability multiplier" 0.25
+						"airblast vertical vulnerability multiplier" 0.25
+					}
+				}
+				TFBot
+				{
+					Template T_TFBot_Medic_QuickUber
+				}
+				TFBot
+				{
+					Template T_TFBot_Medic_QuickUber
+				}
+				TFBot
+				{
+					Template T_TFBot_Medic_QuickUber
+				}
+			}
+		}
+
+		WaveSpawn	// 
+		{
+			Name "wave03b"
+			Where spawnbot_tank
+			TotalCount 12
+			MaxActive 8
+			SpawnCount 4
+			WaitForAllSpawned "wave03aGiant"
+			WaitBeforeStarting 4
+			WaitBetweenSpawns 4
+			TotalCurrency 25
+		
+			Squad
+			{
+				TFBot
+				{
+					Template T_TFBot_Soldier_Extended_Battalion
+				}
+				TFBot
+				{
+					Template T_TFBot_Medic_QuickUber
+				}
+			}
+		}
+
+		// Subwave 3 (maxActive: 20)
+		// Colonel Barrage + Giant Armored Medic (2)
+		// Armored Blaster Pusher Scout [5]
+		// Penetrator Bowman [4]
+		// Extended Buff Soldier [9]
+
+		// The Colonel Barrage and Giant Armored Medic serve
+		// as a spearhead force to dish out damage while
+		// pushing up to RED's defending line. The Armored
+		// Blaster Pusher Scout, Penetrator Bowman, and
+		// Extended Buff Soldier serve as additional sources
+		// of damage or to draw attention.
+
+		WaveSpawn	// 
+		{
+			Name "wave03c"
+			Where spawnbot
+			TotalCount 2
+			MaxActive 2
+			SpawnCount 2
+			WaitForAllSpawned "wave03bGiant"
+			WaitBeforeStarting 3
+			WaitBetweenSpawns 0
+			TotalCurrency 200
+		
+			Squad
+			{
+				TFBot
+				{
+					Template T_TFBot_Giant_Soldier_SlowBarrage
+					// Attributes AlwaysCrit
+					CharacterAttributes
+					{
+						"damage force reduction" 0.25
+						"airblast vulnerability multiplier" 0.25
+						"airblast vertical vulnerability multiplier" 0.25
+					}
+				}
+				TFBot
+				{
+					Template T_TFBot_Giant_Medic_Armored
+					CharacterAttributes
+					{
+						"damage force reduction" 0.25
+						"airblast vulnerability multiplier" 0.25
+						"airblast vertical vulnerability multiplier" 0.25
+					}
+				}
+			}
+		}
+		WaveSpawn	// 
+		{
+			Name "wave03cSupport"
+			Where spawnbot_tank
+			MaxActive 5
+			SpawnCount 1
+			WaitForAllSpawned "wave03b"
+			WaitBeforeStarting 10
+			WaitBetweenSpawns 1
+			TotalCurrency 50
+			Support 1
+		
+			TFBot
+			{
+				Template T_TFBot_Scout_Blaster_Pusher_Armored
+				
+				ItemAttributes
+				{
+					ItemName	"Baby Face's Blaster"
+					"bullets per shot bonus" 2
+					"scattergun has knockback" 2
+				}
+			}
+		}
+		WaveSpawn	// 
+		{
+			Name "wave03cSupport"
+			Where spawnbot
+			MaxActive 4
+			SpawnCount 1
+			WaitForAllSpawned "wave03b"
+			WaitBeforeStarting 10
+			WaitBetweenSpawns 1
+			TotalCurrency 50
+			Support 1
+		
+			TFBot
+			{
+				Template T_TFBot_Sniper_Huntsman_Penetration
+			}
+		}
+		WaveSpawn	// 
+		{
+			Name "wave03cSupport"
+			Where spawnbot
+			MaxActive 9
+			SpawnCount 1
+			WaitForAllSpawned "wave03b"
+			WaitBeforeStarting 10
+			WaitBetweenSpawns 2
+			TotalCurrency 50
+			Support 1
+		
+			TFBot
+			{
+				Template T_TFBot_Soldier_Extended_Buff_Banner
+			}
+		}
+	}
+	Wave
+	{
+		StartWaveOutput
+		{
+			Target wave_start_relay
+			Action Trigger
+		}
+		DoneOutput
+		{
+			Target wave_finished_relay
+			Action Trigger
+		}
+		InitWaveOutput		// Bots will take bomb on path A (bridge)
+		{
+			Target wave_a_init
+    		Action Trigger
+		}
+		WaitWhenDone 65
+		Checkpoint Yes
+
+		// Subwave 1
+		// Tank (1)
+		// Giant Hyper Bonk Scout (10)
+		// Crit Samurai Demo (10)
+
+		// This wave is a modified and slightly shorter version of the
+		// beginning of the second wave of Hellspawn Holdout. The Giant
+		// Hyper Bonk Scouts rush up to the defending line and can dish
+		// insane amounts of damage if shields are not up. The Samurai
+		// Demos serve as a way of killing Medics with active shields by
+		// charging around or over them, or with shield bashing followed
+		// by a crit-boosted swing. The tank serves as an additional HP
+		// obstacle to shore up RED's DPS.
+
+		WaveSpawn
+		{
+			Name "wave04aTank"
+			TotalCount 1
+			WaitBeforeStarting 4
+			TotalCurrency 50
+			
+			FirstSpawnOutput
+			{
+				Target boss_spawn_relay
+				Action Trigger
+			}
+
+			Tank
+			{
+				Health 40000
+				Speed 75
+				Name "tankboss"
+				StartingPathTrackNode "boss_path_a1"
+
+				OnKilledOutput
+				{
+					Target boss_dead_relay
+					Action Trigger
+				}
+				
+				OnBombDroppedOutput
+				{
+					Target boss_deploy_relay 
+					Action Trigger
+				}
+			}
+		}
+		WaveSpawn	// 
+		{
+			Name "wave04a"
+			Where flankers
+			TotalCount 7
+			MaxActive 5
+			SpawnCount 1
+			WaitBeforeStarting 2
+			WaitBetweenSpawns 5
+			TotalCurrency 25
+		
+			TFBot
+			{
+				Template T_TFBot_Giant_Scout_Hyper_Bonk
+				CharacterAttributes
+				{
+					"damage force reduction" 0.35
+					"airblast vulnerability multiplier" 0.35
+					"airblast vertical vulnerability multiplier" 0.35
+				}
+			}
+		}
+		WaveSpawn	// 
+		{
+			Name "wave04a"
+			Where spawnbot
+			TotalCount 7
+			MaxActive 5
+			SpawnCount 1
+			WaitBeforeStarting 2
+			WaitBetweenSpawns 5
+			TotalCurrency 50
+		
+			TFBot
+			{
+				Template T_TFBot_Giant_Scout_Hyper_Bonk
+				CharacterAttributes
+				{
+					"damage force reduction" 0.35
+					"airblast vulnerability multiplier" 0.35
+					"airblast vertical vulnerability multiplier" 0.35
+				}
+			}
+		}
+		WaveSpawn	// 
+		{
+			Name "wave04aSamurai"
+			Where spawnbot
+			TotalCount 26
+			MaxActive 10
+			SpawnCount 2
+			WaitBeforeStarting 0
+			WaitBetweenSpawns 2
+			TotalCurrency 50
+		
+			TFBot
+			{
+				Template T_TFBot_Demoman_Samurai
+				Attributes	AlwaysCrit
+			}
+		}
+
+		// Subwave 2 (maxActive: 22)
+		// Giant Hyper Banners + Shield Uber Medic (6)
+		// Samurai Demo (8)
+		// Crit Heal-on-Hit Dragon Pyro (Hard variant) (8)
+
+		// This subwave is quite anti-shield-oriented without
+		// the use of unavoidable instant-kills, if resistances
+		// are taken into account. The Giant Hyper Banner Soldiers
+		// provide a substantial survivability and a damage increase
+		// (for the Samurai Demos). Without shields, these giants
+		// dish out extremely high damage and can push RED back
+		// substantially, creating space for the third subwave.
+		// This subwave chains very quickly.
+
+		WaveSpawn	// 
+		{
+			Name "wave04bGiant"
+			Where flankers
+			TotalCount 2
+			MaxActive 2
+			SpawnCount 2
+			WaitForAllSpawned "wave04a"
+			WaitBeforeStarting 8
+			WaitBetweenSpawns 0
+			TotalCurrency 25
+		
+			Squad
+			{
+				TFBot
+				{
+					Template T_TFBot_Giant_Soldier_Buff_Hyper
+					CharacterAttributes
+					{
+						"damage force reduction" 0.25
+						"airblast vulnerability multiplier" 0.25
+						"airblast vertical vulnerability multiplier" 0.25
+					}
+				}
+				TFBot
+				{
+					Template T_TFBot_Medic_Shield
+				}
+			}
+		}
+		WaveSpawn	// 
+		{
+			Name "wave04bGiant"
+			Where spawnbot
+			TotalCount 2
+			MaxActive 2
+			SpawnCount 2
+			WaitForAllSpawned "wave04a"
+			WaitBeforeStarting 8
+			WaitBetweenSpawns 0
+			TotalCurrency 25
+		
+			Squad
+			{
+				TFBot
+				{
+					Template T_TFBot_Giant_Soldier_Conch_Hyper
+					CharacterAttributes
+					{
+						"damage force reduction" 0.25
+						"airblast vulnerability multiplier" 0.25
+						"airblast vertical vulnerability multiplier" 0.25
+					}
+				}
+				TFBot
+				{
+					Template T_TFBot_Medic_Shield
+				}
+			}
+		}
+		WaveSpawn	// 
+		{
+			Name "wave04bGiant"
+			Where spawnbot_tank
+			TotalCount 2
+			MaxActive 2
+			SpawnCount 2
+			WaitForAllSpawned "wave04a"
+			WaitBeforeStarting 8
+			WaitBetweenSpawns 0
+			TotalCurrency 25
+		
+			Squad
+			{
+				TFBot
+				{
+					Template T_TFBot_Giant_Soldier_Backup_Hyper
+					CharacterAttributes
+					{
+						"damage force reduction" 0.25
+						"airblast vulnerability multiplier" 0.25
+						"airblast vertical vulnerability multiplier" 0.25
+					}
+				}
+				TFBot
+				{
+					Template T_TFBot_Medic_Shield
+				}
+			}
+		}
+		WaveSpawn	// 
+		{
+			Name "wave04b"
+			Where spawnbot
+			TotalCount 15
+			MaxActive 8
+			SpawnCount 3
+			WaitForAllSpawned "wave04a"
+			WaitBeforeStarting 8
+			WaitBetweenSpawns 3
+			TotalCurrency 25
+		
+			TFBot
+			{
+				Template T_TFBot_Demoman_Samurai
+			}
+		}
+		WaveSpawn	// 
+		{
+			Name "wave04b"
+			Where spawnbot_tank
+			TotalCount 16
+			MaxActive 8
+			SpawnCount 1
+			WaitForAllDead "wave04a"
+			WaitBeforeStarting 3
+			WaitBetweenSpawns 2
+			TotalCurrency 25
+		
+			TFBot
+			{
+				Template T_TFBot_Pyro_Dragon_Heal_Hard
+				Skill	Expert
+				Attributes	AlwaysCrit
+			}
+		}
+
+		// Subwave 3 (maxActive: 22)
+		// Giant Crit Heal-on-Hit Dragon Pyro + Shield Uber Medic (4)
+		// Crit Blast Soldier (6)
+		// Dragon Pyro (4)
+		// Crit Penetrator Bowman [4]
+
+		// This subwave uses a tiny tank train (2 tanks) to force
+		// RED back. The Giant Heal-on-Hit Dragon Pyros dish out
+		// high amounts of damage while having some survivability
+		// via the Shield Uber Medics. The remaining Heal-on-Hit
+		// Dragon Pyros and supporting units dish out a mix of
+		// close and long range damage with substantial anti-shield
+		// capability to prevent RED from simply sponging everything.
+
+		WaveSpawn
+		{
+			Name	"wave04cTankCombat"
+			WaitForAllSpawned	"wave04bGiant"
+			TotalCount 1
+			MaxActive 1
+			SpawnCount 1
+			WaitBeforeStarting 8
+			WaitBetweenSpawns 0
+			TotalCurrency 50
+			Where	spawnbot
+			Tank
+			{
+				Health	32500
+				Name	combattank_bomb|railgun
+				ClassIcon tank_combat_railgun_better [$SIGSEGV]
+				Speed	75
+				StartingPathTrackNode "boss_path_a1"
+				OnKilledOutput
+				{
+					Target	boss_dead_relay
+					Action	Trigger
+				}
+				OnBombDroppedOutput
+				{
+					Target	boss_deploy_relay
+					Action	Trigger
+				}
+			}
+		}
+		WaveSpawn
+		{
+			Name "wave04cTank"
+			TotalCount 1
+			WaitForAllSpawned "wave04bGiant"
+			WaitBeforeStarting 11
+			TotalCurrency 150
+			
+			FirstSpawnOutput
+			{
+				Target boss_spawn_relay
+				Action Trigger
+			}
+
+			Tank
+			{
+				Health 25000
+				Speed 75
+				Name "tankboss"
+				StartingPathTrackNode "boss_path_a1"
+
+				OnKilledOutput
+				{
+					Target boss_dead_relay
+					Action Trigger
+				}
+				
+				OnBombDroppedOutput
+				{
+					Target boss_deploy_relay 
+					Action Trigger
+				}
+			}
+		}
+		WaveSpawn	// 
+		{
+			Name "wave04c"
+			Where spawnbot
+			TotalCount 4
+			MaxActive 4
+			SpawnCount 1
+			WaitForAllSpawned "wave04cTank"
+			WaitBeforeStarting 15
+			WaitBetweenSpawns 6
+			TotalCurrency 50
+		
+			Squad
+			{
+				TFBot
+				{
+					Template T_TFBot_Giant_Pyro_Dragon_Heal
+					Attributes AlwaysCrit
+					CharacterAttributes
+					{
+						"damage force reduction" 0.25
+						"airblast vulnerability multiplier" 0.25
+						"airblast vertical vulnerability multiplier" 0.25
+					}
+					ItemAttributes
+					{
+						ItemName	 "The Dragon's Fury"
+						"mult_item_meter_charge_rate" 1.5
+						"damage bonus" 1.5
+						"heal on hit for rapidfire"	500
+					}
+				}
+				TFBot
+				{
+					Template T_TFBot_Medic_Shield
+				}
+			}
+		}
+		WaveSpawn	// 
+		{
+			Name "wave04c"
+			Where flankers
+			TotalCount 10
+			MaxActive 4
+			SpawnCount 1
+			WaitForAllSpawned "wave04cTank"
+			WaitBeforeStarting 3
+			WaitBetweenSpawns 0
+			TotalCurrency 50
+		
+			TFBot
+			{
+				Template T_TFBot_Pyro_Dragon_Heal_Hard
+				Skill	Expert
+				Attributes	AlwaysCrit
+			}
+		}
+		WaveSpawn	// 
+		{
+			Name "wave04cSupport"
+			Where spawnbot
+			MaxActive 4
+			SpawnCount 1
+			WaitForAllSpawned "wave04cTank"
+			WaitBeforeStarting 3
+			WaitBetweenSpawns 2
+			TotalCurrency 50
+			Support 1
+
+			TFBot
+			{
+				Template T_TFBot_Scout_Shortstop_Strong
+			}
+		}
+		WaveSpawn	// 
+		{
+			Name "wave04cSupport"
+			Where spawnbot
+			MaxActive 6
+			SpawnCount 2
+			WaitForAllSpawned "wave04c"
+			WaitBeforeStarting 3
+			WaitBetweenSpawns 1
+			TotalCurrency 50
+			Support 1
+		
+			TFBot
+			{
+				Template T_TFBot_Sniper_Huntsman_Penetration
+				Attributes AlwaysCrit
+			}
+		}
+		
+	}
+	Wave
+	{
+		StartWaveOutput
+		{
+			Target wave_start_relay
+			Action Trigger
+		}
+		DoneOutput
+		{
+			Target wave_finished_relay
+			Action Trigger
+		}
+		InitWaveOutput
+		{
+			Target wave_a_init
+			Action Trigger
+		}
+		WaitWhenDone 65
+		Checkpoint Yes
+
+		// Subwave 1 (maxActive: 22)
+		// Giant Hyper Pyro  + Giant Uber Shield Medic (2)
+			// Hyper Colonel Barrage (2)
+		// Hyper Shortstop Scout (6)
+		// Armored Penetrator Rapid Fire Bowman (14)
+
+		// This subwave is intended to either force RED out of the
+		// first choke or weaken them enough such that the second
+		// subwave can push through. The giants on this subwave are
+		// solely designed to dish out insanely high damage and push
+		// the defending line back. Strong Shortstop Scouts serve as
+		// minor ranged damage (assuming bullet resistances are taken
+		// into account), but more importantly as damage sponges to
+		// assist the giants in living longer.
+
+		WaveSpawn	// 
+		{
+			Name "wave05aGiant"
+			Where spawnbot_tank
+			TotalCount 2
+			MaxActive 2
+			SpawnCount 2
+			WaitBeforeStarting 0
+			WaitBetweenSpawns 0
+			TotalCurrency 50
+		
+			Squad
+			{
+				TFBot
+				{
+					Template T_TFBot_Giant_Pyro_Hyper_Nerfed_Airblast
+					Attributes AlwaysCrit
+					CharacterAttributes
+					{
+						"damage force reduction" 0.25
+						"airblast vulnerability multiplier" 0.25
+						"airblast vertical vulnerability multiplier" 0.25
+					}
+				}
+				TFBot
+				{
+					Template T_TFBot_Giant_Medic_Shield_Uber
+					CharacterAttributes
+					{
+						"damage force reduction" 0.25
+						"airblast vulnerability multiplier" 0.25
+						"airblast vertical vulnerability multiplier" 0.25
+					}
+				}
+			}
+		}
+		WaveSpawn	// 
+		{
+			Name "wave05aGiant2"
+			Where spawnbot
+			TotalCount 2
+			MaxActive 2
+			SpawnCount 1
+			WaitForAllSpawned "wave05aGiant"
+			WaitBeforeStarting 4
+			WaitBetweenSpawns 6
+			TotalCurrency 50
+		
+			TFBot
+			{
+				Template T_TFBot_Giant_Soldier_Barrage_Hyper
+				CharacterAttributes
+				{
+					"damage force reduction" 0.25
+					"airblast vulnerability multiplier" 0.25
+					"airblast vertical vulnerability multiplier" 0.25
+				}
+			}
+		}
+		WaveSpawn	// 
+		{
+			Name "wave05a"
+			Where spawnbot
+			TotalCount 12
+			MaxActive 6
+			SpawnCount 1
+			WaitBeforeStarting 0
+			WaitBetweenSpawns 1
+			TotalCurrency 50
+		
+			TFBot
+			{
+				Template T_TFBot_Scout_Shortstop_Strong
+			}
+		}
+		WaveSpawn	// 
+		{
+			Name "wave05a"
+			Where flankers
+			TotalCount 22
+			MaxActive 14
+			SpawnCount 2
+			WaitBeforeStarting 0
+			WaitBetweenSpawns 3
+			TotalCurrency 50
+		
+			TFBot
+			{
+				Template T_TFBot_Sniper_Huntsman_Spammer_Penetration
+				Name	"Rapid Fire Penetrator Bowman"
+			}
+		}
+
+		// Subwave 2 (maxActive: 13)
+		// Giant Hyper Pyro + Giant Armored Megaheal Medic (2)
+		// Hyper Colonel Barrage (3)
+		// Strong Shortstop Scout (8)
+
+		// This subwave chains into the third subwave, hence its low maxActive.
+		// It takes advantage of the disruption created by the first subwave and
+		// is meant to push RED to around halfway across.
+
+		WaveSpawn	// 
+		{
+			Name "wave05bGiant"
+			Where flankers
+			TotalCount 2
+			MaxActive 2
+			SpawnCount 2
+			WaitForAllDead "wave05aGiant"
+			WaitBeforeStarting 16
+			WaitBetweenSpawns 0
+			TotalCurrency 100
+		
+			Squad
+			{
+				TFBot
+				{
+					Template T_TFBot_Giant_Pyro_Hyper_Nerfed_Airblast
+					CharacterAttributes
+					{
+						"damage force reduction" 0.25
+						"airblast vulnerability multiplier" 0.25
+						"airblast vertical vulnerability multiplier" 0.25
+					}
+				}
+				TFBot
+				{
+					Template T_TFBot_Giant_Medic_Shield_Uber
+					CharacterAttributes
+					{
+						"damage force reduction" 0.25
+						"airblast vulnerability multiplier" 0.25
+						"airblast vertical vulnerability multiplier" 0.25
+					}
+				}
+			}
+		}
+		WaveSpawn	// 
+		{
+			Name "wave05bGiant2"
+			Where spawnbot
+			TotalCount 4
+			MaxActive 3
+			SpawnCount 1
+			WaitForAllSpawned "wave05aGiant2"
+			WaitBeforeStarting 15
+			WaitBetweenSpawns 10
+			TotalCurrency 100
+		
+			TFBot
+			{
+				Template T_TFBot_Giant_Soldier_Barrage_Hyper
+				CharacterAttributes
+				{
+					"damage force reduction" 0.25
+					"airblast vulnerability multiplier" 0.25
+					"airblast vertical vulnerability multiplier" 0.25
+				}
+			}
+		}
+		WaveSpawn	// 
+		{
+			Name "wave05b"
+			Where spawnbot
+			TotalCount 18
+			MaxActive 8
+			SpawnCount 2
+			WaitForAllDead "wave05a"
+			WaitBeforeStarting 0
+			WaitBetweenSpawns 1
+			TotalCurrency 50
+		
+			TFBot
+			{
+				Template T_TFBot_Scout_Shortstop_Strong
+			}
+		}
+
+		// Subwave 3 (maxActive: 20)
+		// Giant Crit Deflector Heavy + Giant Shield Uber Medic (4)
+		// Crit Concheror Soldier [12]
+		// Hyper Pyro [4]
+
+		// Final subwave of the mission. This is a relatively standard
+		// shield-vs-shield lineup with Extended Concheror Soldiers
+		// providing a minor speed boost while Hyper Pyros give this
+		// subwave some capability to damage RED through shields.
+
+		WaveSpawn	// 
+		{
+			Name "wave05c"
+			Where spawnbot_tank
+			TotalCount 4
+			MaxActive 4
+			SpawnCount 2
+			WaitForAllSpawned "wave05bGiant"
+			WaitBeforeStarting 4
+			WaitBetweenSpawns 10
+			TotalCurrency 100
+		
+			Squad
+			{
+				TFBot
+				{
+					Template T_TFBot_Giant_Heavyweapons_Deflector
+					Attributes	AlwaysCrit
+					CharacterAttributes
+					{
+						"damage force reduction" 0.25
+						"airblast vulnerability multiplier" 0.25
+						"airblast vertical vulnerability multiplier" 0.25
+					}
+				}
+				TFBot
+				{
+					Template T_TFBot_Giant_Medic_Shield_Uber
+					CharacterAttributes
+					{
+						"damage force reduction" 0.25
+						"airblast vulnerability multiplier" 0.25
+						"airblast vertical vulnerability multiplier" 0.25
+					}
+				}
+			}
+		}
+		WaveSpawn	// 
+		{
+			Name "wave05c"
+			Where spawnbot
+			MaxActive 12
+			SpawnCount 2
+			WaitForAllDead "wave05bGiant"
+			WaitBeforeStarting 3
+			WaitBetweenSpawns 1
+			TotalCurrency 50
+			Support 1
+		
+			TFBot
+			{
+				Template T_TFBot_Soldier_Extended_Concheror
+				Attributes AlwaysCrit
+			}
+		}
+		WaveSpawn	// 
+		{
+			Name "wave05c"
+			Where spawnbot
+			MaxActive 4
+			SpawnCount 1
+			WaitForAllDead "wave05bGiant"
+			WaitBeforeStarting 3
+			WaitBetweenSpawns 5
+			TotalCurrency 50
+			Support 1
+		
+			TFBot
+			{
+				Template T_TFBot_Pyro_Hyper_Nerfed_Airblast
+			}
+		}
+	}
+}
