@@ -1,0 +1,1262 @@
+/////////////////////////////////////////////////////////////////////
+// Helpful debug and console commands for developing MVM population scripts:
+//
+// sv_cheats 1 							// Allows cheat commands.
+// currency_give x						// Give player x amount of game currency to be used on upgrades.
+// tf_populator_health_multiplier x.x	// Multiplies health of enemy bots - example: tf_populator_health_multiplier 0.01 will set health of bots to 1% of normal.
+// tf_mvm_popfile abcd					// Will load the .pop file of the specified name - example tf_mvm_popfile mvm_mapname_challenge2 will load mvm_mapname_challenge2.pop in the tf/scripts/population directory.
+// tf_mvm_jump_to_wave x				// Will jump to the specified wave number of the current .pop file - example tf_mvm_jump_to_wave 6 will jump to wave 6.
+// tf_bot_flag_kill_on_touch 1			// When a bot picks up the flag, they die.
+// host_timescale 10					// timescale up
+// addcond [91, 72, 33, 5]				// Enables Haste, Jump, Crit, and Uber respectively
+/////////////////////////////////////////////////////////////////////
+// BEGIN POP FILE
+/////////////////////////////////////////////////////////////////////
+#base	robot_standard.pop
+#base	robot_gatebot.pop
+#base	robot_comstock.pop
+
+// +----------+----------+----------+
+// Created by Gismo
+// Version: 4
+// +----------+----------+----------+
+
+//
+// Starting Currency: 750
+//
+// +----------+----------+----------+
+// | Wave     | Currency | A+       |
+// +----------+----------+----------+
+// | Wave 1   | 650      | 750      |
+// | Wave 2   | 850      | 950      |
+// | Wave 3   | 860      | 960      |
+// | Wave 4   | 860      | 960      |
+// | Wave 5   | 830      | 930      |
+// +----------+----------+----------+
+// | Total    | 4050     | 4550     |
+// +----------+----------+----------+
+//
+
+WaveSchedule
+{
+	StartingCurrency				750
+	RespawnWaveTime					4
+	CanBotsAttackWhileInSpawnRoom	no
+
+	///////////////////////////////////////////////////////////////////////////
+	// SENTRY BUSTER MISSIONS
+	///////////////////////////////////////////////////////////////////////////
+	Mission	// All Waves
+	{
+		Objective			DestroySentries
+		InitialCooldown		30
+		Where				spawnbot
+		BeginAtWave			1
+		RunForThisManyWaves	5	// HOW MANY WAVES WE GET FOLK?
+		CooldownTime		60
+		DesiredCount		1
+
+		TFBot
+		{
+			Template	T_TFBot_SentryBuster
+		}
+	}
+
+	///////////////////////////////////////////////////////////////////////////
+	// SNIPER MISSIONS
+	///////////////////////////////////////////////////////////////////////////
+	Mission	// Wave 2 -> 5
+	{
+		Objective			Sniper
+		InitialCooldown		30
+		Where				spawnbot_left	// Spawn sniper bots on perch
+		BeginAtWave			2
+		RunForThisManyWaves	4
+		CooldownTime		40
+		DesiredCount		2
+
+		TFBot
+		{
+			Template	T_TFBot_Sniper
+		}
+	}
+
+	///////////////////////////////////////////////////////////////////////////
+	// SPY MISSIONS
+	///////////////////////////////////////////////////////////////////////////
+	Mission	// Wave 2
+	{
+		Objective			Spy
+		InitialCooldown		60
+		Where				spawnbot
+		BeginAtWave			2
+		RunForThisManyWaves	1
+		CooldownTime		30
+		DesiredCount		1
+
+		TFBot
+		{
+			Template	T_TFBot_Spy
+		}
+	}
+
+	// WAVE 1 /////////////////////////////////////////////////////////////////////////////////
+	///////////////////////////////////////////////////////////////////////////////////////////
+	// Main Bot:
+	// 1x Gate Tank - $200
+	// 15x Miner - $150
+	// 30x Shotgun Heavy - $300
+	//
+	// Support Bots:
+	// Miners
+	// Shotgun Heavies
+	//
+	// Mission Bots:
+	// Sentry Buster
+	///////////////////////////////////////////////////////////////////////////////////////////
+	Wave
+	{
+		WaitWhenDone	65
+		Sound			Announcer.IncomingMob
+		Checkpoint		Yes
+
+		StartWaveOutput
+		{
+			Target	wave_start_relay
+			Action	Trigger
+		}
+
+		DoneOutput
+		{
+			Target	wave_finished_relay
+			Action	trigger
+		}
+
+		InitWaveOutput
+		{
+			Target pop_bombpath_choose_path_b
+            Action Trigger
+		}
+
+		WaveSpawn
+		{
+			Name				w1_minerIntro
+			Where				spawnbot
+			TotalCount			15
+			MaxActive			5
+			SpawnCount			1
+			WaitBeforeStarting	0
+			WaitBetweenSpawns	3
+			TotalCurrency		150
+
+			TFBot
+			{
+				Template	T_TFBot_Soldier_Miner
+			}
+		}
+
+		WaveSpawn
+		{
+			Name				w1_shotgunHeavy
+			Where				spawnbot
+			TotalCount			30
+			MaxActive			6
+			SpawnCount			2
+			WaitBeforeStarting	2
+			WaitBetweenSpawns	3
+			TotalCurrency		300
+
+			TFBot
+			{
+				Template	T_TFBot_Heavyweapons_Shotgun
+			}
+		}
+
+		WaveSpawn
+		{
+			TotalCount			1
+			WaitBeforeStarting	0
+			TotalCurrency		200
+			WaitForAllSpawned	w1_minerIntro
+
+			Tank
+			{
+				Name					tankboss
+				Health					7000
+				Speed					75
+				StartingPathTrackNode	tank_gate_path_start
+				Skin					0
+
+				OnBombDroppedOutput
+				{
+					Target	boss_deploy_relay
+					Action	Trigger
+				}
+			}
+		}
+
+		WaveSpawn
+		{
+			Where				spawnbot
+			WaitForAllSpawned	w1_minerIntro
+			MaxActive			6
+			SpawnCount			2
+			WaitBeforeStarting	4
+			WaitBetweenSpawns	31
+			Support				1
+
+			TFBot
+			{
+				Template	T_TFBot_Soldier_Miner
+			}
+		}
+
+		WaveSpawn
+		{
+			Where				spawnbot
+			WaitForAllDead		w1_shotgunHeavy
+			MaxActive			3
+			SpawnCount			2
+			WaitBeforeStarting	4
+			WaitBetweenSpawns	3
+			Support				1
+
+			TFBot
+			{
+				Template	T_TFBot_Heavyweapons_Shotgun
+			}
+		}
+	}
+
+	// WAVE 2 /////////////////////////////////////////////////////////////////////////////////
+	///////////////////////////////////////////////////////////////////////////////////////////
+	// Main Bot:
+	// 2x Gate Tank - $400
+	// 18x Squad 1x Gate Miner and 1x Conch Soldier - $180
+	// 18x Small Quaker Heavy - $90
+	// 4x Giant FAN Scout - $80
+	// 9x Dragon Fury Pyro - $90
+	//
+	// Support Bots:
+	// Small Quaker Heavies
+	//
+	// Mission Bots:
+	// Sentry Buster
+	// Sniper
+	// Spy
+	///////////////////////////////////////////////////////////////////////////////////////////
+	Wave
+	{
+		WaitWhenDone	65
+		Sound			Announcer.IncomingMob
+		Checkpoint		Yes
+
+		StartWaveOutput
+		{
+			Target	wave_start_relay
+			Action	Trigger
+		}
+
+		DoneOutput
+		{
+			Target	wave_finished_relay
+			Action	trigger
+		}
+
+		InitWaveOutput
+		{
+			Target pop_bombpath_choose_path_b
+            Action Trigger
+		}
+
+		WaveSpawn
+		{
+			Name				w2_conchMinerComboIntro
+			Where				spawnbot
+			TotalCount			12
+			MaxActive			12
+			SpawnCount			6
+			WaitBeforeStarting	0
+			WaitBetweenSpawns	4
+			TotalCurrency		60
+
+			Squad
+			{
+				TFBot
+				{
+					Template	T_TFGateBot_Soldier_Miner
+				}
+
+				TFBot
+				{
+					Template	T_TFBot_Soldier_Comstock_Conch
+				}
+			}
+		}
+
+		WaveSpawn
+		{
+			Name				w2_tank1
+			TotalCount			1
+			WaitBeforeStarting	3
+			TotalCurrency		200
+			WaitForAllSpawned	w2_conchMinerComboIntro
+
+			Tank
+			{
+				Name					tankboss
+				Health					7500
+				Speed					100
+				StartingPathTrackNode	tank_gate_path_start
+				Skin					0
+
+				OnBombDroppedOutput
+				{
+					Target	boss_deploy_relay
+					Action	Trigger
+				}
+			}
+		}
+
+		WaveSpawn
+		{
+			Where				spawnbot
+			TotalCount			4
+			MaxActive			1
+			SpawnCount			1
+			WaitBeforeStarting	2
+			WaitBetweenSpawns	4
+			TotalCurrency		80
+			WaitForAllDead		w2_tank1
+
+			TFBot
+			{
+				Template	T_TFBot_Giant_Scout_FAN
+			}
+		}
+
+		WaveSpawn
+		{
+			Where				spawnbot
+			TotalCount			9
+			MaxActive			3
+			SpawnCount			1
+			WaitBeforeStarting	1
+			WaitBetweenSpawns	3
+			TotalCurrency		90
+			WaitForAllDead		w2_tank1
+
+			TFBot
+			{
+				Template	T_TFBot_Pyro_DragonFury
+			}
+		}
+
+		WaveSpawn
+		{
+			TotalCount			1
+			WaitBeforeStarting	12
+			TotalCurrency		200
+			WaitForAllDead		w2_tank1
+
+			Tank
+			{
+				Name					tankboss
+				Health					7000
+				Speed					100
+				StartingPathTrackNode	tank_gate_path_start
+				Skin					0
+
+				OnBombDroppedOutput
+				{
+					Target	boss_deploy_relay
+					Action	Trigger
+				}
+			}
+		}
+
+		WaveSpawn
+		{
+			Name				w2_quakerIntro
+			Where				spawnbot
+			TotalCount			18
+			MaxActive			6
+			SpawnCount			2
+			WaitBeforeStarting	3
+			WaitBetweenSpawns	2
+			TotalCurrency		90
+			WaitForAllDead		w2_conchMinerComboIntro
+
+			TFBot
+			{
+				Template	T_TFGateBot_Heavy_Quaker_Small
+			}
+		}
+
+		WaveSpawn
+		{
+			Where				spawnbot
+			MaxActive			4
+			SpawnCount			2
+			WaitBeforeStarting	4
+			WaitBetweenSpawns	3
+			Support				1
+			WaitForAllDead		w2_quakerIntro
+
+			TFBot
+			{
+				Template	T_TFGateBot_Heavy_Quaker_Small
+			}
+		}
+
+		WaveSpawn
+		{
+			Where				spawnbot
+			TotalCount			24
+			MaxActive			8
+			SpawnCount			4
+			WaitBeforeStarting	0
+			WaitBetweenSpawns	4
+			TotalCurrency		120
+			WaitForAllDead		w2_conchMinerComboIntro
+
+			Squad
+			{
+				TFBot
+				{
+					Template	T_TFGateBot_Soldier_Miner
+				}
+
+				TFBot
+				{
+					Template	T_TFBot_Soldier_Comstock_Conch
+				}
+			}
+		}
+	}
+
+	// WAVE 3 /////////////////////////////////////////////////////////////////////////////////
+	///////////////////////////////////////////////////////////////////////////////////////////
+	// Main Bot:
+	// 2x Gate Tank - $400
+	// 5x Giant Mortar Soldier - $110
+	// 24x Gate FAN Scout - $120
+	// 20x Crit Miner - $40
+	// 6x Flare Pyro - $60
+	// 18x Airstrike Soldier - $90
+	//
+	// Support Bots:
+	// Giant FAN Scouts
+	//
+	// Mission Bots:
+	// Sentry Buster
+	// Sniper
+	///////////////////////////////////////////////////////////////////////////////////////////
+	Wave
+	{
+		WaitWhenDone	65
+		Sound			Announcer.IncomingMob
+		Checkpoint		Yes
+
+		StartWaveOutput
+		{
+			Target	wave_start_relay
+			Action	Trigger
+		}
+
+		DoneOutput
+		{
+			Target	wave_finished_relay
+			Action	trigger
+		}
+
+		InitWaveOutput
+		{
+			Target pop_bombpath_choose_path_a
+            Action Trigger
+		}
+
+		WaveSpawn
+		{
+			Name				w3_mortarBotIntro
+			Where				spawnbot
+			TotalCount			1
+			MaxActive			1
+			SpawnCount			1
+			WaitBeforeStarting	0
+			WaitBetweenSpawns	0
+			TotalCurrency		10
+
+			TFBot
+			{
+				Template	T_TFBot_Giant_Soldier_Mortar_Easy
+			}
+		}
+
+		WaveSpawn
+		{
+			Where				spawnbot
+			TotalCount			20
+			MaxActive			4
+			SpawnCount			2
+			WaitBeforeStarting	2
+			WaitBetweenSpawns	3
+			TotalCurrency		40
+			WaitForAllDead		w3_mortarBotIntro
+
+			TFBot
+			{
+				Template	T_TFBot_Soldier_Miner
+				Attributes	AlwaysCrit
+			}
+		}
+
+		WaveSpawn
+		{
+			Name				w3_tank1
+			TotalCount			1
+			WaitBeforeStarting	2
+			TotalCurrency		200
+			WaitForAllDead		w3_mortarBotIntro
+
+			Tank
+			{
+				Name					tankboss
+				Health					8000
+				Speed					75
+				StartingPathTrackNode	tank_gate_path_start
+				Skin					0
+
+				OnBombDroppedOutput
+				{
+					Target	boss_deploy_relay
+					Action	Trigger
+				}
+			}
+		}
+
+		WaveSpawn
+		{
+			Name				w3_tank2
+			TotalCount			1
+			WaitBeforeStarting	2
+			TotalCurrency		200
+			WaitForAllDead		w3_tank1
+
+			Tank
+			{
+				Name					tankboss
+				Health					8000
+				Speed					75
+				StartingPathTrackNode	tank_gate_path_start
+				Skin					0
+
+				OnBombDroppedOutput
+				{
+					Target	boss_deploy_relay
+					Action	Trigger
+				}
+			}
+		}
+
+		WaveSpawn
+		{
+			Where				spawnbot
+			TotalCount			8
+			MaxActive			2
+			SpawnCount			2
+			WaitBeforeStarting	3
+			WaitBetweenSpawns	4
+			TotalCurrency		40
+			WaitForAllSpawned	w3_tank2
+
+			TFBot
+			{
+				Template	T_TFBot_Soldier_Airstrike_Comstock
+			}
+		}
+
+		WaveSpawn
+		{
+			Where				spawnbot
+			TotalCount			6
+			MaxActive			4
+			SpawnCount			2
+			WaitBeforeStarting	0
+			WaitBetweenSpawns	5
+			TotalCurrency		60
+			WaitForAllSpawned	w3_tank2
+
+			TFBot
+			{
+				Template	T_TFBot_Pyro_Flaregun
+			}
+		}
+
+		WaveSpawn
+		{
+			Where				spawnbot
+			TotalCount			4
+			MaxActive			2
+			SpawnCount			1
+			WaitBeforeStarting	1
+			WaitBetweenSpawns	2
+			TotalCurrency		100
+			WaitForAllSpawned	w3_tank2
+
+			TFBot
+			{
+				Template	T_TFBot_Giant_Soldier_Mortar_Easy
+			}
+		}
+
+		WaveSpawn
+		{
+			Name				w3_gateFanIntro
+			Where				spawnbot
+			TotalCount			24
+			MaxActive			8
+			SpawnCount			4
+			WaitBeforeStarting	10
+			WaitBetweenSpawns	3
+			TotalCurrency		120
+			WaitForAllSpawned		w3_mortarBotIntro
+
+
+			TFBot
+			{
+				Template	T_TFGateBot_Scout_FAN
+			}
+		}
+
+		WaveSpawn
+		{
+			Name				w3_airStrikeIntro
+			Where				spawnbot
+			TotalCount			2
+			MaxActive			2
+			SpawnCount			1
+			WaitBeforeStarting	5
+			WaitBetweenSpawns	3
+			TotalCurrency		10
+			WaitForAllSpawned	w3_gateFanIntro
+
+			TFBot
+			{
+				Template	T_TFBot_Soldier_Airstrike_Comstock
+			}
+		}
+
+		WaveSpawn
+		{
+			Where				spawnbot
+			TotalCount			8
+			MaxActive			2
+			SpawnCount			1
+			WaitBeforeStarting	5
+			WaitBetweenSpawns	3
+			TotalCurrency		40
+			WaitForAllDead		w3_airStrikeIntro
+
+			TFBot
+			{
+				Template	T_TFBot_Soldier_Airstrike_Comstock
+			}
+		}
+
+		WaveSpawn
+		{
+			Where				spawnbot
+			MaxActive			2
+			SpawnCount			1
+			WaitBeforeStarting	4
+			WaitBetweenSpawns	3
+			WaitForAllDead		w3_airStrikeIntro
+			Support				1
+
+			TFBot
+			{
+				Template	T_TFGateBot_Scout_FAN
+			}
+		}
+	}
+
+	// WAVE 4 /////////////////////////////////////////////////////////////////////////////////
+	///////////////////////////////////////////////////////////////////////////////////////////
+	// Main Bot:
+	// 3x Tank - $600
+	// 1x Squad 1x Giant Mortar Soldier and 1x Giant Uber Medic - $40
+	// 2x Squad 1x Giant Mortar Soldier and 2x Uber Medic - $30
+	// 6x Squad 1x Giant Gate Miner and 2x Conch Soldier - $90
+	// 40x Gate Burster Demo - $40
+	// 40x FAN Scout - $40
+	// 20x Flare Spam Pyro - $20
+	//
+	// Support Bots:
+	// Spy
+	// Miner
+	//
+	// Mission Bots:
+	// Sentry Buster
+	// Sniper
+	///////////////////////////////////////////////////////////////////////////////////////////
+	Wave
+	{
+		WaitWhenDone	65
+		Sound			Announcer.IncomingMob
+		Checkpoint		Yes
+
+		StartWaveOutput
+		{
+			Target	wave_start_relay
+			Action	Trigger
+		}
+
+		DoneOutput
+		{
+			Target	wave_finished_relay
+			Action	trigger
+		}
+
+		InitWaveOutput
+		{
+			Target pop_bombpath_choose_path_a
+            Action Trigger
+		}
+
+		WaveSpawn
+		{
+			Name				w4_giantMortarMedicalIntro
+			Where				spawnbot
+			TotalCount			2
+			MaxActive			2
+			SpawnCount			2
+			WaitBeforeStarting	0
+			WaitBetweenSpawns	0
+			TotalCurrency		40
+
+			Squad
+			{
+				TFBot
+				{
+					Template	T_TFBot_Giant_Soldier_Mortar_Easy
+				}
+
+				TFBot
+				{
+					Template	T_TFBot_Giant_Medic_Lesser
+				}
+			}
+		}
+
+		WaveSpawn
+		{
+			Name				w4_dualTank
+			TotalCount			2
+			WaitBeforeStarting	3
+			WaitBetweenSpawns	10
+			TotalCurrency		400
+			WaitForAllDead		w4_giantMortarMedicalIntro
+
+			Tank
+			{
+				Name					tankboss
+				Health					8500
+				Speed					75
+				StartingPathTrackNode	tank_gate_path_start
+				Skin					0
+
+				OnBombDroppedOutput
+				{
+					Target	boss_deploy_relay
+					Action	Trigger
+				}
+			}
+		}
+
+		WaveSpawn
+		{
+			Where				spawnbot
+			TotalCount			20
+			MaxActive			4
+			SpawnCount			2
+			WaitBeforeStarting	5
+			WaitBetweenSpawns	5
+			TotalCurrency		20
+			WaitforAllSpawned	w4_dualTank
+
+			TFBot
+			{
+				Template	T_TFBot_Pyro_Flare_Spam
+			}
+		}
+
+		WaveSpawn
+		{
+			Name				w4_mortarDualTankInteruption
+			Where				spawnbot
+			TotalCount			6
+			MaxActive			6
+			SpawnCount			3
+			WaitBeforeStarting	3
+			WaitBetweenSpawns	5
+			TotalCurrency		30
+			WaitForAllDead		w4_dualTank
+
+			Squad
+			{
+				TFBot
+				{
+					Template	T_TFBot_Giant_Soldier_Mortar_Easy
+				}
+
+				TFBot
+				{
+					Template	T_TFBot_Medic_QuickUber
+				}
+
+				TFBot
+				{
+					Template	T_TFBot_Medic_QuickUber
+				}
+			}
+		}
+
+		WaveSpawn
+		{
+			Name				w4_tankSingularity
+			TotalCount			1
+			WaitBeforeStarting	10
+			TotalCurrency		200
+
+			Tank
+			{
+				Name					tankboss
+				Health					8500
+				Speed					75
+				StartingPathTrackNode	tank_gate_path_start
+				Skin					0
+
+				OnBombDroppedOutput
+				{
+					Target	boss_deploy_relay
+					Action	Trigger
+				}
+			}
+		}
+
+		WaveSpawn
+		{
+			Where				spawnbot
+			TotalCount			30
+			MaxActive			10
+			SpawnCount			2
+			WaitBeforeStarting	4
+			WaitBetweenSpawns	5
+			TotalCurrency		30
+			WaitForAllSpawned	w4_tankSingularity
+
+			TFBot
+			{
+				Template	T_TFGateBot_Demo_Burst_Normal
+			}
+		}
+
+		WaveSpawn
+		{
+			Where				spawnbot
+			TotalCount			6
+			MaxActive			6
+			SpawnCount			3
+			WaitBeforeStarting	3
+			WaitBetweenSpawns	3
+			TotalCurrency		30
+			WaitForAllSpawned	w4_tankSingularity
+
+			Squad
+			{
+				TFBot
+				{
+					Template	T_TFBot_Soldier_Mega_Miner
+				}
+
+				TFBot
+				{
+					Template	T_TFBot_Soldier_Comstock_Conch
+				}
+
+				TFBot
+				{
+					Template	T_TFBot_Soldier_Comstock_Conch
+				}
+			}
+		}
+
+		WaveSpawn
+		{
+			Where				spawnbot
+			MaxActive			6
+			SpawnCount			2
+			WaitBeforeStarting	10
+			WaitBetweenSpawns	10
+			Support				1
+			WaitForAllDead		w4_mortarDualTankInteruption
+
+			TFBot
+			{
+				Template	T_TFBot_Soldier_Miner
+			}
+		}
+
+		WaveSpawn
+		{
+			Name				w4_demoBurstersIntro
+			Where				spawnbot
+			TotalCount			10
+			MaxActive			10
+			SpawnCount			2
+			WaitBeforeStarting	3
+			WaitBetweenSpawns	3
+			TotalCurrency		10
+
+			TFBot
+			{
+				Template	T_TFGateBot_Demo_Burst_Normal
+			}
+		}
+
+		WaveSpawn
+		{
+			Where				spawnbot
+			TotalCount			12
+			MaxActive			6
+			SpawnCount			6
+			WaitBeforeStarting	3
+			WaitBetweenSpawns	4
+			TotalCurrency		60
+			WaitForAllSpawned	w4_demoBurstersIntro
+
+			Squad
+			{
+				TFBot
+				{
+					Template	T_TFGateBot_Soldier_Mega_Miner
+				}
+
+				TFBot
+				{
+					Template	T_TFBot_Soldier_Comstock_Conch
+				}
+
+				TFBot
+				{
+					Template	T_TFBot_Soldier_Comstock_Conch
+				}
+			}
+		}
+
+		WaveSpawn
+		{
+			Where				spawnbot
+			TotalCount			40
+			MaxActive			16
+			SpawnCount			4
+			WaitBeforeStarting	3
+			WaitBetweenSpawns	4
+			TotalCurrency		40
+			WaitForAllDead		w4_demoBurstersIntro
+
+			TFBot
+			{
+				Template	T_TFBot_Scout_FAN
+			}
+		}
+
+		WaveSpawn
+		{
+			Where				spawnbot
+			MaxActive			1
+			SpawnCount			1
+			WaitBeforeStarting	20
+			WaitBetweenSpawns	60
+			Support				1
+			WaitForAllDead		w4_demoBurstersIntro
+
+			TFBot
+			{
+				Template	T_TFBot_Spy
+			}
+		}
+	}
+
+	// WAVE 5 /////////////////////////////////////////////////////////////////////////////////
+	///////////////////////////////////////////////////////////////////////////////////////////
+	// Main Bot:
+	// 1x Nuker Soldier Boss - $300
+	// 1x Gate Tank - $200
+	// 10x Airstrike Soldier - $20
+	// 10x Squad 1x Gate Miner and 1x Conch Soldier - $80
+	// 10x Squad 1x Crit Flare Spam Pyro and 1x Quaker Heavy - $200
+	//
+	// Support Bots:
+	// Giant Mortar Soldier
+	// Squad 1x Gate Extended Conch Soldier and 1x Fast Uber Medic
+	// Giant Sandman Stun Scouts
+	// Gate Burst Demo
+	// Gate Miner
+	// Airstrike Soldiers
+	// Dragon Fury Pyros
+	//
+	//
+	// Mission Bots:
+	// Sentry Buster
+	// Sniper
+	///////////////////////////////////////////////////////////////////////////////////////////
+	Wave
+	{
+		WaitWhenDone	65
+		Sound			Announcer.IncomingMob
+		Checkpoint		Yes
+
+		StartWaveOutput
+		{
+			Target	wave_start_relay
+			Action	Trigger
+		}
+
+		DoneOutput
+		{
+			Target	wave_finished_relay
+			Action	trigger
+		}
+
+		WaveSpawn
+		{
+			Name				w5_airstrikerIntro
+			Where				spawnbot
+			TotalCount			5
+			MaxActive			5
+			SpawnCount			1
+			WaitBeforeStarting	3
+			WaitBetweenSpawns	4
+			TotalCurrency		20
+
+			TFBot
+			{
+				Template	T_TFBot_Soldier_Airstrike_Comstock
+			}
+		}
+
+		WaveSpawn
+		{
+			Name				w5_tank1
+			TotalCount			1
+			WaitBeforeStarting	3
+			TotalCurrency		200
+			WaitForAllDead		w5_airstrikerIntro
+
+			Tank
+			{
+				Name					tankboss
+				Health					8500
+				Speed					75
+				StartingPathTrackNode	tank_gate_path_start
+				Skin					0
+
+				OnBombDroppedOutput
+				{
+					Target	boss_deploy_relay
+					Action	Trigger
+				}
+			}
+		}
+
+		WaveSpawn
+		{
+			Name				w5_concherMinerIntro
+			Where				spawnbot
+			TotalCount			20
+			MaxActive			10
+			SpawnCount			2
+			WaitBeforeStarting	0
+			WaitBetweenSpawns	3
+			TotalCurrency		80
+			WaitForAllDead		w5_tank1
+
+			Squad
+			{
+				TFBot
+				{
+					Template	T_TFGateBot_Soldier_Miner
+				}
+
+				TFBot
+				{
+					Template	T_TFBot_Soldier_Comstock_Conch
+				}
+			}
+		}
+
+		WaveSpawn
+		{
+			Name				w5_quaknflare
+			Where				spawnbot
+			TotalCount			20
+			MaxActive			10
+			SpawnCount			2
+			WaitBeforeStarting	0
+			WaitBetweenSpawns	3
+			TotalCurrency		200
+			WaitForAllDead		w5_concherMinerIntro
+
+			Squad
+			{
+				TFBot
+				{
+					Template	T_TFGateBot_Heavy_Quaker_Small
+				}
+				TFBot
+				{
+					Template	T_TFBot_Pyro_Flare_Spam
+				}				
+			}
+		}
+
+		WaveSpawn
+		{
+			Where				spawnbot
+			TotalCount			1
+			MaxActive			1
+			SpawnCount			1
+			WaitBeforeStarting	5
+			WaitBetweenSpawns	0
+
+			WaitForAllDead w5_quaknflare
+
+			TotalCurrency		300
+
+			TFBot
+			{
+				Item "Full Metal Drill Hat"
+				Name "Chief Explosive Specialist"
+				Template	T_TFBot_NukeSoldier_Boss
+				Health		25000
+			}
+		}
+
+		WaveSpawn
+		{
+			Where				spawnbot
+			MaxActive			3
+			SpawnCount			1
+			WaitBeforeStarting	3
+			WaitBetweenSpawns	10
+
+			WaitForAllDead w5_airstrikerIntro
+			
+			Support 1
+
+			TFBot
+			{
+				Template	T_TFBot_Soldier_Airstrike_Comstock
+			}
+		}
+
+		WaveSpawn
+		{
+			Where				spawnbot
+			MaxActive			4
+			SpawnCount			2
+			WaitBeforeStarting	3
+			WaitBetweenSpawns	20
+
+			WaitForAllSpawned w5_airstrikerIntro
+			
+			Support 1
+
+			TFBot
+			{
+				Template	T_TFGateBot_Demo_Burst_Normal
+			}
+		}
+
+		WaveSpawn
+		{
+			Where				spawnbot
+			MaxActive			3
+			SpawnCount			1
+			WaitBeforeStarting	2
+			WaitBetweenSpawns	15
+
+			WaitForAllSpawned w5_tank1
+			
+			Support 1
+
+			TFBot
+			{
+				Template	T_TFBot_Pyro_DragonFury
+			}
+		}
+		
+		WaveSpawn
+		{
+			Where				spawnbot
+			MaxActive			2
+			SpawnCount			1
+			WaitBeforeStarting	2
+			WaitBetweenSpawns	15
+
+			WaitForAllSpawned w5_tank1
+			
+			Support 1
+
+			TFBot
+			{
+				Template	T_TFGateBot_Soldier_Miner
+			}
+		}
+
+		WaveSpawn
+		{
+			Where				spawnbot
+			MaxActive			4
+			SpawnCount			2
+			WaitBeforeStarting	2
+			WaitBetweenSpawns	50
+
+			WaitForAllSpawned w5_concherMinerIntro
+			
+			Support 1
+
+			Squad
+			{
+				TFBot
+				{
+					Template T_TFGateBot_Soldier_Extended_Concheror_Normal
+				}
+				TFBot
+				{
+					Template	T_TFBot_Medic_QuickUber
+				}
+			}	
+		}
+
+		WaveSpawn
+		{
+			Where				spawnbot
+			MaxActive			1
+			SpawnCount			1
+			WaitBeforeStarting	2
+			WaitBetweenSpawns	50
+
+			WaitForAllSpawned w5_quaknflare
+			
+			Support 1
+
+			TFBot
+			{
+				Template T_TFBot_Giant_Soldier_Mortar_Easy
+			}	
+		}
+	}
+}

@@ -1,0 +1,96 @@
+//#base robot_randomguy.pop
+//#base robot_gatebot_randomguy.pop								// Disabled template files for simplicity.
+#base robot_giant.pop 
+#base robot_standard.pop
+
+WaveSchedule
+{
+	CanBotsAttackWhileInSpawnRoom no
+	RespawnWaveTime	100
+	StartingCurrency 3500										// Increased starting credits $2500 → $3500
+	Advanced 1
+	//AddSentryBusterWhenDamageDealtExceeds 200					// Removed Sentry Busters to make Engineer more viable.
+	//AddSentryBusterWhenKillCountExceeds	1
+	// EventPopFile Halloween
+	Templates
+	{
+		T_TFBot_Soldier_Bison_Giant_CHADD_RF
+		{
+			Class Soldier
+			Name "Giant C.H.A.D.D Bison Soldier"
+			Item "The Righteous Bison"
+			Item "Armored Authority"
+			Skill Expert
+			Health 4200
+			ClassIcon soldier_bison_spammer
+			Attributes MiniBoss Tag bot_giant
+			Attributes AlwaysCrit
+			WeaponRestrictions SecondaryOnly
+			CharacterAttributes
+			{
+				"move speed bonus"	0.5
+				"override footstep sound set" 3
+				"airblast vulnerability multiplier" 0
+				"airblast vertical vulnerability multiplier" 0
+				"damage force reduction" 0.4
+			}
+			ItemAttributes
+			{
+				ItemName "The Righteous Bison"
+				"dmg penalty vs buildings" 0.01					// Originally +800% DMG, reduced to -99% to make Engineer more viable.
+				"dmg penalty vs players" 2
+				"faster reload rate" -0.8
+				"fire rate bonus" 0.3
+				"set item tint rgb" 16761600
+			}
+		}
+	}
+	
+//WAVE 1
+	Wave
+	{
+		StartWaveOutput
+		{
+			Target wave_start_relay
+			Action Trigger
+		}
+		DoneOutput
+		{
+			Target wave_finished_relay
+			Action trigger
+		}
+		
+		WaveSpawn
+		{
+			Name stage1
+			Where spawnbot
+			TotalCount 60
+			MaxActive 7
+			SpawnCount 1
+			WaitBeforeStarting 0
+			WaitBetweenSpawns 1
+			TotalCurrency 3500
+				TFBot
+				{
+					Template T_TFBot_Soldier_Bison_Giant_CHADD_RF
+				}
+			
+
+		}
+		WaveSpawn
+		{
+			Name stage1
+			Where spawnbot_giant
+			TotalCount 120
+			MaxActive 14
+			SpawnCount 2
+			WaitBeforeStarting 0
+			WaitBetweenSpawns 1
+			TotalCurrency 3500
+				TFBot
+				{
+					Template T_TFBot_Soldier_Bison_Giant_CHADD_RF
+				}
+		}
+	}
+}

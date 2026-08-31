@@ -1,0 +1,1360 @@
+#base	robot_giant.pop
+#base	robot_standard.pop
+#base	mvm_cloudpiercer_custom_robots_scout.pop
+#base	mvm_cloudpiercer_custom_robots_soldier.pop
+#base	mvm_cloudpiercer_custom_robots_demoman.pop
+#base	mvm_cloudpiercer_custom_robots_pyro.pop
+#base	mvm_cloudpiercer_custom_robots_heavy.pop
+#base	mvm_cloudpiercer_custom_robots_medic.pop
+#base	mvm_cloudpiercer_custom_robots_engineer.pop
+#base	mvm_cloudpiercer_custom_robots_sniper.pop
+#base	mvm_cloudpiercer_custom_robots_spy.pop
+
+WaveSchedule
+{
+	StartingCurrency				800
+	RespawnWaveTime					2
+	CanBotsAttackWhileInSpawnRoom	no
+
+	Mission	// Sentry buster wave 1-3
+	{
+		Objective			DestroySentries
+		InitialCooldown		30
+		Where				spawnbot
+		BeginAtWave			1
+		RunForThisManyWaves	3
+		CooldownTime		45
+
+		TFBot
+		{
+			Template	T_TFBot_SentryBuster
+			tag			sentrybuster
+		}
+	}
+
+	Mission	// Sentry buster wave 4-6
+	{
+		Objective			DestroySentries
+		InitialCooldown		15
+		Where				spawnbot
+		BeginAtWave			4
+		RunForThisManyWaves	6
+		CooldownTime		30
+
+		TFBot
+		{
+			Template	T_TFBot_SentryBuster
+			tag			sentrybuster
+		}
+	}
+
+	Mission	// Sniper wave 2-3
+	{
+		Objective			Sniper
+		InitialCooldown		60
+		Where				spawnbot_mission_sniper
+		BeginAtWave			2
+		RunForThisManyWaves	2
+		CooldownTime		60
+		DesiredCount		2
+
+		TFBot
+		{
+			Template	T_TFBot_Sniper
+			Skill		Hard
+			Tag			mission_sniper
+
+			CharacterAttributes
+			{
+				"damage bonus"	1.0
+			}
+		}
+	}
+
+	Mission	// Engineer wave 2
+	{
+		Objective			Engineer
+		InitialCooldown		45
+		Where				spawnbot
+		BeginAtWave			2
+		RunForThisManyWaves	1
+		CooldownTime		45
+		DesiredCount		1
+
+		TFBot
+		{
+			Template		T_TFBot_Engineer_Sentry_Teleporter
+			TeleportWhere	spawnbot
+			TeleportWhere	spawnbot_left
+			TeleportWhere	spawnbot_right
+			TeleportWhere	spawnbot_tunnel_flank
+			Attributes		TeleportToHint
+			Health			600
+		}
+	}
+
+	Mission	// Engineer wave 4
+	{
+		Objective			Engineer
+		InitialCooldown		0
+		Where				spawnbot
+		BeginAtWave			4
+		RunForThisManyWaves	1
+		CooldownTime		45
+		DesiredCount		1
+
+		TFBot
+		{
+			Template		T_TFBot_Engineer_Sentry_Teleporter
+			TeleportWhere	spawnbot
+			TeleportWhere	spawnbot_left
+			TeleportWhere	spawnbot_right
+			TeleportWhere	spawnbot_tunnel_flank
+			Attributes		TeleportToHint
+			Health			600
+		}
+	}
+
+	Mission	// Engineer wave 6
+	{
+		Objective			Engineer
+		InitialCooldown		20
+		Where				spawnbot
+		BeginAtWave			6
+		RunForThisManyWaves	1
+		CooldownTime		45
+		DesiredCount		1
+
+		TFBot
+		{
+			Template		T_TFBot_Engineer_Sentry_Teleporter
+			TeleportWhere	spawnbot
+			TeleportWhere	spawnbot_left
+			TeleportWhere	spawnbot_right
+			Attributes		TeleportToHint
+			Health			600
+		}
+	}
+
+	Mission	// Spy wave 6
+	{
+		Objective			Spy
+		InitialCooldown		45
+		Where				spawnbot_mission_spy
+		BeginAtWave			6
+		RunForThisManyWaves	1
+		CooldownTime		60
+		DesiredCount		4
+
+		TFBot
+		{
+			Class	Spy
+			Skill	Expert
+			Name	Spy
+		}
+	}
+
+	Mission	// Sniper wave 5
+	{
+		Objective			Sniper
+		InitialCooldown		45
+		Where				spawnbot_mission_sniper
+		BeginAtWave			5
+		RunForThisManyWaves	1
+		CooldownTime		60
+		DesiredCount		2
+
+		TFBot
+		{
+			Template	T_TFBot_Sniper
+			Skill		Hard
+			Tag			mission_sniper
+
+			CharacterAttributes
+			{
+				"damage bonus"	1.0
+			}
+		}
+	}
+
+	Wave
+	{
+		StartWaveOutput
+		{
+			Target	wave_start_relay
+			Action	Trigger
+		}
+
+		DoneOutput
+		{
+			Target	wave_finished_relay
+			Action	trigger
+		}
+		WaitWhenDone	65
+		Checkpoint		Yes
+
+		// Scout squad spawn first to start bomb on the ground
+		WaveSpawn
+		{
+			Name				wave01a
+			Where				spawnbot
+			RandomSpawn			1
+			TotalCount			32
+			MaxActive			8
+			SpawnCount			1
+			WaitBeforeStarting	3
+			WaitBetweenSpawns	4
+			TotalCurrency		120
+
+			Squad
+			{
+				TFBot
+				{
+					Template	T_TFBot_Scout_Melee
+					ClassIcon	scout_bat
+				}
+
+				TFBot
+				{
+					Template	T_TFBot_Scout_Melee
+					ClassIcon	scout_bat
+				}
+
+				TFBot
+				{
+					Template	T_TFBot_Scout_Melee
+					ClassIcon	scout_bat
+				}
+
+				TFBot
+				{
+					Template	T_TFBot_Scout_Melee
+					ClassIcon	scout_bat
+				}
+			}
+		}
+
+		WaveSpawn
+		{
+			Name				wave01b
+			Where				spawnbot_parachute
+			RandomSpawn			1
+			TotalCount			16
+			MaxActive			6
+			SpawnCount			1
+			WaitBeforeStarting	8
+			WaitBetweenSpawns	2
+			TotalCurrency		160
+
+			TFBot
+			{
+				Template	T_TFBot_Scout_Melee_Parachute
+				Tag			parachute
+				Tag			common
+				Attributes	AlwaysCrit
+			}
+		}
+
+		WaveSpawn
+		{
+			Name				wave01c
+			Where				spawnbot
+			WaitForAllSpawned	wave01b
+			RandomSpawn			1
+			TotalCount			48
+			MaxActive			9
+			SpawnCount			3
+			WaitBetweenSpawns	3
+			TotalCurrency		200
+
+			Squad
+			{
+				TFBot
+				{
+					Class	Soldier
+					Skill	Hard
+				}
+
+				TFBot
+				{
+					Class	Scout
+					Skill	Normal
+				}
+
+				TFBot
+				{
+					Class	Scout
+					Skill	Normal
+				}
+			}
+		}
+
+		WaveSpawn
+		{
+			Name				wave01d
+			Where				spawnbot
+			WaitForAllSpawned	wave01c
+			RandomSpawn			1
+			TotalCount			12
+			MaxActive			12
+			SpawnCount			1
+			WaitBetweenSpawns	15
+			WaitBeforeStarting	15
+			TotalCurrency		240
+
+			Squad
+			{
+				TFBot
+				{
+					template	T_TFBot_Giant_Pyro
+					attributes	AlwaysCrit
+				}
+
+				TFBot
+				{
+					template	T_TFBot_Medic
+				}
+
+				TFBot
+				{
+					template	T_TFBot_Medic
+				}
+
+				TFBot
+				{
+					template	T_TFBot_Medic
+				}
+			}
+		}
+
+		WaveSpawn
+		{
+			Name				wave01d
+			Where				spawnbot
+			WaitForAllSpawned	wave01c
+			RandomSpawn			1
+			TotalCount			30
+			MaxActive			8
+			SpawnCount			1
+			WaitBetweenSpawns	2
+			WaitBeforeStarting	8
+			TotalCurrency		80
+
+			Squad
+			{
+				TFBot
+				{
+					template	T_TFBot_Heavyweapons_Heavyweight_Champ_Fast
+				}
+
+				TFBot
+				{
+					template	T_TFBot_Heavyweapons_Heavyweight_Champ_Fast
+				}
+			}
+		}
+	}
+
+	Wave
+	{
+		StartWaveOutput
+		{
+			Target	wave_start_relay
+			Action	Trigger
+		}
+
+		DoneOutput
+		{
+			Target	wave_finished_relay
+			Action	trigger
+		}
+		WaitWhenDone	65
+		Checkpoint		Yes
+
+		WaveSpawn
+		{
+			Name				wave02a
+			Where				spawnbot_parachute
+			RandomSpawn			1
+			TotalCount			12
+			MaxActive			8
+			SpawnCount			1
+			WaitBeforeStarting	5
+			WaitBetweenSpawns	1
+			TotalCurrency		60
+
+			TFBot
+			{
+				Template	T_TFBot_Scout_Sandman_FastCharge_Parachute
+				Tag			parachute
+				Tag			common
+			}
+		}
+
+		WaveSpawn
+		{
+			Name				wave02b
+			Where				spawnbot
+			RandomSpawn			1
+			TotalCount			20
+			MaxActive			8
+			SpawnCount			1
+			WaitBeforeStarting	4
+			WaitBetweenSpawns	5
+			TotalCurrency		80
+
+			Squad
+			{
+				TFBot
+				{
+					Template	T_TFBot_Demoman
+				}
+
+				TFBot
+				{
+					Template	T_TFBot_Demoman
+				}
+			}
+		}
+
+		WaveSpawn
+		{
+			Name				wave02c
+			Where				spawnbot
+			WaitForAllDead		wave02b
+			RandomSpawn			1
+			TotalCount			3
+			MaxActive			6
+			SpawnCount			1
+			WaitBeforeStarting	8
+			WaitBetweenSpawns	8
+			TotalCurrency		80
+
+			TFBot
+			{
+				Template	T_TFBot_Giant_Demo_Burst
+			}
+		}
+
+		WaveSpawn
+		{
+			Name				wave02c
+			Where				spawnbot_parachute
+			WaitForAllDead		wave02b
+			RandomSpawn			1
+			TotalCount			8
+			MaxActive			8
+			SpawnCount			1
+			WaitBeforeStarting	8
+			WaitBetweenSpawns	1
+			TotalCurrency		60
+
+			TFBot
+			{
+				Template	T_TFBot_Scout_Sandman_FastCharge_Parachute
+				Tag			parachute
+				Tag			common
+			}
+		}
+
+		// Demo knight swarm + demoman bosses
+		WaveSpawn
+		{
+			Name				wave02d
+			Where				spawnbot
+			WaitForAllDead		wave02c
+			RandomSpawn			1
+			TotalCount			8
+			MaxActive			4
+			SpawnCount			1
+			WaitBeforeStarting	10
+			WaitBetweenSpawns	2
+			TotalCurrency		30
+
+			TFBot
+			{
+				Template	T_TFBot_Demoman_Knight
+			}
+		}
+
+		WaveSpawn
+		{
+			Name				wave02d
+			Where				spawnbot_left
+			WaitForAllDead		wave02c
+			RandomSpawn			1
+			TotalCount			8
+			MaxActive			4
+			SpawnCount			1
+			WaitBeforeStarting	10
+			WaitBetweenSpawns	2
+			TotalCurrency		30
+
+			TFBot
+			{
+				Template	T_TFBot_Demoman_Knight
+			}
+		}
+
+		WaveSpawn
+		{
+			Name				wave02d
+			Where				spawnbot_right
+			WaitForAllDead		wave02c
+			RandomSpawn			1
+			TotalCount			8
+			MaxActive			4
+			SpawnCount			1
+			WaitBeforeStarting	10
+			WaitBetweenSpawns	2
+			TotalCurrency		30
+
+			TFBot
+			{
+				Template	T_TFBot_Demoman_Knight
+			}
+		}
+
+		WaveSpawn
+		{
+			Name				wave02d
+			Where				spawnbot_tunnel_flank
+			WaitForAllDead		wave02c
+			RandomSpawn			1
+			TotalCount			8
+			MaxActive			4
+			SpawnCount			1
+			WaitBeforeStarting	10
+			WaitBetweenSpawns	2
+			TotalCurrency		30
+
+			TFBot
+			{
+				Template	T_TFBot_Demoman_Knight
+			}
+		}
+
+		WaveSpawn
+		{
+			Name				wave02d
+			Where				spawnbot
+			WaitForAllDead		wave02c
+			RandomSpawn			1
+			TotalCount			3
+			MaxActive			1
+			SpawnCount			1
+			WaitBeforeStarting	12
+			WaitBetweenSpawns	1
+			TotalCurrency		300
+
+			Squad
+			{
+				TFBot
+				{
+					Template	T_TFBot_Giant_Demoman
+					Attributes	AlwaysCrit
+				}
+
+				TFBot
+				{
+					Template	T_TFBot_Giant_Demoman
+					Attributes	AlwaysCrit
+				}
+
+				TFBot
+				{
+					Template	T_TFBot_Giant_Demoman
+					Attributes	AlwaysCrit
+				}
+			}
+		}
+	}
+
+	Wave
+	{
+		StartWaveOutput
+		{
+			Target	wave_start_relay
+			Action	Trigger
+		}
+
+		DoneOutput
+		{
+			Target	wave_finished_relay
+			Action	trigger
+		}
+		WaitWhenDone	65
+		Checkpoint		Yes
+
+		// Sniper squad spawn first to start bomb on the ground
+		WaveSpawn
+		{
+			Name				wave03a
+			Where				spawnbot
+			RandomSpawn			1
+			TotalCount			40
+			MaxActive			8
+			SpawnCount			4
+			WaitBeforeStarting	4
+			WaitBetweenSpawns	4
+			TotalCurrency		160
+
+			Squad
+			{
+				TFBot
+				{
+					Template	T_TFBot_Sniper_Huntsman
+				}
+
+				TFBot
+				{
+					Template	T_TFBot_Sniper_Huntsman
+				}
+
+				TFBot
+				{
+					Template	T_TFBot_Sniper_Huntsman
+				}
+
+				TFBot
+				{
+					Template	T_TFBot_Sniper_Huntsman
+				}
+			}
+		}
+
+		WaveSpawn
+		{
+			Name				wave03b
+			Where				spawnbot_parachute
+			RandomSpawn			1
+			TotalCount			24
+			MaxActive			6
+			SpawnCount			1
+			WaitBeforeStarting	6
+			WaitBetweenSpawns	2
+			TotalCurrency		120
+
+			TFBot
+			{
+				Template	T_TFBot_Sniper_Bushwacka_Parachute
+			}
+		}
+
+		WaveSpawn
+		{
+			Name				wave03c
+			Where				spawnbot_parachute
+			RandomSpawn			1
+			TotalCount			12
+			MaxActive			3
+			SpawnCount			1
+			WaitBeforeStarting	6
+			WaitBetweenSpawns	2
+			TotalCurrency		120
+
+			TFBot
+			{
+				Template	T_TFBot_Sniper_Parachute_Jarate
+				Tag			parachute
+				Tag			common
+			}
+		}
+
+		WaveSpawn
+		{
+			Name				wave03d
+			Where				spawnbot
+			WaitForAllDead		wave03c
+			TotalCount			20
+			MaxActive			10
+			SpawnCount			2
+			WaitBeforeStarting	15
+			WaitBetweenSpawns	3
+			TotalCurrency		160
+
+			Squad
+			{
+				TFBot
+				{
+					Template	T_TFGateBot_Sniper_Huntsman_Mini_Giant
+				}
+
+				TFBot
+				{
+					Template	T_TFBot_Medic
+				}
+
+				TFBot
+				{
+					Class		Pyro
+					Attributes	AlwaysFireWeapon
+					Skill		Easy
+				}
+
+				TFBot
+				{
+					Class	Pyro
+					Skill	Expert
+				}
+
+				TFBot
+				{
+					Class	Pyro
+					Skill	Expert
+				}
+			}
+		}
+
+		WaveSpawn
+		{
+			Name				wave03d
+			Where				spawnbot
+			WaitForAllDead		wave03c
+			TotalCount			16
+			MaxActive			8
+			SpawnCount			2
+			WaitBeforeStarting	10
+			WaitBetweenSpawns	4
+			TotalCurrency		140
+
+			TFBot
+			{
+				Template	T_TFBot_Scout_Pistol
+				Skill		Hard
+			}
+		}
+	}
+
+	Wave
+	{
+		StartWaveOutput
+		{
+			Target	wave_start_relay
+			Action	Trigger
+		}
+
+		DoneOutput
+		{
+			Target	wave_finished_relay
+			Action	trigger
+		}
+		WaitWhenDone	65
+		Checkpoint		Yes
+
+		WaveSpawn
+		{
+			Name				wave04a
+			Where				spawnbot
+			RandomSpawn			1
+			TotalCount			10
+			MaxActive			4
+			SpawnCount			1
+			WaitBeforeStarting	4
+			WaitBetweenSpawns	1
+			TotalCurrency		100
+
+			TFBot
+			{
+				Template	T_TFBot_Heavyweapons_Gnome_The_Return
+			}
+		}
+
+		WaveSpawn
+		{
+			Name				wave04b
+			Where				spawnbot_mission_sniper
+			RandomSpawn			1
+			TotalCount			10
+			MaxActive			4
+			SpawnCount			1
+			WaitBeforeStarting	5
+			WaitBetweenSpawns	1
+			TotalCurrency		100
+
+			TFBot
+			{
+				Template	T_TFBot_Heavyweapons_Gnome_The_Return
+			}
+		}
+
+		WaveSpawn
+		{
+			Name				wave04c
+			Where				spawnbot_parachute
+			RandomSpawn			1
+			TotalCount			10
+			MaxActive			4
+			SpawnCount			1
+			WaitBeforeStarting	5
+			WaitBetweenSpawns	1
+			TotalCurrency		100
+
+			TFBot
+			{
+				Template	T_TFBot_Heavyweapons_Parachute_Gnome
+				Tag			parachute
+				Tag			common
+			}
+		}
+
+		WaveSpawn
+		{
+			Name				wave04c
+			Where				spawnbot_tunnel_flank
+			RandomSpawn			1
+			TotalCount			10
+			MaxActive			4
+			SpawnCount			1
+			WaitBeforeStarting	5
+			WaitBetweenSpawns	1
+			TotalCurrency		100
+
+			TFBot
+			{
+				Template	T_TFBot_Heavyweapons_Parachute_Gnome
+				Tag			parachute
+				Tag			common
+			}
+		}
+
+		WaveSpawn
+		{
+			Name				wave04d
+			Where				spawnbot
+			TotalCount			12
+			MaxActive			4
+			SpawnCount			1
+			WaitBeforeStarting	5
+			WaitBetweenSpawns	2
+
+			// TotalCurrency		160
+			TFBot
+			{
+				Class		Spy
+				Skill		Expert
+				Attributes	IgnoreFlag
+				Item		"Point and Shoot"
+
+				CharacterAttributes
+				{
+					"move speed penalty"	0.75
+				}
+			}
+		}
+
+		WaveSpawn
+		{
+			Name				wave04e
+			WaitBeforeStarting	20
+			TotalCount			1
+			TotalCurrency		260
+
+			FirstSpawnOutput
+			{
+				Target	boss_spawn_relay
+				Action	Trigger
+			}
+
+			Tank
+			{
+				Health					30000
+				Speed					80
+				Name					tankboss
+				StartingPathTrackNode	tank_path_left_1
+
+				OnKilledOutput
+				{
+					Target	boss_dead_relay
+					Action	Trigger
+				}
+
+				OnBombDroppedOutput
+				{
+					Target	boss_deploy_relay
+					Action	Trigger
+				}
+			}
+		}
+
+		WaveSpawn
+		{
+			Name				wave04f
+			Where				spawnbot_tunnel_flank
+			WaitForAllDead		wave04d
+			RandomSpawn			1
+			TotalCount			20
+			MaxActive			20
+			SpawnCount			5
+			WaitBeforeStarting	12
+			WaitBetweenSpawns	3
+			TotalCurrency		40
+
+			TFBot
+			{
+				Class	Soldier
+				Skill	Hard
+			}
+		}
+	}
+
+	Wave
+	{
+		StartWaveOutput
+		{
+			Target	wave_start_relay
+			Action	Trigger
+		}
+
+		DoneOutput
+		{
+			Target	wave_finished_relay
+			Action	trigger
+		}
+		WaitWhenDone	65
+		Checkpoint		Yes
+
+		WaveSpawn
+		{
+			Name				wave05a
+			Where				spawnbot_parachute
+			RandomSpawn			1
+			TotalCount			16
+			MaxActive			6
+			SpawnCount			2
+			WaitBeforeStarting	4
+			WaitBetweenSpawns	2
+			TotalCurrency		120
+
+			TFBot
+			{
+				Template	T_TFBot_Soldier_Parachute
+				Tag			parachute
+				Tag			common
+			}
+		}
+
+		WaveSpawn
+		{
+			Name				wave05a
+			Where				spawnbot
+			RandomSpawn			1
+			TotalCount			6
+			MaxActive			3
+			SpawnCount			1
+			WaitBeforeStarting	3
+			WaitBetweenSpawns	4
+			TotalCurrency		120
+
+			TFBot
+			{
+				Template	T_TFBot_Giant_Sumo_Heavy
+			}
+		}
+
+		WaveSpawn
+		{
+			Name				wave05b
+			Where				spawnbot_right
+			WaitForAllDead		wave05a
+			RandomSpawn			1
+			TotalCount			5
+			MaxActive			5
+			SpawnCount			1
+			WaitBeforeStarting	8
+			WaitBetweenSpawns	4
+			TotalCurrency		50
+
+			Squad
+			{
+				TFBot
+				{
+					Template	T_TFBot_Giant_Heavyweapons
+				}
+
+				TFBot
+				{
+					Template	T_TFBot_Medic
+				}
+
+				TFBot
+				{
+					Template	T_TFBot_Medic
+				}
+
+				TFBot
+				{
+					Template	T_TFBot_Medic
+				}
+
+				TFBot
+				{
+					Template	T_TFBot_Medic
+				}
+			}
+		}
+
+		WaveSpawn
+		{
+			Name				wave05b
+			Where				spawnbot_left
+			WaitForAllDead		wave05a
+			RandomSpawn			1
+			TotalCount			5
+			MaxActive			5
+			SpawnCount			1
+			WaitBeforeStarting	8
+			WaitBetweenSpawns	4
+			TotalCurrency		50
+
+			Squad
+			{
+				TFBot
+				{
+					Template	T_TFBot_Giant_Heavyweapons
+				}
+
+				TFBot
+				{
+					Template	T_TFBot_Medic
+				}
+
+				TFBot
+				{
+					Template	T_TFBot_Medic
+				}
+
+				TFBot
+				{
+					Template	T_TFBot_Medic
+				}
+
+				TFBot
+				{
+					Template	T_TFBot_Medic
+				}
+			}
+		}
+
+		WaveSpawn
+		{
+			Name				wave05c
+			Where				spawnbot
+			WaitForAllDead		wave05a
+			RandomSpawn			1
+			TotalCount			16
+			MaxActive			8
+			SpawnCount			4
+			WaitBeforeStarting	8
+			WaitBetweenSpawns	10
+			TotalCurrency		80
+
+			TFBot
+			{
+				Template	T_TFBot_Heavyweapons_Shotgun
+			}
+		}
+
+		WaveSpawn
+		{
+			Name				wave05c
+			Where				spawnbot
+			WaitForAllDead		wave05b
+			RandomSpawn			1
+			TotalCount			16
+			MaxActive			8
+			SpawnCount			4
+			WaitBeforeStarting	8
+			WaitBetweenSpawns	10
+			TotalCurrency		80
+
+			TFBot
+			{
+				Template	T_TFBot_Heavyweapons_Shotgun
+			}
+		}
+
+		WaveSpawn
+		{
+			Name				wave05c
+			Where				spawnbot_left
+			WaitForAllDead		wave05b
+			RandomSpawn			1
+			TotalCount			5
+			MaxActive			5
+			SpawnCount			1
+			WaitBeforeStarting	8
+			WaitBetweenSpawns	4
+			TotalCurrency		60
+
+			Squad
+			{
+				TFBot
+				{
+					Template	T_TFBot_Heavyweapons_Heater
+				}
+
+				TFBot
+				{
+					Template	T_TFBot_Medic
+				}
+
+				TFBot
+				{
+					Template	T_TFBot_Medic
+				}
+
+				TFBot
+				{
+					Template	T_TFBot_Medic
+				}
+
+				TFBot
+				{
+					Template	T_TFBot_Medic
+				}
+			}
+		}
+
+		WaveSpawn
+		{
+			Name				wave05c
+			Where				spawnbot_right
+			WaitForAllDead		wave05b
+			RandomSpawn			1
+			TotalCount			5
+			MaxActive			5
+			SpawnCount			1
+			WaitBeforeStarting	8
+			WaitBetweenSpawns	4
+			TotalCurrency		60
+
+			Squad
+			{
+				TFBot
+				{
+					Template	T_TFBot_Heavyweapons_Heater
+				}
+
+				TFBot
+				{
+					Template	T_TFBot_Medic
+				}
+
+				TFBot
+				{
+					Template	T_TFBot_Medic
+				}
+
+				TFBot
+				{
+					Template	T_TFBot_Medic
+				}
+
+				TFBot
+				{
+					Template	T_TFBot_Medic
+				}
+			}
+		}
+
+		WaveSpawn
+		{
+			Name				wave05c
+			Where				spawnbot_parachute
+			WaitForAllDead		wave05b
+			RandomSpawn			1
+			TotalCount			12
+			MaxActive			8
+			SpawnCount			2
+			WaitBeforeStarting	6
+			WaitBetweenSpawns	3
+			TotalCurrency		80
+
+			TFBot
+			{
+				template	T_TFBot_Pyro_Detonator_Parachute
+				Tag			parachute
+				Tag			common
+				Attributes	AlwaysCrit
+			}
+		}
+	}
+
+	Wave
+	{
+		StartWaveOutput
+		{
+			Target	wave_start_relay
+			Action	Trigger
+		}
+
+		DoneOutput
+		{
+			Target	wave_finished_relay
+			Action	trigger
+		}
+		WaitWhenDone	65
+		Checkpoint		Yes
+
+		WaveSpawn	// Support Parachute Medics
+		{
+			Name				supportwave06a
+			Where				spawnbot_parachute
+			WaitBeforeStarting	16
+			TotalCount			25
+			MaxActive			4
+			SpawnCount			1
+			WaitBetweenSpawns	8
+			TotalCurrency		100
+			Support				1
+
+			TFBot
+			{
+				Template	T_TFBot_Medic_Quick_Fix_Parachute
+				Tag			parachute
+				Tag			common
+			}
+		}
+
+		WaveSpawn
+		{
+			Name				wave06a
+			Where				spawnbot
+			RandomSpawn			1
+			TotalCount			24
+			MaxActive			6
+			SpawnCount			1
+			WaitBeforeStarting	3
+			WaitBetweenSpawns	1
+			TotalCurrency		80
+
+			TFBot
+			{
+				Template	T_TFBot_Demo_Loose_Cannon
+			}
+		}
+
+		// Pistol Scouts + Force-a-nature scouts
+		WaveSpawn
+		{
+			Name				wave06a
+			Where				spawnbot_tunnel_flank
+			TotalCount			30
+			MaxActive			12
+			SpawnCount			2
+			WaitBeforeStarting	15
+			WaitBetweenSpawns	2
+			TotalCurrency		80
+
+			Squad
+			{
+				TFBot
+				{
+					Template	T_TFBot_Scout_Pistol
+					Skill		Hard
+				}
+
+				TFBot
+				{
+					Template	T_TFBot_Scout_Pistol
+					Skill		Hard
+				}
+
+				TFBot
+				{
+					Template	T_TFBot_Scout_FAN
+					Skill		Hard
+				}
+			}
+		}
+
+		// Mini-bosses with heavies
+		WaveSpawn
+		{
+			Name				wave06b
+			Where				spawnbot
+			WaitForAllSpawned	wave06a
+			WaitBeforeStarting	15
+			WaitBetweenSpawns	8
+			TotalCount			2
+			MaxActive			2
+			SpawnCount			1
+			TotalCurrency		120
+
+			TFBot
+			{
+				Template	T_TFBot_Giant_Soldier_SlowBarrage
+			}
+		}
+
+		WaveSpawn
+		{
+			Where				spawnbot_left
+			Name				wave06b
+			WaitForAllSpawned	wave06a
+			TotalCount			10
+			MaxActive			4
+			SpawnCount			2
+			WaitBeforeStarting	15
+			WaitBetweenSpawns	2
+			TotalCurrency		50
+
+			TFBot
+			{
+				Class	HeavyWeapons
+				Skill	Easy
+			}
+		}
+
+		WaveSpawn
+		{
+			Where				spawnbot_right
+			Name				wave06b
+			WaitForAllSpawned	wave06a
+			TotalCount			10
+			MaxActive			4
+			SpawnCount			2
+			WaitBeforeStarting	15
+			WaitBetweenSpawns	2
+			TotalCurrency		50
+
+			TFBot
+			{
+				Class	HeavyWeapons
+				Skill	Easy
+			}
+		}
+
+		WaveSpawn
+		{
+			Name				wave06c
+			Where				spawnbot
+			WaitForAllSpawned	wave06b
+			TotalCount			3
+			MaxActive			3
+			SpawnCount			1
+			TotalCurrency		120
+			WaitBeforeStarting	15
+			WaitBetweenSpawns	15
+
+			Squad
+			{
+				TFBot
+				{
+					Template	T_TFBot_Giant_Heavyweapons_Natascha
+				}
+
+				TFBot
+				{
+					Template	T_TFBot_Giant_Medic_Regen
+				}
+
+				TFBot
+				{
+					Template	T_TFBot_Giant_Medic_Regen
+				}
+			}
+		}
+	}
+}
