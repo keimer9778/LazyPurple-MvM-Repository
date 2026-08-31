@@ -1,0 +1,1125 @@
+//Fall Firestarters (November Normal)
+//Made by Signalmax
+//Steam Link: https://steamcommunity.com/id/signalmax/
+
+#base robot_november.pop
+
+//Spawn List
+//spawnbot_a
+//spawnbot_b
+//spawnbot_c
+//spawnbot_d
+//spawnbot_e
+//spawnbot_flank_a
+//spawnbot_flank_c
+//spawnbot_sentrybuster_a
+//spawnbot_sentrybuster_b
+//spawnbot_sentrybuster_c
+//spawnbot_sentrybuster_d
+//spawnbot_sentrybuster_e
+//spawnbot_spy_a
+//spawnbot_spy_b
+//spawnbot_spy_c
+//spawnbot_spy_d
+//spawnbot_spy_e
+//spawnbot_sniper_a
+//spawnbot_sniper_b
+//spawnbot_sniper_c
+//spawnbot_sniper_d
+//spawnbot_sniper_e
+
+WaveSchedule
+{
+	StartingCurrency 1200 // 800
+	RespawnWaveTime 2
+	CanBotsAttackWhileInSpawnRoom no
+    
+	Mission // BUSTERS WAVES 1-3
+	{
+		Where spawnbot_sentrybuster_a
+        Where spawnbot_sentrybuster_b
+        Where spawnbot_sentrybuster_c
+        
+		Objective DestroySentries
+		InitialCooldown 55
+		BeginAtWave 1
+		RunForThisManyWaves 3
+		CooldownTime 60
+		TFBot
+		{
+			Template NV_SentryBuster
+		}
+	}
+    Mission // BUSTERS WAVES 4-7
+	{
+		Where spawnbot_sentrybuster_a
+        Where spawnbot_sentrybuster_b
+        Where spawnbot_sentrybuster_c
+        
+		Objective DestroySentries
+		InitialCooldown 45
+		BeginAtWave 4
+		RunForThisManyWaves 4
+		CooldownTime 45
+		TFBot
+		{
+			Template NV_SentryBuster
+		}
+	}
+    
+	Mission // SNIPERS WAVE 3
+	{
+		Where spawnbot_sniper_a
+        Where spawnbot_sniper_b
+        Where spawnbot_sniper_c
+        
+		Objective Sniper
+		InitialCooldown 35
+		BeginAtWave 3
+		RunForThisManyWaves 1
+		CooldownTime 45
+		DesiredCount 1
+		TFBot
+		{
+			Template NV_Sniper_Support
+		}
+	}
+	Mission // SPIES WAVE 5-6
+	{
+		Where spawnbot_spy_a
+        Where spawnbot_spy_b
+        Where spawnbot_spy_c
+        
+		Objective Spy
+		InitialCooldown 30
+		BeginAtWave 5
+		RunForThisManyWaves 2
+		CooldownTime 60
+		DesiredCount 2
+		TFBot
+		{
+			Template NV_Spy
+		}
+	}
+
+	Wave // WAVE 1 - 700 CREDITS
+	{
+    InitWaveOutput
+    {
+        Target bignet
+        Action RunScriptCode
+        Param  "
+        EntFire(`spawn_a_arrows_flank_enable`, `Disable`, `null`, 0.0)
+        EntFire(`normal_spawn_a_relay`, `Trigger`, `null`, 0.0)"
+    }
+		StartWaveOutput
+		{
+			Target wave_start_tutorial_relay
+			Action Trigger
+		}
+		DoneOutput
+		{
+			Target wave_finished_relay
+			Action trigger
+		}
+		WaitWhenDone 65
+		Checkpoint Yes
+        
+    WaveSpawn // 1a_a - PYROS
+		{
+			Where spawnbot_a
+			Name "1a_a"
+			TotalCount 30
+			MaxActive 12
+			SpawnCount 6
+			WaitBeforeStarting 5
+			WaitBetweenSpawns 10
+			TotalCurrency 200
+      TFBot
+      {
+          Template NV_Pyro
+      }
+		}
+        WaveSpawn // 1a_b - SOLDIERS
+		{
+			Where spawnbot_a
+			Name "1a_b"
+			TotalCount 16
+			MaxActive 8
+			SpawnCount 4
+			WaitBeforeStarting 15
+			WaitBetweenSpawns 12
+			TotalCurrency 200
+      TFBot
+      {
+          Template NV_Soldier
+      }
+		}
+        WaveSpawn // 1b_a - SHOTGUN HEAVIES
+		{
+			Where spawnbot_flank_a
+			Name "1b_a"
+			TotalCount 25
+			MaxActive 10
+			SpawnCount 5
+			WaitBeforeStarting 5
+			WaitBetweenSpawns 10
+            WaitForAllSpawned "1a_b"
+			TotalCurrency 200
+      TFBot
+      {
+          Template NV_Heavyweapons_Shotgun
+          Skill Normal
+      }
+		}
+        WaveSpawn // 1b_b - CHAMP FLAMETOSSER PYROS
+		{
+			Where spawnbot_a
+			Name "1b_b"
+			TotalCount 3
+			MaxActive 1
+			SpawnCount 1
+			WaitBeforeStarting 10
+			WaitBetweenSpawns 15
+      WaitForAllSpawned "1a_b"
+			TotalCurrency 300
+      TFBot
+      {
+          Template NV_Pyro_Flametosser_Champion
+      }
+		}
+    WaveSpawn // 1s - SUPPORT SCOUTS
+		{
+			Where spawnbot_flank_a
+      Where spawnbot_flank_a
+			Name "1a_support"
+			TotalCount 30
+			MaxActive 4
+			SpawnCount 1
+			WaitBeforeStarting 35
+			WaitBetweenSpawns 5
+      Support 1
+      TFBot
+      {
+          Template NV_Scout_Fish
+      }
+		}
+	}
+    
+	Wave //WAVE 2 - 800 CREDITS
+	{
+        InitWaveOutput
+        {
+            Target normal_spawn_b_relay
+            Action Trigger
+        }
+		StartWaveOutput
+		{
+			Target wave_start_relay
+			Action Trigger
+		}
+		DoneOutput
+		{
+			Target wave_finished_relay
+			Action trigger
+		}
+		WaitWhenDone 65
+		Checkpoint Yes
+        
+        WaveSpawn // 2a_a - WRAP SCOUTS
+		{
+			Where spawnbot_b
+			Name "2a_a"
+			TotalCount 40
+			MaxActive 20
+			SpawnCount 10
+			WaitBeforeStarting 0
+			WaitBetweenSpawns 10
+			TotalCurrency 400
+      TFBot
+      {
+          Template NV_Scout_Wrap_Assassin
+      }       
+		}
+        WaveSpawn // 2a_a - GIANT SOLDIERS 
+		{
+			Where spawnbot_b
+			Name "2a_b"
+			TotalCount 2
+			MaxActive 2
+			SpawnCount 1
+			WaitBeforeStarting 10
+			WaitBetweenSpawns 20
+			TotalCurrency 200
+      TFBot
+      {
+          Template NV_Giant_Soldier
+      }       
+		}
+        WaveSpawn // 2b_a - HEAVY SQUADS
+		{
+			Where spawnbot_b
+			Name "2b_a"
+      WaitForAllDead "2a_b"
+			TotalCount 16
+			MaxActive 10
+			SpawnCount 4
+			WaitBeforeStarting 1
+			WaitBetweenSpawns 10
+			TotalCurrency 150
+      TFBot
+      {
+          Template NV_Heavy
+          Skill Easy
+      }       
+		}
+    WaveSpawn // 2b_b - DEMO SQUADS
+		{
+			Where spawnbot_b
+			Name "2b_b"
+            WaitForAllDead "2a_b"
+			TotalCount 20
+			MaxActive 10
+			SpawnCount 5
+			WaitBeforeStarting 6
+			WaitBetweenSpawns 10
+			TotalCurrency 150
+      TFBot
+      {
+          Template NV_Demoman
+          Skill Easy
+      }       
+		}
+    WaveSpawn // 2c - GIANT CRITMASTER
+		{
+			Where spawnbot_b
+			Name "2c"
+            WaitForAllSpawned "2b_b"
+			TotalCount 1
+			MaxActive 1
+			SpawnCount 1
+			WaitBeforeStarting 1
+			WaitBetweenSpawns 1
+			TotalCurrency 200
+      TFBot
+      {
+          Template NV_Giant_Soldier_Crit
+      }       
+		}
+	}
+    
+	Wave ///WAVE 3 - 1000 CREDITS (2600 S / 3700 P) (SNIPERS)
+	{
+        InitWaveOutput
+        {
+            Target normal_spawn_c_relay
+            Action Trigger
+        }
+		StartWaveOutput
+		{
+			Target wave_start_relay
+			Action Trigger
+		}
+		DoneOutput
+		{
+			Target wave_finished_relay
+			Action trigger
+		}
+		WaitWhenDone 65
+		Checkpoint Yes
+        
+        WaveSpawn // 3a_a - GIANT SCOUT
+		{
+			Where spawnbot_c
+			Name "3a_a"
+			TotalCount 1
+			MaxActive 1
+			SpawnCount 1
+			WaitBeforeStarting 0
+			WaitBetweenSpawns 10
+			TotalCurrency 100
+      TFBot
+      {
+          Template NV_Giant_Scout
+          Skill Easy
+      }       
+		}
+        
+        WaveSpawn // 3b_a - DEMOKNIGHT FLOOD
+		{
+			Where spawnbot_flank_c
+			Name "3b_a"
+            WaitForAllDead "3a_a"
+			TotalCount 30
+			MaxActive 8
+			SpawnCount 1
+			WaitBeforeStarting 3
+			WaitBetweenSpawns 1
+			TotalCurrency 200
+      TFBot
+      {
+          Template NV_Demoman_Knight
+      }       
+		}
+        
+        WaveSpawn // 3b_b - HUNTSMANS
+		{
+			Where spawnbot_c
+			Name "3b_b"
+            WaitForAllDead "3a_a"
+			TotalCount 16
+			MaxActive 8
+			SpawnCount 4
+			WaitBeforeStarting 8
+			WaitBetweenSpawns 10
+			TotalCurrency 100
+      TFBot
+      {
+          Template NV_Sniper_Huntsman
+      }       
+		}
+        
+        WaveSpawn // 3c_a - FLAMETOSSER
+		{
+			Where spawnbot_c
+			Name "3c_a"
+            WaitForAllSpawned "3b_b"
+			TotalCount 4
+			MaxActive 2
+			SpawnCount 1
+			WaitBeforeStarting 10
+			WaitBetweenSpawns 8
+			TotalCurrency 200
+      TFBot
+      {
+          Template NV_Pyro_Flametosser_Champion
+          Skill Easy
+      }       
+		}
+        
+        WaveSpawn // 3c_b - HEAVYWEIGHTS
+		{
+			Where spawnbot_flank_c
+			Name "3c_b"
+      WaitForAllSpawned "3b_b"
+			TotalCount 24
+			MaxActive 12
+			SpawnCount 6
+			WaitBeforeStarting 12
+			WaitBetweenSpawns 10
+			TotalCurrency 200
+      TFBot
+      {
+          Template NV_Heavyweapons_Heavyweight_Champ
+      }       
+		}
+        
+        WaveSpawn // 3d - STEEL GOLIATH
+		{
+			Where spawnbot_c
+			Name "3d"
+      WaitForAllDead "3c_a"
+			TotalCount 1
+			MaxActive 1
+			SpawnCount 1
+			WaitBeforeStarting 10
+			WaitBetweenSpawns 0
+			TotalCurrency 300
+      TFBot
+      {
+          Template NV_Giant_Heavy_Steel
+          Skill Easy
+      }       
+		}
+    WaveSpawn // 3c_b - HEAVYWEIGHTS
+		{
+			Where spawnbot_flank_c
+			Name "3c_b"
+      WaitForAllDead "3c_a"
+			TotalCount 24
+			MaxActive 4
+			SpawnCount 1
+			WaitBeforeStarting 12
+			WaitBetweenSpawns 6
+			Support 1
+      TFBot
+      {
+          Template NV_Heavyweapons_Heavyweight_Champ_fast
+      }       
+		}
+	}
+    
+	Wave ///WAVE 4 - 900 CREDITS (3700 S / 4700 P)
+	{
+        InitWaveOutput
+        {
+            Target bignet
+        Action RunScriptCode
+        Param  "
+        EntFire(`spawn_a_arrows_flank_enable`, `Disable`, `null`, 0.0)
+        EntFire(`normal_spawn_ab_relay`, `Trigger`, `null`, 0.0)"
+        }
+		StartWaveOutput
+		{
+			Target wave_start_relay
+			Action Trigger
+		}
+		DoneOutput
+		{
+			Target wave_finished_relay
+			Action trigger
+		}
+		WaitWhenDone 65
+		Checkpoint Yes
+		
+    WaveSpawn // 4a_a - HEAVYWEIGHTS (A)
+		{
+			Where spawnbot_flank_a
+			Name "4a_a"
+			TotalCount 24
+			MaxActive 12
+			SpawnCount 4
+			WaitBeforeStarting 0
+			WaitBetweenSpawns 8
+			TotalCurrency 200
+      TFBot
+      {
+          Template NV_Heavyweapons_Heavyweight_Champ
+      }       
+		}
+    WaveSpawn // 4a_a - MINI FLAMETOSSERS (B)
+		{
+			Where spawnbot_b
+			Name "4a_a"
+			TotalCount 20
+			MaxActive 8
+			SpawnCount 4
+			WaitBeforeStarting 2
+			WaitBetweenSpawns 10
+			TotalCurrency 250
+      TFBot
+      {
+          Template NV_Pyro
+          Skill Easy
+          Attributes AlwaysFireWeapon
+      }       
+		}
+        
+        WaveSpawn // 4b_a - GIANT FLARE SQUAD (A)
+		{
+			Where spawnbot_a
+			Name "4b_a"
+      WaitForAllSpawned "4a_a"
+			TotalCount 10
+			MaxActive 10
+			SpawnCount 5
+			WaitBeforeStarting 15
+			WaitBetweenSpawns 15
+			TotalCurrency 300
+			Squad
+			{
+                TFBot
+                {
+                    Template NV_Giant_Pyro_Flare_Spammer
+                    Skill Easy
+                }  
+                TFBot
+                {
+                    Template NV_Pyro_Flaregun
+                    Skill Easy
+                } 
+                TFBot
+                {
+                    Template NV_Pyro_Flaregun
+                    Skill Easy
+                }
+                TFBot
+                {
+                    Template NV_Pyro_Flaregun
+                    Skill Easy
+                }
+                TFBot
+                {
+                    Template NV_Pyro_Flaregun
+                    Skill Easy
+                }
+			}
+		}
+    WaveSpawn // 4b_a - CABER DEMO RUSH (B)
+		{
+			Where spawnbot_b
+			Name "4b_a"
+            WaitForAllSpawned "4a_a"
+			TotalCount 15
+			MaxActive 10
+			SpawnCount 5
+			WaitBeforeStarting 8
+			WaitBetweenSpawns 7
+			TotalCurrency 250
+      TFBot
+      {
+          Template NV_Demoman_Caber
+          Skill Easy
+      }       
+		}
+    WaveSpawn // 4s - SUPPORT SCOUTS
+		{
+			Where spawnbot_flank_a
+      Where spawnbot_b
+			Name "1a_support"
+      WaitForAllSpawned "4a_a"
+			TotalCount 30
+			MaxActive 4
+			SpawnCount 1
+			WaitBeforeStarting 5
+			WaitBetweenSpawns 5
+      Support 1
+      TFBot
+      {
+          Template NV_Scout_Fish
+      }
+		}
+	}
+    
+	Wave ///WAVE 5 - 700 CREDITS (4700 S / 5500 P) (SPIES)
+	{
+        InitWaveOutput
+        {
+            Target bignet
+        Action RunScriptCode
+        Param  "
+        EntFire(`spawn_a_arrows_flank_enable`, `Disable`, `null`, 0.0)
+        EntFire(`normal_spawn_ab_relay`, `Trigger`, `null`, 0.0)"
+        }
+		StartWaveOutput
+		{
+			Target wave_start_relay
+			Action Trigger
+		}
+		DoneOutput
+		{
+			Target wave_finished_relay
+			Action trigger
+		}
+		WaitWhenDone 65
+		Checkpoint Yes
+        
+        WaveSpawn // 5a_a - GIANT DEMO SQUADS
+		{
+			Where spawnbot_a
+			Name "5a_a"
+			TotalCount 10
+			MaxActive 5
+			SpawnCount 5
+			WaitBeforeStarting 0
+			WaitBetweenSpawns 15
+			TotalCurrency 200
+			Squad
+			{
+                TFBot
+                {
+                    Template NV_Giant_Demoman
+                }
+                TFBot
+                {
+                    Template NV_Demoman
+                }
+                TFBot
+                {
+                    Template NV_Demoman
+                }
+                TFBot
+                {
+                    Template NV_Demoman
+                }
+                TFBot
+                {
+                    Template NV_Demoman
+                }
+			}
+		}
+        WaveSpawn // 5a_b - SHOTGUNS (B)
+		{
+			Where spawnbot_b
+			Name "5a_b"
+			TotalCount 32
+			MaxActive 16
+			SpawnCount 4
+			WaitBeforeStarting 5
+			WaitBetweenSpawns 5
+			TotalCurrency 100
+      TFBot
+      {
+          Template NV_Heavyweapons_Shotgun
+          Skill Normal
+      }
+		}
+        WaveSpawn // 5b_a - GIANT HEAVY SQUADS
+		{
+			Where spawnbot_b
+			Name "5b_a"
+      WaitForAllDead "5a_a"
+			TotalCount 10
+			MaxActive 5
+			SpawnCount 5
+			WaitBeforeStarting 5
+			WaitBetweenSpawns 15
+			TotalCurrency 300
+			Squad
+			{
+                TFBot
+                {
+                    Template NV_Giant_Heavyweapons
+                }
+                TFBot
+                {
+                    Template NV_Medic_QuickFix
+                }
+                TFBot
+                {
+                    Template NV_Medic_QuickFix
+                }
+                TFBot
+                {
+                    Template NV_Medic_QuickFix
+                }
+                TFBot
+                {
+                    Template NV_Medic_QuickFix
+                }
+			}
+		}
+    WaveSpawn //5b_b SOLDIERS (A)
+		{
+			Where spawnbot_a
+			Name "5b_b"
+            WaitForAllDead"5a_a"
+			TotalCount 28
+			MaxActive 16
+			SpawnCount 4
+			WaitBeforeStarting 5
+			WaitBetweenSpawns 5
+			TotalCurrency 200
+      TFBot
+      {
+          Template NV_Soldier
+      }
+		}
+    WaveSpawn //5s PYROS
+		{
+			Where spawnbot_a
+      Where spawnbot_b
+      WaitForAllDead"5a_a"
+			TotalCount 32
+			MaxActive 4
+			SpawnCount 1
+			WaitBeforeStarting 5
+			WaitBetweenSpawns 3
+			Support 1
+      TFBot
+      {
+          Template NV_Pyro
+          Skill Easy
+      }
+		}
+	}
+	Wave ///WAVE 6 - 600 CREDITS (5500 S / 6200 P) (SPIES)
+	{
+        InitWaveOutput
+        {
+            Target normal_spawn_bc_relay
+            Action Trigger
+        }
+		StartWaveOutput
+		{
+			Target wave_start_relay
+			Action Trigger
+		}
+		DoneOutput
+		{
+			Target wave_finished_relay
+			Action trigger
+		}
+		WaitWhenDone 65
+		Checkpoint Yes
+        
+        WaveSpawn //6a_a - MELEE SQUADS RIGHT (C)
+		{
+			Where spawnbot_c
+			Name "6a_a"
+			TotalCount 12
+			MaxActive 8
+			SpawnCount 4
+			WaitBeforeStarting 1
+			WaitBetweenSpawns 10
+			TotalCurrency 50
+			Squad
+			{
+                TFBot
+                {
+                    Template NV_Pyro_Powerjack_Champion
+                }
+                TFBot
+                {
+                    Template NV_Heavyweapons_Heavyweight_Champ
+                }
+                TFBot
+                {
+                    Template NV_Heavyweapons_Heavyweight_Champ
+                }
+                TFBot
+                {
+                    Template NV_Heavyweapons_Heavyweight_Champ
+                }
+			}
+		}
+        WaveSpawn //6a_a - MELEE SQUADS LEFT (C)
+		{
+			Where spawnbot_flank_c
+			Name "6a_a"
+			TotalCount 12
+			MaxActive 8
+			SpawnCount 4
+			WaitBeforeStarting 1
+			WaitBetweenSpawns 10
+			TotalCurrency 50
+			Squad
+			{
+                TFBot
+                {
+                    Template NV_Pyro_Powerjack_Champion
+                }
+                TFBot
+                {
+                    Template NV_Heavyweapons_Heavyweight_Champ
+                }
+                TFBot
+                {
+                    Template NV_Heavyweapons_Heavyweight_Champ
+                }
+                TFBot
+                {
+                    Template NV_Heavyweapons_Heavyweight_Champ
+                }
+			}
+		}
+        WaveSpawn //6a_b - GAUNTLET GIANT SQUADS (B)
+		{
+			Where spawnbot_b
+			Name "6a_b"
+			TotalCount 10
+			MaxActive 10
+			SpawnCount 5
+			WaitBeforeStarting 0
+			WaitBetweenSpawns 25
+			TotalCurrency 200
+			Squad
+			{
+                TFBot
+                {
+                    Template NV_Giant_Boxing_Heavy
+                }
+                TFBot
+                {
+                    Template NV_Heavy
+                }
+                TFBot
+                {
+                    Template NV_Heavy
+                }
+                TFBot
+                {
+                    Template NV_Heavy
+                }
+                TFBot
+                {
+                    Template NV_Heavy
+                }
+			}
+		}
+        
+        WaveSpawn //6b_a - GIANT SPAMMER SQUADS (B)
+		{
+			Where spawnbot_b
+			Name "6b_a"
+            WaitForAllDead "6a_b"
+			TotalCount 15
+			MaxActive 10
+			SpawnCount 5
+			WaitBeforeStarting 3
+			WaitBetweenSpawns 15
+			TotalCurrency 100
+			Squad
+			{
+                TFBot
+                {
+                    Template NV_Giant_Soldier_Crit
+                }
+                TFBot
+                {
+                    Template NV_Soldier_Extended_Concheror
+                }
+                TFBot
+                {
+                    Template NV_Soldier_Extended_Concheror
+                }
+                TFBot
+                {
+                    Template NV_Soldier_Extended_Concheror
+                }
+                TFBot
+                {
+                    Template NV_Soldier_Extended_Concheror
+                }
+			}
+		}
+        WaveSpawn //6b_b - BANNER SOLDIER SQUADS (C)
+		{
+			Where spawnbot_c
+			Name "6b_b"
+            WaitForAllDead "6a_b"
+			TotalCount 24
+			MaxActive 8
+			SpawnCount 2
+			WaitBeforeStarting 5
+			WaitBetweenSpawns 3
+			TotalCurrency 100
+      TFBot
+      {
+          Template NV_Demo_Burst
+      }
+		}
+        WaveSpawn //6b_b - SHORTSTOP SCOUT (C)
+		{
+			Where spawnbot_c
+			Name "6b_b"
+            WaitForAllDead "6a_b"
+			TotalCount 6
+			MaxActive 6
+			SpawnCount 1
+			WaitBeforeStarting 10
+			WaitBetweenSpawns 8
+			TotalCurrency 100
+      TFBot
+      {
+          Template NV_Scout_Shortstop_Champion
+      }
+		}
+	}
+	Wave ///WAVE 7 - 400 CREDITS (6200 S / 6700 P)
+	{
+        InitWaveOutput
+        {
+            Target normal_spawn_bc_relay
+            Action Trigger
+        }
+		StartWaveOutput
+		{
+			Target wave_start_relay
+			Action Trigger
+		}
+		DoneOutput
+		{
+			Target wave_finished_relay
+			Action trigger
+		}
+		WaitWhenDone 65
+		Checkpoint Yes
+        
+        WaveSpawn //7a_a - FLAMETOSSER SQUADS RIGHT (C)
+		{
+			Where spawnbot_c
+			Name "7a_a"
+			TotalCount 16
+			MaxActive 8
+			SpawnCount 4
+			WaitBeforeStarting 1
+			WaitBetweenSpawns 10
+			TotalCurrency 25
+			Squad
+			{
+                TFBot
+                {
+                    Template NV_Pyro_Flametosser_Champion
+                }
+                TFBot
+                {
+                    Template NV_Pyro
+                    Attributes AlwaysFireWeapon
+                }
+                TFBot
+                {
+                    Template NV_Pyro
+                    Attributes AlwaysFireWeapon
+                }
+                TFBot
+                {
+                    Template NV_Pyro
+                    Attributes AlwaysFireWeapon
+                }                
+			}
+		}
+        WaveSpawn //7a_a - FLARE PYRO SQUADS LEFT (C)
+		{
+			Where spawnbot_flank_c
+			Name "7a_a"
+			TotalCount 16
+			MaxActive 8
+			SpawnCount 4
+			WaitBeforeStarting 4
+			WaitBetweenSpawns 10
+			TotalCurrency 25
+      TFBot
+      {
+          Template NV_Pyro_Flaregun
+      }             
+		}
+        WaveSpawn //7a_a - GIANT CRITZ FLARE PYRO (B)
+		{
+			Where spawnbot_b
+			Name "7a_a"
+			TotalCount 15
+			MaxActive 10
+			SpawnCount 5
+			WaitBeforeStarting 0
+			WaitBetweenSpawns 10
+			TotalCurrency 50
+			Squad
+			{
+        ShouldPreserveSquad 1
+        TFBot
+        {
+            Template NV_Giant_Pyro_Flare_Spammer
+        }
+        TFBot
+        {
+            Template NV_Medic_Kritz
+        }
+        TFBot
+        {
+            Template NV_Medic_Kritz
+        }
+        TFBot
+        {
+            Template NV_Medic_Kritz
+        }  
+        TFBot
+        {
+            Template NV_Medic_Kritz
+        } 
+			}
+		}
+        WaveSpawn //7b_a - PYRO FLOOD (B)
+		{
+			Where spawnbot_b
+			Name "7b_a"
+            WaitForAllSpawned "7a_a"
+			TotalCount 25
+			MaxActive 10
+			SpawnCount 5
+			WaitBeforeStarting 15
+			WaitBetweenSpawns 4
+			TotalCurrency 100
+      TFBot
+      {
+          Template NV_Pyro
+          Attributes AlwaysFireWeapon
+      }
+		}
+        WaveSpawn //7b_a - PYRO FLOOD (C)
+		{
+			Where spawnbot_c
+			Name "7b_a"
+            WaitForAllSpawned "7a_a"
+			TotalCount 25
+			MaxActive 10
+			SpawnCount 5
+			WaitBeforeStarting 13
+			WaitBetweenSpawns 4
+			TotalCurrency 90
+      TFBot
+      {
+          Template NV_Pyro
+          Attributes AlwaysFireWeapon
+      }
+		}
+        WaveSpawn //7b_b - PYRO BUFFER (C)
+		{
+			Where spawnbot_flank_c
+			Name "7b_b"
+            WaitForAllSpawned "7b_a"
+			TotalCount 4
+			MaxActive 4
+			SpawnCount 4
+			WaitBeforeStarting 6
+			WaitBetweenSpawns 4
+			TotalCurrency 10
+      TFBot
+      {
+          Template NV_Pyro
+          Attributes AlwaysFireWeapon
+      }
+		}
+        
+    WaveSpawn //7_boss - BOSS (COMMANDANT INFERNO) (C)
+		{
+      Where spawnbot_b
+			Where spawnbot_c
+			Name "7_boss"
+            WaitForAllDead "7b_b"
+			TotalCount 6
+			MaxActive 6
+			SpawnCount 6
+			WaitBeforeStarting 4
+			WaitBetweenSpawns 5
+			TotalCurrency 100
+			Squad
+			{
+                TFBot
+                {
+                    Template NV_Boss_Pyro_Inferno
+                }
+                TFBot
+                {
+                    Template NV_Pyro
+                    Attributes AlwaysFireWeapon
+                }
+                TFBot
+                {
+                    Template NV_Pyro
+                    Attributes AlwaysFireWeapon
+                }
+                TFBot
+                {
+                    Template NV_Pyro
+                    Attributes AlwaysFireWeapon
+                }
+                TFBot
+                {
+                    Template NV_Pyro
+                    Attributes AlwaysFireWeapon
+                }
+                TFBot
+                {
+                    Template NV_Pyro
+                    Attributes AlwaysFireWeapon
+                }
+			}
+		}
+    WaveSpawn //7s 
+		{
+			Where spawnbot_b
+      Where spawnbot_c
+			TotalCount 32
+			MaxActive 4
+			SpawnCount 2
+			WaitBeforeStarting 15
+			WaitBetweenSpawns 10
+			Support 1
+      TFBot
+      {
+          Template NV_Scout_SunStick
+      }
+		}
+	}
+}
