@@ -1,0 +1,5935 @@
+
+//	Croissant Combat
+//	AF2023 Meme Mission
+//	Made by Ciaran/Athazar
+
+// This is it. The final chapter.
+// Will there be a Memes 6? I guess time will tell.
+
+#base robot_standard.pop
+#base robot_giant.pop
+#base robot_gatebot.pop
+
+Sneed's_Seed_And_Feed_(Formerly_Chuck's)
+{
+	StartingCurrency	10
+	RespawnWaveTime		0
+	CanBotsAttackWhileInSpawnRoom	no
+	Advanced			1
+	TextPrintTime		0		[$SIGSEGV]
+	BodyPartScaleSpeed	999		[$SIGSEGV]
+	WaveStartCountdown	6		[$SIGSEGV]
+	ForceHoliday		2		[$SIGSEGV]
+	MaxEntitySpeed		1000	[$SIGSEGV]
+	ForceRedMoney		1
+	ExtendedUpgradesOnly	1 	[$SIGSEGV]
+	
+	PrecacheModel	"models/nh2_gmn/wheelchair.mdl"
+	PrecacheModel	"models/weapons/c_models/c_bread/c_bread_baguette.mdl"
+	PrecacheModel	"models/weapons/c_models/c_bread/c_bread_plainloaf.mdl"
+	PrecacheModel	"models/props_medieval/target/target.mdl"
+
+	DisableSound	"music.mvm_end_wave"
+	DisableSound	"music.mvm_end_last_wave"	
+
+	PrecacheGeneric "materials/hud/vince_gilligan_overlay.vmt"
+	PrecacheGeneric	"materials/r60d_cc/onlyred25.raw"
+	PrecacheGeneric	"materials/r60d_cc/onlyred50.raw"
+	PrecacheGeneric	"materials/r60d_cc/onlyred75.raw"
+	
+	PrecacheSound	"crois_ending_music.mp3"
+	PrecacheSound	"crois_playerdeath.wav"
+	PrecacheSound	"crois_w1_kuze.mp3"
+	PrecacheSound	"crois_w1_tutorial_music.mp3"
+	PrecacheSound	"crois_w2_intro_1.mp3"
+	PrecacheSound	"crois_w2_intro_2.mp3"
+	PrecacheSound	"crois_w2_intro_3.mp3"
+	PrecacheSound	"crois_w2_music.mp3"
+	PrecacheSound	"crois_w3_lostjudgment_finaldestination.mp3"
+	PrecacheSound	"crois_w5_gus_bgm.mp3"
+	PrecacheSound	"crois_w5_gus_scream.mp3"
+	PrecacheSound	"crois_w5_saul_death.mp3"
+	PrecacheSound	"crois_w5_saul_spawn.mp3"
+	PrecacheSound	"crois_w5_walt_death.mp3"
+	PrecacheSound	"crois_w5_walt_spawn.mp3"
+	PrecacheSound	"crois_w6_boss.mp3"
+	PrecacheSound	"crois_w6_missileshaker.mp3"
+	PrecacheSound	"crois_w7_cavenoise_1.mp3"
+	PrecacheSound	"crois_w7_cavenoise_2.mp3"
+	PrecacheSound	"crois_w7_cavenoise_3.mp3"
+	PrecacheSound	"crois_w7_final_boss_alt.mp3"
+
+	OverrideSounds [$SIGSEGV]
+	{
+		//"MVM.GiantHeavyExplodes"				"placeholder.mp3"
+		//"MVM.GiantCommonExplodes"				"placeholder.mp3"
+		"MVM.PlayerDied"                        "crois_playerdeath.wav"
+	}
+
+	ClassLimit [$SIGSEGV]
+	{
+		Scout			0
+		Soldier			0
+		Pyro			0
+		Demoman			0
+		Heavyweapons	0
+		Engineer		0
+		Medic			0
+		Sniper			0
+		// Yep, it's spies only. That's the joke.
+	}
+	PlayerAttributes [$SIGSEGV] //Player attributes appied for the whole mission
+	{
+		Scout
+		{
+			"health regen"	-1000
+		}
+		Soldier
+		{
+			"health regen"	-1000
+		}
+		Pyro
+		{
+			"health regen"	-1000
+		}
+		Demoman
+		{
+			"health regen"	-1000
+		}
+		Heavyweapons
+		{
+			"health regen"	-1000
+		}
+		Engineer
+		{
+			"health regen"	-1000
+		}
+		Medic
+		{
+			"health regen"	-1000
+		}
+		Sniper
+		{
+			"health regen"	-1000
+		}
+		Spy
+		{
+			"max health additive bonus"	75
+			"collect currency on kill"	1
+		}
+	}
+
+
+	//
+	//
+	// CUSTOM WEAPONS BEGIN
+	//
+	//
+
+	CustomWeapon
+	{
+		Name	"Literally Your Fist"
+		OriginalItemName	"TF_WEAPON_KNIFE"
+		"custom item model"	"models/empty.mdl"
+		"custom kill icon"	"fists"
+		"special item description"	"Imagine needing a melee weapon to win a fight... lol! use your fists instead loser"
+	}
+	CustomWeapon
+	{
+		Name	"Finger Gun"
+		OriginalItemName	"TF_WEAPON_REVOLVER"
+		"custom item model"	"models/empty.mdl"
+		"custom kill icon"	"heavy_taunt"
+		"special item description"		"No, it is NOT a kid named Finger Gun."
+		"damage bonus hidden"			1.33
+	}
+	CustomWeapon
+	{
+		Name	"Open Carry License"
+		OriginalItemName	"OSX Item"
+		"special item description"		"Allows the usage of ACTUAL guns/knives/combat clothing."
+		"custom item model"	"models/empty.mdl"	
+	}
+	
+
+
+	CustomWeapon
+	{
+		Name	"Ultra-Piercer"
+		OriginalItemName	"The Diamondback"
+		"special item description"		"Pierces all enemies. Consecutive targets hit by pierce attacks take significantly more damage."
+		"special item description 2"	"Permanently stuck at 1 ammo, but ammo regens every 5 seconds. Extremely slow fire rate that can't be upgraded."
+		"mod no reload DISPLAY ONLY"	1
+		"mod max primary clip override"	-1
+		"maxammo secondary reduced"		0.05
+		"fire rate penalty"				5
+		"ammo regen"					1
+		"penetration damage penalty"	5
+		"projectile penetration"		1
+	}
+	CustomWeapon
+	{
+		Name	"Explosive Comeback"
+		OriginalItemName	"The Ambassador"
+		"special item description"		"A terrible comeback is the perfect weapon to fight memes with for the 5th year in a row."
+		"special item description 2"	"Deals basically ZERO body shot damage, but MASSIVE headshot damage + LVL1 explosive headshot. Can't be flinched by damage."
+		"explosive sniper shot"	1
+		"fire rate penalty"		4
+		"no damage view flinch"	1
+		"mult crit dmg"			3
+		"damage penalty on bodyshot"	0.01
+	}
+	CustomWeapon
+	{
+		Name	"Explosive Baguette Cannon"
+		OriginalItemName	"L'Etranger"
+		"special item description"	"Yes, you read the name right."
+		"override projectile type"	2
+		"damage bonus HIDDEN"		2
+		"custom projectile model"	"models/weapons/c_models/c_bread/c_bread_baguette.mdl"
+	}
+	CustomWeapon
+	{
+		Name	"god's strongest enforcer"	// I don't have a funny name for this yet
+		OriginalItemName	"The Enforcer"
+		"special item description"		"Hold M1 to manually load, release to fire a burst fire attack. Landing continuous attacks will slowly increase damage."
+		"special item description 2"	"This weapon is definitely not broken. Probably."
+		"extra damage on hit" 	6
+		"auto fires full clip"	1
+		"auto fires when full"	1
+		"Reload time increased"	1.2
+		"weapon spread bonus"	0.01
+		"fire rate penalty HIDDEN"		0.4
+	}
+
+	CustomWeapon
+	{
+		Name	"The Large Explosion Theorem"
+		OriginalItemName	"TTG Sam Revolver"
+		"special item description"		"What, were the explosive baguettes too slow?"
+		"special item description 2"	"Shoots hitscan bullets that explode, dealing damage in a small but upgradeable radius."
+		"explosive bullets"				100
+	}
+
+
+
+	CustomWeapon
+	{
+		Name	"Knife"
+		OriginalItemName	"TF_WEAPON_KNIFE"
+		"special item description"		"You have your fist and yet you bought a damn knife."
+
+	}
+	CustomWeapon
+	{
+		Name	"$1 shitty replica of some relic from egypt or something idk"
+		OriginalItemName	"Your Eternal Reward"
+		"special item description"		"You can now 'magically' parry projectiles like rockets by timing your swing right."
+		"special item description 2"	"We're selling this $1 item for $400 because fuck you."
+		"melee airblast"			1
+	}
+	CustomWeapon
+	{
+		Name	"Tetanus: The Weapon"
+		OriginalItemName	"The Wanga Prick"
+		"special item description"		"Applies upgradeable bleed effect on hit. Base weapon deals very little damage."
+		"bleeding duration"			5
+	}
+	CustomWeapon
+	{
+		Name	"only equip this if you're a weeb"
+		OriginalItemName	"Conniver's Kunai"
+		"special item description"		"found the weeb lmao. There is literally no other change except for access to a health on hit upgrade."
+	}
+	CustomWeapon
+	{
+		Name	"The Why-cicle"
+		OriginalItemName	"The Spy-cicle"
+		"special item description"		"See, I changed it up from the stupid ice pun. Only actual stat change? Slows on hit. Oh and it's also a sword now."
+		"slow enemy on hit major"	5
+		"melee range multiplier"	3
+		"custom item model"			"models/weapons/c_models/c_claymore/c_claymore_xmas.mdl"
+		
+	}
+	CustomWeapon
+	{
+		Name	"this isn't a dresser but it's still sharp"
+		OriginalItemName	"The Sharp Dresser"
+		"special item description"		"Increased range + cleaves all enemies in range. Don't ask how it can do that."
+		"hand scale"				2
+		"melee range multiplier"	2.0
+		"melee bounds multiplier"	2.0
+		"melee cleave attack"		1
+	}
+	CustomWeapon
+	{
+		Name	"The Biggest Earner"
+		OriginalItemName	"The Big Earner"
+		"special item description"		"That isn't a knife anymore. It's a sword."
+		"special item description 2"	"Gain a small speed boost on hit and a long speed boost on kill. Significant credit radius increase + health on pickup."
+		"melee range multiplier"	3
+		"hand scale"				3
+		"health from credits"		50
+		"mult credit collect range" 4
+	}
+
+
+	//
+	//
+	// MEME BOT ONLY / DEVELOPER WEAPONS
+	//
+	//
+
+	CustomWeapon
+	{
+		Name	"Saul Lightning Gun"
+		OriginalItemName			"tf_weapon_grenadelauncher"
+		"is invisible"				1
+		"custom kill icon"			"obj_attachment_sapper"
+		"custom projectile model"	"models/empty.mdl" 
+		"grenade explode on impact"	1
+		"Set DamageType Ignite"		1
+		"explosion particle"		"wrenchmotron_teleport_beam"
+		"health regen"	62
+		"heal on kill"	200
+		"grenade no spin"	1
+		"grenade no bounce"	1
+	}
+
+
+	CustomWeapon
+	{
+		Name				"I PUT THE NEW FORGIS ON THE JEEP"
+		OriginalItemName	"Backbiter's Billycock"
+		"set item tint RGB"	12073019
+	}
+	CustomWeapon
+	{
+		Name				"I TRAP UNTIL THE BLOODY BOTTOMS IS UNDERNEATH"
+		OriginalItemName	"Manndatory Attire"
+		"item style override"	2	
+		"set item tint RGB"	12073019
+	}
+	CustomWeapon
+	{
+		Name				"CAUSE ALL MY NIGGAS GOT IT OUT THE STREETS"
+		OriginalItemName	"Dead of Night"
+		"set item tint RGB"	15705033
+	}
+	CustomWeapon
+	{
+		Name				"I KEEP A HUNDRED RACKS INSIDE MY JEANS"
+		OriginalItemName	"The Tartantaloons"
+		"set item tint RGB"	11367345
+	}
+	CustomWeapon
+	{
+		Name				"I REMEMBER HITTIN THE MALL WITH THE WHOLE TEAM"
+		OriginalItemName	"Buck Turner All-Stars"
+		"set item tint RGB"	1315860
+	}
+
+
+
+	CustomWeapon
+	{
+		Name				"Final Boss Phase 1"
+		OriginalItemName	"TF_WEAPON_ROCKETLAUNCHER"
+		"mod projectile heat seek power"	360
+		"mod projectile heat aim error"		90
+		"fire rate bonus"					0.22
+		"faster reload rate"				0.5
+		"projectile spread angle penalty"	10
+		"dmg penalty vs players"					0.5
+		"override projectile type extra"	"breadmonster"
+	}
+	CustomWeapon
+	{
+		Name				"Final Boss Phase 2"
+		OriginalItemName	"TF_WEAPON_GRENADELAUNCHER"
+		"fire rate bonus"					0.22
+		"faster reload rate"				0.1
+		"projectile spread angle penalty"	360
+		"clip size upgrade atomic"			69
+		"Set DamageType Ignite"				1
+		"explosion particle"				"wrenchmotron_teleport_beam"
+		"grenade no spin"					1
+		"grenade no bounce"					1
+		"no self effect"					1
+		"projectile range increased"		0.31
+		"dmg taken from self reduced"		0.01
+		"grenade explode on impact"			1
+	}
+	CustomWeapon
+	{
+		Name				"Final Boss Phase Final"
+		OriginalItemName	"TF_WEAPON_SHOVEL"
+		"fire rate bonus"	0.4
+		"damage penalty"	0.60
+		"apply look velocity on damage"	300
+	}
+
+
+
+
+	//
+	//
+	// CUSTOM WEAPONS END
+	//
+	//
+
+	ItemBlacklist
+	{
+	
+	}
+	// so this is the only way I know how to get what I want working which comes at the cost of cosmetics entirely lmao
+	//
+	//
+	//
+	
+	ItemWhitelist
+	{
+		Name	"Literally Your Fist"
+		Name	"Finger Gun"
+		Name	"Open Carry License"
+
+		Name	"Ultra-Piercer"
+		Name	"Explosive Comeback"
+		Name	"Explosive Baguette Cannon"
+		Name	"The Large Explosion Theorem"
+		Name	"god's strongest enforcer"
+		
+		Name	"Knife"
+		Name	"$1 shitty replica of some relic from egypt or something idk"
+		Name	"Tetanus: The Weapon"
+		Name	"only equip this if you're a weeb"
+		Name	"The Why-cicle"
+		Name	"this isn't a dresser but it's still sharp"
+		Name	"The Biggest Earner"
+
+	}
+
+	ExtraLoadoutItems [$SIGSEGV] // Extra loadout items available after typing !missionitems in chat
+	{
+		Spy // Player Class
+		{
+			Secondary
+			{
+				Item  "Finger Gun"
+			}
+			Melee
+			{
+				Item  "Literally Your Fist" 
+			}
+			Secondary
+			{
+				Item 			"Ultra-Piercer"
+				Cost			400
+				AllowRefund		1
+				AllowedMinWave	2
+			}
+			Secondary
+			{
+				Item 			"Explosive Comeback"
+				Cost			400
+				AllowRefund		1
+				AllowedMinWave	2
+			}
+			Secondary
+			{
+				Item 			"Explosive Baguette Cannon"
+				Cost			400
+				AllowRefund		1
+				AllowedMinWave	2
+			}
+			Secondary
+			{
+				Item 			"The Large Explosion Theorem"
+				Cost			400
+				AllowRefund		1
+				AllowedMinWave	2
+			}
+			Secondary
+			{
+				Item 			"god's strongest enforcer"
+				Cost			400
+				AllowRefund		1
+				AllowedMinWave	2
+			}
+
+
+
+			Melee
+			{
+				Item 			"Knife"
+				Cost			400
+				AllowRefund		1
+				AllowedMinWave	2
+			}
+			Melee
+			{
+				Item 			"$1 shitty replica of some relic from egypt or something idk"
+				Cost			400
+				AllowRefund		1
+				AllowedMinWave	2
+			}
+			Melee
+			{
+				Item 			"Tetanus: The Weapon"
+				Cost			400
+				AllowRefund		1
+				AllowedMinWave	2
+			}
+			Melee
+			{
+				Item 			"only equip this if you're a weeb"
+				Cost			400
+				AllowRefund		1
+				AllowedMinWave	2
+			}
+			Melee
+			{
+				Item 			"The Why-cicle"
+				Cost			400
+				AllowRefund		1
+				AllowedMinWave	2
+			}
+			Melee
+			{
+				Item 			"The Biggest Earner"
+				Cost			400
+				AllowRefund		1
+				AllowedMinWave	2
+			}
+
+
+
+
+			// Available slots:
+			// Primary
+			// Secondary
+			// Melee
+			// PDA (construction kit, disguise kit)
+			// PDA2 (destruction kit, watch)
+			// Head
+			// Misc
+			// Action (canteen)
+			// Misc2
+		}
+	}
+
+	ItemReplacement [$SIGSEGV] // Replace Items
+	{
+		"Literally Your Fist"
+		{
+			Name	"TF_WEAPON_KNIFE"
+		}
+		"Finger Gun"
+		{
+			Name	"TF_WEAPON_REVOLVER"
+		}
+	}
+
+	//
+
+
+	ExtendedUpgrades [$SIGSEGV]
+	{
+		body_movespeed
+		{
+			Name			"Move Speed Bonus"
+			Attribute		"move speed bonus"
+			Cap				1.6
+			Increment		0.2
+			Cost			200
+			PlayerUpgrade	1
+			Description		"+20% faster move speed"
+		}
+		body_jumpheight
+		{
+			Name			"Jump Height Bonus"
+			Attribute		"increased jump height"
+			Cap				1.45
+			Increment		0.15
+			Cost			100
+			PlayerUpgrade	1
+			Description		"+15% jump height"
+		}
+		body_resistance_fire
+		{
+			Name			"Fire Resistance"
+			Attribute		"dmg taken from fire reduced"
+			Cap				0.25
+			Increment		-0.25
+			Cost			150
+			PlayerUpgrade	1
+			Description		"+25% fire resistance"
+		}
+		body_resistance_bullet
+		{
+			Name			"Bullet Resistance"
+			Attribute		"dmg taken from bullets reduced"
+			Cap				0.25
+			Increment		-0.25
+			Cost			300
+			PlayerUpgrade	1
+			Description		"+25% bullet resistance"
+		}
+		body_resistance_blast
+		{
+			Name			"Blast Resistance"
+			Attribute		"dmg taken from blast reduced"
+			Cap				0.25
+			Increment		-0.25
+			Cost			300
+			PlayerUpgrade	1
+			Description		"+25% blast resistance"
+		}
+		body_resistance_crit
+		{
+			Name			"The Crit Tax™"
+			Attribute		"dmg taken from crit reduced"
+			Cap				0.25
+			Increment		-0.75
+			Cost			750
+			PlayerUpgrade	1
+			Description		"Pay the crit tax, and get 75% crit damage resistance. All for the low price of 1 kidney!"
+		}
+		body_hp_regen
+		{
+			Name			"Health Regen"
+			Attribute		"health regen"
+			Cap				10
+			Increment		2
+			Cost			200
+			PlayerUpgrade	1
+			Description		"+2 health regenerated per second"
+		}
+
+		everybody_wanna_be_a_superstar
+		{
+			Name			"Special: Underhill Deluxe"
+			Attribute		"model scale"
+			Cap				0.5
+			Increment		-0.5
+			Cost			1000
+			PlayerUpgrade	1
+			Description		"For anybody that wants to be a superstar."
+		}
+
+
+
+
+
+
+
+		dmg_upgrade_standard
+		{
+			Name			"Damage Bonus"
+			Attribute		"damage bonus"
+			Cap				2
+			Increment		0.25
+			Cost			300
+			Description		"Increases weapon damage by 25%."
+			AllowedWeapons
+			{
+				ItemName	"Finger Gun"
+				ItemName	"Explosive Baguette Cannon"
+
+				ItemName	"Literally Your Fist"
+				ItemName	"Knife"
+				ItemName	"$1 shitty replica of some relic from egypt or something idk"
+				ItemName	"only equip this if you're a weeb"
+				ItemName	"The Why-cicle"
+				ItemName	"this isn't a dresser but it's still sharp"
+				ItemName	"The Biggest Earner"
+			}
+		}
+		reload_upgrade_standard
+		{
+			Name			"Reload Speed Increased"
+			Attribute		"faster reload rate"
+			Cap				0.4
+			Increment		-0.15
+			Cost			300
+			Description		"Increases weapon reload speed by 15%."
+			AllowedWeapons
+			{
+				ItemName	"Finger Gun"
+				ItemName	"Explosive Comeback"
+				ItemName	"Explosive Baguette Cannon"
+				ItemName	"The Large Explosion Theorem"
+				ItemName	"god's strongest enforcer"
+			}
+		}
+		firerate_upgrade_standard
+		{
+			Name			"Fire Rate Bonus"
+			Attribute		"fire rate bonus"
+			Cap				0.6
+			Increment		-0.1
+			Cost			200
+			Description		"Increases weapon fire rate by 10%."
+			AllowedWeapons
+			{
+				ItemName	"Finger Gun"
+				ItemName	"Explosive Comeback"
+				ItemName	"Explosive Baguette Cannon"
+				ItemName	"The Large Explosion Theorem"
+				ItemName	"god's strongest enforcer"
+			}
+		}
+		firerate_upgrade_melee
+		{
+			Name			"Fire Rate Bonus"
+			Attribute		"melee attack rate bonus"
+			Cap				0.4
+			Increment		-0.15
+			Cost			200
+			Description		"Increases stabbing/slashing speed by 15%."
+			AllowedWeapons
+			{
+				ItemName	"Literally Your Fist"
+				ItemName	"Knife"
+				ItemName	"$1 shitty replica of some relic from egypt or something idk"
+				ItemName	"only equip this if you're a weeb"
+				ItemName	"The Why-cicle"
+				ItemName	"this isn't a dresser but it's still sharp"
+				ItemName	"The Biggest Earner"
+			}
+		}
+		clipsize_upgrade_standard
+		{
+			Name			"Clip Size Upgrade"
+			Attribute		"clip size bonus"
+			Cap				2.5
+			Increment		0.5
+			Cost			200
+			Description		"Increases clip size by 50%."
+			AllowedWeapons
+			{
+				ItemName	"Finger Gun"
+				ItemName	"Explosive Comeback"
+				ItemName	"Explosive Baguette Cannon"
+				ItemName	"The Large Explosion Theorem"
+			}
+		}
+		ammo_upgrade_standard
+		{
+			Name			"Ammo Upgrade"
+			Attribute		"maxammo secondary increased"
+			Cap				2.5
+			Increment		0.5
+			Cost			250
+			Description		"+50% more ammo. More bullets, more war crimes, more fun!"
+			AllowedWeapons
+			{
+				ItemName	"Finger Gun"
+				ItemName	"Explosive Comeback"
+				ItemName	"Explosive Baguette Cannon"
+				ItemName	"The Large Explosion Theorem"
+			}
+		}
+		penetration_upgrade_standard
+		{
+			Name			"Penetration Bonus"
+			Attribute		"projectile penetration heavy"
+			Cap				3
+			Increment		1
+			Cost			300
+			Description		"+1 targets penetrated. Who DOESN'T love penetration?"
+			AllowedWeapons
+			{
+				ItemName	"Finger Gun"
+				ItemName	"Explosive Comeback"
+				ItemName	"The Large Explosion Theorem"
+				ItemName	"god's strongest enforcer"
+			}
+		}
+		heal_on_kill_standard
+		{
+			Name			"Heal on Kill"
+			Attribute		"heal on kill"
+			Cap				100
+			Increment		25
+			Cost			200
+			Description		"+25 health healed on kill."
+			AllowedWeapons
+			{
+				ItemName	"Finger Gun"
+				ItemName	"Ultra-Piercer"
+				ItemName	"Explosive Comeback"
+				ItemName	"Explosive Baguette Cannon"
+				ItemName	"The Large Explosion Theorem"
+				ItemName	"god's strongest enforcer"
+
+				ItemName	"Literally Your Fist"
+				ItemName	"Knife"
+				ItemName	"$1 shitty replica of some relic from egypt or something idk"
+				ItemName	"Tetanus: The Weapon"
+				ItemName	"only equip this if you're a weeb"
+				ItemName	"The Why-cicle"
+				ItemName	"this isn't a dresser but it's still sharp"
+				ItemName	"The Biggest Earner"
+			}
+		}
+
+
+		/////////////////////////////
+		// SPECIAL WEAPON UPGRADES //
+		/////////////////////////////
+
+		bleeding_damage_upgrade
+		{
+			Name			"Bleed Damage Bonus"
+			Attribute		"mult bleeding dmg"
+			Cap				5
+			Increment		1
+			Cost			400
+			Description		"100% more bleed damage!"
+			AllowedWeapons
+			{
+				ItemName	"Tetanus: The Weapon"
+			}
+		}
+		bleeding_duration_upgrade
+		{
+			Name			"Bleed Duration Bonus"
+			Attribute		"bleeding duration"
+			Cap				15
+			Increment		5
+			Cost			400
+			Description		"+5 seconds of bleed time."
+			AllowedWeapons
+			{
+				ItemName	"Tetanus: The Weapon"
+			}
+		}
+		bleeding_delay_upgrade
+		{
+			Name			"Faster Bleed"
+			Attribute		"mult bleeding delay"
+			Cap				0.25
+			Increment		-0.25
+			Cost			300
+			Description		"Increases tick rate of bleed damage."
+			AllowedWeapons
+			{
+				ItemName	"Tetanus: The Weapon"
+			}
+		}
+
+
+		amby_explosive_headshot_upgrade
+		{
+			Name			"Stronger Headshot Damage"
+			Attribute		"mult crit dmg"
+			Cap				9
+			Increment		2
+			Cost			450
+			Description		"+200% headshot damage."
+			AllowedWeapons
+			{
+				ItemName	"Explosive Comeback"
+			}
+		}
+
+		letranger_rocket_specialist
+		{
+			Name			"Rocket Specialist"
+			Attribute		"rocket specialist"
+			Cap				1
+			Increment		1
+			Cost			500
+			Description		"Soldier's Rocket Specialist but for this gun... it's now Baguette Specialist."
+			AllowedWeapons
+			{
+				ItemName	"Explosive Baguette Cannon"
+			}
+		}
+
+		burstgun_clip_size_special
+		{
+			Name			"Clip Size Upgrade EX"
+			Attribute		"clip size bonus"
+			Cap				3
+			Increment		1
+			Cost			400
+			Description		"+6 bullets to your clip. A small gun with a big attack needs an equally big clip size."
+			AllowedWeapons
+			{
+				ItemName	"god's strongest enforcer"
+			}
+		}
+		burstgun_ammo_special
+		{
+			Name			"Ammo Upgrade EX"
+			Attribute		"maxammo secondary increased"
+			Cap				4
+			Increment		1
+			Cost			400
+			Description		"BULLETS! BULLETS! BULLETS! BULLETS! BULLETS! BULLETS! (+100% ammo bonus)"
+			AllowedWeapons
+			{
+				ItemName	"god's strongest enforcer"
+			}
+		}
+
+
+		explosivegun_radius
+		{
+			Name			"Larger Explosive Radius"
+			Attribute		"explosive bullets"
+			Cap				300
+			Increment		100
+			Cost			300
+			Description		"You probably don't know what a hammer unit is, but this increases the explosive bullet radius by 100 of them. Also, keep your distance."
+			AllowedWeapons
+			{
+				ItemName	"The Large Explosion Theorem"
+			}
+		}
+		explosivegun_damage_special
+		{
+			Name			"Damage Bonus EX"
+			Attribute		"damage bonus"
+			Cap				5
+			Increment		1
+			Cost			400
+			Description		"Yes, this gun definitely does need a 100% fucking damage bonus upgrade."
+			AllowedWeapons
+			{
+				ItemName	"The Large Explosion Theorem"
+			}
+		}
+
+
+
+
+		ultrapiercer_damage_upgrade_special
+		{
+			Name			"Ultra-Pierce Damage Bonus"
+			Attribute		"penetration damage penalty"
+			Cap				20
+			Increment		5
+			Cost			400
+			Description		"Increases penetrated target damage bonus."
+			AllowedWeapons
+			{
+				ItemName	"Ultra-Piercer"
+			}
+			DisallowedUpgrade
+			{
+				Upgrade	ultrapiercer_damage_upgrade_ultimate
+			} 
+		}
+
+
+
+		weebknife_heal_upgrade
+		{
+			Name			"Percent Health on Damage Bonus"
+			Attribute		"damage returns as health"
+			Cap				1.8
+			Increment		0.2
+			Cost			200
+			Description		"+20% of damage dealt is returned as health."
+			AllowedWeapons
+			{
+				ItemName	"only equip this if you're a weeb"
+			}
+		}
+
+
+
+		upgrade	// placeholder template for future upgrades
+		{
+			Name			"Placeholder Name"
+			Attribute		"cannot trade"
+			Cap				1
+			Increment		0.25
+			Cost			300
+			Description		"Placeholder Text"
+			AllowedWeapons
+			{
+				ItemName	"placeholder"
+			}
+		}
+
+
+	}
+
+
+	//
+
+
+
+	ExtraSpawnPoint [$SIGSEGV]
+	{
+		Name	"spawnbot_kuze"
+		TeamNum	3
+		X		"640"                     
+		Y		"-6592"                  
+		Z		"775"        
+	}
+	ExtraSpawnPoint [$SIGSEGV]
+	{
+		Name	"spawnbot_suicide"
+		TeamNum	3
+		X		"-2538"                     
+		Y		"-1600"                  
+		Z		"440"        
+	}
+
+	ExtraSpawnPoint [$SIGSEGV]
+	{
+		Name	"spawnbot_w2_vehiclebots"
+		TeamNum	3
+		X		"1608"                     
+		Y		"-6160"                  
+		Z		"416"        
+	}
+	ExtraSpawnPoint [$SIGSEGV]
+	{
+		Name	"spawnbot_w5_breakingbald"
+		TeamNum	3
+		X		"-704"
+		Y		"-1720"
+		Z		"343"
+	}
+	ExtraSpawnPoint [$SIGSEGV]
+	{
+		Name	"spawnbot_gustavo_fring"
+		TeamNum	3
+		X		"1368"
+		Y		"-4968"
+		Z		"408"
+	}
+
+    ExtraTankPath
+    {
+        Name	"the_missile_shaker_path"	// this is NOT a tank path
+        Node	"-667 2752 -1024"
+        Node	"-667 2304 1344"
+		Node	"768 -4608 1472"
+    }
+	ExtraTankPath [$SIGSEGV] // W5 hector salamanca tank path, I think I'll re-use this for reverse later
+	{
+		Name	"hector_tank_path"
+		Node	"-3872 -832 448"
+		Node	"-3072 -832 352"
+		Node	"-2624 -480 352"
+		Node	"-1664 -480 64"
+		Node	"-1024 -352 64"
+		Node	"-128 -352 64"
+		Node	"-96 -368 64"
+		Node	"-32 -928 128"
+		Node	"608 -928 224"
+		Node	"608 -1472 224"
+		Node	"275 -1472 272"
+		Node	"275 -2336 272"
+		Node	"275 -2760 456"
+		Node	"275 -2856 456"
+		Node	"544 -3312 456"
+		Node	"416 -4688 376"
+		Node	"1224 -4880 408"
+
+	}
+
+
+	PointTemplates	// i wish everyone who puts standard spaces instead of tab spaces in their point templates a very FUCKING KILL YOURSELVES
+	{
+		W1_Tutorial_Music
+		{
+			ambient_generic
+			{
+				"targetname"	"w1_music"
+				"health"		"10"
+				"message"		"#crois_w1_tutorial_music.mp3"
+				"pitch"			"100"
+				"spawnflags"	"17"
+			}
+		}
+
+		KuzeCutsceneLogic
+		{
+			NoFixup 1
+			ambient_generic
+			{
+				"targetname"	"kuze_bgm"
+				"health"		"10"
+				"message"		"#crois_w1_kuze.mp3"
+				"pitch"			"100"
+				"pitchstart"	"100"
+				"radius"		"99999"
+				"spawnflags"	"49"
+			}
+			info_particle_system
+			{
+				"targetname"		"kuze_explosion_particle"
+				"angles"			"0 0 0"
+				"effect_name"		"cinefx_goldrush"
+				"flag_as_weather"	"0"
+				"start_active"		"0"
+				"origin"			"640 -6592 775"
+			}
+			ambient_generic
+			{
+				"targetname"	"kuze_kaboom"
+				"health"		"10"
+				"message" 		"Cart.Explode"
+				"pitch" 		"100"
+				"pitchstart"	"100"
+				"radius"		"99999"
+				"spawnflags"	"49"
+			}
+			logic_relay
+			{
+				"targetname"	"kuze_music_fade_relay"
+				"OnTrigger"		"pledge_of_demon,FadeOut,5,0,-1"
+			}
+
+			logic_relay
+			{
+				"targetname"	"hudbgone"
+				"OnTrigger"		"player*,SetHUDVisibility,0,0,-1"
+			}
+			logic_relay
+			{
+				"targetname"	"hudcome"
+				"OnTrigger"		"player*,SetHUDVisibility,1,0,-1"
+			}
+            env_fade
+            {
+                "duration"              "3"
+                "holdtime"              "2"
+                "renderamt"             "255"
+                "rendercolor"           "0 0 0"
+                "targetname"            "kuze_fade"
+            }
+			point_viewcontrol
+			{
+				"targetname"	"kuze_view_control_1"
+				"acceleration"	"0"
+				"deceleration"	"0"
+				"interpolatepositiontoplayer"	"0"
+				"spawnflags"	"0"
+				"speed"			"0"
+				"wait"			"6"
+				"origin"		"-97 -3970 804"
+				"angles"		"0 315 0"
+			}
+			point_viewcontrol
+			{
+				"targetname"	"kuze_view_control_2"
+				"acceleration"	"0"
+				"deceleration"	"0"
+				"interpolatepositiontoplayer"	"0"
+				"spawnflags"	"0"
+				"speed"			"0"
+				"wait"			"6"
+				"origin"		"2241 -5505 804"
+				"angles"		"0 135 0"
+			}
+			point_viewcontrol
+			{
+				"targetname"	"kuze_view_control_3"
+				"acceleration"	"0"
+				"deceleration"	"0"
+				"interpolatepositiontoplayer"	"0"
+				"spawnflags"	"0"
+				"speed"			"0"
+				"wait"			"6"
+				"origin"		"1406 -4737 804"
+				"angles"		"0 240 0"
+			}
+			point_viewcontrol
+			{
+				"targetname"	"kuze_view_control_4"
+				"acceleration"	"0"
+				"deceleration"	"0"
+				"interpolatepositiontoplayer"	"0"
+				"spawnflags"	"0"
+				"speed"			"0"
+				"wait"			"6"
+				"origin"		"640 -6242 804"
+				"angles"		"0 270 0"
+			}
+
+
+			logic_relay
+			{
+				"targetname"	"kuze_cutscene_relay"
+				"OnTrigger"		"player*,SetHUDVisibility,0,0,-1"
+				"OnTrigger"		"kuze_fade,Fade,0,0,-1"
+
+
+				"OnTrigger"		"kuze_bgm,PlaySound,0,5,-1"
+				"OnTrigger"		"kuze_view_control_1,$EnableAll,0,4.75,-1"
+				"OnTrigger"		"kuze_view_control_2,$EnableAll,0,7.75,-1"
+				"OnTrigger"		"kuze_view_control_3,$EnableAll,0,10.25,-1"
+				"OnTrigger"		"kuze_view_control_4,$EnableAll,0,12.75,-1"
+				"OnTrigger"		"kuze_kaboom,PlaySound,0,14.25,-1"
+				"OnTrigger"		"kuze_explosion_particle,Start,0,14.25,-1"
+
+				"OnTrigger"		"player*,SetHUDVisibility,1,21,-1"
+				"OnTrigger"		"kuze_view_control_1,Kill,0,21,-1"
+				"OnTrigger"		"kuze_view_control_2,Kill,0,21,-1"
+				"OnTrigger"		"kuze_view_control_3,Kill,0,21,-1"
+				"OnTrigger"		"kuze_view_control_4,Kill,0,21,-1"
+			}
+		}
+
+		BaguetteTankFix
+		{
+			NoFixup	1
+			prop_dynamic
+			{
+				//"angles"				"0 0 0"
+				"disablereceiveshadows"	"1"
+				"disableshadows"		"1"
+				"modelscale"			"6.9"
+				"model"					"models/weapons/c_models/c_bread/c_bread_baguette.mdl"
+				"origin"				"0 0 45"
+			}
+			OnSpawnOutput
+			{
+				Action	"setparent"
+				Param	"!activator"
+			}
+		}
+		
+
+		W2_EUROBEAT_MORE_LIKE_EUROBEAT_MY_WIFE
+		{
+			ambient_generic
+			{
+				"targetname"	"w2_music"
+				"health"		"10"
+				"message"		"#crois_w2_music.mp3"
+				"pitch"			"100"
+				"spawnflags"	"17"
+			}
+		}
+
+
+        BusTeleport	//	bussy
+        {
+            NoFixUp 1
+            trigger_teleport
+            {
+                "targetname" "tank_teleport"
+                "filtername" "tankbot_filter"
+                "origin" "1608 -6160 416" //put this where the bots spawn
+                "spawnflags" "1"
+                "target" "tank_teleport_dest"
+                "mins" "-500 -500 -100"
+                "maxs" "500 500 100"
+            }
+            filter_tf_bot_has_tag //Give bots you want to teleport this Tag!
+            {
+                "targetname" "tankbot_filter"
+                "Negated" "0"
+                "require_all_tags" "1"
+                "tags" "tank_teleport_bot" //tag the bots must have
+            }
+        }
+        BusTeleportDest //Spawn this with the tank
+        {
+            NoFixUp 1
+            KeepAlive 1
+            info_target
+            {
+                "targetname" "tank_teleport_dest"
+            }
+        }
+		UnstableBomberWarningSound
+		{
+			NoFixup 1
+			ambient_generic
+			{
+				"targetname"	"unstablebomber_warning"
+				"health"		"10"
+				"message"		"Cart.Trigger"
+				"pitch"			"100"
+				"spawnflags"	"17"
+			}
+		}
+
+
+
+
+
+
+
+
+
+
+
+
+
+		AllahModeBotParticle
+		{
+			NoFixup 1
+			info_particle_system
+			{
+				"targetname"		"funny_bot_particle"
+				"angles"			"0 0 0"
+				"effect_name"		"powerup_supernova_ready"
+				"flag_as_weather"	"0"
+				"start_active"		"1"
+			}
+		}
+
+		retarded_necro_masher_logic_I_stole_from_apedrews_equally_retarded_mission
+		{
+			NoFixup 1
+			prop_dynamic
+			{
+				"targetname"			"hammer_arm"
+				"model"					"models/props_halloween/hammer_mechanism.mdl"
+				"angles"				"0 0 0"
+				"disablebonefollowers"	"1"
+				"disablereceiveshadows"	"1"
+				"disableshadows"		"1"
+				"modelscale"			"0.75"
+				"StartDisabled"			1
+				"origin"				"-512 0 180"
+			}
+			trigger_hurt
+			{
+				"mins"			"-9999 -9999 -9999" 
+				"maxs"			"9999 9999 9999" 
+				"spawnflags"	"1"
+				
+				"filtername"	"filter_cpunch_necromash"
+				"targetname"	"cpunch_necro_mash_hurt"
+				"damage"		"9999999"
+				"StartDisabled"	1
+			}
+
+
+			NoFixup 1
+			logic_relay
+			{
+				"targetname" "necro_mash_relay"
+
+				"OnTrigger" "sound_bell,playsound,,0,-1"
+				"OnTrigger" "hammer_arm,enable,,0,-1"
+
+				"OnTrigger" "sound_crank,playsound,,1,-1"
+				"OnTrigger" "hammer_arm,setanimation,smash,1,-1"
+				"OnTrigger" "hammer_arm,setplaybackrate,0.75,1.01,-1"
+				"OnTrigger" "sound_swing,playsound,,2.33,-1"
+				"OnTrigger" "sound_button_smash,playsound,,2.73,-1"
+				"OnTrigger" "hammer_shake,startshake,,2.73,-1"
+				"OnTrigger" "cpunch_necro_mash_hurt,enable,,2.75,-1"
+				"OnTrigger" "sound_crank_reset,playsound,,5.53"
+				"OnTrigger" "hammer_shake,stopshake,,6.73,-1"
+			}
+
+			env_shake
+			{
+				"targetname" "hammer_shake"
+				"amplitude" "16"
+				"duration" "4"
+				"frequency" "40"
+				"spawnflags" "5"
+			}
+
+			ambient_generic
+			{
+				"targetname" "sound_bell"
+				"health" "10"
+				"message" "vo/halloween_merasmus/sf12_found02.mp3"
+				"pitch" "100"
+				"spawnflags" "49"
+			}
+			ambient_generic
+			{
+				"targetname" "sound_bell"
+				"health" "10"
+				"message" "vo/halloween_merasmus/sf12_found02.mp3"
+				"pitch" "100"
+				"spawnflags" "49"
+			}
+
+
+			ambient_generic
+			{
+				"targetname" "sound_crank"
+				"health"	"10"
+				"message" "misc/halloween/strongman_fast_swing_01.wav"
+				"pitch"		"100"
+				"spawnflags"	"49"
+			}
+			ambient_generic
+			{
+				"targetname" "sound_swing"
+				"health" "10"
+				"message" "misc/halloween/strongman_fast_whoosh_01.wav"
+				"pitch" "100"
+				"spawnflags" "49"
+			}
+			ambient_generic
+			{
+				"targetname" "sound_crank_reset"
+				"health" "10"
+				"message" "doors/vent_open2.wav"
+				"pitch" "100"
+				"spawnflags" "49"
+			}
+			ambient_generic
+			{
+				"targetname" "sound_button_smash"
+				"health" "10"
+				"message" "ambient/explosions/explode_1.wav"
+				"pitch" "100"
+				"spawnflags" "49"
+			}
+			ambient_generic
+			{
+				"targetname" "sound_button_smash"
+				"health" "10"
+				"message" "misc/halloween/strongman_fast_impact_01.wav"
+				"pitch" "100"
+				"spawnflags" "49"
+			}
+		}
+		CaptainPunchGetsFuckingNecroMashedToDeath
+		{
+			NoFixup	1
+
+			filter_tf_bot_has_tag
+			{
+				"Negated"			"0"
+				"require_all_tags"	"1"
+				"tags"			"tag_get_necro_mashed" //add this tag to the bot you want to KILL. KILL. KILL. KILL. KILL
+				"targetname"	"filter_cpunch_necromash"
+			}
+			trigger_once
+			{
+				"origin"		"832 -4928 704"
+				"mins"			"-1024 -1024 -1024" 
+				"maxs"			"1024 1024 1024" 
+				"spawnflags"	"1"
+				"filtername"	"filter_cpunch_necromash"
+				"targetname"	"cpunch_necro_mash_trigger"
+
+				"OnTrigger"		"spawnbot_suicide,Enable,,0,-1"
+			}
+			ambient_generic
+			{
+				"targetname"	"captain_gambler_punch_bgm"
+				"health"		"10"
+				"message"		"#crois_w3_lostjudgment_finaldestination.mp3"
+				"pitch"			"100"
+				"pitchstart"	"100"
+				"radius"		"99999"
+				"spawnflags"	"17"
+			}
+		}
+		MethCrystalBotModel	// because the models are too small so I have to make the main bot invis and parent a properly sized model to them so they don't have fucked hitboxes
+		{
+			NoFixup	1
+			prop_dynamic
+			{
+				//"angles"				"0 0 0"
+				"disablereceiveshadows"	"1"
+				"disableshadows"		"1"
+				"modelscale"			"3"
+				"model"					"models/props_moonbase/moon_gravel_crystal_blue.mdl"
+				"origin"				"0 0 50"
+			}
+			OnSpawnOutput
+			{
+				Action	"setparent"
+				Param	"!activator"
+			}
+		}
+		HectorSalamancaTank
+		{
+			NoFixup	1
+			prop_dynamic
+			{
+				//"angles"				"0 0 0"
+				"disablereceiveshadows"	"1"
+				"disableshadows"		"1"
+				"modelscale"			"3.5"
+				"model"					"models/nh2_gmn/wheelchair.mdl"
+				"origin"				"0 0 1"
+			}
+			OnSpawnOutput
+			{
+				Action	"setparent"
+				Param	"!activator"
+			}
+			trigger_hurt
+			{
+				"mins"			"-69 -69 -69" 
+				"maxs"			"69 69 69" 
+				"spawnflags"	"65"
+				"targetname"	"hector_tank_kill"
+				"damage"		"9999999"
+				"StartDisabled"	1
+			}
+		}
+		GustavoLogic
+		{
+			NoFixup	1
+
+			filter_tf_bot_has_tag
+			{
+				"Negated"			"0"
+				"require_all_tags"	"1"
+				"tags"			"tag_gustavo_fring" //add this tag to the bot you want to KILL. KILL. KILL. KILL. KILL
+				"targetname"	"filter_gustavo_fring"
+			}
+			point_viewcontrol
+			{
+				"targetname"	"gus_view_control"
+				"acceleration"	"0"
+				"deceleration"	"0"
+				"interpolatepositiontoplayer"	"0"
+				"spawnflags"	"0"
+				"speed"			"0"
+				"wait"			"6"
+				"origin"		"1222 -4881 424"
+				"angles"		"0 0 0"
+			}
+			point_viewcontrol
+			{
+				"targetname"	"gus_view_control_2"
+				"acceleration"	"0"
+				"deceleration"	"0"
+				"interpolatepositiontoplayer"	"0"
+				"spawnflags"	"0"
+				"speed"			"0"
+				"wait"			"6"
+				"origin"		"1727 -4514 580"
+				"angles"		"0 240 0"
+			}
+			trigger_hurt
+			{
+				"origin"		"1368 -4968 408"
+				"mins"			"-9999 -9999 -9999" 
+				"maxs"			"9999 9999 9999" 
+				"spawnflags"	"1"
+				"filtername"	"filter_gustavo_fring"
+				"targetname"	"gustavo_fring_trigger_hurt"
+				"damage"		"9999999"
+				"StartDisabled"	1
+			}
+			info_particle_system
+			{
+				"targetname"		"gus_particle"
+				"angles"			"0 0 0"
+				"effect_name"		"cinefx_goldrush"
+				"flag_as_weather"	"0"
+				"start_active"		"0"
+				"origin"			"1368 -4968 408"
+			}
+			ambient_generic
+			{
+				"targetname"	"gustavo_fring_background_sound"
+				"health"		"10"
+				"message"		"#crois_w5_gus_bgm.mp3"
+				"pitch"			"100"
+				"spawnflags"	"17"
+			}
+			ambient_generic
+			{
+				"targetname"	"gustavo_fring_death_warning"
+				"health"		"10"
+				"message"		"Cart.Trigger"
+				"pitch"			"100"
+				"spawnflags"	"49"
+			}
+			ambient_generic
+			{
+				"targetname"	"gustavo_fring_death_warning"
+				"health"		"10"
+				"message"		"Cart.Trigger"
+				"pitch"			"100"
+				"spawnflags"	"49"
+			}
+			ambient_generic
+			{
+				"targetname"	"gustavo_fring_death_scream"
+				"health"		"10"
+				"message"		"crois_w5_gus_scream.mp3"
+				"pitch"			"100"
+				"spawnflags"	"49"
+			}
+			ambient_generic
+			{
+				"targetname"	"gustavo_fring_death_scream"
+				"health"		"10"
+				"message"		"crois_w5_gus_scream.mp3"
+				"pitch"			"100"
+				"spawnflags"	"49"
+			}
+			ambient_generic
+			{
+				"targetname"	"gustavo_fring_death_explode"
+				"health"		"10"
+				"message"		"Cart.Explode"
+				"pitch"			"100"
+				"spawnflags"	"49"
+			}
+			logic_relay
+			{
+				"targetname"	"gus_cutscene_relay"
+				"OnTrigger"		"gus_view_control,$EnableAll,0,0,-1"
+				"OnTrigger"		"gustavo_fring_background_sound,PlaySound,0,0,-1"
+				"OnTrigger"		"gus_view_control,Kill,0,10,-1"
+			}
+
+
+
+			logic_relay
+			{
+				"targetname"	"gus_death_relay"
+				
+				"OnTrigger"		"@f@filter_blueteam@player,$AddCond,87 56,0,-1"
+				"OnTrigger"		"gus_view_control_2,$EnableAll,0,0,-1"
+				"OnTrigger"		"gustavo_fring_background_sound,FadeOut,1,0,-1"
+				"OnTrigger"		"gustavo_fring_death_warning,PlaySound,0,0,-1"
+				"OnTrigger"		"gustavo_fring_death_scream,PlaySound,0,2.5,-1"
+				"OnTrigger"		"gustavo_fring_death_explode,PlaySound,0,3,-1"
+				"OnTrigger"		"gus_particle,Start,0,3,-1"
+				"OnTrigger"		"gustavo_fring_trigger_hurt,Enable,0,3.1,-1"
+				"OnTrigger"		"gus_view_control_2,KILL,0,6,-1"
+			}
+		}
+		WaltuhCutscene
+		{
+			NoFixUp	1
+			// intro cutscene
+			point_viewcontrol
+			{
+				"targetname"	"walter_white_viewcontrol_1"
+				"acceleration"	"0"
+				"deceleration"	"0"
+				"interpolatepositiontoplayer"	"0"
+				"spawnflags"	"0"
+				"speed"			"0"
+				"wait"			"6"
+				"origin"		"-510 -1568 388"
+				"angles"		"0 210 0"
+			}
+			point_viewcontrol
+			{
+				"targetname"	"walter_white_viewcontrol_2"
+				"acceleration"	"0"
+				"deceleration"	"0"
+				"interpolatepositiontoplayer"	"0"
+				"spawnflags"	"0"
+				"speed"			"0"
+				"wait"			"6"
+				"origin"		"-594 -1712 356"
+				"angles"		"0 180 0"
+			}
+            env_fade
+            {
+                "duration"              "3"
+                "holdtime"              "2"
+                "renderamt"             "255"
+                "rendercolor"           "0 0 0"
+                "targetname"            "walter_fade_1"
+            }
+
+
+			logic_relay
+			{
+				"targetname"	"waltuh_cutscene_relay"
+				"OnTrigger"		"walter_fade_1,Fade,0,0,-1"
+				"OnTrigger"		"walter_white_viewcontrol_1,$EnableAll,0,4,-1"
+				"OnTrigger"		"walter_white_viewcontrol_2,$EnableAll,0,7.5,-1"
+				"OnTrigger"		"walter_white_viewcontrol_1,Kill,0,10,-1"
+				"OnTrigger"		"walter_white_viewcontrol_2,Kill,0,10,-1"
+
+			}
+		}
+		WalterCleanup
+		{
+			NoFixup	1
+			trigger_hurt
+			{
+				"mins"			"-69 -69 -69" 
+				"maxs"			"69 69 69" 
+				"spawnflags"	"65"
+				"targetname"	"walter_hurt_trigger"
+				"damage"		"9999999"
+				"StartDisabled"	1
+			}
+		}
+		SaulCleanup
+		{
+			NoFixup	1
+			trigger_hurt
+			{
+				"mins"			"-69 -69 -69" 
+				"maxs"			"69 69 69" 
+				"spawnflags"	"65"
+				"targetname"	"saul_hurt_trigger"
+				"damage"		"9999999"
+				"StartDisabled"	1
+			}
+		}
+
+
+
+		YOU_CAN_DO_THE_MISSILE_SHAKER_HUH	// W6 end cutscene
+		{
+			func_tracktrain
+			{
+				"targetname"	"missile_shaker_train"
+				"target"		"the_missile_shaker_path_1"
+				"origin"		"0 11520 -2944"
+				"velocitytype"	0
+				"startspeed"	"1000"
+				"speed"			"0"
+			}
+			func_rotating
+			{
+				"targetname"	"missile_shaker_rotater_1"
+				"origin" 		"0 11520 -2944"
+				"mins"			"-8 -8 -8"
+				"maxs"			"8 8 8"
+				"fanfriction"	"12"
+				"maxspeed"		"9999"
+				"rendermode"	"10"
+				"spawnflags"	"68"
+				"parentname"	"missile_shaker_train"
+			}
+			func_rotating
+			{
+				"targetname"	"missile_shaker_rotater_2"
+				"origin" 		"0 11520 -2944"
+				"mins"			"-8 -8 -8"
+				"maxs"			"8 8 8"
+				"fanfriction"	"12"
+				"maxspeed"		"9999"
+				"rendermode"	"10"
+				"spawnflags"	"72"
+				"parentname"	"missile_shaker_rotater_1"
+			}
+
+
+			ambient_generic
+			{
+				"targetname"	"missile_shaker_start_sfx"
+				"health"		"10"
+				"message"		"misc/doomsday_missile_launch.wav"
+				"pitch"			"100"
+				"pitchstart"	"100"
+				"radius"		"99999"
+				"spawnflags"	"49"
+			}
+			ambient_generic
+			{
+				"targetname"	"missile_shaker_sound"
+				"health"		"10"
+				"message"		"crois_w6_missileshaker.mp3"
+				"pitch"			"100"
+				"pitchstart"	"100"
+				"radius"		"99999"
+				"spawnflags"	"49"
+			}
+
+			ambient_generic
+			{
+				"targetname"	"missile_kaboom"
+				"health"		"10"
+				"message" 		"Cart.Explode"
+				"pitch" 		"100"
+				"pitchstart"	"100"
+				"radius"		"99999"
+				"spawnflags"	"49"
+				"origin"		"0 11520 -2944"
+			}
+			prop_dynamic
+			{
+				"targetname"			"the_missile_shaker_model"
+				"DisableBoneFollowers"	"1"
+				"model"			"models/props_spytech/rocket003.mdl"
+				"origin"		"0 11520 -2944"
+				"angles"		"0 90 90"
+				"StartDisabled"	1
+				"parentname"	"missile_shaker_rotater_2"
+			}
+			filter_tf_bot_has_tag
+			{
+				"Negated"			"0"
+				"require_all_tags"	"1"
+				"tags"			"annoying_fucking_asshole" //add this tag to the bot you want to KILL. KILL. KILL. KILL. KILL
+				"targetname"	"filter_assholebot"
+			}
+			trigger_hurt
+			{
+				"origin"		"736 -4832 504"
+				"mins"			"-9999 -9999 -9999" 
+				"maxs"			"9999 9999 9999" 
+				"spawnflags"	"1"
+				"damage"		"9999999"
+				"filtername"	"filter_assholebot"
+				"targetname"	"anti_fly_protocol"
+				"StartDisabled"	1
+			}
+			info_particle_system
+			{
+				"targetname"		"the_particle_effect"
+				"angles"			"0 0 0"
+				"effect_name"		"cinefx_goldrush"
+				"flag_as_weather"	"0"
+				"start_active"		"0"
+				"origin"			"0 11520 -2944"
+				"parentname"	"missile_shaker_train"
+			}
+			point_viewcontrol
+			{
+				"targetname"	"missile_shaker_viewcontrol"
+				"acceleration"	"0"
+				"deceleration"	"0"
+				"interpolatepositiontoplayer"	"0"
+				"spawnflags"	"0"
+				"speed"			"0"
+				"wait"			"6"
+				"origin"		"1858 -3200 938"
+				"angles"		"0 135 0"
+				"target"		"missile_shaker_train"
+			}
+			logic_relay
+			{
+				"targetname"	"missile_shaker_begin_relay"
+				"OnTrigger"		"missile_shaker_start_sfx,PlaySound,0,0,-1"
+				"OnTrigger"		"missile_shaker_viewcontrol,$EnableAll,0,0,-1"
+				"OnTrigger"		"missile_shaker_viewcontrol,Kill,0,6,-1"
+				"OnTrigger"		"missile_shaker_train,SetSpeed,420,0,-1"
+				"OnTrigger"		"the_missile_shaker_path_3,AddOutput,OnPass !activator:SetSpeed 0:0:0:-1"
+				"OnTrigger"		"the_missile_shaker_model,Enable,,0,-1"
+				"OnTrigger"		"the_missile_shaker_path_3,AddOutput,OnPass missile_shaker_sound:PlaySound:0:0:-1"
+				"OnTrigger"		"the_missile_shaker_path_3,AddOutput,OnPass missile_shaker_rotater_1:Start:0:15:-1"
+				"OnTrigger"		"the_missile_shaker_path_3,AddOutput,OnPass missile_shaker_rotater_2:Start:0:15:-1"
+				"OnTrigger"		"the_missile_shaker_path_3,AddOutput,OnPass missile_shaker_rotater_1:Stop:0:25:-1"
+				"OnTrigger"		"the_missile_shaker_path_3,AddOutput,OnPass missile_shaker_rotater_2:Stop:0:25:-1"
+				"OnTrigger"		"the_missile_shaker_path_3,AddOutput,OnPass !activator:SetSpeed 1000:0:27:-1"
+				"OnTrigger"		"the_missile_shaker_path_3,AddOutput,OnPass the_particle_effect:Start:0:27:-1"
+				"OnTrigger"		"the_missile_shaker_path_3,AddOutput,OnPass missile_kaboom:PlaySound:0:27:-1"
+				"OnTrigger"		"the_missile_shaker_path_3,AddOutput,OnPass anti_fly_protocol:Enable:0:27:-1"
+				"OnTrigger"		"the_missile_shaker_path_3,AddOutput,OnPass anti_fly_protocol:Disable:0:30:-1"
+				"OnTrigger"		"the_missile_shaker_path_3,AddOutput,OnPass the_missile_shaker_model:Disable:0:27:-1"
+				"OnTrigger"		"the_missile_shaker_path_3,AddOutput,OnPass the_particle_effect:Stop:0:32:-1"
+			}
+		}
+		W6_StupidMusic
+		{
+			ambient_generic
+			{
+				"targetname"	"w6_thug_shaker_music"
+				"health"		"10"
+				"message"		"crois_w6_boss.mp3"
+				"pitch"			"100"
+				"spawnflags"	"17"
+			}
+		}
+		MemeticAgentFailsafe
+		{
+			NoFixup	1
+			trigger_hurt
+			{
+				"mins"			"-69 -69 -69" 
+				"maxs"			"69 69 69" 
+				"spawnflags"	"65"
+				"targetname"	"w6_anti_softlock"
+				"damage"		"9999999"
+				"StartDisabled"	1
+			}
+		}
+
+
+
+
+
+		FinalWaveLogic
+		{
+			NoFixup	1
+			color_correction 
+			{	
+				"targetname"		"finale_cc_tier1"
+				"fadeInDuration"	"5.0"
+				"fadeOutDuration"	"5.0"
+				"maxfalloff"		"-1"
+				"minfalloff"		"-1"
+				"maxweight"			"1.0"
+				"filename"			"materials/r60d_cc/onlyred25.raw"
+				"StartDisabled"		1
+			}
+			color_correction 
+			{	
+				"targetname"		"finale_cc_tier2"
+				"fadeInDuration"	"5.0"
+				"fadeOutDuration"	"5.0"
+				"maxfalloff"		"-1"
+				"minfalloff"		"-1"
+				"maxweight"			"1.0"
+				"filename"			"materials/r60d_cc/onlyred50.raw"
+				"StartDisabled"		1
+			}
+			ambient_generic
+			{
+				"targetname"	"w7_final_boss_music"
+				"health"		"10"
+				"message"		"#crois_w7_final_boss_alt.mp3"
+				"pitch"			"100"
+				"spawnflags"	"17"
+			}
+			color_correction 
+			{	
+				"targetname"		"finale_cc_tier3"
+				"fadeInDuration"	"5.0"
+				"fadeOutDuration"	"5.0"
+				"maxfalloff"		"-1"
+				"minfalloff"		"-1"
+				"maxweight"			"1.0"
+				"filename"			"materials/r60d_cc/onlyred75.raw"
+				"StartDisabled"		1
+			}
+			info_particle_system
+			{
+				"targetname"		"finale_skybox_particles"
+				"angles"			"0 0 0"
+				"effect_name"		"utaunt_portalswirl_purple_parent"
+				"flag_as_weather"	"0"
+				"start_active"		"0"
+				"origin"			"64 8608 -2488"
+			}
+			info_particle_system
+			{
+				"targetname"		"finale_skybox_particles"
+				"angles"			"0 0 0"
+				"effect_name"		"utaunt_portalswirl_purple_parent"
+				"flag_as_weather"	"0"
+				"start_active"		"0"
+				"origin"			"64 8608 -2488"
+			}
+
+
+			env_shake
+			{
+				"targetname"	"thugshaker"
+				"amplitude"		"16"
+				"duration"		"4"
+				"frequency"		"40"
+				"spawnflags"	"5"
+			}
+
+			func_door
+			{
+				"origin"		"256 8632 -2532"
+				"mins"			"-1 -1 -152" 
+				"maxs"			"1 1 152" 
+				"spawnpos"		"1"
+				"targetname"	"finale_skybox_door_1"
+				"movedir"		"90 0 0"
+				"speed"			"30"
+			}
+			prop_dynamic
+			{
+				"origin"				"256 8632 -2566"
+				"angles"				"0 180 0"
+				"disablereceiveshadows"	"1"
+				"disableshadows"		"1"
+				"model"					"models/bots/scout/bot_scout.mdl"
+				"modelscale"			"1.5"
+				"DisableBoneFollowers"	"1"
+				"StartDisabled"			"1"
+				"skin"					"1"
+				"targetname"			"finale_skytitan_model_1"
+				"parentname"			"finale_skybox_door_1"
+			}
+			ambient_generic
+			{
+				"targetname"	"finale_skytitan_laugh_1"
+				"health"		"10"
+				"message"		"vo/mvm/norm/scout_mvm_laughlong02.mp3"
+				"pitch"			"69"
+				"spawnflags"	"17"
+			}
+			logic_relay
+			{
+				"targetname"	"finale_skytitan_relay_1"
+				"OnTrigger"		"thugshaker,StartShake,0,0,-1"
+				"OnTrigger"		"finale_skytitan_laugh_1,PlaySound,0,0,-1"
+				"OnTrigger"		"finale_skytitan_model_1,Enable,0,1,-1"
+				"OnTrigger"		"finale_skybox_door_1,Close,0,1,-1"
+				"OnTrigger"		"thugshaker,StopShake,0,6,-1"
+			}
+
+			func_door
+			{
+				"origin"		"248 8520 -2532"
+				"mins"			"-1 -1 -152" 
+				"maxs"			"1 1 152" 
+				"spawnpos"		"1"
+				"targetname"	"finale_skybox_door_2"
+				"StartDisabled"	"1"
+				"movedir"		"90 0 0"
+				"speed"			"30"
+			}
+			prop_dynamic
+			{
+				"origin"				"248 8520 -2566"
+				"angles"				"0 135 0"
+				"disablereceiveshadows"	"1"
+				"disableshadows"		"1"
+				"model"					"models/bots/pyro/bot_pyro.mdl"
+				"modelscale"			"1.5"
+				"DisableBoneFollowers"	"1"
+				"StartDisabled"			"1"
+				"skin"					"1"
+				"targetname"			"finale_skytitan_model_2"
+				"parentname"			"finale_skybox_door_2"
+			}
+			ambient_generic
+			{
+				"targetname"	"finale_skytitan_laugh_2"
+				"health"		"10"
+				"message"		"vo/mvm/norm/pyro_mvm_laugh_addl04.mp3"
+				"pitch"			"69"
+				"spawnflags"	"17"
+			}
+			logic_relay
+			{
+				"targetname"	"finale_skytitan_relay_2"
+				"OnTrigger"		"thugshaker,StartShake,0,0,-1"
+				"OnTrigger"		"finale_skytitan_laugh_2,PlaySound,0,0,-1"
+				"OnTrigger"		"finale_skytitan_model_2,Enable,0,1,-1"
+				"OnTrigger"		"finale_skybox_door_2,Close,0,1,-1"
+				"OnTrigger"		"thugshaker,StopShake,0,6,-1"
+			}
+
+			func_door
+			{
+				"origin"		"96 8432 -2492"
+				"mins"			"-1 -1 -152" 
+				"maxs"			"1 1 152" 
+				"spawnpos"		"1"
+				"targetname"	"finale_skybox_door_3"
+				"movedir"		"90 0 0"
+				"speed"			"30"
+			}
+			prop_dynamic
+			{
+				"origin"				"96 8440 -2526"
+				"angles"				"0 90 0"
+				"disablereceiveshadows"	"1"
+				"disableshadows"		"1"
+				"model"					"models/bots/demo/bot_demo.mdl"
+				"modelscale"			"1.5"
+				"DisableBoneFollowers"	"1"
+				"StartDisabled"			"1"
+				"skin"					"1"
+				"targetname"			"finale_skytitan_model_3"
+				"parentname"			"finale_skybox_door_3"
+			}
+			ambient_generic
+			{
+				"targetname"	"finale_skytitan_laugh_3"
+				"health"		"10"
+				"message"		"vo/mvm/norm/demoman_mvm_laughlong01.mp3"
+				"pitch"			"69"
+				"spawnflags"	"17"
+			}
+			logic_relay
+			{
+				"targetname"	"finale_skytitan_relay_3"
+				"OnTrigger"		"thugshaker,StartShake,0,0,-1"
+				"OnTrigger"		"finale_skytitan_laugh_3,PlaySound,0,0,-1"
+				"OnTrigger"		"finale_skytitan_model_3,Enable,0,1,-1"
+				"OnTrigger"		"finale_skybox_door_3,Close,0,1,-1"
+				"OnTrigger"		"thugshaker,StopShake,0,6,-1"
+			}
+
+			func_door
+			{
+				"origin"		"-8 8440 -2508"
+				"mins"			"-1 -1 -152" 
+				"maxs"			"1 1 152" 
+				"spawnpos"		"1"
+				"targetname"	"finale_skybox_door_4"
+				"movedir"		"90 0 0"
+				"speed"			"30"
+			}
+			prop_dynamic
+			{
+				"origin"				"-8 8448 -2542"
+				"angles"				"0 75 0"
+				"disablereceiveshadows"	"1"
+				"disableshadows"		"1"
+				"model"					"models/bots/heavy/bot_heavy.mdl"
+				"modelscale"			"1.5"
+				"DisableBoneFollowers"	"1"
+				"StartDisabled"			"1"
+				"skin"					"1"
+				"targetname"			"finale_skytitan_model_4"
+				"parentname"			"finale_skybox_door_4"
+			}
+			ambient_generic
+			{
+				"targetname"	"finale_skytitan_laugh_4"
+				"health"		"10"
+				"message"		"vo/mvm/norm/heavy_mvm_laughlong01.mp3"
+				"pitch"			"69"
+				"spawnflags"	"17"
+			}
+			logic_relay
+			{
+				"targetname"	"finale_skytitan_relay_4"
+				"OnTrigger"		"thugshaker,StartShake,0,0,-1"
+				"OnTrigger"		"finale_skytitan_laugh_4,PlaySound,0,0,-1"
+				"OnTrigger"		"finale_skytitan_model_4,Enable,0,1,-1"
+				"OnTrigger"		"finale_skybox_door_4,Close,0,1,-1"
+				"OnTrigger"		"thugshaker,StopShake,0,6,-1"
+			}
+
+
+			func_door
+			{
+				"origin"		"-64 8576 -2524"
+				"mins"			"-1 -1 -152" 
+				"maxs"			"1 1 152" 
+				"spawnpos"		"1"
+				"targetname"	"finale_skybox_door_5"
+				"movedir"		"90 0 0"
+				"speed"			"30"
+			}
+			prop_dynamic
+			{
+				"origin"				"-64 8576 -2558"
+				"angles"				"0 0 0"
+				"disablereceiveshadows"	"1"
+				"disableshadows"		"1"
+				"model"					"models/bots/soldier/bot_soldier.mdl"
+				"modelscale"			"1.5"
+				"DisableBoneFollowers"	"1"
+				"StartDisabled"			"1"
+				"skin"					"1"
+				"targetname"			"finale_skytitan_model_5"
+				"parentname"			"finale_skybox_door_5"
+			}
+			ambient_generic
+			{
+				"targetname"	"finale_skytitan_laugh_5"
+				"health"		"10"
+				"message"		"vo/mvm/norm/soldier_mvm_laughlong01.mp3"
+				"pitch"			"69"
+				"spawnflags"	"17"
+			}
+			logic_relay
+			{
+				"targetname"	"finale_skytitan_relay_5"
+				"OnTrigger"		"thugshaker,StartShake,0,0,-1"
+				"OnTrigger"		"finale_skytitan_laugh_5,PlaySound,0,0,-1"
+				"OnTrigger"		"finale_skytitan_model_5,Enable,0,1,-1"
+				"OnTrigger"		"finale_skybox_door_5,Close,0,1,-1"
+				"OnTrigger"		"thugshaker,StopShake,0,6,-1"
+				"OnTrigger"		"finale_skybox_particles,Start,0,6,-1"
+			}
+
+			logic_relay
+			{
+				"targetname"	"finale_initiation_backup_relay"
+				"OnTrigger"		"finale_skybox_door_1,open,0,1,-1"
+				"OnTrigger"		"finale_skybox_door_2,open,0,1,-1"
+				"OnTrigger"		"finale_skybox_door_3,open,0,1,-1"
+				"OnTrigger"		"finale_skybox_door_4,open,0,1,-1"
+				"OnTrigger"		"finale_skybox_door_5,open,0,1,-1"
+			}
+
+			game_text
+			{
+				"targetname"	"finalboss_titlecard_text1"
+				"message"		"INTERCONTINENTIAL MENACE TO FRENCH SOCIETY"
+				"x"				"-1"
+				"y"				"0.4"
+				"spawnflags"	"1"
+				"channel"		"2"
+				"color"			"255 255 255"
+				"fadein"		"0.5"
+				"fadeout"		"1"
+				"holdtime"		"4"
+			}
+			game_text
+			{
+				"targetname"	"finalboss_titlecard_text2"
+				"message"		"AMERICAN BREAD"
+				"x"				"-1"
+				"y"				"0.5"
+				"channel"		"4"
+				"spawnflags"	"1"
+				"color"			"255 255 255"
+				"fadein"		"0.5"
+				"fadeout"		"1"
+				"holdtime"		"3.8"
+			}
+			trigger_multiple
+			{
+				"targetname"		"absolute_terror_field"
+				"mins"				"-9999 -9999 -9999"
+				"maxs"				"9999 9999 9999"
+				"StartDisabled"		1
+				"spawnflags"		"1"
+				"OnStartTouch"		"!activator,SpeakResponseConcept,HalloweenLongFall,0,-1"
+				"filtername"		"filter_redteam"
+			}
+			logic_relay
+			{
+				"targetname"	"final_boss_spawn_relay"
+				"OnTrigger"		"finalboss_titlecard_text1,Display,,0,-1"
+				"OnTrigger"		"finalboss_titlecard_text2,Display,,1,-1"
+				"OnTrigger"		"absolute_terror_field,Enable,,2,-1"
+				"OnTrigger"		"absolute_terror_field,Disable,,6,-1"
+			}
+
+            env_screenoverlay
+            {
+                "targetname"	"final_overlay"
+                "OverlayName1"	"hud/vince_gilligan_overlay"
+                "OverlayTime1"	"15"
+            }
+
+
+            env_fade
+            {
+                "duration"              "4"
+                "holdtime"              "300"
+                "renderamt"             "255"
+                "rendercolor"           "0 0 0"
+                "targetname"            "ending_fade_1"
+            }
+
+
+			logic_relay
+			{
+				"targetname"	"the_final_relay"
+				"OnTrigger"		"player*,SetHUDVisibility,0,0,-1"
+				"OnTrigger"		"ending_fade_1,Fade,,0,-1"
+				"OnTrigger"		"final_overlay,StartOverlays,,5,-1"
+				"OnTrigger"		"final_overlay,StopOverlays,,10,-1"
+				"OnTrigger"		"player*,SetHUDVisibility,1,11,-1"
+			}
+
+
+		}
+		FinalBossModel
+		{
+			NoFixup	1
+			prop_dynamic
+			{
+				//"angles"				"0 0 0"
+				"disablereceiveshadows"	"1"
+				"disableshadows"		"1"
+				"modelscale"			"3.5"
+				"model"					"models/weapons/c_models/c_bread/c_bread_plainloaf.mdl"
+				"origin"				"0 0 70"
+			}
+		}
+	}
+
+
+	Templates
+	{
+
+		W1_Kuze
+		{
+			Class			Heavyweapons
+			Name			"The Five Guys™"
+			Health			300
+			ClassIcon		heavy_fist_nys
+			NoIdleSound		1
+			ChangeAttributes [$SIGSEGV]  
+			{
+				Delay	10
+				Repeats	0
+				Name	"Gamer_Mode"
+			}
+
+			EventChangeAttributes
+			{
+				Default
+				{
+					UseHumanModel	2	[$SIGSEGV]
+					Item			"TF_WEAPON_FISTS"
+					Item			"Heavy Hair"
+					Attributes		MiniBoss
+					Skill			Expert
+					WeaponRestrictions	MeleeOnly
+					//Action	Mobber
+					CharacterAttributes
+					{
+						"move speed bonus"	0.000001
+						"damage force reduction"			0.01
+						"airblast vulnerability multiplier"	0.01
+						"airblast vertical vulnerability multiplier"	0.1
+						"rage giving scale"	0.01
+					}
+					Taunt [$SIGSEGV]
+					{
+						Delay			1
+						Repeats			0
+						Duration	 	1
+						Name			"Taunt: The Proletariat Showoff"
+					}
+				}
+				Gamer_Mode
+				{
+					UseHumanModel	2	[$SIGSEGV]
+					Item			"TF_WEAPON_FISTS"
+					Item			"Heavy Hair"
+					Attributes		MiniBoss
+					Skill			Expert
+					WeaponRestrictions	MeleeOnly
+					//Action	Mobber
+					CharacterAttributes
+					{
+						"move speed bonus"	5
+						"damage force reduction"			0.01
+						"airblast vulnerability multiplier"	0.01
+						"airblast vertical vulnerability multiplier"	0.1
+						"rage giving scale"	0.01
+					}
+				}
+			}
+		}
+		W2_VehicleBot_DemoDumptruck
+		{
+			UseCustomModel	"models/props_hydro/dumptruck_empty.mdl"
+			Class		Demoman
+			Name		"Dumptruck"
+			Health		100
+			ClassIcon	demo_targe_nys
+			Skill	Expert
+			Item	"The Tide Turner"
+			Item	"The Eyelander"
+			WeaponRestrictions MeleeOnly
+			ItemAttributes
+			{
+				ItemName	"The Eyelander"
+				"damage penalty"	0.5
+			}
+		}
+		W2_VehicleBot_GDemo_PainTrain
+		{
+			UseCustomModel	"models/props_vehicles/train_enginecar.mdl"
+			ClassIcon	paintrain_lite
+			Class	Demoman
+			Name	"PAIN TRAIN"
+			Skill	Expert
+			Health	2000
+			Attributes	UseBossHealthBar
+			Item	"The Tide Turner"
+			Item	"The Pain Train"
+			Item	"Ali Baba's Wee Booties"
+			WeaponRestrictions MeleeOnly
+			Attributes MiniBoss
+			Scale	1
+			ItemAttributes
+			{
+				ItemName	"The Pain Train"
+				"critboost on kill"	5
+			}
+			CharacterAttributes
+			{
+				"move speed bonus" 0.5
+				"damage force reduction" 0.5
+				"airblast vulnerability multiplier" 0.5
+				"override footstep sound set" 4
+				"charge recharge rate increased"	2
+				"charge time increased"				100
+			}
+		}
+		W2_VehicleBot_Soldier_Jeep
+		{
+			UseCustomModel	"models/props_swamp/landrover.mdl"
+			Class	Soldier
+			Skill	Normal
+			Health	100
+			CharacterAttributes
+			{
+				"damage penalty"	0.66
+			}
+		}
+		W2_VehicleBot_Medic_Ambulance
+		{
+			UseCustomModel	"models/ambulance.mdl"
+			Template		T_TFBot_Medic_QuickFix
+			CharacterAttributes
+			{
+				"damage penalty"	0.66
+			}
+		}
+		W2_VehicleBot_Sniper_CamperVan
+		{
+			UseCustomModel	"models/props_movies/campervan/campervan.mdl"
+			ClassIcon	van_lite
+			Class		Sniper
+			Skill		Easy
+			Health		65
+			WeaponRestrictions	SecondaryOnly
+			CharacterAttributes
+			{
+				"damage penalty"	0.66
+			}
+		}
+		W2_VehicleBot_Boss_SuicideBomber_Payload
+		{
+			UseCustomModel	"models/props_trainyard/bomb_cart.mdl"
+			ClassIcon	payload_blu
+			Class		Demoman
+			Name		"Payload Cart"
+			Skill		Expert
+			Health		3000
+			WeaponRestrictions	PrimaryOnly
+			Attributes	MiniBoss
+			Attributes	UseBossHealthBar
+			Item		"The Loose Cannon"
+			Attributes	SuppressFire
+			ItemAttributes
+			{
+				ItemName	"The Loose Cannon"
+				"Blast radius increased"		7.9
+				"damage bonus"					691
+				"blast dmg to self increased"	690690691
+				"use large smoke explosion"		1
+				"allow friendly fire"			1		[$SIGSEGV]
+				"fuse bonus"					0.00001
+			}
+			CharacterAttributes
+			{
+				"move speed bonus"					0.5
+				"damage force reduction"			0.5
+				"airblast vulnerability multiplier"	0.5
+				"override footstep sound set" 		4
+				"custom kill icon"					"purgatory"
+			}
+			FireWeapon [$SIGSEGV]
+			{
+				Delay			2
+				Repeats			1
+				Duration		10
+				Type			"Primary"
+				IfHealthBelow	2000
+			}
+			FireInput [$SIGSEGV] 
+			{
+				Target			"unstablebomber_warning"
+				Action			"PlaySound"
+				Delay			0
+				Cooldown		1
+				Repeats			0
+				IfHealthBelow	2000
+			}
+		}
+
+		W3_RTDBot_RocketJumper_HomingProjectiles
+		{
+			Class	Soldier
+			Name	"Rocket Jumper Soldier"
+			Item	"Rocket Jumper"
+			HomingRockets	[$SIGSEGV]
+			{
+				IgnoreDisguisedSpies	1
+				IgnoreStealthedSpies	1
+				TurnPower				90
+				MaxAimError				360
+			}
+			Message //Displays message in the chat
+			{
+				Name		"{fffd00}[RTD] {99CCFF}Rocket Jumper Soldier {reset}rolled {784fb8}Homing Projectiles"
+				Delay		0
+				Cooldown	99999
+				Repeats		0
+			}
+		}
+		W3_RTDBot_HeavyMittens_Criticals
+		{
+			Class Heavyweapons
+			Name "Heavy Mittens"
+			Skill Easy
+			ClassIcon heavy_mittens
+			WeaponRestrictions MeleeOnly
+			Health 60
+			Item "The Holiday Punch"
+			ItemAttributes
+			{
+				ItemName "The Holiday Punch"
+				"damage bonus"	0.2
+				"always crit"	1
+			}
+			CharacterAttributes
+			{
+				"move speed bonus"	1.3
+			}
+			Message //Displays message in the chat
+			{
+				Name		"{fffd00}[RTD] {99CCFF}Heavy Mittens {reset}rolled {784fb8}Critical Hits"
+				Delay		0
+				Cooldown	99999
+				Repeats		0
+			}
+		}
+		W3_RTDBot_ShortstopScout_ANNOYING_FUCK
+		{
+			Template	T_TFBot_Scout_Shortstop
+			Name		"Minor Inconvenience"
+			Attributes	SuppressFire
+			Attributes	IgnoreFlag
+			Action		Mobber
+			DesiredAttackRange 100
+			CharacterAttributes
+			{
+				"dmg taken increased"	0.00001
+			}
+			Message //Displays message in the chat
+			{
+				Name		"{fffd00}[RTD] {99CCFF}Minor Inconvenience {reset}rolled {784fb8}Godmode"
+				Delay		0
+				Cooldown	99999
+				Repeats		0
+			}
+			FireWeapon [$SIGSEGV]
+			{
+				Delay			0.1
+				Repeats			9999
+				Cooldown 		0.5
+				Duration		0.1
+				Type			"Secondary"
+			}
+			SpawnTemplate	"AllahModeBotParticle"
+		}
+		W3_RTDBot_Huntsman_ForcedTaunt
+		{
+			Template	T_TFBot_Sniper_Huntsman
+			Message //Displays message in the chat
+			{
+				Name		"{fffd00}[RTD] {99CCFF}Bowman {reset}rolled {784fb8}Forced Taunt"
+				Delay		0
+				Cooldown	99999
+				Repeats		0
+			}
+			Taunt [$SIGSEGV]  //Taunt periodically
+			{
+				Delay		1
+				Cooldown	4
+				Repeats		9999 //How many times the bot should taunt in total (Default: 0 - Infinite)
+			}
+		}
+		W3_RTDBot_PlayerBuster_Invisible
+		{
+			Class	Demoman
+			Name	"Player Buster"
+			Skill	Expert
+			Item	"The Ullapool Caber"
+			WeaponRestrictions	MeleeOnly
+			ClassIcon	sentry_buster
+			Scale	1
+			Health	650
+			Action	SuicideBomber	[$SIGSEGV]
+			UseBusterModel	1		[$SIGSEGV]
+			AddCond	[$SIGSEGV]
+			{
+				Name		"TF_COND_STEALTHED_USER_BUFF_FADING"
+				Delay		0.0000000000000001
+				Duration	12798696969
+			}
+			CharacterAttributes
+			{
+				"move speed bonus"					3
+				"damage force reduction"			0.01
+				"airblast vulnerability multiplier"	0.01
+				"override footstep sound set"		7
+				"cannot be backstabbed"				1
+			}
+
+			Message //Displays message in the chat
+			{
+				Name		"{fffd00}[RTD] {99CCFF}Player Buster {reset}rolled {784fb8}Invisibility"
+				Delay		0
+				Cooldown	99999
+				Repeats		0
+			}
+		}
+		W3_RTDBot_Demoman_BigHead
+		{
+			Class	Demoman
+			Skill	Easy
+			CharacterAttributes
+			{
+				"head scale"	4.20
+				"voice pitch scale"	0.33
+				"damage penalty"	0.80
+			}
+			Message //Displays message in the chat
+			{
+				Name		"{fffd00}[RTD] {99CCFF}Demoman {reset}rolled {784fb8}Big Head"
+				Delay		0
+				Cooldown	99999
+				Repeats		0
+			}
+		}
+		W3_RTDBot_GPyroAxe_LongMelee
+		{
+			Template			T_TFBot_Giant_Pyro
+			Name				"Giant Hot Hand Pyro"
+			WeaponRestrictions	MeleeOnly
+			ClassIcon			pyro_slap_lite	// dear potato.tf: i apologize for any injuries lite sustains, the icon told me to do it.
+			Item				"The Hot Hand"
+			UseHumanModel		1
+			CharacterAttributes
+			{
+				"melee range multiplier"	10
+				"damage penalty"	0.1
+			}
+			Message //Displays message in the chat
+			{
+				Name		"{fffd00}[RTD] {99CCFF}Giant Hot Hand Pyro {reset}rolled {784fb8}Long Melee"
+				Delay		0
+				Cooldown	99999
+				Repeats		0
+			}
+		}
+		W3_RTDBot_Spy_Outline
+		{
+			Template	T_TFBot_Spy
+			AlwaysGlow	1
+			Action		Mobber
+			Message //Displays message in the chat
+			{
+				Name		"{fffd00}[RTD] {99CCFF}Spy {reset}rolled {784fb8}Outline"
+				Delay		0
+				Cooldown	99999
+				Repeats		0
+			}
+		}
+
+		W3_RTDBot_CaptainPunch_NecroMash
+		{
+			Template	T_TFBot_Chief_Gauntlet
+			// message gets displayed under a very specific condition
+			SpawnTemplate	"AllahModeBotParticle"
+			Tag	tag_get_necro_mashed
+			CharacterAttributes
+			{
+				"dmg taken from bullets reduced"	0.01
+				"dmg taken from blast reduced"		0.01
+				"dmg taken from fire reduced"		0.01
+				"mult dmgtaken from melee"			0.01
+			}
+		}
+		W3_RTDBot_NecroMashInitiator	// tied to actual captain punch- once captain punch walks into a trigger in front of bot spawn, it activates a spawnpoint that spawns this bot and fires a relay
+		{
+			Class	Scout
+			Health	1
+			Scale	0.01
+			Attributes	IgnoreFlag
+			CharacterAttributes
+			{
+				"active health degen"	-1
+				"voice pitch scale"		0
+			}
+		}
+
+		W3_RTDBot_GiantPunchie_SpringShoes
+		{
+			Template	T_TFBot_Giant_Boxing_Heavy
+			Name		"Giant Punchie"
+			Health		2500
+			CharacterAttributes
+			{
+				"increased jump height"	1.5
+			}
+			Attributes	AutoJump
+				AutoJumpMin	0.1
+				AutoJumpMax	0.1
+			Message //Displays message in the chat
+			{
+				Name		"{fffd00}[RTD] {99CCFF}Giant Punchie {reset}rolled {784fb8}Spring Shoes"
+				Delay		0
+				Cooldown	99999
+				Repeats		0
+			}
+		}
+		W3_RTDBot_Major_League_Snail
+		{
+			Template	T_TFBot_Giant_Major_League
+			Action		Mobber
+			Message //Displays message in the chat
+			{
+				Name		"{fffd00}[RTD] {99CCFF}Major League {reset}rolled {784fb8}Snail"
+				Delay		0
+				Cooldown	99999
+				Repeats		0
+			}
+			CharacterAttributes
+			{
+				"move speed bonus"	0.05
+				"damage penalty"	0.1
+			}
+		}
+		W3_RTDBot_Major_Crits_TinyMann
+		{
+			Template	T_TFBot_Chief_Soldier
+			Action		Mobber
+			Message //Displays message in the chat
+			{
+				Name		"{fffd00}[RTD] {99CCFF}Sergeant Crits {reset}rolled {784fb8}Tiny Mann"
+				Delay		0
+				Cooldown	99999
+				Repeats		0
+			}
+			Scale	0.1
+			CharacterAttributes
+			{
+				"damage penalty"			0.02
+			}
+			
+		}
+
+
+
+
+
+		W5_RED_Walter_White
+		{
+
+			Class	Engineer
+			ClassIcon	walter_white
+			WeaponRestrictions	SecondaryOnly
+			Name	"Walter Hartwell White"
+			Item	"The Danger"
+			Item	"Dad Duds"
+			Skill	Expert
+			Action	Idle
+			UseHumanModel	1
+			Health	6200
+			Attributes	UseBossHealthBar
+			AlwaysGlow	1
+			SpawnTemplate	"WalterCleanup"	// Not making the same mistake I did with THE ROCK in Somewhere In Nevada
+			AddCond	[$SIGSEGV]
+			{
+				Name	"TF_COND_REPROGRAMMED"
+				Delay	0.0000000000000001
+				Duration	12798696969
+			}
+			CharacterAttributes
+			{
+				"move speed bonus" 					0.0001
+				"damage force reduction" 			0.0001
+				"airblast vulnerability multiplier" 0.0001
+				"override footstep sound set"	4
+				"health regen"	62
+			}
+		}
+		W5_RED_Saul_Goodman
+		{
+			Class	Soldier
+			ClassIcon	saul_goodman
+			Name	"Saul Goodman"
+			Item	"The Classified Coif"
+			Item	"The Spook Specs"
+			Attributes	UseBossHealthBar
+			Health		6200
+			WeaponRestrictions	PrimaryOnly
+			Action	Mobber
+			Item	"Saul Lightning Gun"
+			Scale	1.75
+			UseHumanModel	1
+			AlwaysGlow	1
+			SpawnTemplate	"SaulCleanup"	
+			ItemAttributes
+			{
+				ItemName	"The Classified Coif"
+				"set item tint RGB"		15787660
+			}
+			WeaponRestrictions	PrimaryOnly
+			ItemAttributes
+			{
+				ItemName	"TF_WEAPON_SHOVEL"
+				"is_passive_weapon"	1
+				"damage penalty"	0.001
+			}
+			AddCond	[$SIGSEGV]
+			{
+				Name	"TF_COND_REPROGRAMMED"
+				Delay	0.0000000000000001
+				Duration	12798696969
+			}
+		}
+		
+		W5_MethCrystal	//	required to progress wave
+		{
+			Name		"Meth Crystal"
+			Class		Heavyweapons
+			Attributes	SuppressFire
+			Attributes	IgnoreFlag
+			Action		Idle
+			WeaponRestrictions	MeleeOnly
+			ClassIcon	random_lite
+			Health		620
+			MaxVisionRange	1
+			SpawnTemplate	"MethCrystalBotModel"
+			UseCustomModel	"models/empty.mdl"
+			CharacterAttributes
+			{
+				"move speed bonus"	0
+				"no_jump"			1
+				"voice pitch scale"	0
+			}
+		}
+
+		W5_MethCrystalAggressiveVariant	//	ultra lazy version
+		{
+			Name		"Meth Crystal"
+			Class		Scout
+			Attributes	IgnoreFlag
+			Action		Mobber
+			WeaponRestrictions	MeleeOnly
+			ClassIcon	random_lite
+			MaxVisionRange	1
+			Health		420
+			SpawnTemplate	"MethCrystalBotModel"
+			UseCustomModel	"models/empty.mdl"
+			CharacterAttributes
+			{
+				"voice pitch scale"	0
+			}
+		}
+
+
+		W5_Boss_Gustavo_Fring
+		{
+			ClassIcon	gustavo_fring
+			Skill	Expert
+			Action	Idle
+			UseHumanModel	1
+			Class	Demoman
+			Name	"Gustavo Fring"
+			Attributes	UseBossHealthBar
+			Attributes	MiniBoss
+			Attributes	IgnoreFlag
+			Attributes	HoldFireUntilFullReload
+			Health	62000
+			Item	"Reader's Choice"
+			Item	"Dead of Night"
+			Tag	tag_gustavo_fring
+			NoIdleSound	1
+			ItemAttributes
+			{
+				ItemName	"Dead of Night"
+				"set item tint RGB"		15787660
+			}
+			
+			ItemAttributes
+			{
+				ItemName	"TF_WEAPON_GRENADELAUNCHER"
+				"fire rate bonus"	0.6
+				"faster reload rate"	-0.2
+
+				"custom projectile model"	"models/player/items/taunts/chicken_bucket/chicken_bucket.mdl"
+				"fuse bonus"		2
+				"grenade no spin"	1
+				"grenade no bounce"	1
+			}
+			CharacterAttributes
+			{
+				"move speed bonus" 					0.0001
+				"damage force reduction" 			0.0001
+				"airblast vulnerability multiplier" 0.0001
+				"override footstep sound set"	4
+				"no_jump"	1
+				"no_duck"	1
+				"ignored by bots"	1
+				"health regen"	99999
+			}
+		}
+		
+		// add BB/BCS reference bots like Chimp With A Machine Gun
+		
+		W5_Sniper_MACHINEGUNCHIMP
+		{
+			Class	Sniper
+			ClassIcon	sniper_smg_tind
+			WeaponRestrictions	SecondaryOnly
+			Item	"Poopy Doe"
+			Name	"Chimp With A Machine Gun"
+			Skill	Easy
+			Action	Mobber
+		}
+		W5_Soldier_FulminatedMercuryLauncher
+		{
+			Class	Soldier
+			Name	"Fulminated Mercury Launcher"
+			Skill	Normal
+			Action	Mobber
+			ItemAttributes
+			{
+				ItemName	"TF_WEAPON_ROCKETLAUNCHER"
+				"custom projectile model"	"models/props_moonbase/moon_gravel_crystal.mdl"
+			}
+		}
+		W5_Engineer_TortoiseBomber
+		{
+			Class	Engineer	
+			ClassIcon	demo_caber_nys
+			WeaponRestrictions	MeleeOnly
+			Action	Mobber
+			Name	"there is a BOMB in this turtle"
+			Item	"Dell in the Shell"
+			Item	"A Shell of a Mann"
+			Item	"The Ullapool Caber"
+			UseHumanModel	1
+			ItemAttributes
+			{
+				ItemName	"The Ullapool Caber"
+				"damage bonus"	2
+				"blast dmg to self increased"	100
+			}
+		}
+		W6_BasherScout
+		{
+			Class	Scout
+			ClassIcon	scout_basher_lite
+			Item		"The Boston Basher"
+			Name		"Boston Basher Scout?"
+			WeaponRestrictions	MeleeOnly
+			Health		125
+			CharacterAttributes
+			{
+				"dmg taken increased"	0.01
+				"self dmg push force increased"	70
+				"dmg taken from self reduced" 99999
+				"cannot be backstabbed"	1
+				"force distribute currency on death" 1
+			}
+		}
+		W6_AirStriker
+		{
+			Class	Soldier
+			Name	"Air Strike Soldier?"
+			ClassIcon	soldier_airstrike_lite
+			WeaponRestrictions	PrimaryOnly
+			Health		125
+			Action		Mobber
+			Item	"The Air Strike"
+			Attributes	HoldFireUntilFullReload
+			ItemAttributes
+			{
+				ItemName	"The Air Strike"
+				"fire rate bonus"	0.15
+				"faster reload rate"	0.9
+			}
+			CharacterAttributes
+			{
+				"dmg taken increased"	0.01
+				"self dmg push force increased"	70
+				"blast dmg to self increased" 		99999
+				"force distribute currency on death" 1
+			}
+			RocketJump 2
+		}
+
+
+		W6_GSoldier_HomingNuker
+		{
+			Class		Soldier
+			Name		"Giant Homing Nuke Soldier"
+			ClassIcon	soldier_barrage_homing_hyper
+			Skill	Expert
+			Health	4200
+			Item	"Upgradeable TF_WEAPON_ROCKETLAUNCHER"
+			Item	"The Chief Constable"
+			Attributes	AlwaysCrit
+			WeaponRestrictions	PrimaryOnly
+			Attributes	MiniBoss
+			Attributes	IgnoreFlag
+			Action		Mobber
+			ItemAttributes
+			{
+				ItemName							"Upgradeable TF_WEAPON_ROCKETLAUNCHER"
+				"faster reload rate"				0.2
+				"fire rate bonus"					5
+				"Projectile speed increased" 		0.1
+				"damage bonus"						0.1
+				"blast radius increased"			2.2
+				"use large smoke explosion"			1
+				"mod projectile heat seek power"	360
+				"mod projectile heat aim error"		90
+				"projectile trail particle"			"eyeboss_projectile"
+				"projectile no deflect"				1
+			}
+			CharacterAttributes
+			{
+				"move speed bonus"	0.5
+				"damage force reduction"	0.4
+				"airblast vulnerability multiplier"	0.4
+				"override footstep sound set"	3
+
+				"blast dmg to self increased" 		99999
+				"dmg taken increased"				0.01
+				"cannot be backstabbed"				1
+			}
+		}
+
+
+
+		W6_Flygineer_Scumbag
+		{
+			Class			Engineer
+			Name			"GOD DAMN FLY"
+			Attributes		IgnoreFlag
+			Action			Idle
+			UseHumanModel	1
+			WeaponRestrictions	MeleeOnly
+			Item	"Buzz Killer"
+			Item	"Frontier Flyboy"
+			Item	"Legend of Bugfoot"
+
+			Tag		annoying_fucking_asshole
+			Taunt	[$SIGSEGV]
+			{
+				Name		"Taunt: Kazotsky Kick"
+				Delay		3
+				Cooldown	3.5
+				Duration	69
+				Repeats		9999
+			}
+			AddCond	[$SIGSEGV]
+			{
+				Name	"TF_COND_REPROGRAMMED"
+				Delay	0.0000000000000001
+				Duration	12798696969
+			}
+			CharacterAttributes
+			{
+				"SET BONUS: special dsp"	134
+				"force distribute currency on death" 1
+			}
+		}
+
+		W6_I_PUT_THE_NEW_FORGIS_ON_THE_JEEP
+		{
+			Class				Demoman
+			ClassIcon			demo_sticky_daan
+			Name				"The Thug Shaker"
+			Skill				Expert
+			Health				69420
+			Attributes			UseBossHealthBar
+			Skill				Expert
+			WeaponRestrictions	SecondaryOnly
+			UseHumanModel		1
+			NoIdleSound			1
+			Item				"The Scottish Resistance"
+			Attributes			MiniBoss
+			Attributes			HoldFireUntilFullReload
+			Attributes			IgnoreFlag
+			Action				Mobber
+			MaxVisionRange		100
+			DesiredAttackRange	69
+			SpawnTemplate		"MemeticAgentFailsafe"
+
+			Item	"I PUT THE NEW FORGIS ON THE JEEP"
+			Item	"I TRAP UNTIL THE BLOODY BOTTOMS IS UNDERNEATH"
+			Item	"CAUSE ALL MY NIGGAS GOT IT OUT THE STREETS"	// this is the moment I get cancelled on twitter.com
+			Item	"I KEEP A HUNDRED RACKS INSIDE MY JEANS"
+			Item	"I REMEMBER HITTIN THE MALL WITH THE WHOLE TEAM"
+			
+			Taunt	[$SIGSEGV]
+			{
+				Delay		3.5
+				Cooldown	3.5
+				Repeats		9999
+			}
+
+			ItemAttributes
+			{
+				ItemName	"The Scottish Resistance"
+				"sticky detonate mode"			0
+				"faster reload rate"			0.42
+				"stickybomb charge rate"		0.01
+				"fire rate bonus"				0.01
+				"damage penalty"				0.05
+				"sticky arm time penalty"		1
+				"blast radius increased"		7.9
+				"projectile range increased"	0.31
+				"is invisible"					1
+			}
+			CharacterAttributes
+			{
+				"move speed bonus"					3
+				"damage force reduction"			0.4
+				"airblast vulnerability multiplier"	0.4
+				"override footstep sound set"		4
+				"blast dmg to self increased" 		9999
+				"dmg taken increased"				0.01
+				"cannot be backstabbed"				1
+			}
+		}
+
+
+
+
+		THE_TRULY_FINAL_BOSS_OF_FINAL_BOSSES
+		{
+			Class			Soldier
+			Name			"AMERICAN BREAD"
+			ClassIcon		heavy_breadbite_nys
+			SpawnTemplate	"FinalBossModel"
+			Health			60000
+			NoIdleSound			1
+
+			ChangeAttributes [$SIGSEGV]  
+			{
+				Delay	0
+				Repeats	0
+				IfHealthBelow	30000
+				Name	"Phase2"
+			}
+			ChangeAttributes [$SIGSEGV]  
+			{
+				Delay	0
+				Repeats	0
+				IfHealthBelow	15000
+				Name	"FinalPhase"
+			}
+
+
+			EventChangeAttributes
+			{
+				Default	
+				{
+					UseCustomModel  "models/empty.mdl"
+					Attributes	MiniBoss
+					Attributes	UseBossHealthBar
+					Skill				Expert
+					WeaponRestrictions	PrimaryOnly
+					Attributes			HoldFireUntilFullReload
+					Item	"Final Boss Phase 1"
+					CharacterAttributes
+					{
+						"move speed bonus"	0.5
+						"damage force reduction"			0.01
+						"airblast vulnerability multiplier"	0.01
+						"override footstep sound set"		2
+						"airblast vertical vulnerability multiplier"	0.1
+						"rage giving scale"	0.1
+						"voice pitch scale"	0
+					}
+				}
+				Phase2
+				{
+					UseCustomModel  "models/empty.mdl"
+					Attributes	MiniBoss
+					Attributes	UseBossHealthBar
+					Skill				Expert
+					WeaponRestrictions	PrimaryOnly
+					Attributes			HoldFireUntilFullReload
+					Item	"Final Boss Phase 2"
+					CharacterAttributes
+					{
+						"move speed bonus"	0.5
+						"damage force reduction"			0.01
+						"airblast vulnerability multiplier"	0.01
+						"override footstep sound set"		2
+						"airblast vertical vulnerability multiplier"	0.1
+						"rage giving scale"	0.1
+						"voice pitch scale"	0
+					}
+				}
+				FinalPhase
+				{
+					UseCustomModel  "models/empty.mdl"
+					Attributes	MiniBoss
+					Attributes	UseBossHealthBar
+					Attributes	AlwaysFireWeapon
+					Skill				Expert
+					WeaponRestrictions	MeleeOnly
+
+					Item	"Final Boss Phase Final"
+					Item	"TF_WEAPON_GRAPPLINGHOOK"
+					Attributes	DisableDodge
+					FireWeapon [$SIGSEGV]
+					{
+						Delay			3
+						Cooldown		3
+						Repeats			9999
+						Duration		0.5
+						Type			"Jump"
+					}
+					ItemAttributes
+					{
+						ItemName "TF_WEAPON_GRAPPLINGHOOK"
+						"is_passive_weapon" 1
+						"increased jump height" 0.1
+					}
+					
+					CharacterAttributes
+					{
+						"move speed bonus"	0.01
+						"dmg taken increased"	0.01
+						"damage force reduction"			0.01
+						"airblast vulnerability multiplier"	0.01
+						"override footstep sound set"		2
+						"airblast vertical vulnerability multiplier"	0.1
+						"rage giving scale"	0.1
+						"voice pitch scale"	0
+					}
+				}
+			}
+		}
+	}
+
+
+	Wave
+	{
+		InitWaveOutput
+		{
+			Target BigNet
+			Action RunScriptCode
+			Param "
+				::CrossaintCombat <- {
+					mvm_stats = Entities.FindByClassname(null, `tf_mann_vs_machine_stats`)
+
+					// Fix players being stuck on wave init since they spawn with
+					//  no weapons.
+					function UnstuckPlayers() {
+						for (local p; p = Entities.FindByClassname(p, `player`);)
+							p.ForceRespawn()
+					}
+					// Kill player viewmodel when they have no weapons.
+					function TestKillViewmodel(p) {
+						for (local i = 0; i < 8; ++i) {
+							local wep = NetProps.GetPropEntityArray(p, `m_hMyWeapons`, i)
+							if (wep) {
+								// Swap to first weapon if it exists so we don't T-pose.
+								p.Weapon_Switch(wep)
+								return
+							}
+						}
+						local vm = NetProps.GetPropEntity(p, `m_hViewModel`)
+						if (vm) vm.Kill()
+					}
+
+					// Kill player viewmodel when they have no weapons.
+					function OnGameEvent_player_spawn(event) {
+						if (event.team != Constants.ETFTeam.TF_TEAM_RED) return
+						TestKillViewmodel(GetPlayerFromUserID(event.userid))
+					}
+					function OnGameEvent_teamplay_round_start(_) {
+						// Work around tanks falling through the hatch grate by moving
+						//  the final node to the position of the previous node.
+						Entities.FindByName(null, `tank_path_68`).SetAbsOrigin(
+							Vector(-2536.0, -1360.0, 456.0)
+						)
+						EntFireByHandle(mvm_stats, `RunScriptCode`,
+							`::CrossaintCombat.UnstuckPlayers()`,
+						-1.0, null, null)
+					}
+					function OnGameEvent_player_death(event) {
+						local bot = GetPlayerFromUserID(event.userid)
+						if (!bot.IsBotOfType(Constants.EBotType.TF_BOT_TYPE)) return
+						if (bot.GetModelName().find(`player`, 7) != null) return
+
+						// Kill non-player ragdolls as they throw an error on client.
+						EntFireByHandle(bot, `RunScriptCode`,
+							`NetProps.GetPropEntity(self,\`m_hRagdoll\`).Kill()`,
+						-1.0, null, null)
+					}
+					function OnGameEvent_recalculate_holidays(_) {
+						if (NetProps.GetPropInt(mvm_stats, `m_iWaveIdx`) != 0) return
+						delete ::CrossaintCombat
+					}
+				}
+				__CollectGameEventCallbacks(::CrossaintCombat)
+
+				Entities.FindByName(null,
+					`tank_path_68`).SetAbsOrigin(Vector(-2536.0, -1360.0, 456.0))
+				for (local p; p = Entities.FindByClassname(p, `player`);)
+					if (!p.IsBotOfType(Constants.EBotType.TF_BOT_TYPE))
+						::CrossaintCombat.TestKillViewmodel(p)
+				::CrossaintCombat.UnstuckPlayers()
+			"
+		}
+		StartWaveOutput
+		{
+			Target	wave_start_relay
+			Action	Trigger
+		}
+		DoneOutput					
+		{
+			Target	wave_finished_relay
+			Action	Trigger
+		}
+
+		CustomWaveNumber 	0	[$SIGSEGV]
+		CustomMaxWaveNumber 5	[$SIGSEGV]
+
+		Explanation	[$SIGSEGV]
+		{
+			Line	"{0dff00}"	
+			Line	"{0dff00}Please turn up your music slider in your options and turn off all background noises such as music before attempting to play this mission."	
+			Line	"{0dff00}"	
+			Line	"{yellow}Also, this is a Spy only mission. Various new/rebalanced weapons will become available after beating the tutorial."
+			Line	"{yellow}Disguising and cloaking is disabled. Backstabbing is still enabled, but is harder to pull off without coordinated teamwork."
+			Line	"{fffd00}ALSO, LASTLY: GO TO THE UPGRADE STATION TO EQUIP BEGINNING WEAPONS. AGAIN; W2 WILL UNLOCK MORE WEAPONS."
+		}
+
+		SpawnTemplate	"W1_Tutorial_Music"
+		SpawnTemplate	"KuzeCutsceneLogic"
+
+
+		WaveSpawn
+		{
+			Name		w1_silly_music
+			TotalCount	0
+			MaxActive	0
+			SpawnCount	0
+			Support		Limited
+			WaitBeforeStarting	0
+			FirstSpawnMessage		"{fffd00}[Music] Now Playing: ULTRAKILL - A Thousand Greetings" [$SIGSEGV]
+			FirstSpawnOutput
+			{
+				Target	w1_music
+				Action	PlaySound
+			}
+		}
+
+
+		WaveSpawn
+		{
+			Name		w1_text
+			TotalCount	0
+			MaxActive	0
+			SpawnCount	0
+			Support		Limited
+			WaitBeforeStarting	0.1
+			FirstSpawnMessage		"{0dff00}Welcome to the Official Croissant Combat Union's Learning Tutorial program, or OCCULT for short." [$SIGSEGV]
+		}
+		WaveSpawn
+		{
+			Name		w1_text
+			TotalCount	0
+			MaxActive	0
+			SpawnCount	0
+			Support		Limited
+			WaitBeforeStarting	3
+			FirstSpawnMessage		"{0dff00}There is definitely nothing strange going on here despite the acronym, you're here for one of two reasons:" [$SIGSEGV]
+		}
+		WaveSpawn
+		{
+			Name		w1_text
+			TotalCount	0
+			MaxActive	0
+			SpawnCount	0
+			Support		Limited
+			WaitBeforeStarting	6
+			FirstSpawnMessage		"{0dff00}You're either someone who has never played serious spy in a totally serious mission before..." [$SIGSEGV]
+		}
+		WaveSpawn
+		{
+			Name		w1_text
+			TotalCount	0
+			MaxActive	0
+			SpawnCount	0
+			Support		Limited
+			WaitBeforeStarting	9
+			FirstSpawnMessage		"{0dff00}Or a filthy, naysaying, meta obsessed egotistical American Psycho that thinks Spy sucks." [$SIGSEGV]
+		}
+		WaveSpawn
+		{
+			Name		w1_text
+			TotalCount	0
+			MaxActive	0
+			SpawnCount	0
+			Support		Limited
+			WaitBeforeStarting	12
+			FirstSpawnMessage		"{0dff00}Either way we're going to set you straight and painfully transform you into French Psychos. Start by brutally murdering these targets with your... finger guns, or fists." [$SIGSEGV]
+		}
+
+
+
+		WaveSpawn
+		{
+			Name	wave1_targets
+			TotalCount	20
+			MaxActive	15
+			SpawnCount	5
+			WaitBeforeStarting	12
+			WaitBetweenSpawns	6
+			Where	spawnbot
+			TFBot
+			{
+				Class	Scout
+				Health	1
+				Name	"Target"
+				Attributes	IgnoreFlag
+				Action		Mobber
+				Attributes	IgnoreEnemies
+				WeaponRestrictions	MeleeOnly
+				CharacterAttributes
+				{
+					"voice pitch scale"	0
+				}
+				UseCustomModel	"models/props_medieval/target/target.mdl"
+
+				// Hide target weapons as they don't use them anyway.
+				// "is invisible" 1 didn't seem to work on TF_WEAPON_BAT here.
+				CustomWeaponModel [$SIGSEGV]
+				{
+					Slot 2
+					Model "models/empty.mdl"
+				}
+			}
+		}
+		WaveSpawn
+		{
+			Name	wave1_targets
+			TotalCount	1
+			MaxActive	1
+			SpawnCount	1
+			WaitBeforeStarting	24
+			Where	flankers
+			TFBot
+			{
+				Template	T_TFBot_Giant_Soldier
+				Name	"Giant Angry Target"
+				Health	1000
+				UseCustomModel	"models/props_medieval/target/target.mdl"
+				Scale	2
+			}
+		}
+
+		WaveSpawn
+		{
+			Name		w1_text2
+			TotalCount	0
+			MaxActive	0
+			SpawnCount	0
+			Support		Limited
+			WaitForAllDead	wave1_targets
+			FirstSpawnMessage		"{0dff00}Okay good, now we're going to test your ability to cut bread. Here comes multiple baguettes." [$SIGSEGV]
+		}
+		WaveSpawn
+		{
+			Name		w1_text2
+			TotalCount	0
+			MaxActive	0
+			SpawnCount	0
+			Support		Limited
+			WaitForAllDead	wave1_targets
+			WaitBeforeStarting		15
+			FirstSpawnMessage		"{0dff00}You are definitely not committing a crime by stabbing the baguettes, it's all part of the test." [$SIGSEGV]
+		}
+
+		WaveSpawn
+		{
+			Name	wave1_baguettes
+			WaitForAllDead	wave1_targets
+			TotalCount	3
+			MaxActive	3
+			SpawnCount	1
+			WaitBeforeStarting	3
+			WaitBetweenSpawns	6.9
+			Tank
+			{
+				Name	"tankboss"
+				Health	2000
+				Speed	160
+				StartingPathTrackNode	"tank_path_1"
+				SpawnTemplate	"BaguetteTankFix"
+				Model			"models/empty.mdl" [$SIGSEGV]
+
+				DisableSmokestack		1	[$SIGSEGV]
+				DisableTracks			1	[$SIGSEGV]
+				DisableChildModels		1	[$SIGSEGV]
+
+				OnBombDroppedOutput 
+				{
+					Target boss_deploy_relay
+					Action Trigger
+				}
+			}
+		}
+
+
+		WaveSpawn
+		{
+			Name		w1_kuze_text_intro
+			TotalCount	0
+			MaxActive	0
+			SpawnCount	0
+			Support		Limited
+			WaitForAllDead	wave1_baguettes
+			FirstSpawnMessage		"{0dff00}Great job! You're almost done with the tutorial. All you need to do is one last thing!" [$SIGSEGV]
+		}
+		WaveSpawn
+		{
+			Name		w1_kuze_text_intro
+			TotalCount	0
+			MaxActive	0
+			SpawnCount	0
+			Support		Limited
+			WaitForAllDead	wave1_baguettes
+			WaitBeforeStarting		4
+			FirstSpawnMessage		"{0dff00}Okay, I know we're in England or some shit, but there are 5 guys who want to use their fists instead of shanking you to death." [$SIGSEGV]
+		}
+		WaveSpawn
+		{
+			Name		w1_kuze_text_intro
+			TotalCount	0
+			MaxActive	0
+			SpawnCount	0
+			Support		Limited
+			WaitForAllDead	wave1_baguettes
+			WaitBeforeStarting		8
+			FirstSpawnMessage		"{0dff00}One small issue..." [$SIGSEGV]
+			FirstSpawnOutput
+			{
+				Target	w1_music
+				Action	FadeOut
+				Param	5
+			}
+		}
+		WaveSpawn
+		{
+			Name		w1_kuze_text_intro
+			TotalCount	0
+			MaxActive	0
+			SpawnCount	0
+			Support		Limited
+			WaitForAllDead	wave1_baguettes
+			WaitBeforeStarting		12
+			FirstSpawnOutput
+			{
+				Target	kuze_cutscene_relay
+				Action	Trigger
+			}
+		}
+
+
+		WaveSpawn
+		{
+			Name	wave1_kuze
+			WaitForAllDead	wave1_baguettes
+			TotalCurrency	1600
+			TotalCount	5
+			MaxActive	5
+			SpawnCount	5
+			WaitBeforeStarting	26.5
+			Where	spawnbot_kuze
+			TFBot
+			{
+				Template	W1_Kuze
+			}
+		}
+		WaveSpawn
+		{
+			Name		jahkuza
+			TotalCount	0
+			MaxActive	0
+			SpawnCount	0
+			Support		Limited
+			WaitForAllDead			wave1_baguettes
+			FirstSpawnMessage		"{fffd00}[Music] Now Playing: Yakuza 0 - Pledge of Demon"
+			WaitBeforeStarting		31
+		}
+
+
+		WaveSpawn
+		{
+			Name		w1_kuze_music_fade
+			TotalCount	0
+			MaxActive	0
+			SpawnCount	0
+			Support		Limited
+			WaitForAllDead	wave1_kuze
+			FirstSpawnOutput
+			{
+				Target	kuze_music_fade_relay
+				Action	Trigger
+			}
+		}
+		WaveSpawn
+		{
+			Name		w1_kuze_music_fade
+			TotalCount	0
+			MaxActive	0
+			SpawnCount	0
+			Support		Limited
+			WaitForAllDead	wave1_kuze
+			FirstSpawnOutput
+			{
+				Target	kuze_bgm
+				Action	FadeOut
+				Param	5
+			}
+		}
+		WaveSpawn
+		{
+			Name		wave1_end
+			TotalCount	0
+			MaxActive	0
+			SpawnCount	0
+			Support		Limited
+			WaitForAllDead	wave1_kuze
+			WaitBeforeStarting	5
+			FirstSpawnMessage		"{0dff00}Okay, good job, you finished the tutorial. The real mission begins now." [$SIGSEGV]
+		}
+
+
+		WaveSpawn
+		{
+			Name	wave1_end
+			WaitForAllDead	wave1_kuze	
+			TotalCount	1
+			MaxActive	1
+			SpawnCount	1
+			WaitBeforeStarting	8
+			Where	spawnbot_suicide
+			Randomchoice
+			{
+				Squad
+				{
+					TFBot
+					{
+						Class	Scout
+						Health	1
+						Scale	0.01
+						Attributes	IgnoreFlag
+						CharacterAttributes
+						{
+							"active health degen"	-1
+							"voice pitch scale"		0
+						}
+					}
+				}
+			}
+		}
+	}
+
+
+	Wave	// PART 2 // VEHICULAR MANNSLAUGHTER
+	{
+		StartWaveOutput
+		{
+			Target	wave_start_relay
+			Action	Trigger
+		}
+		DoneOutput					
+		{
+			Target	wave_finished_relay
+			Action	Trigger
+		}
+		InitWaveOutput
+		{
+			Target	tank_bust_relay
+			Action	Trigger
+		}
+		Explanation	[$SIGSEGV]
+		{
+			Line	"{red}THE WEST HAS FALLEN"	
+			Line	"{red}BILLIONS MUST SPY."	
+			Line	""
+			Line	"{fffd00}REMINDER: YOU NOW HAVE NEW WEAPONS UNLOCKED AT THE UPGRADE STATION. PRESS 'EXTRA LOADOUT WEAPONS'."
+			Line	"{fffd00}IF YOU ARE USING THE FRONT UPGRADE STATION, KILLBIND/RESPAWN TO EQUIP THE ITEMS PROPERLY."
+
+		}
+
+
+		CustomWaveNumber 	1	[$SIGSEGV]
+		CustomMaxWaveNumber 5	[$SIGSEGV]
+
+		SpawnTemplate	"BusTeleport"
+		SpawnTemplate	"UnstableBomberWarningSound"
+		SpawnTemplate	"W2_EUROBEAT_MORE_LIKE_EUROBEAT_MY_WIFE"
+		WaveSpawn
+		{
+			Name		w2_intro_sound_1
+			TotalCount	0
+			MaxActive	0
+			SpawnCount	0
+			Support		Limited
+			FirstSpawnWarningSound	"crois_w2_intro_1.mp3"
+		}
+
+		WaveSpawn
+		{
+			Name	wave2_intro
+			TotalCurrency	100
+			TotalCount	8
+			MaxActive	8
+			SpawnCount	8
+			WaitBeforeStarting	8
+			Where	spawnbot
+			TFBot
+			{
+				Template	W2_VehicleBot_DemoDumptruck
+			}
+		}
+		WaveSpawn
+		{
+			Name		w2_eurobeat_more_like_europoor
+			TotalCount	0
+			MaxActive	0
+			SpawnCount	0
+			Support		Limited
+			WaitBeforeStarting	8
+			FirstSpawnMessage		"{fffd00}[Music] Now Playing: Initial D - Deja Vu" [$SIGSEGV]
+			FirstSpawnOutput
+			{
+				Target	w2_music
+				Action	PlaySound
+			}
+		}
+		WaveSpawn
+		{
+			Name		w2_eurobeat_more_like_europoor
+			TotalCount	0
+			MaxActive	0
+			SpawnCount	0
+			Support		Limited
+			WaitBeforeStarting	71.5
+			FirstSpawnMessage		"{0dff00}DEJA VU, I'VE SEEN THIS EUROBEAT JOKE DONE IN OTHER MISSIONS BEFORE" [$SIGSEGV]
+		}
+		WaveSpawn
+		{
+			Name		w2_eurobeat_more_like_europoor
+			TotalCount	0
+			MaxActive	0
+			SpawnCount	0
+			Support		Limited
+			WaitBeforeStarting	76.5
+			FirstSpawnMessage		"{0dff00}AT LEAST IT ISN'T ONE OR MULTIPLE ULTRA FAST TANKS" [$SIGSEGV]
+		}
+
+
+		WaveSpawn
+		{
+			Name		w2_intro_sound_2
+			TotalCount	0
+			MaxActive	0
+			SpawnCount	0
+			Support		Limited
+			WaitBeforeStarting		2
+			WaitForAllDead			wave2_intro
+			FirstSpawnWarningSound	"crois_w2_intro_2.mp3"
+		}
+		WaveSpawn
+		{
+			Name	wave2_intro2
+			TotalCurrency	100
+			TotalCount	8
+			MaxActive	8
+			SpawnCount	8
+			WaitForAllDead	wave2_intro
+			Where	spawnbot
+			TFBot
+			{
+				Template	W2_VehicleBot_DemoDumptruck
+			}
+		}
+
+
+
+		WaveSpawn
+		{
+			Name	wave2_intro3
+			TotalCurrency	100
+			TotalCount	1
+			MaxActive	1
+			SpawnCount	1
+			WaitForAllDead	wave2_intro2
+			Where	spawnbot
+			WaitBeforeStarting			3
+			FirstSpawnWarningSound		"passtime/horn_big.wav"	// train sfx
+			TFBot
+			{
+				Template	W2_VehicleBot_GDemo_PainTrain
+			}
+		}
+		WaveSpawn
+		{
+			Name	wave2_intro3
+			TotalCurrency	100
+			TotalCount	8
+			MaxActive	8
+			SpawnCount	8
+			WaitForAllDead	wave2_intro2
+			WaitBeforeStarting			3
+			Where	spawnbot
+			TFBot
+			{
+				Template	W2_VehicleBot_DemoDumptruck
+			}
+		}
+		WaveSpawn
+		{
+			Name		w2_intro_sound_3
+			TotalCount	0
+			MaxActive	0
+			SpawnCount	0
+			Support		Limited
+			WaitBeforeStarting		6
+			WaitForAllDead			wave2_intro2
+			FirstSpawnWarningSound	"crois_w2_intro_3.mp3"
+		}
+
+		WaveSpawn
+		{
+			Name	wave2a
+			WaitForAllDead	wave2_intro3
+			TotalCurrency	100
+			TotalCount	8
+			MaxActive	6
+			SpawnCount	2
+			WaitBeforeStarting	7
+			WaitBetweenSpawns	7
+			Where	spawnbot
+			Squad
+			{
+				TFBot
+				{
+					Template	W2_VehicleBot_Soldier_Jeep
+				}
+				TFBot
+				{
+					Template	W2_VehicleBot_Medic_Ambulance
+				}
+			}
+		}
+		WaveSpawn
+		{
+			Name	wave2a
+			WaitForAllDead	wave2_intro3
+			TotalCurrency	100
+			TotalCount	12
+			MaxActive	6
+			SpawnCount	3
+			WaitBetweenSpawns	3.60
+			Where	spawnbot
+			TFBot
+			{
+				Template	W2_VehicleBot_Sniper_CamperVan
+			}
+		}
+
+		WaveSpawn
+		{
+			Name	wave2b
+			TotalCount	1
+			MaxActive	1
+			SpawnCount	1
+			Where	spawnbot
+			WaitForAllSpawned	wave2a
+			FirstSpawnWarningSound	"items/cart_warning_single.wav"	// payload warning sound goes here
+			TFBot
+			{
+				Template	W2_VehicleBot_Boss_SuicideBomber_Payload
+			}
+		}
+
+		WaveSpawn
+		{
+			Name	wave2_bussy
+			TotalCount	1
+			MaxActive	1
+			SpawnCount	1
+			WaitBeforeStarting	5
+			WaitForAllDead	wave2b
+			Tank
+			{
+				Name	"tankboss"
+				Health	5000
+				Speed	169
+				StartingPathTrackNode	"tank_path_1"
+				Model	"models/props_soho/bus001.mdl" [$SIGSEGV]
+				SpawnTemplate	"BusTeleportDest"
+
+				DisableSmokestack		1	[$SIGSEGV]
+				DisableTracks			1	[$SIGSEGV]
+				DisableChildModels		1	[$SIGSEGV]
+				ReplaceModelCollisions	1	[$SIGSEGV]
+
+				OnBombDroppedOutput 
+				{
+					Target boss_deploy_relay
+					Action Trigger
+				}
+			}
+		}
+		WaveSpawn
+		{
+			Name	wave2_passengers
+			WaitForAllDead	wave2_bussy
+			TotalCurrency	100
+			TotalCount	21
+			MaxActive	21
+			SpawnCount	21
+			Where		spawnbot_w2_vehiclebots
+			TFBot
+			{
+				Class	Scout
+				Skill	Easy
+				Health	1
+				WeaponRestrictions	MeleeOnly
+				Name	"Angry Bus Passenger"
+				Action	Mobber
+				Tag		tank_teleport_bot
+			}
+		}
+
+
+
+
+
+		WaveSpawn
+		{
+			Name	wave2_tankhell
+			TotalCount	1
+			SpawnCount	1
+			WaitBeforeStarting	5
+			WaitForAllDead	wave2_passengers
+			Tank
+			{
+				Name	"tankboss"
+				ClassIcon	scout_giant
+				Health	690
+				Speed	222
+				StartingPathTrackNode	"tank_path_1"
+				Model	"models/bots/scout/bot_scout.mdl" [$SIGSEGV]
+
+				DisableSmokestack		1	[$SIGSEGV]
+				DisableTracks			1	[$SIGSEGV]
+				DisableChildModels		1	[$SIGSEGV]
+				ReplaceModelCollisions	1	[$SIGSEGV]
+
+				OnBombDroppedOutput 
+				{
+					Target boss_deploy_relay
+					Action Trigger
+				}
+			}
+			FirstSpawnOutput
+			{
+				Target	tank_teleport_dest
+				Action	Kill
+				Delay	5
+			}
+		}
+		WaveSpawn
+		{
+			Name	wave2_tankhell
+			TotalCount	1
+			SpawnCount	1
+			WaitBeforeStarting	6
+			WaitForAllDead	wave2_passengers
+			Tank
+			{
+				Name	"tankboss"
+				ClassIcon	soldier_giant
+				Health	690
+				Speed	222
+				StartingPathTrackNode	"tank_path_1"
+				Model	"models/bots/soldier/bot_soldier.mdl" [$SIGSEGV]
+
+				DisableSmokestack		1	[$SIGSEGV]
+				DisableTracks			1	[$SIGSEGV]
+				DisableChildModels		1	[$SIGSEGV]
+				ReplaceModelCollisions	1	[$SIGSEGV]
+
+				OnBombDroppedOutput 
+				{
+					Target boss_deploy_relay
+					Action Trigger
+				}
+			}
+		}
+		WaveSpawn
+		{
+			Name	wave2_tankhell
+			TotalCount	1
+			SpawnCount	1
+			WaitBeforeStarting	7
+			WaitForAllDead	wave2_passengers
+			Tank
+			{
+				Name	"tankboss"
+				ClassIcon	pyro_giant
+				Health	690
+				Speed	222
+				StartingPathTrackNode	"tank_path_1"
+				Model	"models/bots/pyro/bot_pyro.mdl" [$SIGSEGV]
+
+				DisableSmokestack		1	[$SIGSEGV]
+				DisableTracks			1	[$SIGSEGV]
+				DisableChildModels		1	[$SIGSEGV]
+				ReplaceModelCollisions	1	[$SIGSEGV]
+
+				OnBombDroppedOutput 
+				{
+					Target boss_deploy_relay
+					Action Trigger
+				}
+			}
+		}
+		WaveSpawn
+		{
+			Name	wave2_tankhell
+			TotalCount	1
+			SpawnCount	1
+			WaitBeforeStarting	8
+			WaitForAllDead	wave2_passengers
+			Tank
+			{
+				Name	"tankboss"
+				ClassIcon	demo_giant
+				Health	690
+				Speed	222
+				StartingPathTrackNode	"tank_path_1"
+				Model	"models/bots/demo/bot_demo.mdl" [$SIGSEGV]
+
+				DisableSmokestack		1	[$SIGSEGV]
+				DisableTracks			1	[$SIGSEGV]
+				DisableChildModels		1	[$SIGSEGV]
+				ReplaceModelCollisions	1	[$SIGSEGV]
+
+				OnBombDroppedOutput 
+				{
+					Target boss_deploy_relay
+					Action Trigger
+				}
+			}
+		}
+		WaveSpawn
+		{
+			Name	wave2_tankhell
+			TotalCount	1
+			SpawnCount	1
+			WaitBeforeStarting	9
+			WaitForAllDead	wave2_passengers
+			Tank
+			{
+				Name	"tankboss"
+				ClassIcon	heavy_giant
+				Health	690
+				Speed	222
+				StartingPathTrackNode	"tank_path_1"
+				Model	"models/bots/heavy/bot_heavy.mdl" [$SIGSEGV]
+
+				DisableSmokestack		1	[$SIGSEGV]
+				DisableTracks			1	[$SIGSEGV]
+				DisableChildModels		1	[$SIGSEGV]
+				ReplaceModelCollisions	1	[$SIGSEGV]
+
+				OnBombDroppedOutput 
+				{
+					Target boss_deploy_relay
+					Action Trigger
+				}
+			}
+		}
+		WaveSpawn
+		{
+			Name	wave2_tankhell
+			TotalCount	1
+			SpawnCount	1
+			WaitBeforeStarting	10
+			WaitForAllDead	wave2_passengers
+			Tank
+			{
+				Name	"tankboss"
+				ClassIcon	engineer
+				Health	690
+				Speed	222
+				StartingPathTrackNode	"tank_path_1"
+				Model	"models/bots/engineer/bot_engineer.mdl" [$SIGSEGV]
+
+				DisableSmokestack		1	[$SIGSEGV]
+				DisableTracks			1	[$SIGSEGV]
+				DisableChildModels		1	[$SIGSEGV]
+				ReplaceModelCollisions	1	[$SIGSEGV]
+
+				OnBombDroppedOutput 
+				{
+					Target boss_deploy_relay
+					Action Trigger
+				}
+			}
+		}
+		WaveSpawn
+		{
+			Name	wave2_tankhell
+			TotalCount	1
+			SpawnCount	1
+			WaitBeforeStarting	11
+			WaitForAllDead	wave2_passengers
+			Tank
+			{
+				Name	"tankboss"
+				ClassIcon	medic_giant
+				Health	690
+				Speed	222
+				StartingPathTrackNode	"tank_path_1"
+				Model	"models/bots/medic/bot_medic.mdl" [$SIGSEGV]
+
+				DisableSmokestack		1	[$SIGSEGV]
+				DisableTracks			1	[$SIGSEGV]
+				DisableChildModels		1	[$SIGSEGV]
+				ReplaceModelCollisions	1	[$SIGSEGV]
+
+				OnBombDroppedOutput 
+				{
+					Target boss_deploy_relay
+					Action Trigger
+				}
+			}
+		}
+		WaveSpawn
+		{
+			Name	wave2_tankhell
+			TotalCount	1
+			SpawnCount	1
+			WaitBeforeStarting	12
+			WaitForAllDead	wave2_passengers
+			Tank
+			{
+				Name	"tankboss"
+				ClassIcon	sniper
+				Health	690
+				Speed	222
+				StartingPathTrackNode	"tank_path_1"
+				Model	"models/bots/sniper/bot_sniper.mdl" [$SIGSEGV]
+
+				DisableSmokestack		1	[$SIGSEGV]
+				DisableTracks			1	[$SIGSEGV]
+				DisableChildModels		1	[$SIGSEGV]
+				ReplaceModelCollisions	1	[$SIGSEGV]
+
+				OnBombDroppedOutput 
+				{
+					Target boss_deploy_relay
+					Action Trigger
+				}
+			}
+		}
+		WaveSpawn
+		{
+			Name	wave2_tankhell
+			TotalCount	1
+			SpawnCount	1
+			WaitBeforeStarting	13
+			WaitForAllDead	wave2_passengers
+			Tank
+			{
+				Name	"tankboss"
+				ClassIcon	spy
+				Health	690
+				Speed	222
+				StartingPathTrackNode	"tank_path_1"
+				Model	"models/bots/spy/bot_spy.mdl" [$SIGSEGV]
+
+				DisableSmokestack		1	[$SIGSEGV]
+				DisableTracks			1	[$SIGSEGV]
+				DisableChildModels		1	[$SIGSEGV]
+				ReplaceModelCollisions	1	[$SIGSEGV]
+
+				OnBombDroppedOutput 
+				{
+					Target boss_deploy_relay
+					Action Trigger
+				}
+			}
+		}
+	}
+	Wave	// PART 3 // RTD: THE WAVE
+	{
+		StartWaveOutput
+		{
+			Target	wave_start_relay
+			Action	Trigger
+		}
+		DoneOutput
+		{
+			Target	wave_finished_relay
+			Action	Trigger
+		}
+		InitWaveOutput	// temporary - gets enabled again for wave ending
+		{
+			Target	spawnbot_suicide
+			Action	Disable
+		}
+
+		CustomWaveNumber 	2	[$SIGSEGV]
+		CustomMaxWaveNumber 5	[$SIGSEGV]
+
+		SpawnTemplate	"CaptainPunchGetsFuckingNecroMashedToDeath"
+
+		WaveSpawn
+		{
+			Name	wave3_fake_icon
+			TotalCount	0
+			MaxActive	0
+			SpawnCount	0
+			WaitBeforeStarting	9999
+			WaitBetweenSpawns	9999
+			Support		1
+			TFBot
+			{
+				ClassIcon	rtd_blu
+			}
+		}
+
+
+		WaveSpawn
+		{
+			Name	wave3a
+			TotalCurrency	50
+			TotalCount	18
+			MaxActive	6
+			SpawnCount	1
+			WaitBetweenSpawns	0.1
+			Where	spawnbot
+			TFBot
+			{
+				Template	W3_RTDBot_RocketJumper_HomingProjectiles
+			}
+		}
+		WaveSpawn
+		{
+			Name	wave3a
+			TotalCurrency	50
+			TotalCount	24
+			MaxActive	9
+			SpawnCount	3
+			WaitBeforeStarting	3
+			WaitBetweenSpawns	3
+			Where	flankers
+			TFBot
+			{
+				Template	W3_RTDBot_HeavyMittens_Criticals
+			}
+		}
+		WaveSpawn
+		{
+			Name	wave3a
+			TotalCurrency	100
+			TotalCount	1
+			MaxActive	1
+			SpawnCount	1
+			WaitBeforeStarting	15
+			Where	spawnbot
+			TFBot
+			{
+				Template	W3_RTDBot_GiantPunchie_SpringShoes
+			}
+		}
+
+		WaveSpawn
+		{
+			Name	wave3_support_fuckers_1
+			WaitForAllDead	wave3a
+			Support		1
+			TotalCount	6
+			MaxActive	6
+			SpawnCount	6
+			Where	flankers
+			TFBot
+			{
+				Template	W3_RTDBot_ShortstopScout_ANNOYING_FUCK
+			}
+		}
+		WaveSpawn
+		{
+			Name	wave3b
+			WaitForAllDead	wave3a
+			TotalCurrency	100
+			TotalCount	15
+			MaxActive	9
+			SpawnCount	3
+			WaitBetweenSpawns	3
+			Where	flankers
+			TFBot
+			{
+				Template	W3_RTDBot_Huntsman_ForcedTaunt
+			}
+		}
+		WaveSpawn
+		{
+			Name	wave3b
+			WaitForAllDead	wave3a
+			TotalCurrency	100
+			TotalCount	12
+			MaxActive	6
+			SpawnCount	2
+			WaitBeforeStarting	3
+			WaitBetweenSpawns	3
+			Where	spawnbot
+			TFBot
+			{
+				Template	W3_RTDBot_Demoman_BigHead
+			}
+		}
+		WaveSpawn
+		{
+			Name	wave3_support_fuckers_2
+			WaitForAllDead	wave3a
+			Support		1
+			TotalCount	1
+			MaxActive	1
+			SpawnCount	1
+			WaitBeforeStarting	15
+			Where	spawnbot
+			TFBot
+			{
+				Template	W3_RTDBot_Major_Crits_TinyMann
+			}
+		}
+		WaveSpawn
+		{
+			Name	wave3_support_fuckers_3
+			WaitForAllDead	wave3b
+			Support		1
+			TotalCount	1
+			MaxActive	1
+			SpawnCount	1
+			WaitBeforeStarting	15
+			Where	flankers
+			TFBot
+			{
+				Template	W3_RTDBot_Major_League_Snail
+			}
+		}
+		WaveSpawn
+		{
+			Name	wave3c
+			WaitForAllDead	wave3b
+			TotalCurrency	100
+			TotalCount	6
+			MaxActive	6
+			SpawnCount	1
+			WaitBeforeStarting	3
+			WaitBetweenSpawns	1
+			Where	spawnbot
+			Where	flankers
+			TFBot
+			{
+				Template	W3_RTDBot_PlayerBuster_Invisible
+			}
+		}
+		WaveSpawn
+		{
+			Name	wave3c
+			WaitForAllDead	wave3b
+			TotalCurrency	100
+			TotalCount	6
+			MaxActive	6
+			SpawnCount	6
+			Where	spawnbot
+			TFBot
+			{
+				Template	W3_RTDBot_Spy_Outline
+			}
+		}
+		WaveSpawn
+		{
+			Name	wave3c
+			WaitForAllDead	wave3b
+			TotalCurrency	100
+			TotalCount	2
+			MaxActive	2
+			SpawnCount	1
+			WaitBeforeStarting	12
+			WaitBetweenSpawns	12
+			Where	spawnbot
+			TFBot
+			{
+				Template	W3_RTDBot_GPyroAxe_LongMelee
+			}
+		}
+
+
+
+
+
+
+
+
+
+
+		WaveSpawn
+		{
+			Name	w3_ending_captainpunch
+			TotalCurrency	100
+			TotalCount	1
+			MaxActive	1
+			SpawnCount	1
+			Where		spawnbot
+			WaitForAllDead	wave3c
+			WaitBeforeStarting	3
+			FirstSpawnWarningSound	"mvm/giant_heavy/giant_heavy_entrance.wav"
+			FirstSpawnMessage	"{fffd00}[Music] Now Playing: Lost Judgment - Final Destination"
+			TFBot
+			{
+				Template	W3_RTDBot_CaptainPunch_NecroMash
+				SpawnTemplate	"retarded_necro_masher_logic_I_stole_from_apedrews_equally_retarded_mission"
+			}
+		}
+		WaveSpawn
+		{
+			Name		w3_captain_punchs_gambling_adventure_text
+			TotalCount	0
+			MaxActive	0
+			SpawnCount	0
+			Support		Limited
+			WaitBeforeStarting	2
+			WaitForAllSpawned	w3_ending_captainpunch
+			FirstSpawnMessage	"{fffd00}[RTD] {99CCFF}Captain Punch {reset}rolled {784fb8}Godmode"
+			FirstSpawnOutput
+			{
+				Target		captain_gambler_punch_bgm
+				Action		PlaySound
+			}
+		}
+
+
+		WaveSpawn
+		{
+			Name		w3_captain_punchs_gambling_adventure_text
+			TotalCount	0
+			MaxActive	0
+			SpawnCount	0
+			Support		Limited
+			WaitBeforeStarting	3
+			WaitForAllSpawned	w3_ending_captainpunch
+			FirstSpawnMessage	"{fffd00}[RTD] {99CCFF}Captain Punch {reset}rolled {784fb8}Critical Hits"
+		}
+		WaveSpawn
+		{
+			Name		w3_captain_punchs_gambling_adventure_text
+			TotalCount	0
+			MaxActive	0
+			SpawnCount	0
+			Support		Limited
+			WaitBeforeStarting	4
+			WaitForAllSpawned	w3_ending_captainpunch
+			FirstSpawnMessage	"{fffd00}[RTD] {99CCFF}Captain Punch {reset}rolled {784fb8}Infinite Ammo"
+		}
+		WaveSpawn
+		{
+			Name		w3_captain_punchs_gambling_adventure_text
+			TotalCount	0
+			MaxActive	0
+			SpawnCount	0
+			Support		Limited
+			WaitBeforeStarting	5
+			WaitForAllSpawned	w3_ending_captainpunch
+			FirstSpawnMessage	"{fffd00}[RTD] {99CCFF}Captain Punch {reset}rolled {784fb8}Lucky Sandvich"
+		}
+		WaveSpawn
+		{
+			Name		w3_captain_punchs_gambling_adventure_text
+			TotalCount	0
+			MaxActive	0
+			SpawnCount	0
+			Support		Limited
+			WaitBeforeStarting	6
+			WaitForAllSpawned	w3_ending_captainpunch
+			FirstSpawnMessage	"{fffd00}[RTD] {99CCFF}Captain Punch {reset}rolled {784fb8}Powerful Hits"
+		}
+		WaveSpawn
+		{
+			Name		w3_captain_punchs_gambling_adventure_text
+			TotalCount	0
+			MaxActive	0
+			SpawnCount	0
+			Support		Limited
+			WaitBeforeStarting	7
+			WaitForAllSpawned	w3_ending_captainpunch
+			FirstSpawnMessage	"{fffd00}[RTD] {99CCFF}Captain Punch {reset}rolled {784fb8}Deadly Voice"
+		}
+		WaveSpawn
+		{
+			Name		w3_captain_punchs_gambling_adventure_text
+			TotalCount	0
+			MaxActive	0
+			SpawnCount	0
+			Support		Limited
+			WaitBeforeStarting	8
+			WaitForAllSpawned	w3_ending_captainpunch
+			FirstSpawnMessage	"{fffd00}[RTD] {99CCFF}Captain Punch {reset}rolled {784fb8}Mercs Die Twice"
+		}
+		WaveSpawn
+		{
+			Name		w3_captain_punchs_gambling_adventure_text
+			TotalCount	0
+			MaxActive	0
+			SpawnCount	0
+			Support		Limited
+			WaitBeforeStarting	9
+			WaitForAllSpawned	w3_ending_captainpunch
+			FirstSpawnMessage	"{fffd00}[RTD] {99CCFF}Captain Punch {reset}rolled {784fb8}Drug Bullets"
+		}
+		WaveSpawn
+		{
+			Name		w3_captain_punchs_gambling_adventure_text
+			TotalCount	0
+			MaxActive	0
+			SpawnCount	0
+			Support		Limited
+			WaitBeforeStarting	10
+			WaitForAllSpawned	w3_ending_captainpunch
+			FirstSpawnMessage	"{fffd00}[RTD] {99CCFF}Captain Punch {reset}rolled {784fb8}Vampire"
+		}
+		WaveSpawn
+		{
+			Name	w3_necro_init
+			TotalCount	1
+			MaxActive	1
+			SpawnCount	1
+			Where	spawnbot_suicide
+			RandomChoice
+			{
+				Squad
+				{
+					TFBot
+					{
+						Template	W3_RTDBot_NecroMashInitiator
+					}
+				}
+			}
+		}
+
+		WaveSpawn
+		{
+			Name	w3_necro_actually_begins
+			WaitForAllDead	w3_necro_init
+			TotalCount	1
+			MaxActive	1
+			SpawnCount	1
+			Where	spawnbot_suicide
+			WaitBeforeStarting	5
+			RandomChoice
+			{
+				Squad
+				{
+					TFBot
+					{
+						Template	W3_RTDBot_NecroMashInitiator
+						Message //Displays message in the chat
+						{
+							Name		"{fffd00}[RTD] {99CCFF}Captain Punch {reset}rolled {784fb8}Necro Mash"
+							Delay		0
+							Cooldown	99999
+							Repeats		0
+						}
+					}
+				}
+			}
+			FirstSpawnOutput
+			{
+				Target		captain_gambler_punch_bgm
+				Action		FadeOut
+				Param		2
+			}
+			DoneOutput
+			{
+				Target	necro_mash_relay
+				Action	Trigger
+			}
+		}
+
+	}
+
+	// There used to be a "4th" wave but I scrapped it because it's filler and probably won't be that funny.
+	// Here lies the Cha Cha Slide wave, died on March 11th 2023 at 9:08 PM (CST)
+
+	Wave	// PART 5 // "You can have one pop culture/media reference meme wave, as a treat."
+	{
+		StartWaveOutput
+		{
+			Target	wave_start_relay
+			Action	Trigger
+		}
+		DoneOutput					
+		{
+			Target	wave_finished_relay
+			Action	Trigger
+		}
+
+		CustomWaveNumber 	3	[$SIGSEGV]
+		CustomMaxWaveNumber 5	[$SIGSEGV]
+
+		SpawnTemplate	"WaltuhCutscene"
+		SpawnTemplate	"GustavoLogic"
+
+		Explanation	[$SIGSEGV]
+		{
+			Line	"{fffd00}ALERT: A SPECIAL GUEST CAMEO IS HAPPENING FOR THIS WAVE"	
+			Line	"{0dff00}Yep, that's right, special guest camo happening during this wave! You get one special pop culture/media reference wave, as a treat."
+
+		}
+
+		WaveSpawn
+		{
+			Name		w5_walt_text
+			TotalCount	0
+			MaxActive	0
+			SpawnCount	0
+			Support		Limited
+			FirstSpawnOutput
+			{
+				Target	waltuh_cutscene_relay
+				Action	Trigger
+			}
+		}
+
+		WaveSpawn
+		{
+			Name	wave5_waltuh	
+			TotalCount	1
+			MaxActive	1
+			SpawnCount	1
+			WaitBeforeStarting	5
+			Where	spawnbot_w5_breakingbald
+			Support	Limited
+			RandomChoice
+			{
+				Squad
+				{
+					TFBot
+					{
+						Template	W5_RED_Walter_White
+					}
+				}
+			}
+		}
+		WaveSpawn
+		{
+			Name	w5_walter_death_check
+			WaitForAllDead	wave5_waltuh
+			TotalCount	1
+			MaxActive	1
+			SpawnCount	1
+			Where	spawnbot_suicide
+			WaitBeforeStarting	0.5
+			FirstSpawnWarningSound	"crois_w5_walt_death.mp3"
+			RandomChoice
+			{
+				Squad
+				{
+					TFBot
+					{
+						Class	Scout
+						Health	1
+						Scale	0.01
+						Attributes	IgnoreFlag
+						CharacterAttributes
+						{
+							"active health degen"	-1
+							"voice pitch scale"		0
+						}
+					}
+				}
+			}
+		}
+		WaveSpawn
+		{
+			Name	w5_walter_death_check
+			WaitForAllDead	wave5_waltuh
+			TotalCount	1
+			MaxActive	1
+			SpawnCount	1
+			Support		Limited
+			WaitBeforeStarting	2
+			RandomChoice
+			{
+				Squad
+				{
+					TFBot
+					{
+						Class	Scout
+						Health	1
+						Scale	0.01
+						Attributes	IgnoreFlag
+						CharacterAttributes
+						{
+							"active health degen"	-1
+							"voice pitch scale"		0
+						}
+					}
+				}
+			}
+			FirstSpawnOutput
+			{
+				Target	boss_deploy_relay
+				Action	Trigger
+			}
+		}
+		WaveSpawn
+		{
+			Name		w5_walt_text
+			TotalCount	1
+			MaxActive	1
+			SpawnCount	1
+			Support		Limited
+			Where		spawnbot_suicide
+			WaitBeforeStarting	7.5
+			FirstSpawnWarningSound	"crois_w5_walt_spawn.mp3"
+			RandomChoice
+			{
+				Squad
+				{
+					TFBot
+					{
+						Class	Scout
+						Health	1
+						Scale	0.01
+						Attributes	IgnoreFlag
+						CharacterAttributes
+						{
+							"active health degen"	-1
+							"voice pitch scale"		0
+						}
+						Message
+						{
+							Name		"{red}Walter White :{reset} ...My name is Walter Hartwell White."
+							Delay		0
+							Cooldown	99999
+							Repeats		0
+						}
+
+					}
+				}
+			}
+		}
+		WaveSpawn
+		{
+			Name		w5_walt_text
+			TotalCount	1
+			MaxActive	1
+			SpawnCount	1
+			Support		Limited
+			WaitBeforeStarting	11
+			Where		spawnbot_suicide
+			RandomChoice
+			{
+				Squad
+				{
+					TFBot
+					{
+						Class	Scout
+						Health	1
+						Scale	0.01
+						Attributes	IgnoreFlag
+						CharacterAttributes
+						{
+							"active health degen"	-1
+							"voice pitch scale"		0
+						}
+						Message
+						{
+							Name		"{red}Walter White :{reset} I am here from another dimension to find a special type of mutated crystal meth here."
+							Delay		0
+							Cooldown	99999
+							Repeats		0
+						}
+					}
+				}
+			}
+		}
+		WaveSpawn
+		{
+			Name		w5_walt_text
+			TotalCount	1
+			MaxActive	1
+			SpawnCount	1
+			Support		Limited
+			WaitBeforeStarting	14
+			Where		spawnbot_suicide
+			RandomChoice
+			{
+				Squad
+				{
+					TFBot
+					{
+						Class	Scout
+						Health	1
+						Scale	0.01
+						Attributes	IgnoreFlag
+						CharacterAttributes
+						{
+							"active health degen"	-1
+							"voice pitch scale"		0
+						}
+						Message
+						{
+							Name		"{red}Walter White :{reset} Unfortunately when I say mutant I mean the meth is highly sentient AND aggressive, and I need your help."
+							Delay		0
+							Cooldown	99999
+							Repeats		0
+						}
+					}
+				}
+			}
+		}
+		WaveSpawn
+		{
+			Name		w5_walt_text
+			TotalCount	1
+			MaxActive	1
+			SpawnCount	1
+			Support		Limited
+			WaitBeforeStarting	17
+			Where		spawnbot_suicide
+			RandomChoice
+			{
+				Squad
+				{
+					TFBot
+					{
+						Class	Scout
+						Health	1
+						Scale	0.01
+						Attributes	IgnoreFlag
+						CharacterAttributes
+						{
+							"active health degen"	-1
+							"voice pitch scale"		0
+						}
+						Message
+						{
+							Name		"{red}Walter White :{reset} The meth needs to be 'euthanized' so I can collect it. Help me and I will reward you with something special later."
+							Delay		0
+							Cooldown	99999
+							Repeats		0
+						}
+					}
+				}
+			}
+		}
+		WaveSpawn
+		{
+			Name		w5_walt_text
+			TotalCount	1
+			MaxActive	1
+			SpawnCount	1
+			Support		Limited
+			WaitBeforeStarting	20
+			Where		spawnbot_suicide
+			RandomChoice
+			{
+				Squad
+				{
+					TFBot
+					{
+						Class	Scout
+						Health	1
+						Scale	0.01
+						Attributes	IgnoreFlag
+						CharacterAttributes
+						{
+							"active health degen"	-1
+							"voice pitch scale"		0
+						}
+						Message
+						{
+							Name		"{red}Walter White :{reset} My associate will also help you, it doesn't matter if he dies though. Keep me alive."
+							Delay		0
+							Cooldown	99999
+							Repeats		0
+						}
+					}
+				}
+			}
+		}
+
+		WaveSpawn
+		{
+			Name	wave5_soul
+			TotalCount	1
+			MaxActive	1
+			SpawnCount	1
+			WaitBeforeStarting	23
+			Where	spawnbot_w5_breakingbald
+			FirstSpawnWarningSound	"crois_w5_saul_spawn.mp3"
+			DoneWarningSound	"crois_w5_saul_death.mp3"
+			RandomChoice
+			{
+				Squad
+				{
+					TFBot
+					{
+						Template	W5_RED_Saul_Goodman
+					}
+				}
+			}
+		}
+
+
+		WaveSpawn
+		{
+			Name	wave5_crystalmethswarm
+			TotalCurrency	200
+			TotalCount	30
+			MaxActive	15
+			SpawnCount	5
+			WaitBeforeStarting	26
+			WaitBetweenSpawns	5
+			Where	spawnbot
+			Where	flankers
+			TFBot
+			{
+				Template	W5_MethCrystalAggressiveVariant
+			}
+		}
+		WaveSpawn
+		{
+			Name		w5_walt_text
+			TotalCount	1
+			MaxActive	1
+			SpawnCount	1
+			Support		Limited
+			WaitBeforeStarting	26
+			Where		spawnbot_suicide
+			RandomChoice
+			{
+				Squad
+				{
+					TFBot
+					{
+						Class	Scout
+						Health	1
+						Scale	0.01
+						Attributes	IgnoreFlag
+						CharacterAttributes
+						{
+							"active health degen"	-1
+							"voice pitch scale"		0
+						}
+						Message
+						{
+							Name		"{red}Walter White :{reset} The meth monsters have arrived! Do not fail me."
+							Delay		0
+							Cooldown	99999
+							Repeats		0
+						}
+					}
+				}
+			}
+		}
+
+
+		WaveSpawn
+		{
+			Name		w5_walt_text2
+			TotalCount	1
+			MaxActive	1
+			SpawnCount	1
+			Support		Limited
+			WaitForAllDead	wave5_crystalmethswarm
+			Where		spawnbot_suicide
+			WaitBeforeStarting	0
+			RandomChoice
+			{
+				Squad
+				{
+					TFBot
+					{
+						Class	Scout
+						Health	1
+						Scale	0.01
+						Attributes	IgnoreFlag
+						CharacterAttributes
+						{
+							"active health degen"	-1
+							"voice pitch scale"		0
+						}
+						Message
+						{
+							Name		"{red}Walter White :{reset} Good job, the meth has been purified and secured..."
+							Delay		0
+							Cooldown	99999
+							Repeats		0
+						}
+					}
+				}
+			}
+		}
+		WaveSpawn
+		{
+			Name		w5_walt_text2
+			TotalCount	1
+			MaxActive	1
+			SpawnCount	1
+			Support		Limited
+			WaitForAllDead	wave5_crystalmethswarm
+			Where		spawnbot_suicide
+			WaitBeforeStarting	4
+			RandomChoice
+			{
+				Squad
+				{
+					TFBot
+					{
+						Class	Scout
+						Health	1
+						Scale	0.01
+						Attributes	IgnoreFlag
+						CharacterAttributes
+						{
+							"active health degen"	-1
+							"voice pitch scale"		0
+						}
+						Message
+						{
+							Name		"{red}Walter White :{reset} However, one small issue, my nemesis is now here and wants both my head and my meth."
+							Delay		0
+							Cooldown	99999
+							Repeats		0
+						}
+					}
+				}
+			}
+		}
+		WaveSpawn
+		{
+			Name		w5_walt_text2
+			TotalCount	0
+			MaxActive	0
+			SpawnCount	0
+			Support		Limited
+			WaitForAllDead	wave5_crystalmethswarm
+			WaitBeforeStarting	8
+			FirstSpawnOutput
+			{
+				Target	gus_cutscene_relay
+				Action	Trigger
+			}
+		}
+
+
+		WaveSpawn
+		{
+			Name	wave5_GUSTAVO_FRING_GAMING
+			WaitForAllDead	wave5_crystalmethswarm
+			TotalCurrency	500
+			TotalCount	1
+			MaxActive	1
+			SpawnCount	1
+			WaitBeforeStarting	8
+			Where	spawnbot_gustavo_fring
+			RandomChoice
+			{
+				Squad
+				{
+					TFBot
+					{
+						Template	W5_Boss_Gustavo_Fring
+					}
+				}
+			}
+		}
+		WaveSpawn
+		{
+			Name	wave5_support
+			WaitForAllDead	wave5_crystalmethswarm
+			TotalCurrency	200
+			TotalCount	24
+			MaxActive	9
+			SpawnCount	3
+			WaitBeforeStarting	15
+			WaitBetweenSpawns	3
+			Where	spawnbot
+			Where	flankers
+			Support	1
+			FirstSpawnOutput
+			{
+				Target	gus_view_control
+				Action	Kill
+			}
+			RandomChoice
+			{
+				TFBot
+				{
+					Template	W5_Engineer_TortoiseBomber
+				}
+				TFBot
+				{
+					Template	W5_Sniper_MACHINEGUNCHIMP
+				}
+				TFBot
+				{
+					Template	W5_Soldier_FulminatedMercuryLauncher
+				}
+			}
+		}
+		WaveSpawn
+		{
+			Name		w5_walt_text2
+			TotalCount	1
+			MaxActive	1
+			SpawnCount	1
+			Support		Limited
+			WaitForAllDead	wave5_crystalmethswarm
+			Where		spawnbot_suicide
+			WaitBeforeStarting	15
+			RandomChoice
+			{
+				Squad
+				{
+					TFBot
+					{
+						Class	Scout
+						Health	1
+						Scale	0.01
+						Attributes	IgnoreFlag
+						CharacterAttributes
+						{
+							"active health degen"	-1
+							"voice pitch scale"		0
+						}
+						Message
+						{
+							Name		"{red}Walter White :{reset} He needs to be stopped or else I'm fucked and also you're fucked! Fortunately I've prepared for this exact situation..."
+							Delay		0
+							Cooldown	99999
+							Repeats		0
+						}
+					}
+				}
+			}
+		}
+		WaveSpawn
+		{
+			Name	w5_hector_tank
+			TotalCount	1
+			SpawnCount	1
+			WaitForAllDead	wave5_crystalmethswarm
+			WaitBeforeStarting	20
+			Support		Limited
+			Tank
+			{
+				Name	"hector_tank"
+				Health	69420
+				Speed	100
+				StartingPathTrackNode	"hector_tank_path_1"
+				DisableSmokestack		1	[$SIGSEGV]
+				DisableTracks			1	[$SIGSEGV]
+				SpawnTemplate	"HectorSalamancaTank"
+				TeamNum 		2
+				ClassIcon		tank_red_lite
+				Scale			0.75
+				MaxTurnRate		1000
+				Model  
+				{
+					Default "models/empty.mdl" 
+					LeftTrack "models/empty.mdl" 
+					RightTrack "models/empty.mdl" 
+					Destruction "models/empty.mdl" 
+				}
+				OnBombDroppedOutput 
+				{
+					Target gus_death_relay
+					Action Trigger
+				}
+			}
+		}
+		WaveSpawn
+		{
+			Name		w5_walt_text2
+			TotalCount	1
+			MaxActive	1
+			SpawnCount	1
+			Support		Limited
+			WaitForAllDead	wave5_crystalmethswarm
+			Where		spawnbot_suicide
+			WaitBeforeStarting	20
+			RandomChoice
+			{
+				Squad
+				{
+					TFBot
+					{
+						Class	Scout
+						Health	1
+						Scale	0.01
+						Attributes	IgnoreFlag
+						CharacterAttributes
+						{
+							"active health degen"	-1
+							"voice pitch scale"		0
+						}
+						Message
+						{
+							Name		"{red}Walter White :{reset} This... is a giant wheelchair armed with a giant pipebomb. Protect it until it reaches Gustavo Fring. Or else you lose."
+							Delay		0
+							Cooldown	99999
+							Repeats		0
+						}
+					}
+				}
+			}
+		}
+		WaveSpawn
+		{
+			Name	w5_hector_death_check
+			WaitForAllDead	w5_hector_tank
+			TotalCount	1
+			MaxActive	1
+			SpawnCount	1
+			Support		Limited
+			WaitBeforeStarting	5
+			RandomChoice
+			{
+				Squad
+				{
+					TFBot
+					{
+						Class	Scout
+						Health	1
+						Scale	0.01
+						Attributes	IgnoreFlag
+						CharacterAttributes
+						{
+							"active health degen"	-1
+							"voice pitch scale"		0
+						}
+					}
+				}
+			}
+			FirstSpawnOutput
+			{
+				Target	boss_deploy_relay
+				Action	Trigger
+			}
+		}
+
+
+
+		WaveSpawn
+		{
+			Name	w5_ending
+			WaitForAllDead	wave5_GUSTAVO_FRING_GAMING
+			TotalCount	1
+			MaxActive	1
+			SpawnCount	1
+			Support		Limited
+			Where		spawnbot_suicide
+			WaitBeforeStarting	5
+
+			RandomChoice
+			{
+				Squad
+				{
+					TFBot
+					{
+						Class	Scout
+						Health	1
+						Scale	0.01
+						Attributes	IgnoreFlag
+						CharacterAttributes
+						{
+							"active health degen"	-1
+							"voice pitch scale"		0
+						}
+						Message
+						{
+							Name		"{red}Walter White :{reset} I AM THE ONE WHO KNOCKS. Thank you for your help, you will be rewarded... soon."
+							Delay		0
+							Cooldown	99999
+							Repeats		0
+						}
+					}
+				}
+			}
+			DoneOutput
+			{
+				Target	walter_hurt_trigger
+				Action	Enable
+			}
+		}
+		WaveSpawn
+		{
+			Name	w5_ending
+			WaitForAllDead	wave5_GUSTAVO_FRING_GAMING
+			TotalCount	1
+			MaxActive	1
+			SpawnCount	1
+			Support		Limited
+			Where		spawnbot_suicide
+			WaitBeforeStarting	5
+
+			RandomChoice
+			{
+				Squad
+				{
+					TFBot
+					{
+						Class	Scout
+						Health	1
+						Scale	0.01
+						Attributes	IgnoreFlag
+						CharacterAttributes
+						{
+							"active health degen"	-1
+							"voice pitch scale"		0
+						}
+					}
+				}
+			}
+			DoneOutput
+			{
+				Target	saul_hurt_trigger
+				Action	Enable
+			}
+		}
+		WaveSpawn
+		{
+			Name	w5_ending
+			WaitForAllDead	wave5_GUSTAVO_FRING_GAMING
+			TotalCount	1
+			MaxActive	1
+			SpawnCount	1
+			Support		Limited
+			Where		spawnbot_suicide
+			WaitBeforeStarting	5
+
+			RandomChoice
+			{
+				Squad
+				{
+					TFBot
+					{
+						Class	Scout
+						Health	1
+						Scale	0.01
+						Attributes	IgnoreFlag
+						CharacterAttributes
+						{
+							"active health degen"	-1
+							"voice pitch scale"		0
+						}
+					}
+				}
+			}
+			DoneOutput	// extra countermeasure to KILL hector salamanca
+			{
+				Target	hector_tank
+				Action	RemoveHealth
+				Param	100000
+			}
+		}
+	}
+	Wave	// PART 6 // SHAKE THAT SHIT
+	{
+		StartWaveOutput
+		{
+			Target	wave_start_relay
+			Action	Trigger
+		}
+		DoneOutput
+		{
+			Target	wave_finished_relay
+			Action	Trigger
+		}
+
+		CustomWaveNumber 	4	[$SIGSEGV]
+		CustomMaxWaveNumber 5	[$SIGSEGV]
+
+		SpawnTemplate	"W6_StupidMusic"
+		SpawnTemplate	"YOU_CAN_DO_THE_MISSILE_SHAKER_HUH"
+
+		WaveSpawn
+		{
+			Name	wave6_a
+			TotalCurrency	50
+			TotalCount	20
+			MaxActive	8
+			SpawnCount	2
+			WaitBetweenSpawns	2
+			Where	spawnbot
+			TFBot
+			{
+				Template	W6_BasherScout
+			}
+		}
+		WaveSpawn
+		{
+			Name	wave6_a
+			TotalCurrency	100
+			TotalCount	15
+			MaxActive	9
+			SpawnCount	3
+			WaitBetweenSpawns	4
+			Where	flankers
+			TFBot
+			{
+				Template	W6_AirStriker
+			}
+		}
+
+		WaveSpawn
+		{
+			Name	wave6_b
+			WaitForAllDead	wave6_a
+			TotalCurrency	250
+			TotalCount	5
+			MaxActive	5
+			SpawnCount	1
+			WaitBetweenSpawns	6.9
+			Where	spawnbot
+			Where	flankers
+			TFBot
+			{
+				Template	W6_GSoldier_HomingNuker
+			}
+		}
+
+
+		WaveSpawn
+		{
+			Name	wave6_the_swarm
+			WaitForAllDead	wave6_b
+			TotalCurrency	100
+			TotalCount	20
+			MaxActive	20
+			SpawnCount	1
+			WaitBeforeStarting	5
+			WaitBetweenSpawns	0.25
+			Where	spawnbot_gustavo_fring
+			TFBot
+			{
+				Template	W6_Flygineer_Scumbag
+			}
+		}
+		WaveSpawn
+		{
+			Name			wave6_missile_shaker_initiation
+			WaitForAllDead	wave6_b
+			Support		Limited
+			TotalCount	0
+			MaxActive	0
+			SpawnCount	0
+			WaitBeforeStarting	15
+			FirstSpawnOutput
+			{
+				Target	missile_shaker_begin_relay
+				Action	Trigger
+			}
+			
+		}
+
+		WaveSpawn
+		{
+			Name			dear_fucking_god
+			WaitForAllDead	wave6_the_swarm
+			TotalCurrency	100
+			TotalCount	1
+			MaxActive	1
+			SpawnCount	1
+			Where		flankers
+			WaitBeforeStarting	5
+			FirstSpawnOutput
+			{
+				Target	w6_thug_shaker_music
+				Action	PlaySound
+			}
+			TFBot
+			{
+				Template	W6_I_PUT_THE_NEW_FORGIS_ON_THE_JEEP	
+			}
+		}
+		WaveSpawn
+		{
+			Name			wave6_anti_softlock_engage
+			WaitForAllDead	wave6_the_swarm
+			Support		Limited
+			TotalCount	0
+			MaxActive	0
+			SpawnCount	0
+			WaitBeforeStarting	60
+			FirstSpawnMessage	"{red}WARNING: MEMETIC ANTI-SOFTLOCK PROTOCOL ENGAGED"
+			FirstSpawnOutput
+			{
+				Target	w6_anti_softlock
+				Action	Enable
+				Delay	3
+			}
+			
+		}
+	}
+	Wave	// PART 7 // FINALE
+	{
+		StartWaveOutput
+		{
+			Target	wave_start_relay
+			Action	Trigger
+		}
+		DoneOutput					
+		{
+			Target	wave_finished_relay
+			Action	Trigger
+		}
+
+		CustomWaveNumber 	5	[$SIGSEGV]
+		CustomMaxWaveNumber 5	[$SIGSEGV]
+
+		SpawnTemplate	"FinalWaveLogic"
+
+		WaveSpawn
+		{
+			Name	wave7_intro_1
+			TotalCount	1
+			MaxActive	1
+			SpawnCount	1
+			Where		spawnbot
+			FirstSpawnOutput
+			{
+				Target	finale_initiation_backup_relay
+				Action	Trigger
+			}
+			TFBot
+			{
+				Template	T_TFBot_Giant_Major_League
+				CharacterAttributes
+				{
+					"dmg taken increased"	100
+					"damage penalty"		0.02
+					"move speed bonus"		0.8
+				}
+			}
+		}
+		WaveSpawn
+		{
+			Name			wave7_ambience_init_1
+			WaitForAllDead	wave7_intro_1
+			TotalCount	0
+			MaxActive	0
+			SpawnCount	0
+			Support		Limited
+			WaitBeforeStarting	2.5
+			FirstSpawnWarningSound	"crois_w7_cavenoise_1.mp3"
+			FirstSpawnOutput
+			{
+				Target	finale_cc_tier1
+				Action	Enable
+			}
+		}
+		WaveSpawn
+		{
+			Name			wave7_ambience_init_1
+			WaitForAllDead	wave7_intro_1
+			TotalCount	0
+			MaxActive	0
+			SpawnCount	0
+			Support		Limited
+			WaitBeforeStarting	6.9
+			FirstSpawnOutput
+			{
+				Target	finale_skytitan_relay_1
+				Action	Trigger
+			}
+		}
+
+
+		WaveSpawn
+		{
+			Name			wave7_intro_2
+			WaitForAllDead	wave7_intro_1
+			TotalCount	1
+			MaxActive	1
+			SpawnCount	1
+			Where		spawnbot
+			WaitBeforeStarting	10
+			TFBot
+			{
+				Template	T_TFBot_Chief_Pyro
+				CharacterAttributes
+				{
+					"dmg taken increased"	100
+					"damage penalty"		0.02
+					"move speed bonus"		0.8
+				}
+			}
+		}
+		WaveSpawn
+		{
+			Name			wave7_ambience_init_2
+			WaitForAllDead	wave7_intro_2
+			TotalCount	0
+			MaxActive	0
+			SpawnCount	0
+			Support		Limited
+			WaitBeforeStarting	2.5
+			FirstSpawnOutput
+			{
+				Target	finale_skytitan_relay_2
+				Action	Trigger
+			}
+		}
+
+
+		WaveSpawn
+		{
+			Name			wave7_intro_3
+			WaitForAllDead	wave7_intro_2
+			TotalCount	1
+			MaxActive	1
+			SpawnCount	1
+			Where		spawnbot
+			WaitBeforeStarting	7.5
+			TFBot
+			{
+				Template	T_TFBot_Giant_Metalbeard
+				CharacterAttributes
+				{
+					"dmg taken increased"	100
+					"damage penalty"		0.02
+					"move speed bonus"		0.8
+				}
+			}
+		}
+		WaveSpawn
+		{
+			Name			wave7_ambience_init_3
+			WaitForAllDead	wave7_intro_3
+			TotalCount	0
+			MaxActive	0
+			SpawnCount	0
+			Support		Limited
+			WaitBeforeStarting	2.5
+			FirstSpawnWarningSound	"crois_w7_cavenoise_2.mp3"
+			FirstSpawnOutput
+			{
+				Target	finale_cc_tier1
+				Action	Disable
+			}
+		}
+		WaveSpawn
+		{
+			Name			wave7_ambience_init_3
+			WaitForAllDead	wave7_intro_3
+			TotalCount	0
+			MaxActive	0
+			SpawnCount	0
+			Support		Limited
+			WaitBeforeStarting	2.5
+			FirstSpawnOutput
+			{
+				Target	finale_cc_tier2
+				Action	Enable
+			}
+		}
+		WaveSpawn
+		{
+			Name			wave7_ambience_init_3
+			WaitForAllDead	wave7_intro_3
+			TotalCount	0
+			MaxActive	0
+			SpawnCount	0
+			Support		Limited
+			WaitBeforeStarting	6.9
+			FirstSpawnOutput
+			{
+				Target	finale_skytitan_relay_3
+				Action	Trigger
+			}
+		}
+
+
+		WaveSpawn
+		{
+			Name			wave7_intro_4
+			WaitForAllDead	wave7_intro_3
+			TotalCount	1
+			MaxActive	1
+			SpawnCount	1
+			Where		spawnbot
+			WaitBeforeStarting	10
+			TFBot
+			{
+				Template	T_TFBot_Chief_Gauntlet
+				CharacterAttributes
+				{
+					"dmg taken increased"	100
+					"damage penalty"		0.02
+					"move speed bonus"		1
+				}
+			}
+		}
+		WaveSpawn
+		{
+			Name			wave7_ambience_init_4
+			WaitForAllDead	wave7_intro_4
+			TotalCount	0
+			MaxActive	0
+			SpawnCount	0
+			Support		Limited
+			WaitBeforeStarting	2.5
+			FirstSpawnOutput
+			{
+				Target	finale_skytitan_relay_4
+				Action	Trigger
+			}
+		}
+
+
+		WaveSpawn
+		{
+			Name			wave7_intro_final
+			WaitForAllDead	wave7_intro_4
+			TotalCount	1
+			MaxActive	1
+			SpawnCount	1
+			Where		spawnbot
+			WaitBeforeStarting	7.5
+			TFBot
+			{
+				Template	T_TFBot_Chief_Soldier
+				CharacterAttributes
+				{
+					"dmg taken increased"	100
+					"damage penalty"		0.02
+					"move speed bonus"		0.8
+				}
+			}
+		}
+		WaveSpawn
+		{
+			Name			wave7_ambience_init_final
+			WaitForAllDead	wave7_intro_final
+			TotalCount	0
+			MaxActive	0
+			SpawnCount	0
+			Support		Limited
+			WaitBeforeStarting	2.5
+			FirstSpawnOutput
+			{
+				Target	finale_cc_tier2
+				Action	Disable
+			}
+		}
+		WaveSpawn
+		{
+			Name			wave7_ambience_init_final
+			WaitForAllDead	wave7_intro_final
+			TotalCount	0
+			MaxActive	0
+			SpawnCount	0
+			Support		Limited
+			WaitBeforeStarting	2.5
+			FirstSpawnWarningSound	"crois_w7_cavenoise_3.mp3"
+			FirstSpawnOutput
+			{
+				Target	finale_cc_tier3
+				Action	Enable
+			}
+		}
+		WaveSpawn
+		{
+			Name			wave7_ambience_init_final
+			WaitForAllDead	wave7_intro_final
+			TotalCount	0
+			MaxActive	0
+			SpawnCount	0
+			Support		Limited
+			WaitBeforeStarting	6.9
+			FirstSpawnOutput
+			{
+				Target	finale_skytitan_relay_5
+				Action	Trigger
+			}
+		}
+
+		WaveSpawn
+		{
+			Name		w7_final_boss_text
+			TotalCount	0
+			MaxActive	0
+			SpawnCount	0
+			Support		Limited
+			WaitBeforeStarting	10
+			WaitForAllDead		wave7_intro_final
+			FirstSpawnMessage	"{red}Well... you've finally made it to the final challenge."
+		}
+		WaveSpawn
+		{
+			Name		w7_final_boss_text
+			TotalCount	0
+			MaxActive	0
+			SpawnCount	0
+			Support		Limited
+			WaitBeforeStarting	14
+			WaitForAllDead		wave7_intro_final
+			FirstSpawnMessage	"{red}You might be wondering... what could be the final thing a bunch of funny baguette people possibly face off against?"
+			FirstSpawnOutput
+			{
+				Target	w7_final_boss_music
+				Action	PlaySound
+			}
+		}
+		WaveSpawn
+		{
+			Name		w7_final_boss_text
+			TotalCount	0
+			MaxActive	0
+			SpawnCount	0
+			Support		Limited
+			WaitBeforeStarting	18
+			WaitForAllDead		wave7_intro_final
+			FirstSpawnMessage	"{red}To that I ask you, what is the worst possible thing you could present to the French?"
+		}
+		WaveSpawn
+		{
+			Name		w7_final_boss_text
+			TotalCount	0
+			MaxActive	0
+			SpawnCount	0
+			Support		Limited
+			WaitBeforeStarting	23.5
+			WaitForAllDead		wave7_intro_final
+			FirstSpawnMessage	"{red}Oh, you know EXACTLY what that would be..."
+		}
+		WaveSpawn
+		{
+			Name		w7_final_boss_text
+			TotalCount	0
+			MaxActive	0
+			SpawnCount	0
+			Support		Limited
+			WaitBeforeStarting	27
+			WaitForAllDead		wave7_intro_final
+			FirstSpawnMessage	"{red}THERE'S NOTHING WORSE THAN AMERICAN BREAD"
+		}
+
+
+		WaveSpawn
+		{
+			Name	AND_HERE_WE_ARE
+			WaitForAllDead	wave7_intro_final
+			TotalCount	1
+			MaxActive	1
+			SpawnCount	1
+			Where		spawnbot
+			WaitBeforeStarting	34
+			FirstSpawnMessage	"{fffd00}[Music] Now Playing: Yakuza 6 - The Way Of Life (Final Boss)"
+			RandomChoice
+			{
+				Squad
+				{
+					TFBot
+					{
+						Template	THE_TRULY_FINAL_BOSS_OF_FINAL_BOSSES
+					}
+				}
+			}
+			FirstSpawnOutput
+			{
+				Target	final_boss_spawn_relay
+				Action	Trigger
+			}
+		}
+		WaveSpawn
+		{
+			Name		the_final_chapter
+			TotalCount	0
+			MaxActive	0
+			SpawnCount	0
+			Support		Limited
+			WaitForAllDead		AND_HERE_WE_ARE
+			FirstSpawnOutput
+			{
+				Target	w7_final_boss_music
+				Action	FadeOut
+				Param	5
+			}
+		}
+		WaveSpawn
+		{
+			Name		the_final_chapter
+			TotalCount	0
+			MaxActive	0
+			SpawnCount	0
+			Support		Limited
+			WaitForAllDead		AND_HERE_WE_ARE
+			FirstSpawnOutput
+			{
+				Target	finale_cc_tier3
+				Action	Disable
+			}
+		}
+		WaveSpawn
+		{
+			Name		the_final_chapter
+			TotalCount	0
+			MaxActive	0
+			SpawnCount	0
+			Support		Limited
+			WaitForAllDead		AND_HERE_WE_ARE
+			WaitBeforeStarting	5
+			FirstSpawnOutput
+			{
+				Target	the_final_relay
+				Action	Trigger
+			}
+		}
+		WaveSpawn
+		{
+			Name		the_final_chapter
+			TotalCount	0
+			MaxActive	0
+			SpawnCount	0
+			Support		Limited
+			WaitForAllDead		AND_HERE_WE_ARE
+			FirstSpawnMessage		"{fffd00}THE END? OR TO BE CONTINUED?"
+			WaitBeforeStarting		16
+		}
+
+
+		WaveSpawn
+		{
+			Name			the_final_chapter
+			WaitForAllDead	AND_HERE_WE_ARE
+			TotalCount	1
+			MaxActive	1
+			SpawnCount	1
+			WaitBeforeStarting		22
+			Where					spawnbot_suicide
+			FirstSpawnMessage		"{fffd00}[Music] Now Playing: ULTRAKILL - Silence, Introspection"
+			FirstSpawnWarningSound	"crois_ending_music.mp3"
+			RandomChoice
+			{
+				Squad
+				{
+					TFBot
+					{
+						Class	Scout
+						Health	1
+						Scale	0.01
+						Attributes	IgnoreFlag
+						CharacterAttributes
+						{
+							"active health degen"	-1
+							"voice pitch scale"		0
+						}
+					}
+				}
+			}
+		}
+
+	}
+
+
+
+}
