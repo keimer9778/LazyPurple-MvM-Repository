@@ -1,0 +1,3506 @@
+//Giant Bird 
+
+//Credit:
+// Nopey for the Scout Bot, Sniper AI and Demoknight script
+// Orhbus for helping with the Music looping
+// lite for helping with the hyper icons
+// Seelpit for the Skybox Script
+// Sergeant Table for the boss death animation template
+// mid for helping test the mission + feedback
+// The Tragic Yule Bus for helping with the Blimp Logic
+
+//W5 Music https://www.youtube.com/watch?v=NBFuzr_GnqQ //By bobacupcake
+//w4 Music https://www.youtube.com/watch?v=-8A6_Q-CQjY  //TF2 Cadaver theme
+//W3 Music https://www.youtube.com/watch?v=ObNYdv9q3KE  //Angry Birds
+
+#base robot_standard.pop
+#base robot_giant.pop
+#base robot_moonlight_nai.pop
+#base birdy_blimp.pop 
+
+WaveSchedule
+{
+    StartingCurrency 800
+    RespawnWaveTime 4
+	FixedRespawnWaveTime No
+    ForceRedMoney 1
+	CanBotsAttackWhileInSpawnRoom No
+    SniperAllowHeadshots 1
+    BotsAreHumans  2 // Makes the Human
+    NoRomevisionCosmetics	1 //All roads dont lead to Rome
+    //Bird Icons//
+    PrecacheGeneric "materials/hud/leaderboard_class_demo_bird"
+    PrecacheGeneric "materials/hud/leaderboard_class_demo_bird_giant"
+    PrecacheGeneric "materials/hud/leaderboard_class_demo_bird_random"
+    PrecacheGeneric "materials/hud/leaderboard_class_engineer_bird"
+    PrecacheGeneric "materials/hud/leaderboard_class_engineer_bird_giant"
+    PrecacheGeneric "materials/hud/leaderboard_class_soldier_hawkboss"
+    PrecacheGeneric "materials/hud/leaderboard_class_heavy_bird"
+    PrecacheGeneric "materials/hud/leaderboard_class_heavy_bird_giant"
+    PrecacheGeneric "materials/hud/leaderboard_class_medic_bird"
+    PrecacheGeneric "materials/hud/leaderboard_class_medic_bird_giant"
+    PrecacheGeneric "materials/hud/leaderboard_class_pyro_bird2"
+    PrecacheGeneric "materials/hud/leaderboard_class_pyro_bird2_giant"
+    PrecacheGeneric "materials/hud/leaderboard_class_scout_birb"
+    PrecacheGeneric "materials/hud/leaderboard_class_scout_birb_milk2"
+    PrecacheGeneric "materials/hud/leaderboard_class_scout_birb_giant"
+    PrecacheGeneric "materials/hud/leaderboard_class_sniper_bird"
+    PrecacheGeneric "materials/hud/leaderboard_class_sniper_bird_jarate2"
+    PrecacheGeneric "materials/hud/leaderboard_class_sniper_bird_brick2"
+    PrecacheGeneric "materials/hud/leaderboard_class_sniper_bird_hyper"
+    PrecacheGeneric "materials/hud/leaderboard_class_sniper_bird_giant"
+    PrecacheGeneric "materials/hud/leaderboard_class_soldier_bird"
+    PrecacheGeneric "materials/hud/leaderboard_class_soldier_bird_giant"
+    PrecacheGeneric "materials/hud/leaderboard_class_spy_bird"
+    PrecacheGeneric "materials/hud/leaderboard_class_spy_bird_giant"
+    //Boss Icons
+    PrecacheGeneric "materials/hud/leaderboard_class_soldier_incendiary_spammer_giant"
+    PrecacheGeneric "materials/hud/leaderboard_class_soldier_golden_lite"
+    PrecacheGeneric "materials/hud/leaderboard_class_soldier_rocket_shotgun_charged"
+    PrecacheGeneric "materials/hud/leaderboard_class_pyro_hot_nys"
+    PrecacheGeneric "materials/hud/leaderboard_class_heavy_head_nys"
+    PrecacheGeneric "materials/hud/leaderboard_class_spy_revolver_lite"
+    // Music //
+    PrecacheSound "birdboss.mp3"
+    PrecacheSound "cadaverw4.mp3"
+    PrecacheSound "angrybirdw3.mp3"
+    PrecacheSound "shred_alert.wav"
+    PrecacheSound "rimshot.wav"
+
+    //Weapons that shouldnt be precache but apperently it needs to be//
+    PrecacheModel "models/workshop/weapons/c_models/c_invasion_wrangler/c_invasion_wrangler.mdl"
+    PrecacheModel "models/weapons/c_models/c_tw_eagle/c_tw_eagle.mdl"
+
+    PointTemplates // Copied from Echoes of a Warzone but Modified it to suit this pop (Credit to Sergeant Table)
+    {
+        boss_logicA
+        {
+			OnSpawnOutput
+			{
+				Target "upper_text"
+				Action "Display"
+				Delay 4
+			}
+			OnSpawnOutput
+			{
+				Target "text_lower"
+				Action "Display"
+				Delay 5
+			}
+            game_text
+			{
+				"origin" "1984 1984 99999"
+				"targetname" "upper_text"
+				"message" "Flock Leaders:"
+				"x" "-1"
+				"y" "0.4"
+				"spawnflags" "1"
+				"effect" "2"
+				"channel" "1"
+				"color" "255 255 255"
+				"fxtime" "0.2"
+				"fadeout" "1"
+				//"fadein" "0"
+				"holdtime" "5"
+			}
+
+			game_text
+			{
+				"origin" "1984 1984 99999"
+				"targetname" "text_lower"
+				"message" "Please spare us"
+				"x" "-1"
+				"y" "0.45"
+				"channel" "0"
+				"spawnflags" "1"
+				"color" "255 255 255"
+				"fadein" "0.2"
+				"fadeout" "1"
+				"holdtime" "2.8"
+			}
+            game_text
+			 {
+				"origin" "1984 1984 99999"
+				"targetname" "layer_text"
+				"message" "Please spare us"
+				"x" "-1"
+				"y" "0.45"
+				"channel" "4"
+				"spawnflags" "1"
+				"color" "255 0 0"
+				"fadein" "0.2"
+				"fadeout" "1"
+				"holdtime" "3"
+			 }
+        }
+        boss_logicB
+        {
+			OnSpawnOutput
+			{
+				Target "upper_text"
+				Action "Display"
+				Delay 2
+			}
+			OnSpawnOutput
+			{
+				Target "text_lower"
+				Action "Display"
+				Delay 3
+			}
+            game_text
+			{
+				"origin" "1984 1984 99999"
+				"targetname" "upper_text"
+				"message" "Flock Leaders:"
+				"x" "-1"
+				"y" "0.4"
+				"spawnflags" "1"
+				"effect" "2"
+				"channel" "1"
+				"color" "255 255 255"
+				"fxtime" "0.2"
+				"fadeout" "1"
+				//"fadein" "0"
+				"holdtime" "5"
+			}
+			game_text
+			{
+				"origin" "1984 1984 99999"
+				"targetname" "text_lower"
+				"message" "Where did we go so wrong..."
+				"x" "-1"
+				"y" "0.45"
+				"channel" "0"
+				"spawnflags" "1"
+				"color" "255 255 255"
+				"fadein" "0.2"
+				"fadeout" "1"
+				"holdtime" "2.8"
+			}
+            game_text
+			 {
+				"origin" "1984 1984 99999"
+				"targetname" "layer_text"
+				"message" "Where did we go so wrong..."
+				"x" "-1"
+				"y" "0.45"
+				"channel" "4"
+				"spawnflags" "1"
+				"color" "255 0 0"
+				"fadein" "0.2"
+				"fadeout" "1"
+				"holdtime" "3"
+			 }
+        }
+         boss_logicC 
+        {
+			OnSpawnOutput
+			{
+				Target "upper_text"
+				Action "Display"
+				Delay 2
+			}
+			OnSpawnOutput
+			{
+				Target "text_lower"
+				Action "Display"
+				Delay 3
+			}
+            game_text
+			{
+				"origin" "1984 1984 99999"
+				"targetname" "upper_text"
+				"message" "Flock Leaders:"
+				"x" "-1"
+				"y" "0.4"
+				"spawnflags" "1"
+				"effect" "2"
+				"channel" "1"
+				"color" "255 255 255"
+				"fxtime" "0.2"
+				"fadeout" "1"
+				//"fadein" "0"
+				"holdtime" "5"
+			}
+
+			game_text
+			{
+				"origin" "1984 1984 99999"
+				"targetname" "text_lower"
+				"message" "You will regret this"
+				"x" "-1"
+				"y" "0.45"
+				"channel" "0"
+				"spawnflags" "1"
+				"color" "255 255 255"
+				"fadein" "0.2"
+				"fadeout" "1"
+				"holdtime" "2.8"
+			}
+            game_text
+			 {
+				"origin" "1984 1984 99999"
+				"targetname" "layer_text"
+				"message" "You will regret this"
+				"x" "-1"
+				"y" "0.45"
+				"channel" "4"
+				"spawnflags" "1"
+				"color" "255 0 0"
+				"fadein" "0.2"
+				"fadeout" "1"
+				"holdtime" "3"
+			 }
+        }
+         boss_logicD
+        {
+			OnSpawnOutput
+			{
+				Target "upper_text"
+				Action "Display"
+				Delay 6
+			}
+			OnSpawnOutput
+			{
+				Target "text_lower"
+				Action "Display"
+				Delay 7.5
+			}
+            game_text
+			{
+				"origin" "1984 1984 99999"
+				"targetname" "upper_text"
+				"message" "Apex Bird"
+				"x" "-1"
+				"y" "0.4"
+				"spawnflags" "1"
+				"effect" "2"
+				"channel" "1"
+				"color" "255 255 255"
+				"fxtime" "0.2"
+				"fadeout" "1"
+				//"fadein" "0"
+				"holdtime" "5"
+			}
+
+			game_text
+			{
+				"origin" "1984 1984 99999"
+				"targetname" "text_lower"
+				"message" "Great Blue Eagle "
+				"x" "-1"
+				"y" "0.45"
+				"channel" "0"
+				"spawnflags" "1"
+				"color" "255 255 255"
+				"fadein" "0.2"
+				"fadeout" "1"
+				"holdtime" "2.8"
+			}
+            game_text
+			{
+				"origin" "1984 1984 99999"
+				"targetname" "layer_text"
+				"message" "Great Blue Eagle"
+				"x" "-1"
+				"y" "0.45"
+				"channel" "4"
+				"spawnflags" "1"
+				"color" "255 0 0"
+				"fadein" "0.2"
+				"fadeout" "1"
+				"holdtime" "3"
+			}
+        }
+        birdgetrektanimation 
+		{
+            KeepAlive 1
+            OnSpawnOutput
+			{
+				Target "Birdhat"
+				Action "TurnOff"
+			}
+			OnParentKilledOutput
+			{
+				Target "sayonarababies"
+				Action Enable
+			}
+			OnParentKilledOutput
+			{
+				Target "spawnbot"
+				Action disable
+			}
+			OnParentKilledOutput
+			{
+				Target "flank"
+				Action disable
+			}
+            OnParentKilledOutput
+			{
+				Target "top"
+				Action disable
+			}
+			OnParentKilledOutput
+			{
+				Target "Flyhighmyhomieeagle"
+				Action Enable
+			}
+			OnParentKilledOutput
+			{
+				Target "tf_gamerules"
+				Action PlayVO
+				Param "vo\mvm\norm\soldier_item_birdhead_on_fire01.mp3"
+			}
+            OnParentKilledOutput
+			{
+				Target "Birdhat"
+				Action "TurnOn"
+			}
+			OnParentKilledOutput
+			{
+				Target "Flyhighmyhomieeagle"
+				Action "SetPlayBackRate"
+				Param "0.6"
+				Delay 0.1
+			}
+			trigger_hurt
+			{
+				"targetname" "sayonarababies"
+				"origin" "0 0 0"
+				"mins" "-5000 -5000 -5000"
+				"maxs" "5000 5000 5000"
+				"damage" "100000"
+				"damagecap" "1000000"
+				"damagemodel" "0"
+				"damagetype" "0"
+				"filtername" "filter_bluteam"
+				"nodmgforce" "1"
+				"spawnflags" "1"
+				"StartDisabled" "1"
+			}
+            prop_dynamic_ornament
+			{
+				"targetname" "Birdhat"
+				"model" "models/workshop/player/items/soldier/sum20_hawk_warrior/sum20_hawk_warrior.mdl"
+				"solid" "0"
+				"disablebonefollowers" "1"
+				"disableshadows" "1"
+				"skin" "1"
+				"initialowner" "Flyhighmyhomieeagle"
+			}
+			prop_dynamic //taunt_killer_joke_soldier
+			{
+				"targetname" "Flyhighmyhomieeagle"
+				"model" "models\player\soldier.mdl"
+				"modelscale" "1.75"
+				"origin" "0 0 0"
+				"angles" "0 0 0"
+				"defaultanim" "taunt_killer_joke_soldier"
+				"skin" "1"
+                "disablebonefollowers" "1"
+				"startdisabled" "1"
+				"OnAnimationBegun" "!self,SetPlayBackRate,0,,-1"
+                "OnAnimationBegun" "player,$PlaySoundToSelf,rimshot.wav,,0,-1"
+				"OnAnimationDone" "!self,SetPlayBackRate,0,,-1"
+				"OnAnimationDone" "eagleisdown,Trigger,,0,-1"
+				"OnAnimationDone" "!self,kill,,0,-1"
+                
+			}
+            KeepAlive 1
+			logic_relay
+			{
+				"targetname" "eagleisdown"
+                "OnTrigger" "kaboom,Start,,0,-1"
+                "OnTrigger" "kaboom,Stop,,3,-1"
+				"OnTrigger" "ripeagle,Start,,0,-1"
+                "OnTrigger" "ripeagle,Stop,,3,-1"
+                "OnTrigger" "finalrumble,StartShake,,0,-1"
+				"OnTrigger" "player,$PlaySoundToSelf,vo\mvm\norm\Soldier_sf12_taunts06.wav,0,-1"
+                "OnTrigger" "player,$PlaySoundToSelf,shred_alert.wav,0,-1"
+                "OnTrigger" "player,$playsoundtoself,mvm\mvm_tank_end.wav,0,-1"
+				"OnTrigger" "player,$playsoundtoself,mvm\mvm_tank_explode.wav,0,-1"
+            }
+            KeepAlive 1
+			info_particle_system
+			{
+				"targetname" "ripeagle"
+				"origin" "0 0 0"
+				"angles" "-90 0 0"
+				"effect_name" "bl_killtaunt" //Shred Alert
+			}
+            KeepAlive 1
+			info_particle_system
+			{
+				"targetname" "kaboom"
+				"origin" "0 0 0"
+				"angles" "-90 0 0"
+				"effect_name" "mvm_tank_destroy"
+			}
+            KeepAlive 1
+			env_shake
+			{
+				"targetname" "finalrumble"
+				"spawnflags" "4"
+				"amplitude" "16"
+				"radius" "1000"
+				"frequency" "12"
+				"duration" "3"
+			}
+        }
+        birdmusicw3
+        {
+            ambient_generic
+            {
+                "targetname" "musicplayer"
+                
+                "health"    "35"
+                "message"   "#angrybirdw3.mp3"
+                "spawnflags" "17"
+                "origin"    "0 0 0"
+                "pitch"     "100"
+            }
+            logic_relay
+            {
+                "targetname" "musicstart"
+                "OnTrigger" "musicplayer,Playsound,,0.2,-1"
+            }
+            logic_relay
+            {
+                "targetname" "musicend"
+                "OnTrigger" "musicplayer,Volume,0.01,0,-1"
+            }
+            logic_timer
+            {
+                "targetname" "musicplaya"
+                "RefireTime"    "133.0"
+                "StartDisabled"  "1"
+                "OnTimer"    "musicplayer,PlaySound,,0,-1"
+                "OnTimer"    "musicplayer,StopSound,,132,-1"
+                "OnTimer"    "musicplaya,ResetTimer,,0,-1"
+            }
+        }
+        birdmusicw4
+        {
+            ambient_generic
+            {
+                "targetname" "musicplayer"
+                
+                "health"    "35"
+                "message"   "#cadaverw4.mp3"
+                "spawnflags" "17"
+                "origin"    "0 0 0"
+                "pitch"     "100"
+            }
+            logic_relay
+            {
+                "targetname" "musicstart"
+                "OnTrigger" "musicplayer,Playsound,,0.2,-1"
+            }
+            logic_relay
+            {
+                "targetname" "musicend"
+                "OnTrigger" "musicplayer,Volume,0.01,0,-1"
+            }
+        }
+         birdmusicboss
+        {
+            ambient_generic
+            {
+                "targetname" "musicplayer"
+                "message"   "#birdboss.mp3"
+                "health"    "35"
+                "spawnflags" "17"
+                "origin"    "0 0 0"
+                "pitch"     "100"
+            }
+            logic_relay
+            {
+                "targetname" "musicstart"
+                "OnTrigger" "musicplayer,Playsound,,0.2,-1"
+            }
+            logic_relay
+            {
+                "targetname" "musicend"
+                "OnTrigger" "musicplayer,Volume,0.01,0,-1"
+            }
+        }
+    }
+    Mission
+    {
+        Where spawnbot
+        Where spawnbot_flank
+        Objective DestroySentries
+        InitialCooldown 20
+        CooldownTime 35
+        TFBot
+        {
+            Template T_TFBot_SentryBuster
+            Tag bot_pro_busterknight
+            Attributes IgnoreFlag
+            Attributes SuppressFire
+            Attributes DisableDodge
+            Name "Perregrine Falcon"
+            Item "The Freedom Feathers"
+            Item "The Bootlegger"
+            Item "The Splendid Screen"
+            CharacterAttributes
+            {
+                "head scale" 5
+				"torso scale" 0.01
+				"voice pitch scale" 2
+				"dmg penalty vs players" 0
+            }
+        }
+    }
+    Mission
+	{
+		Where spawnbot_mission_sniper
+		Objective Sniper  
+		BeginAtWave 2
+		RunForThisManyWaves 1
+		InitialCooldown 30
+		CooldownTime 40
+		DesiredCount 1
+		TFBot
+		{
+			Template T_TFBot_Sniper
+            StripItemSlot 2
+            StripItemSlot 3
+            Skill Expert
+            Tag jbirds_pro_sniper //Le Jbird script
+            ClassIcon sniper_bird_hyper
+            Name "jbird"
+            Item "The Sydney Straw Boat"
+            Item "Villain's Veil"
+            Item "Upgradeable TF_WEAPON_SNIPERRIFLE"
+            ItemAttributes
+            {
+                ItemName "The Sydney Straw Boat"
+                "attach particle effect" 8
+            }
+            ItemAttributes
+            {
+                ItemName "Upgradeable TF_WEAPON_SNIPERRIFLE"
+                "is australium item" 1
+                "can headshot" 1
+                "damage bonus" 0.33
+                "killstreak tier" 2
+                "killstreak idleeffect" 1
+            }
+		}
+	}
+     Mission
+	{
+		Where spawnbot_mission_sniper
+		Objective Sniper
+		BeginAtWave 5
+		RunForThisManyWaves 1
+		InitialCooldown 40
+		CooldownTime 35
+		DesiredCount 1
+		TFBot
+		{
+			Template T_TFBot_Sniper
+            StripItemSlot 2
+            StripItemSlot 3
+            Skill Expert
+            Tag jbirds_pro_sniper //Le Jbird script
+            ClassIcon sniper_bird_hyper
+            Name "jbird"
+            Item "The Sydney Straw Boat"
+            Item "Villain's Veil"
+            Item "Upgradeable TF_WEAPON_SNIPERRIFLE"
+            ItemAttributes
+            {
+                ItemName "The Sydney Straw Boat"
+                "attach particle effect" 8
+            }
+            ItemAttributes
+            {
+                ItemName "Upgradeable TF_WEAPON_SNIPERRIFLE"
+                "is australium item" 1
+                "can headshot" 1
+                "damage bonus" 0.33
+                "killstreak tier" 2
+                "killstreak idleeffect" 1
+            }
+		}
+    }
+    Mission
+	{
+		Where spawnbot_mission_spy
+		Objective Spy
+		BeginAtWave 2 
+		RunForThisManyWaves 2
+		InitialCooldown 30
+		CooldownTime 40
+		DesiredCount 4
+		TFBot
+		{
+			Template T_TFBot_Spy
+
+            Name "They're Watching"
+            ClassIcon spy_Bird
+            StripItemSlot 0
+            StripItemSlot 1
+            StripItemSlot 2
+            StripItemSlot 3
+            StripItemSlot 4
+            StripItemSlot 5
+            Item "Avian Amante"
+            Item "Camera Beard"
+		}
+    }
+    Mission
+	{
+		Where spawnbot_mission_spy
+		Objective Spy
+		BeginAtWave 5
+		RunForThisManyWaves 1
+		InitialCooldown 30
+		CooldownTime 40
+		DesiredCount 4
+		TFBot
+		{
+			Template T_TFBot_Spy
+            Name "They're Watching"
+            ClassIcon spy_Bird
+            StripItemSlot 0
+            StripItemSlot 1
+            StripItemSlot 2
+            StripItemSlot 3
+            StripItemSlot 4
+            StripItemSlot 5
+            Item "Avian Amante"
+            Item "Camera Beard"
+		}
+    }
+    Templates //Bird//
+    {                                                                                                //Birds//
+        bird_scout 
+		{
+			Class Scout
+			Name "Bird Scout"
+             Skill Normal
+            Item "Batter's Beak"
+            Item "EOTL_Brisk-weather Beanie"
+            Item "Fowl Fists"
+            Item "Talon Trotters"
+            ItemAttributes
+            {
+                ItemName "Batter's Beak"
+                "head scale" 2
+            }
+		}
+         bird_scout^2
+		{
+			Class Scout
+			Name "Bird Scout"
+            Skill Expert
+            Item "Batter's Beak"
+            Item "EOTL_Brisk-weather Beanie"
+            Item "Fowl Fists"
+            Item "Talon Trotters"
+            ItemAttributes
+            {
+                ItemName "Batter's Beak"
+                "attach particle effect" 3097
+            }
+		}
+         bird_scout_hidden  //W4 Support//
+		{
+			Class Scout
+            Tag bot_flying_chicken
+			Name "Chirp Chrip"
+            Skill Normal
+            ClassIcon scout_birb
+            WeaponRestrictions MeleeOnly
+            Item "Batter's Beak"
+            Item "EOTL_Brisk-weather Beanie"
+            Item "Fowl Fists"
+            Item "Talon Trotters"
+            ItemAttributes
+            {
+                ItemName "Batter's Beak"
+                "head scale" 2
+            }
+        }
+        bird_scout_normal  //W4 Support//
+		{
+			Class Scout
+			Name "Get Chriped On"
+            Skill Normal
+            ClassIcon scout_birb
+            WeaponRestrictions MeleeOnly
+            Item "Batter's Beak"
+            Item "EOTL_Brisk-weather Beanie"
+            Item "Fowl Fists"
+            Item "Talon Trotters"
+            ItemAttributes
+            {
+                ItemName "Batter's Beak"
+                "head scale" 2
+            }
+        }
+         bird_soldier_eagle
+		{
+			Class Soldier
+            Health 200
+            ClassIcon soldier_bird
+            Name "Falcon Soldier"
+            Skill Expert
+            Item "EOTL_Brisk-weather Beanie"
+            Item "The Freedom Feathers"
+            Item "The Freedom Staff"
+            ItemAttributes
+            {
+                ItemName "The Freedom Feathers"
+                "scale" 2
+            }
+        }
+         bird_soldier_eagle_hidden  //W4 Support//
+		{
+			Class Soldier
+            Health 200
+            ClassIcon soldier_bird
+            Name "Seize these hunters"
+            Skill Normal
+             Item "EOTL_Brisk-weather Beanie"
+            Item "The Freedom Feathers"
+            Item "The Freedom Staff"
+            ItemAttributes
+            {
+                ItemName "TF_WEAPON_ROCKETLAUNCHER"
+                "custom projectile model" "models/workshop/player/items/soldier/spr18_private_maggot_muncher/spr18_private_maggot_muncher.mdl"
+                 "Projectile speed increased" 0.30
+                 "damage bonus" 0.80
+                 "damage causes airblast" 1
+                 "mult projectile scale" 3
+                 "blast dmg to self increased" 0
+                "custom item model" "models/weapons/c_models/c_tw_eagle/c_tw_eagle.mdl"
+            }
+            ItemAttributes
+            {
+                ItemName "The Freedom Staff"
+                "is_passive_weapon" 1
+            }
+        }
+          bird_pyro_chicken //Unused
+		{
+            Class Pyro
+            Name "Bird Pyro?"
+            Skill Easy
+            Item "Pyromantic Plumage"
+		}
+         bird_pyro_chicken_hidden  //W4 Support//
+		{
+            Class Pyro
+            Name "Revenge of the Birds"
+            WeaponRestrictions SecondaryOnly
+            Skill Normal
+            ClassIcon pyro_bird2
+            Item "Pyromantic Plumage"
+            ItemAttributes
+            {
+              ItemName "TF_WEAPON_SHOTGUN_PYRO"
+                "override projectile type" 6
+                "clip size upgrade atomic" 5
+                "fire rate bonus" 0.10
+                "faster reload rate" 0.35
+            }
+		}
+         bird_pyro_chicken_korean  //W4 Support//
+		{
+             Name "Buldak Chicken Pyro"
+                    Template bird_pyro_chicken
+                    ClassIcon pyro_bird2
+                    Item "The Hot Hand"
+                    Item "The Dragon's Fury"
+                ItemAttributes
+                {
+                    ItemName "The Dragon's Fury"
+                    "custom item model" "models\empty.mdl"
+                }
+                ItemAttributes
+                {
+                    ItemName "The Hot Hand"
+                    "is_passive_weapon" 1
+                } 
+		}
+        bird_demoman_parrot
+		{
+			Class Demoman
+            Name "Parrot Demoman"
+            Skill Normal
+            Item "The Mann-Bird of Aberdeen"
+            ItemAttributes
+            {
+                ItemName "TF_WEAPON_GRENADELAUNCHER"
+                "custom projectile model" "models/player/items/demo/demo_parrot.mdl"
+                "grenade no spin" 1
+                "grenade no bounce" 1
+                "damage causes airblast" 1
+                "mult projectile scale" 3
+                "damage bonus" 0.80
+                "Projectile speed increased" 0.80
+                "blast dmg to self increased" 0
+            }
+            ItemAttributes
+            {
+                ItemName "The Mann-Bird of Aberdeen"
+                "head scale" 1.15
+            }
+        }
+         bird_demoman_parrot_hidden  //W4 Support//
+		{
+			Class Demoman
+            Name "Bwak Avenge Bwak"
+            Skill Expert
+            ClassIcon demo_bird
+            Item "The Mann-Bird of Aberdeen"
+            ItemAttributes
+            {
+                ItemName "TF_WEAPON_GRENADELAUNCHER"
+                "custom projectile model" "models/player/items/demo/demo_parrot.mdl"
+                "grenade no spin" 1
+                "faster reload rate" 1.75
+				"fire rate bonus" 0.05
+				"clip size penalty" 0.5
+				"projectile spread angle penalty" 3
+                "grenade no bounce" 1
+                "damage causes airblast" 1
+                 "mult projectile scale" 3
+                "damage bonus" 0.80
+                "Projectile speed increased" 0.80
+            }
+            ItemAttributes
+            {
+                ItemName "The Mann-Bird of Aberdeen"
+                "head scale" 1.15
+            }
+        }
+        bird_demoman_parrot_scary  //W4 Support//
+		{
+			Template bird_demoman_parrot
+             Tag bot_pro_demoknight
+            Attributes SuppressFire
+            Name "Parrotknight"
+            ClassIcon demo_bird
+            WeaponRestrictions MeleeOnly
+            Item "The Splendid Screen"
+            Item "Ali Baba's Wee Booties"
+            Item "The Eyelander"
+        }
+        bird_demo_parrotknight
+        {
+                Template bird_demoman_parrot
+                Tag bot_pro_demoknight
+                Health 150
+                Attributes SuppressFire
+                Name "Parrotknight"
+                ClassIcon demo_bird
+                WeaponRestrictions MeleeOnly
+                Item "The Splendid Screen"
+                Item "Ali Baba's Wee Booties"
+                Item "The Eyelander"
+                CharacterAttributes
+                {
+                    "damage force reduction" 2
+                }
+        }
+        bird_heavy_tweet 
+		{
+            Class Heavyweapons
+            Name "Robin Heavy"
+            Skill Easy
+            Item "The Chicken Kiev"
+		}
+        bird_engineer_canary
+		{
+            Class Engineer
+            Name "Canary Engineer"
+            Skill Normal
+            Item "Eingineer"
+		}
+        bird_medic_dove
+		{
+			Class Medic
+            Name "Dove Medic"
+            Skill Expert
+            Item "Medimedes"
+            Item "Wings of Purity"
+        }
+          bird_sniper_owl
+		{
+            Class Sniper
+            Name "Owl Sniper"
+            Skill Easy
+            Item "Sir Shootsalot"
+            Item "The Birdman of Australiacatraz"
+		}
+          bird_spy_crow
+		{
+            Class Sniper
+            Name "Crow Spy"
+            Skill Easy
+            Item "Avian Amante"
+		}
+                                                                                                    //Giant Birds//
+        bird_scout_G 
+		{
+			
+           Template T_TFBot_Giant_Scout_Fast
+			Name "Bird Scout"
+            Skill Normal
+            Item "Batter's Beak"
+            Item "Talon Trotters"
+            Item "Fowl Fists"
+            ItemAttributes
+            {
+                ItemName "Batter's Beak"
+                "head scale" 1.25
+                
+            }
+		}
+         bird_soldier_eagle_G
+		{
+			Template T_TFBot_Giant_Soldier
+            Name "Eagle Soldier"
+            Item "The Compatriot"
+            Item "The Freedom Feathers"
+            Item "The Freedom Staff"
+            Skill Hard
+            ItemAttributes
+            {
+                ItemName "TF_WEAPON_ROCKETLAUNCHER"
+                "custom projectile model" "models/workshop/player/items/soldier/spr18_private_maggot_muncher/spr18_private_maggot_muncher.mdl"
+                 "Projectile speed increased" 0.40
+                "custom item model" "models/weapons/c_models/c_tw_eagle/c_tw_eagle.mdl"
+                 "damage causes airblast" 1
+                 "mult projectile scale" 4
+                 "blast dmg to self increased" 0
+            }
+            ItemAttributes
+            {
+                ItemName "The Freedom Staff"
+                "override projectile type"	2
+                "is_passive_weapon" 1
+            } 
+            ItemAttributes
+            {
+                ItemName "The Compatriot"
+                "head scale" 5
+            }
+        }
+          bird_pyro_chicken_G
+		{
+            Template T_TFBot_Giant_Pyro
+            Name "Phoenix Pyro"
+            Skill Easy
+            Item "Pyromantic Plumage"
+        }
+        bird_demoman_parrot_G
+		{
+			Template T_TFBot_Giant_Demoman
+            Name "Giant Parrot Demoman"
+            ClassIcon demo_bird_giant
+            Skill Expert
+            WeaponRestrictions PrimaryOnly
+            Item "The Mann-Bird of Aberdeen"
+            ItemAttributes
+            {
+                ItemName "TF_WEAPON_GRENADELAUNCHER"
+                "custom projectile model" "models/player/items/demo/demo_parrot.mdl"
+                "custom item model" ""models/weapons/c_models/c_tw_eagle/c_tw_eagle.mdl""
+                 "damage causes airblast" 1
+                 "fuse bonus" 1.5
+                 "mult projectile scale" 3
+                 "grenade no spin" 1
+                "grenade no bounce" 1
+                 "mult projectile scale" 4
+                "Projectile speed increased" 0.80
+                "blast dmg to self increased" 0
+            }
+            ItemAttributes
+            {
+                ItemName "The Mann-Bird of Aberdeen"
+                "head scale" 1.15
+            }
+        }
+          bird_heavy_tweet_G
+		{
+            Template T_TFBot_Giant_Heavyweapons
+            Class Heavyweapons
+            Name "Robin Heavy"
+            Skill Expert
+            Item "The Chicken Kiev"
+		}
+        bird_engineer_canary_G
+		{
+            Class Engineer
+            Health 3500
+            Scale 1.75
+            Attributes MiniBoss
+            BehaviorModifiers Push
+            Name "Canary Engineer"
+            Skill Normal
+            Item "Eingineer"
+            CharacterAttributes
+            {
+                "move speed bonus" 0.5
+            }
+		}
+        bird_medic_dove_G
+		{
+			Template T_TFBot_Giant_Medic_Regen
+            Name "Dove Medic"
+            Health 5000
+            Skill Expert
+            Item "Medimedes"
+            Item "Wings of Purity"
+        }  
+         bird_sniper_owl_g
+		{
+			Class Sniper
+            Name "Head Council of Owls"
+            Attributes MiniBoss
+            BehaviorModifiers Push
+            Skill Normal
+            Item "Sir Shootsalot"
+            Item "The Birdman of Australiacatraz"
+            Scale 1.90
+            Health 5000
+            CharacterAttributes
+            {
+                "move speed bonus" 0.5
+                "damage force reduction" 0.6
+				"airblast vulnerability multiplier" 0.6
+            }
+        }  
+         bird_spy_crow_g
+		{
+			Class Spy
+            Name "Head Council of Crows"
+            Attributes MiniBoss
+            BehaviorModifiers Push
+            Skill Normal
+            Item "Avian Amante"
+            Scale 1.90
+            Health 5000
+            CharacterAttributes
+            {
+                "move speed bonus" 0.5
+                "damage force reduction" 0.6
+				"airblast vulnerability multiplier" 0.6
+            }
+        }
+    } 
+    //$1100 CREDITS (1/5) 
+	Wave
+	{
+        CustomWaveNumber 1
+        CustomMaxWaveNumber  69
+		StartWaveOutput
+		{
+			Target wave_start_relay
+			Action Trigger
+		}
+        InitWaveOutput
+        {
+            Target bignet
+            Action RunScriptCode
+            Param "
+            IncludeScript(`nopey_lib/constants_nopey_fork`)
+            Convars.SetValue(`tf_avoidteammates_pushaway`, 0)
+            IncludeScript(`pro_demoknight`)
+            IncludeScript(`birded`) //Bird bot Script
+            ClientPrint(null,3,`\x078ff347 Chuck: Welcome to Maplehill, a place with lots of exotic and rare birds`)
+            ClientPrint(null,3,`\x078ff347 Chuck: Today we're gonna hunt some birds and hopefully get money while at it`)
+            ClientPrint(null,3,`\x078ff347 Chuck: I'll give you some money to start`)
+            EntFire(`tf_objective_resource`, `$SetClientProp$m_iszMvMPopfileName`, `Maplehill Forest, 10:00 AM`)    
+            SpawnEntityFromTable(`prop_dynamic`,
+			{
+				targetname = `smallbird1`
+				origin = `-31 5057 -263`
+				angles = `0 240 0`
+				start_active = true
+				model = `models/props_forest/bird.mdl`
+				disableshadows = true
+				modelscale = 2
+				skin = 0
+			}) 
+            SpawnEntityFromTable(`prop_dynamic`,
+			{
+				targetname = `smallbird2`
+				origin = `770 4224 -54`
+				angles = `0 180 0`
+				start_active = true
+				model = `models/props_forest/bird.mdl`
+				disableshadows = true
+				modelscale = 2
+				skin = 0
+			})     
+            SpawnEntityFromTable(`prop_dynamic`,
+			{
+				targetname = `smallbird3`
+				origin = `-1026 4544 -165`
+				angles = `0 0 0`
+				start_active = true
+				model = `models/props_forest/bird.mdl`
+				disableshadows = true
+				modelscale = 2
+				skin = 0
+			})
+            SpawnEntityFromTable(`prop_dynamic`,
+			{
+				targetname = `smallbird4`
+				origin = `-640 5410 -245`
+				angles = `0 270 0`
+				start_active = true
+				model = `models/props_forest/bird.mdl`
+				disableshadows = true
+				modelscale = 2
+				skin = 0
+			})
+            SpawnEntityFromTable(`prop_dynamic`,
+			{
+				targetname = `smallbird4`
+				origin = `1121 4961 -54`
+				angles = `0 225 0`
+				start_active = true
+				model = `models/props_forest/bird.mdl`
+				disableshadows = true
+				modelscale = 2
+				skin = 0
+			})                                                                                                                                                        
+            ::BirdspotSkyBox <- { //Copied from Calendartillery (Credit to Seelpit)
+                Cleanup = function() {
+             SetSkyboxTexture(`sky_trainyard_01`)
+             delete ::BirdspotSkyBox
+                }
+            OnGameEvent_recalculate_holidays = function(_) { if (GetRoundState() == 3) Cleanup() }
+            OnGameEvent_mvm_wave_complete = function(_) { Cleanup() }
+            }
+            __CollectGameEventCallbacks(BirdspotSkyBox)
+                SetSkyboxTexture(`sky_morningsnow_01`)
+                    "
+        }
+		DoneOutput
+		{
+			Target wave_finished_relay
+			Action Trigger
+		}
+         WaveSpawn
+		{
+			Where spawnbot
+            Where spawnbot_flank
+			Name "Smallbot1A"
+			TotalCount 24
+			MaxActive 10
+			SpawnCount 4
+			WaitBeforeStarting 4
+			WaitBetweenSpawns 10
+			TotalCurrency 200
+			TFBot
+			{
+                Template bird_scout
+                WeaponRestrictions MeleeOnly
+                Name "Stoopid Birb"
+                ClassIcon scout_birb
+                Item "The Boston Basher"
+			}
+		}
+		WaveSpawn
+		{
+			Where spawnbot
+            Where spawnbot_flank
+			Name "Smallbot1B"
+			TotalCount 16
+			MaxActive 10
+			SpawnCount 4
+			WaitBeforeStarting 8
+			WaitBetweenSpawns 10
+			TotalCurrency 200
+			TFBot
+			{
+				Template bird_soldier_eagle
+                Skill Expert
+                Name "Native American Falcon"
+                ClassIcon soldier_bird
+                Item "The Conscientious Objector"
+                 WeaponRestrictions MeleeOnly
+                ItemAttributes
+                    {
+                        ItemName "The Conscientious Objector"
+                        "custom texture hi" "xedd1be66"
+                        "custom texture lo" "x758a5e7"
+                    }
+			}
+		}
+		WaveSpawn
+		{
+			Where spawnbot
+            Where spawnbot_flank
+			Name "Smallbot1C"
+            WaitForAllSpawned "Smallbot1A"
+			TotalCount 12
+			MaxActive 12
+			SpawnCount 2
+			WaitBeforeStarting 2
+			WaitBetweenSpawns 8
+			TotalCurrency 200
+			TFBot
+			{
+				Template bird_demoman_parrot
+                Name "Parrotknight"
+                ClassIcon demo_bird
+                WeaponRestrictions MeleeOnly
+                Item "The Chargin' Targe"
+                Item "Ali Baba's Wee Booties"
+                Item "The Eyelander"
+			}
+		}
+       WaveSpawn
+		{
+			Where spawnbot
+            Where spawnbot_flank
+			Name "Bigbot1A"
+			TotalCount 3
+			MaxActive 1
+			SpawnCount 1
+			WaitBeforeStarting 3
+			WaitBetweenSpawns 0
+			TotalCurrency 200
+			TFBot
+			{
+				Template bird_soldier_eagle_G
+                Name "Haliaeetus leucocephalus"
+                ClassIcon soldier_bird_giant
+            }
+		}
+         WaveSpawn
+	{
+		WaitBeforeStarting		2
+		FirstSpawnWarningSound	/vo/soldier_item_birdhead_uber01.mp3
+    }
+        WaveSpawn
+		{
+			Where spawnbot_flank
+			Name "Bigbot1B"
+            WaitForAllDead "Smallbot1B"
+			TotalCount 10
+			MaxActive 10
+			SpawnCount 3
+			WaitBeforeStarting 3
+			WaitBetweenSpawns 6
+			TotalCurrency 100
+			TFBot
+			{
+				Template bird_heavy_tweet
+                Name "EU Rob in"
+                ClassIcon heavy_bird
+                WeaponRestrictions MeleeOnly
+            }
+		}
+         WaveSpawn
+		{
+			Where spawnbot_flank
+			Name "Support1"
+			TotalCount 100
+			MaxActive 5
+			SpawnCount 4
+			WaitBeforeStarting 6
+			WaitBetweenSpawns 5
+			TotalCurrency 100
+            Support 1
+			TFBot
+			{
+				Template bird_scout //Annoying bird
+                Name "Flying Birb"
+                Tag bot_flying_chicken
+                BehaviorModifiers Push
+                ClassIcon scout_birb
+                WeaponRestrictions MeleeOnly
+            }
+		}
+         WaveSpawn
+		{
+			Where spawnbot_flank
+			Name "Bigbot1B"
+            WaitForAllDead "Smallbot1B"
+			TotalCount 14
+			MaxActive 14
+			SpawnCount 3
+			WaitBeforeStarting 3
+			WaitBetweenSpawns 5
+			TotalCurrency 100
+			TFBot
+			{
+				Template bird_pyro_chicken
+                Name "I Regenerate"
+                ClassIcon pyro_bird2
+                Skill Expert
+                WeaponRestrictions MeleeOnly
+                Item "The Hot Hand"
+                ItemAttributes
+                {
+                    ItemName "The Hot Hand"
+                    "health regen" 10
+                }
+            }
+		}
+    }
+    //$1000 CREDITS (2/5) 
+     Wave 
+	{
+        CustomWaveNumber 2
+        CustomMaxWaveNumber 21
+		StartWaveOutput
+		{
+			Target wave_start_relay
+			Action Trigger
+		}
+        InitWaveOutput
+        {
+            Target bignet
+            Action RunScriptCode
+            Param "
+            IncludeScript(`nopey_lib/constants_nopey_fork`) 
+            IncludeScript(`pro_sniper`) // Sniper Bot Script
+            IncludeScript(`birded`)
+            IncludeScript(`pro_demoknight`)
+            __CollectGameEventCallbacks(prosniper) 
+              EntFire(`tf_objective_resource`, `$SetClientProp$m_iszMvMPopfileName`, `Maplehill Forest, 12:00 PM`)
+            ClientPrint(null,3,`\x078ff347 Chuck: Good job on the hunting fellas`)
+            ClientPrint(null,3,`\x078ff347 Chuck: We got some money to help us on the hunt for more birds`)
+            ClientPrint(null,3,`\x078ff347 Chuck: Not long ago, I spotted a flock of birds coming our way. Be Prepared`) 
+            ClientPrint(null,3,`\x07FF5B00 Enemy Marksman has arrived. Don't be hunted!`)
+            SpawnEntityFromTable(`prop_dynamic`,
+			{
+				targetname = `smallbird1`
+				origin = `-31 5057 -263`
+				angles = `0 240 0`
+				start_active = true
+				model = `models/props_forest/bird.mdl`
+				disableshadows = true
+				modelscale = 2
+				skin = 0
+			}) 
+            SpawnEntityFromTable(`prop_dynamic`,
+			{
+				targetname = `smallbird2`
+				origin = `770 4224 -54`
+				angles = `0 180 0`
+				start_active = true
+				model = `models/props_forest/bird.mdl`
+				disableshadows = true
+				modelscale = 2
+				skin = 0
+			})     
+            SpawnEntityFromTable(`prop_dynamic`,
+			{
+				targetname = `smallbird3`
+				origin = `-1026 4544 -165`
+				angles = `0 0 0`
+				start_active = true
+				model = `models/props_forest/bird.mdl`
+				disableshadows = true
+				modelscale = 2
+				skin = 0
+			})
+            SpawnEntityFromTable(`prop_dynamic`,
+			{
+				targetname = `smallbird4`
+				origin = `-640 5410 -245`
+				angles = `0 270 0`
+				start_active = true
+				model = `models/props_forest/bird.mdl`
+				disableshadows = true
+				modelscale = 2
+				skin = 0
+			})    
+            ::BirdspotSkyBox <- { //(Credit to Seelpit)
+                Cleanup = function() {
+             SetSkyboxTexture(`sky_morningsnow_01`)
+             delete ::BirdspotSkyBox
+                }
+            OnGameEvent_recalculate_holidays = function(_) { if (GetRoundState() == 3) Cleanup() }
+            OnGameEvent_mvm_wave_complete = function(_) { Cleanup() }
+            }
+            __CollectGameEventCallbacks(BirdspotSkyBox)
+                SetSkyboxTexture(`sky_hydro_01`)
+            "
+        }
+		DoneOutput
+		{
+			Target wave_finished_relay
+			Action Trigger
+		}
+        WaveSpawn
+		{
+			Where spawnbot_top
+            Where spawnbot_flank
+			Name "Smallbot2A"
+			TotalCount 16
+			MaxActive 8
+			SpawnCount 4
+			WaitBeforeStarting 4.5
+			WaitBetweenSpawns 10
+			TotalCurrency 200
+			TFBot
+			{
+                Template bird_scout
+                Name "Chirp Chirp"
+                WeaponRestrictions PrimaryOnly
+                ClassIcon scout_birb
+                Skill Easy
+               
+			}
+		}   
+        WaveSpawn
+		{
+			Where spawnbot_flank
+            Where spawnbot_top
+			Name "SmallBot2B"
+			TotalCount 15
+			MaxActive 5
+			SpawnCount 3
+			WaitBeforeStarting 3
+			WaitBetweenSpawns 6
+			TotalCurrency 200
+			TFBot
+			{
+                    Name "Buldak Chicken Pyro"
+                    Template bird_pyro_chicken
+                    ClassIcon pyro_bird2
+                    Item "The Hot Hand"
+                    Item "The Dragon's Fury"
+                ItemAttributes
+                {
+                    ItemName "The Dragon's Fury"
+                    "custom item model" "models\empty.mdl"
+                }
+                ItemAttributes
+                {
+                    ItemName "The Hot Hand"
+                    "is_passive_weapon" 1
+                } 
+            }
+		}
+      WaveSpawn
+		{
+			Where spawnbot
+            Where spawnbot_flank
+			Name "Bigbot2A"
+			TotalCount 3
+			MaxActive 2
+			SpawnCount 1
+			WaitBeforeStarting 3
+			WaitBetweenSpawns 16
+			TotalCurrency 200
+			TFBot
+			{
+                Name "Buldak Chicken 3x Spicy Pyro"
+                Template bird_pyro_chicken_G
+                ClassIcon pyro_bird2_giant
+                Item "The Hot Hand"
+                Item "The Dragon's Fury"
+                ItemAttributes
+                {
+                    ItemName "The Dragon's Fury"
+                    "custom item model" "models\empty.mdl"
+                    "mult_item_meter_charge_rate" 0.5
+                    "damage bonus" 0.50
+                }
+                ItemAttributes
+                {
+                    ItemName "The Hot Hand"
+                    "is_passive_weapon" 1
+                }
+            }
+		}
+      WaveSpawn
+		{
+			Where spawnbot_flank
+            Where spawnbot_top
+			Name "Bigbot2B"
+            WaitForAllSpawned "Bigbot2A"
+			TotalCount 2
+			MaxActive 2
+			SpawnCount 1
+			WaitBeforeStarting 3
+			WaitBetweenSpawns 35
+			TotalCurrency 200
+			TFBot
+			{
+                Name "Angry Birds"
+                Template bird_heavy_tweet_G
+                ClassIcon heavy_bird_Giant
+                WeaponRestrictions MeleeOnly
+                Item "The Killing Gloves of Boxing"
+            }
+		}
+       WaveSpawn
+		{
+			Where spawnbot
+            Where spawnbot_flank
+			Name "Bigbot2C"
+            WaitForAllSpawned "Bigbot2B"
+			TotalCount 2
+			MaxActive 2
+			SpawnCount 1
+			WaitBeforeStarting 8
+			WaitBetweenSpawns 35
+			TotalCurrency 100
+			TFBot
+			{
+                Name "Dove Bodywash"
+                Template bird_medic_dove_G
+                ClassIcon medic_bird
+                Action FetchFlag
+                WeaponRestrictions PrimaryOnly
+                Item "The Crusader's Crossbow"
+                ItemAttributes
+			{
+				ItemName "The Crusader's Crossbow"
+                "custom projectile model" "models/player/items/medic/archimedes.mdl"
+				"damage penalty" 0.50
+				"fire rate bonus" 0.10
+                "clip size upgrade atomic" 4
+				"faster reload rate" 0.10
+                "override projectile type" 2
+                "Projectile speed increased" 0.20
+                "damage causes airblast" 1
+                "blast dmg to self increased" 0
+                "fires milk bolt" 1
+                
+			}
+            }
+		}
+       WaveSpawn
+		{
+			Where spawnbot
+            Where spawnbot_flank
+			Name "SmallBot2C"
+            WaitForAllSpawned "SmallBot2B"
+			TotalCount 12
+			MaxActive 6
+			SpawnCount 3
+			WaitBeforeStarting 3
+			WaitBetweenSpawns 5.5
+			TotalCurrency 100
+			TFBot
+			{
+				Template bird_soldier_eagle
+                Skill Easy
+                Name "Patriotism Launcher"
+                Item "The Conscientious Objector"
+                ClassIcon soldier_bird
+                ItemAttributes
+            {
+                ItemName "TF_WEAPON_ROCKETLAUNCHER"
+                "custom projectile model" "models/workshop/player/items/soldier/jul13_soldier_eagle/jul13_soldier_eagle.mdl"
+                "Projectile speed increased" 0.30
+                "mult projectile scale" 3
+                 "damage bonus" 0.80
+                "custom item model" "models/weapons/c_models/c_tw_eagle/c_tw_eagle.mdl"
+                "damage causes airblast" 1 
+            }
+            ItemAttributes
+            {
+                ItemName "The Conscientious Objector"
+                "custom texture hi" "xee9cc7b8"
+                "custom texture lo" "x7a5a8dd0"
+                "override projectile type"	2
+                "is_passive_weapon" 1
+            } 
+                
+            }
+		}
+      WaveSpawn
+		{
+			Where spawnbot
+            Where spawnbot_flank
+			Name "SmallBot2D"
+            WaitForAllSpawned "SmallBot2B"
+			TotalCount 14
+			MaxActive 6
+			SpawnCount 3
+			WaitBeforeStarting 5
+			WaitBetweenSpawns 4.5
+			TotalCurrency 100
+			TFBot
+			{
+                Name "Patchy the Parrot"
+                WeaponRestrictions PrimaryOnly
+                Skill Normal
+				Template bird_demoman_parrot
+                ClassIcon demo_bird
+            }
+                
+                
+		}
+         WaveSpawn
+		{
+			Where spawnbot
+            Where spawnbot_flank
+			Name "Support2E"
+            WaitForAllSpawned "Smallbot2B"
+			TotalCount 18
+			MaxActive 13
+			SpawnCount 3
+			WaitBeforestarting 3
+			WaitBetweenSpawns 2
+			TotalCurrency 100
+			TFBot
+			{
+			Template bird_sniper_owl
+            StripItemSlot 0
+            StripItemSlot 2
+            Name "Do not give bread to birds"
+            Skill Expert
+            Attributes AlwaysFireWeapon
+            WeaponRestrictions SecondaryOnly
+            ClassIcon sniper_bird_brick2
+            Item  "The Self-Aware Beauty Mark"
+            ItemAttributes
+                {
+                    ItemName "The Self-Aware Beauty Mark"
+                    "effect bar recharge rate increased" 0.10
+                    "override projectile type extra" "brick"
+                    "custom projectile model" "models\weapons\c_models\c_bread\c_bread_cornbread.mdl"
+                    "custom item model" "models\weapons\c_models\c_bread\c_bread_cornbread.mdl"
+                }
+			}
+		}
+         WaveSpawn
+		{
+			Where spawnbot_top
+            Where spawnbot_flank
+			Name "Smallbot2A"
+			TotalCount 24
+			MaxActive 4
+            Support 1
+			SpawnCount 3
+			WaitBeforeStarting 4.5
+			WaitBetweenSpawns 11
+			TotalCurrency 200
+			RandomChoice
+			{
+                TFBot
+                {
+                Template bird_scout
+                Name "Bird Poop"
+                Tag bot_flying_chicken
+                BehaviorModifiers Push
+                WeaponRestrictions SecondaryOnly
+                ClassIcon scout_birb_milk2
+                Item "Mad Milk"
+                ItemAttributes
+                    {
+                        ItemName "Mad Milk"
+                        "effect bar recharge rate increased" 0.01
+                    }
+                }
+                TFBot
+                {
+                Template bird_scout
+                Name "Bird Poop"
+                Tag bot_flying_chicken
+                BehaviorModifiers Push
+                WeaponRestrictions SecondaryOnly
+                ClassIcon scout_birb_milk2
+                Item "Mad Milk"
+                ItemAttributes
+                    {
+                        ItemName "Mad Milk"
+                        "effect bar recharge rate increased" 0.01
+                    }
+                }
+                TFBot
+                {
+                Template bird_scout
+                Name "Bird Poop"
+                Tag bot_flying_chicken
+                BehaviorModifiers Push
+                WeaponRestrictions SecondaryOnly
+                ClassIcon scout_birb_milk2
+                Item "Mad Milk"
+                ItemAttributes
+                    {
+                        ItemName "Mad Milk"
+                        "effect bar recharge rate increased" 0.01
+                    }
+                }
+                TFBot
+                {
+                Template bird_scout
+                Name "Bird Poop"
+                Tag bot_flying_chicken
+                BehaviorModifiers Push
+                WeaponRestrictions SecondaryOnly
+                ClassIcon scout_birb_milk2
+                Item "Mad Milk"
+                ItemAttributes
+                    {
+                        ItemName "Mad Milk"
+                        "effect bar recharge rate increased" 0.01
+                    }
+                }
+                TFBot
+                {
+                Template bird_scout
+                Name "Bird Poop"
+                Tag bot_flying_chicken
+                BehaviorModifiers Push
+                WeaponRestrictions SecondaryOnly
+                ClassIcon scout_birb_milk2
+                Item "Mad Milk"
+                ItemAttributes
+                    {
+                        ItemName "Mad Milk"
+                        "effect bar recharge rate increased" 0.01
+                    }
+                }
+                TFBot
+                {
+                Template bird_scout
+                Name "Bird Poop"
+                Tag bot_flying_chicken
+                BehaviorModifiers Push
+                WeaponRestrictions SecondaryOnly
+                ClassIcon scout_birb_milk2
+                Item "Mad Milk"
+                ItemAttributes
+                    {
+                        ItemName "Mad Milk"
+                        "effect bar recharge rate increased" 0.01
+                    }
+                }
+                TFBot
+                {
+                Template bird_scout
+                Name "Bird Poop"
+                Tag bot_flying_chicken
+                BehaviorModifiers Push
+                WeaponRestrictions SecondaryOnly
+                ClassIcon scout_birb_milk2
+                Item "Mad Milk"
+                ItemAttributes
+                    {
+                        ItemName "Mad Milk"
+                        "effect bar recharge rate increased" 0.01
+                    }
+                }
+                TFBot
+                {
+                Template bird_scout
+                Name "Bird Poop"
+                Tag bot_flying_chicken
+                BehaviorModifiers Push
+                WeaponRestrictions SecondaryOnly
+                ClassIcon scout_birb_milk2
+                Item "Mad Milk"
+                ItemAttributes
+                    {
+                        ItemName "Mad Milk"
+                        "effect bar recharge rate increased" 0.01
+                    }
+                }
+                TFBot
+                {
+                Template bird_scout
+                Name "Bird Poop"
+                Tag bot_flying_chicken
+                BehaviorModifiers Push
+                WeaponRestrictions SecondaryOnly
+                ClassIcon scout_birb_milk2
+                Item "Mad Milk"
+                ItemAttributes
+                    {
+                        ItemName "Mad Milk"
+                        "effect bar recharge rate increased" 0.01
+                    }
+                }
+                TFBot
+                {
+                Template  bird_scout^2
+                Name "Bird Poop^2"
+                Tag bot_flying_chicken
+                BehaviorModifiers Push
+                WeaponRestrictions SecondaryOnly
+                ClassIcon scout_birb_milk2
+                Item "Mad Milk"
+                ItemAttributes
+                    {
+                        ItemName "Mad Milk"
+                        "effect bar recharge rate increased" 0.01
+                        "applies snare effect" 0.20
+                    }
+                }
+                TFBot
+                {
+                Template  bird_scout^2
+                Name "Bird Poop^2"
+                Tag bot_flying_chicken
+                BehaviorModifiers Push
+                WeaponRestrictions SecondaryOnly
+                ClassIcon scout_birb_milk2
+                Item "Mad Milk"
+                ItemAttributes
+                    {
+                        ItemName "Mad Milk"
+                        "effect bar recharge rate increased" 0.01
+                        "applies snare effect" 0.20
+                    }
+                }
+            }
+		}   
+    }   
+    //$1400 CREDITS (3/5) 
+    Wave
+	{
+        CustomWaveNumber 3
+        CustomMaxWaveNumber 420
+		StartWaveOutput
+		{
+			Target wave_start_relay
+			Action Trigger
+		}
+        InitWaveOutput
+        {
+            Target bignet
+            Action RunScriptCode
+            Param "  
+            IncludeScript(`nopey_lib/constants_nopey_fork`)
+            Convars.SetValue(`tf_avoidteammates_pushaway`, 0)
+            IncludeScript(`pro_demoknight`)
+            IncludeScript(`birded`)
+            IncludeScript(`pro_sniper`)
+            __CollectGameEventCallbacks(prosniper)
+              EntFire(`tf_objective_resource`, `$SetClientProp$m_iszMvMPopfileName`, `Maplehill Forest, 02:10 PM`)
+            ClientPrint(null,3,`\x078ff347 Chuck: Nice one fellas`)
+            ClientPrint(null,3,`\x078ff347 Chuck: We even got to hunt some rare and exotic birds`)
+            ClientPrint(null,3,`\x078ff347 Chuck: But for some reason, these birds are getting more and more erratic`)   
+            SpawnEntityFromTable(`prop_dynamic`,
+			{
+				targetname = `smallbird1`
+				origin = `-31 5057 -263`
+				angles = `0 240 0`
+				start_active = true
+				model = `models/props_forest/bird.mdl`
+				disableshadows = true
+				modelscale = 2
+				skin = 0
+			}) 
+            SpawnEntityFromTable(`prop_dynamic`,
+			{
+				targetname = `smallbird2`
+				origin = `770 4224 -54`
+				angles = `0 180 0`
+				start_active = true
+				model = `models/props_forest/bird.mdl`
+				disableshadows = true
+				modelscale = 2
+				skin = 0
+			})     
+            SpawnEntityFromTable(`prop_dynamic`,
+			{
+				targetname = `smallbird3`
+				origin = `-1026 4544 -165`
+				angles = `0 0 0`
+				start_active = true
+				model = `models/props_forest/bird.mdl`
+				disableshadows = true
+				modelscale = 2
+				skin = 0
+			})
+            ::BirdspotSkyBox <- { //(Credit to Seelpit)
+                Cleanup = function() {
+             SetSkyboxTexture(`sky_hydro_01`)
+             delete ::BirdspotSkyBox
+                }
+            OnGameEvent_recalculate_holidays = function(_) { if (GetRoundState() == 3) Cleanup() }
+            OnGameEvent_mvm_wave_complete = function(_) { Cleanup() }
+            }
+            __CollectGameEventCallbacks(BirdspotSkyBox)
+                SetSkyboxTexture(`sky_goldrush_01`)
+            "
+        }
+		DoneOutput
+		{
+			Target wave_finished_relay
+			Action Trigger
+		}
+         SpawnTemplate birdmusicw3
+         WaveSpawn
+		{
+            Name music
+            WaitBeforeStarting 2
+            FirstSpawnOutput
+            {
+                Target musicstart
+                Action Trigger
+            }
+        }
+         WaveSpawn
+		{
+            Name message
+            StartWaveMessage "Now Playing: Angry Birds Theme"
+            WaitForAllSpawned "music"
+            WaitBeforeStarting 1.5
+        
+        }
+         WaveSpawn
+		{
+			Where spawnbot
+            Where spawnbot_flank
+			Name "BigBot3Aa"
+			TotalCount 1
+			MaxActive 1
+			SpawnCount 1
+			WaitBeforeStarting 2
+			TotalCurrency 100
+			TFBot
+			{
+			Template bird_scout_G
+                AutoJumpMin 7
+				AutoJumpMax 7
+            Name "Look up at the Sky"
+            Attributes AutoJump
+            Skill Expert
+            WeaponRestrictions MeleeOnly
+            ClassIcon scout_birb_giant
+            Item  "The Conscientious Objector"
+            ItemAttributes
+                {
+                    ItemName "The Conscientious Objector" //Sky Picture
+                    "custom texture hi" "x91c0a4aa"
+                    "custom texture lo" "x281a8b7b"
+                    "increased jump height" 100
+                    "stomp player damage" 5
+                }
+                CharacterAttributes
+                {
+                    "boots falling stomp" 1
+				    "cancel falling damage" 1
+                    "move speed bonus" 0.60
+                }
+			}
+        }
+         WaveSpawn
+		{
+			Where spawnbot
+            Where spawnbot_flank
+			Name "BigBot3Ab"
+            WaitForAllSpawned "BigBot3Aa"
+			TotalCount 1
+			MaxActive 1
+			SpawnCount 1
+			WaitBeforeStarting 10
+			TotalCurrency 100
+			TFBot
+			{
+			Template bird_scout_G
+                AutoJumpMin 7
+				AutoJumpMax 7
+            Name "Its a Bird"
+            Attributes AutoJump
+            Skill Expert
+            WeaponRestrictions MeleeOnly
+            ClassIcon scout_birb_giant
+            Item  "The Conscientious Objector"
+            ItemAttributes
+                {
+                    ItemName "The Conscientious Objector" //Bird picture
+                    "custom texture hi" "xbb7b35c6"
+                    "custom texture lo" "x9b98ddec"
+                    "increased jump height" 100
+                    "stomp player damage" 5
+                }
+                CharacterAttributes
+                {
+                    "boots falling stomp" 1
+				    "cancel falling damage" 1
+                    "move speed bonus" 0.60
+                }
+			}
+        }
+         WaveSpawn
+		{
+			Where spawnbot
+            Where spawnbot_flank
+			Name "BigBot3Ac"
+            WaitForAllSpawned "BigBot3Ab"
+			TotalCount 1
+			MaxActive 1
+			SpawnCount 1
+			WaitBeforeStarting 10
+			TotalCurrency 100
+			TFBot
+			{
+			Template bird_scout_G
+                AutoJumpMin 7
+				AutoJumpMax 7
+            Name "Its a Plane"
+            Attributes AutoJump
+            Skill Expert
+            WeaponRestrictions MeleeOnly
+            ClassIcon scout_birb_giant
+            Item  "The Conscientious Objector"
+            ItemAttributes
+                {
+                    ItemName "The Conscientious Objector"
+                    "custom texture hi" "xfca963e5"
+                    "custom texture lo" "x78295c1d"
+                    "increased jump height" 100
+                    "stomp player damage" 5
+                }
+                CharacterAttributes
+                {
+                    "boots falling stomp" 1
+				    "cancel falling damage" 1
+                    "move speed bonus" 0.60
+                }
+			}
+        }
+        WaveSpawn
+        {
+            TotalCurrency 300
+            Totalcount 1
+            Maxactive 1
+            Spawncount 1
+            WaitForAllDead "BigBot3Ac"
+            Waitbeforestarting 1
+            FirstSpawnOutPut
+			{
+				Target wave_start_relay
+				Action RunScriptCode
+				Param "
+					ClientPrint(null,3,`\x0799CCFFGiant Mechanical Bird deployed with 12000 HP!`)
+				"
+			}
+            Tank
+            {
+                Health 12000
+                Speed 75
+                SpawnTemplate BirdBlimp
+                DisableSmokestack 1    
+                Classicon blimp2_lite
+                Skin 1    
+                MaxTurnRate 35 
+                Model "models/bots/boss_bot/boss_blimp.mdl"
+                Gravity 0    
+                DisableTracks 1    
+                ReplaceModelCollisions 1    
+                DisableChildModels 1    
+                EngineLoopSound "npc\combine_gunship\dropship_engine_distant_loop1.wav"    
+                PingSound "ambient_mp3\lair\animal_call_bird_weird4.mp3"    
+                Name "tankboss"
+                StartingPathTrackNode "blimp_path_2"
+
+                OnBombDroppedOutput
+                {
+                    Target boss_deploy_relay
+                    Action Trigger
+                }
+
+            }
+        }
+         WaveSpawn
+		{
+            Where spawnbot_flank
+			Name "BigBot3B"
+            WaitForAllDead "BigBot3Ac"
+			TotalCount 4
+			MaxActive 4
+			SpawnCount 2
+			WaitBeforeStarting 3
+			WaitBetweenSpawns 26
+			TotalCurrency 100
+			Squad
+            {
+                ShouldPreserveSquad 1
+                TFBot
+                {
+                    Template bird_demoman_parrot_G
+                    Name "Psittacoidea"
+                }
+                TFBot
+                {
+                    Template bird_engineer_canary_G
+                    Name "Ein Stein"
+                    ClassIcon engineer_bird_giant
+                    BehaviorModifiers Push
+                    Item "The Wrangler"
+                    Item "The Rescue Ranger"
+                    ItemAttributes
+                    {
+                    ItemName "The Rescue Ranger"
+                    "custom projectile model" "models/workshop/player/items/engineer/sbox2014_einstein/sbox2014_einstein.mdl"
+                    "Projectile speed increased" 0.25
+                    "custom item model" "models/workshop/weapons/c_models/c_invasion_wrangler/c_invasion_wrangler.mdl"
+                    "damage causes airblast" 1 
+                    "override projectile type" 2
+                    "mult projectile scale" 3
+                    "blast dmg to self increased" 0
+                    }
+                    ItemAttributes
+                    {
+                        ItemName "The Wrangler"
+                        "is_passive_weapon" 1
+                    }
+                }
+            }
+		}    
+         WaveSpawn
+		{
+            Where spawnbot_flank
+            Where spawnbot
+			Name "Smallbot3A"
+			TotalCount 18
+			MaxActive 6
+			SpawnCount 3
+			WaitBeforeStarting 5
+			WaitBetweenSpawns 10
+			TotalCurrency 100
+			TFBot
+			{
+			Template bird_demoman_parrot
+            Name "The parrots begin to jabber"
+            Attributes IgnoreFlag
+            BehaviorModifiers Push
+            WeaponRestrictions MeleeOnly
+            ClassIcon demo_bird_random
+            Item  "The Splendid Screen"
+            Item "Ali Baba's Wee Booties"
+            Item  "The Escape Plan"
+                 CharacterAttributes
+				{
+					"move speed bonus"	1.00
+					"voice pitch scale" 2.00
+					"damage bonus" 0.1
+				}
+				ItemAttributes
+				{
+					ItemName "The Splendid Screen"
+					"charge recharge rate increased" 100
+					"Attack not cancel charge" 1
+					"charge impact damage increased" 0.1
+					"charge time increased" 5
+				}
+			}
+		} 
+         WaveSpawn
+		{
+			Where spawnbot
+            Where spawnbot_flank
+			Name "Smallbot3A2"
+            WaitForAllSpawned "Smallbot3A"
+			TotalCount 12
+			MaxActive 4
+			SpawnCount 3
+			WaitBeforeStarting 0
+			WaitBetweenSpawns 10
+			TotalCurrency 100
+			TFBot
+			{
+			Template bird_demoman_parrot
+            Name "Parry this Bwak"
+            WeaponRestrictions MeleeOnly
+            ClassIcon demo_bird_random
+            Item "The Claidheamohmor"
+            Item "The Splendid Screen"
+            Skill Hard
+            ItemAttributes
+                {
+                    ItemName "The Claidheamohmor"
+                    "hand scale" 2
+                    "melee airblast" 1
+                }
+			}
+		} 
+         WaveSpawn
+		{
+			Where spawnbot
+            Where spawnbot_flank
+			Name "Smallbot3B"
+			TotalCount 16
+			MaxActive 6
+			SpawnCount 3
+			WaitBeforeStarting 8
+			WaitBetweenSpawns 10
+			TotalCurrency 100
+			TFBot
+			{
+			Template bird_sniper_owl
+            Name "Bird Piss"
+            Attributes AlwaysFireWeapon
+            Skill Expert
+            WeaponRestrictions SecondaryOnly
+            ClassIcon sniper_bird_jarate2
+            Item "Jarate"
+            ItemAttributes
+                {
+                    ItemName "Jarate"
+                    "effect bar recharge rate increased" 0.02
+                }
+			}
+		}    
+        WaveSpawn
+		{
+			Where spawnbot
+            Where spawnbot_flank
+			Name "SmallBot3C"
+            WaitForAllSpawned "Smallbot3B"
+			TotalCount 15
+			MaxActive 6
+			SpawnCount 3
+			WaitBeforeStarting 3
+			WaitBetweenSpawns 5
+			TotalCurrency 100
+			TFBot
+			{
+                Name "Phoenix + Fire Emoji"
+                Template bird_pyro_chicken
+                ClassIcon pyro_bird2
+                Skill Easy
+                Attributes AlwaysFireWeapon
+            }
+        }
+       WaveSpawn
+		{
+			Where spawnbot
+            Where spawnbot_flank
+			Name "SmallBot3D"
+            WaitForAllSpawned "Bigbot3C"
+			TotalCount 16
+			MaxActive 8
+			SpawnCount 4
+			WaitBeforeStarting 3
+			WaitBetweenSpawns 4
+			TotalCurrency 100
+			TFBot
+			{
+               Template bird_heavy_tweet
+               Health 200
+               Name "Speedy Robin"
+               ClassIcon heavy_bird
+               Item "Gloves of Running Urgently MvM"
+               WeaponRestrictions MeleeOnly
+               ItemAttributes
+               {
+                ItemName "Gloves of Running Urgently MvM"
+                 "move speed bonus" 2.5
+               }
+            } 
+        }
+        WaveSpawn
+		{
+			Where spawnbot
+			Name "Bigbot3C"
+            WaitForAllDead "BigBot3B"
+			TotalCount 1
+			MaxActive 1
+			SpawnCount 1
+			WaitBeforeStarting 3
+			WaitBetweenSpawns 10
+			TotalCurrency 100
+			TFBot
+			{
+               Template bird_heavy_tweet_G
+               Attributes AlwaysCrit
+               Health 8500
+               Attributes AutoJump
+               Attributes UseBossHealthBar
+               Skill Expert
+               Name "Birds are funny creatures"
+                AutoJumpMin 12
+				AutoJumpMax 12
+               ClassIcon heavy_bird_giant
+               Item "The Holiday Punch"
+               WeaponRestrictions MeleeOnly
+               ItemAttributes
+               {
+                ItemName "The Holiday Punch"
+                    "boots falling stomp" 1
+				    "cancel falling damage" 1
+                    "move speed bonus" 1
+                    "increased jump height" 100
+                    "stomp player damage" 10
+               }
+               CharacterAttributes
+               {
+                    "boots falling stomp" 1
+				    "cancel falling damage" 1
+                    "stomp player damage" 10
+               }
+            } 
+        }
+        WaveSpawn
+	{
+		WaitBeforeStarting		2
+		FirstSpawnWarningSound	/vo/heavy_item_birdhead_round_start01.mp3
+        WaitForAllDead "BigBot3B"
+	}
+        WaveSpawn
+		{
+			Where spawnbot
+            Where spawnbot_flank
+			Name "Support3A"
+			TotalCount 100
+			MaxActive 5
+			SpawnCount 3
+			WaitBeforeStarting 10
+			WaitBetweenSpawns 8
+			TotalCurrency 100
+            Support 1
+			TFBot
+			{
+			    Template bird_demo_parrotknight
+			}
+        }
+    }
+    //$1967 CREDITS (4/5) 
+     Wave
+	{
+        CustomWaveNumber 4
+        CustomMaxWaveNumber  123
+		StartWaveOutput
+		{
+			Target wave_start_relay
+			Action Trigger
+		}
+        InitWaveOutput
+        {
+            Target bignet
+            Action RunScriptCode
+            Param "
+            IncludeScript(`nopey_lib/constants_nopey_fork`)
+            IncludeScript(`birded`)
+             IncludeScript(`pro_demoknight`)
+            ClientPrint(null,3,`\x078ff347 Chuck: Its afternoon already? `)
+            ClientPrint(null,3,`\x078ff347 Chuck: Time sure does fly when you're out on the wild huh `)
+            ClientPrint(null,3,`\x078ff347 Chuck: I can see the motherload of birds coming our way. Time to make some big money!`)    
+              EntFire(`tf_objective_resource`, `$SetClientProp$m_iszMvMPopfileName`, `Maplehill Forest, 04:20 PM`)
+            SpawnEntityFromTable(`prop_dynamic`,
+			{
+				targetname = `smallbird1`
+				origin = `-31 5057 -263`
+				angles = `0 240 0`
+				start_active = true
+				model = `models/props_forest/bird.mdl`
+				disableshadows = true
+				modelscale = 2
+				skin = 0
+			}) 
+            SpawnEntityFromTable(`prop_dynamic`,
+			{
+				targetname = `smallbird2`
+				origin = `770 4224 -54`
+				angles = `0 180 0`
+				start_active = true
+				model = `models/props_forest/bird.mdl`
+				disableshadows = true
+				modelscale = 2
+				skin = 0
+			})     
+            ::BirdspotSkyBox <- { //(Credit to Seelpit)
+                Cleanup = function() {
+             SetSkyboxTexture(`sky_goldrush_01`)
+             delete ::BirdspotSkyBox
+                }
+            OnGameEvent_recalculate_holidays = function(_) { if (GetRoundState() == 3) Cleanup() }
+            OnGameEvent_mvm_wave_complete = function(_) { Cleanup() }
+            }
+            __CollectGameEventCallbacks(BirdspotSkyBox)
+                SetSkyboxTexture(`sky_harvest_01`) 
+            "
+        }
+		DoneOutput
+		{
+			Target wave_finished_relay
+			Action Trigger
+		}
+         WaveSpawn
+		{
+            
+            Name message1
+            StartWaveMessage "{Blue}You see the birds trying to communicate"
+            WaitBeforeStarting 7
+        }
+          WaveSpawn
+		{
+            Name message2
+            StartWaveMessage "{Blue}It seems they are speaking something"
+            WaitForAllSpawned "message1"
+            WaitBeforeStarting 7
+        }
+         SpawnTemplate birdmusicw4
+         WaveSpawn
+		{
+            Name music
+            WaitBeforeStarting 11
+            FirstSpawnOutput
+            {
+                Target musicstart
+                Action Trigger
+            }
+        }
+         WaveSpawn
+		{
+            Name message
+            StartWaveMessage "Now Playing: Team Fortress 2 OST Dapper Cadaver"
+            WaitForAllSpawned "music"
+            WaitBeforeStarting 10
+        
+        }
+         WaveSpawn
+		{
+			Where spawnbot
+			Name "BigBot4A"
+			TotalCount 3
+			MaxActive 3
+			SpawnCount 1
+			WaitBeforeStarting 12
+			WaitBetweenSpawns 10
+			TotalCurrency 320
+			Squad
+			{
+                ShouldPreserveSquad 1
+                TFBot
+                {
+                    SpawnTemplate boss_logicA
+                    Template bird_demoman_parrot_G
+                    Name "Parrot Leader"
+                    Health 7500
+                    Scale 1.80
+                    ClassIcon demo_bird_giant
+                }
+                TFBot
+                {
+                    Template bird_scout_G
+                    Health 7500
+                    Scale 1.80
+                    Name "Mockingbird Leader"
+                    Attributes AlwaysFireWeapon
+                    WeaponRestrictions SecondaryOnly
+                    ClassIcon scout_birb_milk2
+                    Item "Mutated Milk"
+                    ItemAttributes
+                    {
+                        ItemName "Mutated Milk"
+                        "effect bar recharge rate increased" 0.01
+                        "applies snare effect" 0.50
+                    } 
+                    CharacterAttributes
+                    {
+                        "move speed bonus" 0.85
+                    }
+                }
+                TFBot
+                {
+                    Template bird_sniper_owl_g
+                    Skill Expert
+                    Name "Owl Leader"
+                    StripItemSlot 0
+                    StripItemSlot 2
+                    Attributes AlwaysFireWeapon
+                    Health 7500
+                    Scale 1.80
+                    ClassIcon sniper_bird_brick2
+                    Item "The Self-Aware Beauty Mark"
+                    WeaponRestrictions SecondaryOnly
+                    ItemAttributes
+                    {
+                    ItemName "The Self-Aware Beauty Mark"
+                    "custom projectile model" "models\weapons\c_models\c_bread\c_bread_cornbread.mdl"
+                    "custom item model" "models\weapons\c_models\c_bread\c_bread_cornbread.mdl"
+                    "effect bar recharge rate increased" 0.01
+                     "override projectile type extra" "brick"
+                    }
+                }
+			}
+		} 
+       WaveSpawn
+		{
+			Where spawnbot
+			Name "BigBot4B"
+            WaitForAllDead "BigBot4A"
+			TotalCount 3
+			MaxActive 3
+			SpawnCount 1
+			WaitBeforeStarting 2
+			WaitBetweenSpawns 8
+			TotalCurrency 420
+			Squad
+			{
+                ShouldPreserveSquad 1
+                TFBot
+                {
+                    SpawnTemplate boss_logicB
+                    Health 7500
+                    Scale 1.80
+                    Skill Expert
+                    Template bird_soldier_eagle_G
+                    Name "Falcon Leader"
+                    ClassIcon soldier_bird_giant
+                    ItemAttributes
+                    {
+                        ItemName "TF_WEAPON_ROCKETLAUNCHER"
+                        "custom projectile model" "models/workshop/player/items/soldier/spr18_private_maggot_muncher/spr18_private_maggot_muncher.mdl"
+                        "faster reload rate" 0.4
+                        "custom item model" "models/weapons/c_models/c_tw_eagle/c_tw_eagle.mdl"
+				        "fire rate bonus" 0.2
+				        "clip size upgrade atomic" 5.0
+                        "Projectile speed increased" 0.60
+                        "damage causes airblast" 1
+                        "mult projectile scale" 3
+                        "blast dmg to self increased" 0
+                    }
+                    ItemAttributes
+                    {
+                        ItemName "The Freedom Staff"
+                        "override projectile type"	2
+                        "is_passive_weapon" 1
+                    } 
+                }
+                TFBot
+                {
+                    Template bird_engineer_canary_G
+                    Health 7500
+                    Scale 1.80
+                    Name "Canary Leader"
+                    ClassIcon engineer_bird_giant
+                    BehaviorModifiers Push
+                    Item "The Wrangler"
+                    Item "The Rescue Ranger"
+                    ItemAttributes
+                    {
+                    ItemName "The Rescue Ranger"
+                    "custom projectile model" "models/workshop/player/items/engineer/sbox2014_einstein/sbox2014_einstein.mdl"
+                    "Projectile speed increased" 0.40
+                    "custom item model" "models/workshop/weapons/c_models/c_invasion_wrangler/c_invasion_wrangler.mdl"
+                    "damage causes airblast" 1 
+                    "override projectile type" 2
+                    "mult projectile scale" 3
+                    "faster reload rate" -0.8
+				    "fire rate bonus" 0.3
+                    "blast dmg to self increased" 0
+                    }
+                    ItemAttributes
+                    {
+                        ItemName "The Wrangler"
+                        "is_passive_weapon" 1
+                    }
+                }
+                TFBot
+                {
+                    Template bird_spy_crow_g
+                    Scale 1.80
+                    Health 7500
+                    Name "Why are we here just to suffer?"
+                    StripItemSlot 0
+                    StripItemSlot 1
+                    StripItemSlot 2
+                    ClassIcon spy_Bird_giant
+                }
+            }
+        }
+        WaveSpawn
+		{
+			Where spawnbot
+			Name "BigBot4C"
+            WaitForAllDead "BigBot4B"
+			TotalCount 3
+			MaxActive 3
+			SpawnCount 1
+			WaitBeforeStarting 2
+			WaitBetweenSpawns 8
+			TotalCurrency 660
+			Squad
+			{
+                ShouldPreserveSquad 1
+                TFBot
+                {
+                    SpawnTemplate boss_logicC
+                    Scale 1.80
+                    Health 7500
+                    Template bird_heavy_tweet_G
+                    Skill Hard
+                    Name "Robin Leader"
+                    ClassIcon heavy_bird_giant
+                    Item "Upgradeable TF_WEAPON_MINIGUN"
+                    ItemAttributes
+                    {
+                        ItemName "Upgradeable TF_WEAPON_MINIGUN"
+                        "projectile spread angle penalty" 1.5
+                        "override projectile type" 2
+                        "Projectile speed increased" 0.80
+                        "fire rate penalty" 1.15
+                        "damage penalty" 0.90
+                        "paintkit_proto_def_index" 224
+                        "set_item_texture_wear" 0
+                        "blast dmg to self increased" 0
+                        "mult projectile scale" 1.5
+                        "custom projectile model" "models/workshop/player/items/heavy/jul13_red_army_robin/jul13_red_army_robin.mdl"
+
+                    }
+                }
+                TFBot
+                {
+                    Template bird_medic_dove_G
+                    Health 7500
+                    Scale 1.80
+                    Name "Dove Leader"
+                    Attributes AlwaysFireWeapon
+                    Action FetchFlag
+                    ClassIcon medic_bird
+                    WeaponRestrictions PrimaryOnly
+                    Item "The Crusader's Crossbow"
+                    ItemAttributes
+                    {
+                        ItemName "The Crusader's Crossbow"
+                        "custom projectile model" "models/player/items/medic/archimedes.mdl"
+                       "damage penalty" 0.80
+                        "fire rate bonus" 0.10
+                        "clip size upgrade atomic" 4
+                        "faster reload rate" 0.02
+                        "override projectile type" 2
+                        "Projectile speed increased" 0.20
+                        "damage causes airblast" 1
+                        "blast dmg to self increased" 0
+                        "fires milk bolt" 1
+                        "mult projectile scale" 1.5
+                        
+                    }
+                }
+                TFBot
+                {
+                    Template bird_pyro_chicken_G
+                    Skill Hard
+                    Health 7500
+                    Scale 1.80
+                    Name "Phoenix Leader"
+                    ClassIcon pyro_bird2_giant
+                     Item "The Hot Hand"
+                    Item "The Dragon's Fury"
+                    ItemAttributes
+                    {
+                        ItemName "The Dragon's Fury"
+                        "mult_item_meter_charge_rate" 0.6
+                        "health regen" 100
+                        "custom item model" "models\empty.mdl"
+                    }
+                    ItemAttributes
+                    {
+                        ItemName "The Hot Hand"
+                        "is_passive_weapon" 1
+                    }
+                }
+            }
+        }
+          
+        WaveSpawn
+		{
+			Where spawnbot
+            Where spawnbot_flank
+            Where spawnbot_top
+			Name "Support4A"
+            WaitForAllSpawned "BigBot4A"
+			TotalCount 100
+			MaxActive 12
+			SpawnCount 4
+			WaitBeforeStarting 6
+			WaitBetweenSpawns 13
+			TotalCurrency 200
+            Support 1
+            RandomChoice
+            {
+                TFBot
+                {
+                    Template bird_soldier_eagle_hidden 
+                    ClassIcon soldier_bird
+                }
+                TFBot
+                {
+                    Template bird_pyro_chicken_hidden 
+                    ClassIcon pyro_bird2
+                }
+                TFBot
+                {
+                    Template bird_pyro_chicken_korean 
+                     ClassIcon pyro_bird2
+                }
+                TFBot
+                {
+                    Template bird_pyro_chicken_korean 
+                     ClassIcon pyro_bird2
+                }
+                TFBot
+                {
+                    Template bird_demoman_parrot_hidden
+                    ClassIcon demo_bird
+                }
+                TFBot
+                {
+                    Template bird_soldier_eagle_hidden 
+                     ClassIcon soldier_bird
+                }
+                TFBot
+                {
+                    Template bird_soldier_eagle_hidden 
+                     ClassIcon soldier_bird
+                }
+                TFBot
+                {
+                    Template bird_scout_hidden 
+                    ClassIcon scout_birb
+                }
+                TFBot
+                {
+                    Template bird_scout_normal
+                    ClassIcon scout_birb
+                }
+                TFBot
+                {
+                    Template bird_scout_normal
+                    ClassIcon scout_birb
+                }
+                TFBot
+                {
+                    Template bird_demoman_parrot_scary
+                    ClassIcon demo_bird
+                }
+                TFBot
+                {
+                    Template bird_demoman_parrot_scary
+                    ClassIcon demo_bird
+                }
+            }
+            
+        }
+    }   
+    //$6 7 CREDITS (5/5) 
+    Wave
+	{
+        CustomWaveNumber 67 //this was made in October this is a bad joke 
+        CustomMaxWaveNumber 67
+		StartWaveOutput
+		{
+			Target wave_start_relay
+			Action Trigger
+		}
+        InitWaveOutput
+        {
+            Target bignet
+            Action RunScriptCode
+            Param "
+            IncludeScript(`nopey_lib/constants_nopey_fork`)
+            Convars.SetValue(`tf_avoidteammates_pushaway`, 0)
+            IncludeScript(`pro_demoknight`)
+            IncludeScript(`birded`)
+            IncludeScript(`pro_sniper`)
+            __CollectGameEventCallbacks(prosniper)
+            ClientPrint(null,3,`\x078ff347 Chuck: Phew that was a good hunt, We made profit and we got some cool displays for our house`)
+            ClientPrint(null,3,`\x07FF0000 *Whispers in the distance*`)
+            ClientPrint(null,3,`\x078ff347 Chuck: Did you hear that?`)
+            ClientPrint(null,3,`\x078ff347 Chuck: I hear a faint sound saying weapon...reskins?`)  
+            EntFire(`tf_objective_resource`, `$SetClientProp$m_iszMvMPopfileName`, `Maplehill Forest, 06:09 PM`)
+            SpawnEntityFromTable(`prop_dynamic`,
+			{
+				targetname = `smallbird1`
+				origin = `-31 5057 -263`
+				angles = `0 240 0`
+				start_active = true
+				model = `models/props_forest/bird.mdl`
+				disableshadows = true
+				modelscale = 2
+				skin = 0
+			}) 
+            ::BirdspotSkyBox <- { //(Credit to Seelpit)
+                Cleanup = function() {
+             SetSkyboxTexture(`sky_harvest_01`)
+             delete ::BirdspotSkyBox
+                }
+            OnGameEvent_recalculate_holidays = function(_) { if (GetRoundState() == 3) Cleanup() }
+            OnGameEvent_mvm_wave_complete = function(_) { Cleanup() }
+            }
+            __CollectGameEventCallbacks(BirdspotSkyBox)
+                SetSkyboxTexture(`sky_badlands_01`) 
+            "
+        }
+		DoneOutput
+		{
+			Target wave_finished_relay
+			Action Trigger 
+		}
+         WaveSpawn
+		{
+            
+            Name message1
+            StartWaveMessage "{Blue}You have destroyed our ecosystem with your reckless hunting"
+            WaitBeforeStarting 7
+        }
+         WaveSpawn
+		{
+            Name message2
+            StartWaveMessage "{Blue}I have lived in this forest for many years"
+            WaitForAllSpawned "message1"
+            WaitBeforeStarting 7
+        }
+        WaveSpawn
+		{
+            Name message3
+            StartWaveMessage "{Red}I'll promise that you'll regret ever stepping foot in this forest"
+            WaitForAllSpawned "message2"
+            WaitBeforeStarting 7
+        }
+        WaveSpawn
+		{
+            Name message4
+            StartWaveMessage  "{Red}Now it's time for you to face the consequences"
+            WaitForAllSpawned "message3"
+            WaitBeforeStarting 7
+        
+        }
+        SpawnTemplate birdmusicboss
+         WaveSpawn
+		{
+            Name music
+            WaitBeforeStarting 17
+            FirstSpawnOutput
+            {
+                Target musicstart
+                Action Trigger
+            }
+        }
+         WaveSpawn
+		{
+            Name message
+            StartWaveMessage "Now Playing: theme of really cool bird By Bobacupcake"
+            WaitForAllSpawned "Great Blue TF2"
+            WaitBeforeStarting 7
+        
+        }
+        WaveSpawn
+        {
+            Where spawnbot
+			Name "Great Blue TF2"
+			TotalCount 1
+			MaxActive 1
+			SpawnCount 1
+			WaitBeforeStarting 29
+			TotalCurrency 9
+			FirstSpawnOutPut
+			{
+				Target wave_start_relay
+				Action RunScriptCode
+				Param "
+				ClientPrint(null,3,`\x0799CCFF Weapon reskins`)
+                ClientPrint(null,3,`\x0799CCFF WEapon REskins`)
+                ClientPrint(null,3,`\x0799CCFF 67 is a bad joke`)
+                ClientPrint(null,3,`\x0799CCFF WEAPon RESKins`)
+                ClientPrint(null,3,`\x0799CCFF Weapon Reskins`)
+                ClientPrint(null,3,`\x0799CCFF Weapon Reskins`)
+                ClientPrint(null,3,`\x0799CCFF Why did i make this a 67 reference`)
+                ClientPrint(null,3,`\x0799CCFF Weapon Reskins`)
+                ClientPrint(null,3,`\x0799CCFF WEAPOn RESKINs`)
+                ClientPrint(null,3,`\x0799CCFF WEAPON RESKINS`)
+                ClientPrint(null,3,`\x0799CCFF Worst joke of 2025`)
+                ClientPrint(null,3,`\x0799CCFF WEAPON RESKINS`)
+                ClientPrint(null,3,`\x0799CCFF WEAPON RESKINS`)
+                ClientPrint(null,3,`\x0799CCFF 69 is better`)
+                ClientPrint(null,3,`\x0799CCFF WEAPON RESKINS`)
+                ClientPrint(null,3,`\x0799CCFF WEAPON RESKINS`)
+                ClientPrint(null,3,`\x0799CCFF WEAPON RESKINS`)
+                ClientPrint(null,3,`\x0799CCFF WEAPON RESKINS`)
+                ClientPrint(null,3,`\x0799CCFF WEAPON RESKINS`)
+                ClientPrint(null,3,`\x0799CCFF WEAPON RESKINS`)
+				"
+			}
+		    TFBot
+            {
+            SpawnTemplate boss_logicD
+            SpawnTemplate birdgetrektanimation
+            Name "Great Blue Eagle" // Uses weapon reskins 
+			Class	Soldier
+			ClassIcon soldier_hawkboss
+			Skill	Normal
+			Health 67000
+			Item	"Hawk Warrior"
+			Attributes	MiniBoss
+			Attributes	UseBossHealthBar
+            Attributes  DisableDodge
+			
+                ChangeAttributes
+                {
+                    Delay 0
+                    Repeats 1
+                    IfHealthBelow 56000
+                    Name "Weaponskins1"
+                }
+                ChangeAttributes
+                {
+                    Delay 0
+                    Repeats 1
+                    IfHealthBelow 45000
+                    Name "Weaponskins2"
+                }
+                ChangeAttributes
+                {
+                    Delay 0
+                    Repeats 1
+                    IfHealthBelow 34000
+                    Name "Weaponskins3"
+                }
+                ChangeAttributes
+                {
+                    Delay 0
+                    Repeats 1
+                    IfHealthBelow 23000
+                    Name "Weaponskins4"
+                }
+                ChangeAttributes
+                {
+                    Delay 0
+                    Repeats 1
+                    IfHealthBelow 12000
+                    Name "Weaponskins5"
+                }
+                ChangeAttributes
+                {
+                    Delay 0
+                    Repeats 1
+                    IfHealthBelow 6000
+                    Name "Weaponskins6"
+                }
+               EventChangeAttributes
+                {
+                    Default
+                    {
+						Item "TF_WEAPON_ROCKETLAUNCHER"
+                        Skill Expert
+                        Attributes	MiniBoss
+						Attributes	UseBossHealthBar
+                        ItemAttributes
+						{
+							ItemName	"TF_WEAPON_ROCKETLAUNCHER"
+                            "damage bonus" 3
+                            "blast dmg to self increased" 0
+                            "use large smoke explosion" 1
+                        }
+                        CharacterAttributes
+						{
+							"move speed bonus"	0.30
+							"damage force reduction"			0.4
+							"airblast vulnerability multiplier"	0.2
+							"override footstep sound set"		3
+							"airblast vertical vulnerability multiplier"	0.1
+							"rage giving scale"	0.25
+							"cancel falling damage"	1
+                            "hand scale" 2
+                            "self dmg push force decreased" 0
+						}
+					
+                    }
+                   Weaponskins1
+                    {
+                        Item "Upgradeable TF_WEAPON_ROCKETLAUNCHER"
+                        Skill Expert
+                        Attributes	MiniBoss
+						Attributes	UseBossHealthBar
+                        ItemAttributes
+						{
+							ItemName "Upgradeable TF_WEAPON_ROCKETLAUNCHER"
+                            "paintkit_proto_def_index" 205
+					        "set_item_texture_wear" 0
+							"faster reload rate" -0.8
+				            "fire rate bonus" 0.5
+                            "blast dmg to self increased" 0
+                            "attach particle effect" 13
+					        "Set DamageType Ignite" 1
+
+                        
+                        }
+                        CharacterAttributes
+						{
+							"move speed bonus"	0.30
+							"damage force reduction"			0.4
+							"airblast vulnerability multiplier"	0.2
+							"override footstep sound set"		3
+							"airblast vertical vulnerability multiplier"	0.1
+							"rage giving scale"	0.25
+							"cancel falling damage"	1
+                            "hand scale" 2
+                             "self dmg push force decreased" 0
+						}
+                        FireInput
+                        {
+                            Target player
+							Action $SetProp$m_iszClassIcon
+							Param  soldier_incendiary_spammer_giant
+							Delay 0
+							Cooldown 0
+							Repeats 1
+                        }
+                    }  
+                   Weaponskins2
+                    {
+                        Item "The Original"
+                        Skill Expert
+                        Attributes	MiniBoss
+                        Attributes HoldFireUntilFullReload
+						Attributes	UseBossHealthBar
+                        ItemAttributes
+						{
+							ItemName    "The Original"
+                            "fire rate bonus" 0.001
+                            "clip size upgrade atomic" 0
+                            "damage bonus" 1.25
+                            "faster reload rate" 0.5
+                            "projectile spread angle penalty" 2
+                            "Projectile speed increased" 0.3
+                            "blast dmg to self increased" 0
+			
+                        }
+                        CharacterAttributes
+						{
+							"move speed bonus"	0.30
+							"damage force reduction"			0.4
+							"airblast vulnerability multiplier"	0.2
+							"override footstep sound set"		3
+							"airblast vertical vulnerability multiplier"	0.1
+							"rage giving scale"	0.25
+							"cancel falling damage"	1
+                            "hand scale" 2
+                             "self dmg push force decreased" 0
+						}
+                         FireInput
+                        {
+                            Target player
+							Action $SetProp$m_iszClassIcon
+							Param  soldier_rocket_shotgun_charged
+							Delay 0
+							Cooldown 0
+							Repeats 1
+                        }
+                    }
+                    Weaponskins3
+                    {
+                        Item "The Nostromo Napalmer"
+                        Skill Normal
+                        Attributes	MiniBoss
+						Attributes	UseBossHealthBar
+                        Attributes AlwaysFireWeapon
+                        ItemAttributes
+						{
+							ItemName "The Nostromo Napalmer"
+                            "airblast disabled" 1
+                            "flame_drag" 2
+
+                        }
+                        CharacterAttributes
+						{
+							"move speed bonus" 0.30
+							"damage force reduction"			0.4
+							"airblast vulnerability multiplier"	0.2
+							"override footstep sound set"		3
+							"airblast vertical vulnerability multiplier"	0.1
+							"rage giving scale"	0.25
+							"cancel falling damage"	1
+                            "hand scale" 1.5
+                             "self dmg push force decreased" 0
+                        }
+                        FireInput
+                        {
+                            Target player
+							Action $SetProp$m_iszClassIcon
+							Param  pyro_hot_giant
+							Delay 0
+							Cooldown 0
+							Repeats 1
+                        }
+                    }
+                    Weaponskins4
+                    {
+                        Item "Iron Curtain"
+                        Skill Expert
+                        Attributes	MiniBoss
+						Attributes	UseBossHealthBar
+                        ItemAttributes
+						{
+							ItemName "Iron Curtain"
+                            "heal on kill" 2500
+                        }
+                        CharacterAttributes
+						{
+							"move speed bonus" 0.30
+							"damage force reduction"			0.4
+							"airblast vulnerability multiplier"	0.2
+							"override footstep sound set"		3
+							"airblast vertical vulnerability multiplier"	0.1
+							"rage giving scale"	0.25
+							"cancel falling damage"	1
+                            "hand scale" 1.25
+                            "self dmg push force decreased" 0
+                        }
+                        FireInput
+                        {
+                            Target player
+							Action $SetProp$m_iszClassIcon
+							Param  heavy_head_nys
+							Delay 0
+							Cooldown 0
+							Repeats 1
+                        }
+                    }
+                    Weaponskins5
+                    {
+                        Item "TTG Sam Revolver"
+                        Skill Hard
+                        Attributes	MiniBoss
+						Attributes	UseBossHealthBar
+                        ItemAttributes
+						{
+							ItemName "TTG Sam Revolver"
+                            "fire rate bonus" 0.40
+                            "Reload time increased" 0.1
+                            "last shot crits" 1
+                        }
+                        CharacterAttributes
+						{
+							"move speed bonus" 0.30
+							"damage force reduction"			0.4
+							"airblast vulnerability multiplier"	0.2
+							"override footstep sound set"		3
+							"airblast vertical vulnerability multiplier"	0.1
+							"rage giving scale"	0.25
+							"cancel falling damage"	1
+                            "hand scale" 2
+                             "self dmg push force decreased" 0
+                        }
+                        FireInput
+                        {
+                            Target player
+							Action $SetProp$m_iszClassIcon
+							Param  spy_revolver_lite
+							Delay 0
+							Cooldown 0
+							Repeats 1
+                        }
+                    }
+                   Weaponskins6
+                    {
+                        Item "Upgradeable TF_WEAPON_ROCKETLAUNCHER"
+                        Skill Expert
+                        Attributes	MiniBoss
+						Attributes	UseBossHealthBar
+                        ItemAttributes
+						{
+							ItemName "Upgradeable TF_WEAPON_ROCKETLAUNCHER"
+							"projectile spread angle penalty" 3
+                            "Projectile speed increased" 0.50
+                            "faster reload rate" -0.8
+				            "fire rate bonus" 0.5
+                            "is australium item"	1
+		                    "item style override"	1
+                            "turn to gold" 1
+                            "weapon never gib" 1
+                            "damage bonus" 2.5
+                           "blast dmg to self increased" 0
+                        }
+                        CharacterAttributes
+						{
+							"move speed bonus"	0.30
+							"damage force reduction"			0.4
+							"airblast vulnerability multiplier"	0.2
+							"override footstep sound set"		3
+							"airblast vertical vulnerability multiplier"	0.1
+							"rage giving scale"	0.25
+							"cancel falling damage"	1
+                            "hand scale" 2
+                             "self dmg push force decreased" 0
+                        }
+                         FireInput
+                        {
+                            Target player
+							Action $SetProp$m_iszClassIcon
+							Param  soldier_golden_lite
+							Delay 0
+							Cooldown 0
+							Repeats 1
+                        }
+                    }
+                }   
+            }       
+        }
+
+         WaveSpawn
+	{
+		WaitBeforeStarting		1
+		FirstSpawnWarningSound	/vo/soldier_item_birdhead_round_start03.mp3
+        WaitForAllSpawned "Great Blue TF2"
+	}
+      WaveSpawn
+	{
+		WaitBeforeStarting		0
+		FirstSpawnWarningSound	/vo/soldier_item_birdhead_round_start05.mp3
+        WaitForAllDead "Great Blue TF2"
+	}
+         WaveSpawn
+		{
+			Where spawnbot
+            Where spawnbot_flank
+            Where spawnbot_top
+			Name "Support4A"
+            WaitForAllSpawned "Great Blue TF2"
+			TotalCount 10
+			MaxActive 4
+			SpawnCount 2
+			WaitBeforeStarting 8
+			WaitBetweenSpawns 14
+			TotalCurrency 20
+            Support 1
+			TFBot
+			{
+                Template bird_demo_parrotknight
+            } 
+        }
+        
+         WaveSpawn
+	     {
+			Where spawnbot
+            Where spawnbot_flank
+            Where spawnbot_top
+			Name "Support4A"
+            WaitForAllSpawned "Great Blue TF2"
+			TotalCount 100
+			MaxActive 4
+			SpawnCount 3
+			WaitBeforeStarting 5
+			WaitBetweenSpawns 13
+			TotalCurrency 20
+            Support 1
+			RandomChoice
+			{
+                TFBot
+                {
+                Template bird_scout
+                Name "Bird Poop"
+                Tag bot_flying_chicken
+                BehaviorModifiers Push
+                WeaponRestrictions SecondaryOnly
+                ClassIcon scout_birb_milk2
+                Item "Mad Milk"
+                ItemAttributes
+                    {
+                        ItemName "Mad Milk"
+                        "effect bar recharge rate increased" 0.01
+                    }
+                }
+                TFBot
+                {
+                Template bird_scout
+                Name "Bird Poop"
+                Tag bot_flying_chicken
+                BehaviorModifiers Push
+                WeaponRestrictions SecondaryOnly
+                ClassIcon scout_birb_milk2
+                Item "Mad Milk"
+                ItemAttributes
+                    {
+                        ItemName "Mad Milk"
+                        "effect bar recharge rate increased" 0.01
+                    }
+                }
+                TFBot
+                {
+                Template bird_scout
+                Name "Bird Poop"
+                Tag bot_flying_chicken
+                BehaviorModifiers Push
+                WeaponRestrictions SecondaryOnly
+                ClassIcon scout_birb_milk2
+                Item "Mad Milk"
+                ItemAttributes
+                    {
+                        ItemName "Mad Milk"
+                        "effect bar recharge rate increased" 0.01
+                    }
+                }
+                TFBot
+                {
+                Template bird_scout
+                Name "Bird Poop"
+                Tag bot_flying_chicken
+                BehaviorModifiers Push
+                WeaponRestrictions SecondaryOnly
+                ClassIcon scout_birb_milk2
+                Item "Mad Milk"
+                ItemAttributes
+                    {
+                        ItemName "Mad Milk"
+                        "effect bar recharge rate increased" 0.01
+                    }
+                }
+                TFBot
+                {
+                Template bird_scout
+                Name "Bird Poop"
+                Tag bot_flying_chicken
+                BehaviorModifiers Push
+                WeaponRestrictions SecondaryOnly
+                ClassIcon scout_birb_milk2
+                Item "Mad Milk"
+                ItemAttributes
+                    {
+                        ItemName "Mad Milk"
+                        "effect bar recharge rate increased" 0.01
+                    }
+                }
+                TFBot
+                {
+                Template bird_scout
+                Name "Bird Poop"
+                Tag bot_flying_chicken
+                BehaviorModifiers Push
+                WeaponRestrictions SecondaryOnly
+                ClassIcon scout_birb_milk2
+                Item "Mad Milk"
+                ItemAttributes
+                    {
+                        ItemName "Mad Milk"
+                        "effect bar recharge rate increased" 0.01
+                    }
+                }
+                TFBot
+                {
+                Template bird_scout
+                Name "Bird Poop"
+                Tag bot_flying_chicken
+                BehaviorModifiers Push
+                WeaponRestrictions SecondaryOnly
+                ClassIcon scout_birb_milk2
+                Item "Mad Milk"
+                ItemAttributes
+                    {
+                        ItemName "Mad Milk"
+                        "effect bar recharge rate increased" 0.01
+                    }
+                }
+                TFBot
+                {
+                Template bird_scout
+                Name "Bird Poop"
+                Tag bot_flying_chicken
+                BehaviorModifiers Push
+                WeaponRestrictions SecondaryOnly
+                ClassIcon scout_birb_milk2
+                Item "Mad Milk"
+                ItemAttributes
+                    {
+                        ItemName "Mad Milk"
+                        "effect bar recharge rate increased" 0.01
+                    }
+                }
+                TFBot
+                {
+                Template bird_scout
+                Name "Bird Poop"
+                Tag bot_flying_chicken
+                BehaviorModifiers Push
+                WeaponRestrictions SecondaryOnly
+                ClassIcon scout_birb_milk2
+                Item "Mad Milk"
+                ItemAttributes
+                    {
+                        ItemName "Mad Milk"
+                        "effect bar recharge rate increased" 0.01
+                    }
+                }
+                TFBot
+                {
+                Template  bird_scout^2
+                Name "Bird Poop"
+                Tag bot_flying_chicken
+                BehaviorModifiers Push
+                WeaponRestrictions SecondaryOnly
+                ClassIcon scout_birb_milk2
+                Item "Mad Milk"
+                ItemAttributes
+                    {
+                        ItemName "Mad Milk"
+                        "effect bar recharge rate increased" 0.01
+                        "applies snare effect" 0.20
+                    }
+                }
+                TFBot
+                {
+                Template  bird_scout^2
+                Name "Bird Poop"
+                Tag bot_flying_chicken
+                BehaviorModifiers Push
+                WeaponRestrictions SecondaryOnly
+                ClassIcon scout_birb_milk2
+                Item "Mad Milk"
+                ItemAttributes
+                    {
+                        ItemName "Mad Milk"
+                        "effect bar recharge rate increased" 0.01
+                        "applies snare effect" 0.20
+                    }
+                }
+            } 
+        }
+        WaveSpawn
+		    {
+			Where spawnbot
+            Where spawnbot_flank
+            Where spawnbot_top
+			Name "Support4A"
+            WaitForAllSpawned "Great Blue TF2"
+			TotalCount 100
+			MaxActive 5
+			SpawnCount 3
+			WaitBeforeStarting 10
+			WaitBetweenSpawns 11
+			TotalCurrency 20
+            Support 1
+			TFBot
+			{
+               Template bird_soldier_eagle
+               Health 200
+               Skill Expert
+               BehaviorModifiers Push
+               Name "Baby Blue Eagle"
+               ClassIcon soldier_bird
+               Item "The Conscientious Objector"
+               WeaponRestrictions MeleeOnly
+               ItemAttributes
+                {
+                    ItemName "The Conscientious Objector"
+                    "custom texture hi" "xedd1be66"
+                    "custom texture lo" "x758a5e7"
+                }
+            } 
+		}
+       WaveSpawn
+		{
+			WaitForAllDead "Great Blue TF2"
+			WaitBeforeStarting 12
+		}
+    }
+}
+
+		
+		
+	
+		
+		
+	
+
+	
+
+      
+    

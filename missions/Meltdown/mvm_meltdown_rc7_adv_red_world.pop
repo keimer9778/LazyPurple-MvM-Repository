@@ -1,0 +1,2699 @@
+// "saRy is third long map. Design by Neptune" - saRy
+// Created by Mentrillum
+
+#base robot_standard.pop
+#base robot_giant.pop
+#base robot_mentrillum.pop
+
+WaveSchedule
+{
+	StartingCurrency 900
+	RespawnWaveTime 4
+	CanBotsAttackWhileInSpawnRoom no
+	Advanced 1
+	ForceRedMoney 1 [$SIGSEGV]
+	WaveStartCountdown 3 [$SIGSEGV]
+	Robotlimit 40 [$SIGSEGV]
+
+	PrecacheSound "mentrillum/mvm/sfx/attack_groundpound.wav" [$SIGSEGV]
+	PrecacheSound "mentrillum/mvm/sfx/attack_chestbeam.wav" [$SIGSEGV]
+	PrecacheSound "mentrillum/mvm/music/red_alert_3_hell_march_3.wav" [$SIGSEGV]
+	PrecacheModel "models/mentrillum/bots/soviet_tonka_weapons_02.mdl" [$SIGSEGV]
+	PrecacheModel "models/bots/sniper_boss/bot_sniper_boss.mdl" [$SIGSEGV]
+
+	Templates
+	{
+		T_TFBot_Giant_Armored_Heavyweapons
+		{
+			Class Heavyweapons
+			Name "Giant Armored Heavy"
+			ClassIcon heavy_armored
+			Skill Expert
+			Health 12000
+			WeaponRestrictions PrimaryOnly
+			MaxVisionRange 1200
+			Attributes MiniBoss
+			Attributes UseBossHealthBar
+			Tag bot_giant
+			// Damage bonus is cancer with this guy, so no more damage bonus
+			CharacterAttributes
+			{
+				"move speed bonus"	0.5
+				"damage force reduction" 0.3
+				"airblast vulnerability multiplier" 0.3
+				"override footstep sound set" 2
+			}
+		}
+
+		T_TFBot_Chief_Armored_Heavy
+		{
+			Class Heavyweapons
+			Name "Soviet Tonka Weapons"
+			ClassIcon heavy_titanium
+			Item "Potato of Labor"
+			ItemModel
+			{
+				ItemName "Potato of Labor"
+				Model "models/player/items/heavy/cop_glasses.mdl"
+			}
+			Item "Officer's Ushanka"
+			Item "Heavy Metal"
+			Tag "soviet_tonka_weapons"
+			Tag "dontdoublehp_damageres"
+			UseCustomModel "models/mentrillum/bots/soviet_tonka_weapons_02.mdl"
+			CustomEyeGlowColor "255 0 0"
+			Tag bot_giant
+			Skill Expert
+			//Health 90000
+			Health 50000
+			WeaponRestrictions MeleeOnly
+			Attributes MiniBoss
+			Attributes UseBossHealthBar
+			AlwaysGlow 1
+			FastUpdate 1
+			UseMeleeThreatPrioritization 1
+			ExtAttr IgnoreNPC
+			ExtAttr IgnoreBuildings
+			Attributes IgnoreFlag
+			Scale 1.9
+			Action Mobber
+			Item "TF_WEAPON_MINIGUN"
+			Item "TF_WEAPON_SHOTGUN_HWG"
+			Item "Advanced Training Gauntlets"
+			WeaponResist
+			{
+				"TF_WEAPON_MINIGUN"	0.65
+			}
+			ItemAttributes
+			{
+				ItemName "Advanced Training Gauntlets"
+				"melee cleave attack" 1
+				"fire rate bonus" 5555
+				"melee range multiplier" 1.3
+				"move speed bonus" 2.0
+				"gesture speed increase" 3.0
+				"health regen" 0.0
+				"set item tint RGB" 14197
+			}
+			CharacterAttributes
+			{
+				"move speed bonus"	0.65
+				"damage force reduction" 0.3
+				"airblast vulnerability multiplier" 0.3
+				"override footstep sound set" 2
+				"rage giving scale" 0.1
+				"cancel falling damage" 1
+				"gesture speed increase" 1.5
+			}
+
+			EventChangeAttributes
+			{
+				Minigun_Action
+				{
+					WeaponRestrictions PrimaryOnly
+					Item "TF_WEAPON_MINIGUN"
+					Item "TF_WEAPON_SHOTGUN_HWG"
+					Item "TF_WEAPON_FISTS"
+					ItemAttributes
+					{
+						ItemName "TF_WEAPON_MINIGUN"
+						"damage bonus"	1.5
+					}
+					CharacterAttributes
+					{
+						"move speed bonus"	0.4
+						"damage force reduction" 0.3
+						"airblast vulnerability multiplier" 0.3
+						"override footstep sound set" 2
+						"rage giving scale" 0.1
+						"cancel falling damage" 1
+						"gesture speed increase" 1.5
+						"maxammo primary reduced" 3.0
+					}
+				}
+
+				Shotgun_Action_Dragonsbreath
+				{
+					WeaponRestrictions SecondaryOnly
+					Item "Dragonsbreath"
+					Item "Necro Smasher"
+					ItemAttributes
+					{
+						ItemName "Dragonsbreath"
+						"fire rate bonus" 1.1
+						"bullets per shot bonus" 2.0
+						"damage penalty" 0.75
+						"faster reload rate" 0.1
+						"move speed bonus" 1.1
+						"attack projectiles" 1
+						"weapon burn dmg reduced" 1.0
+					}
+					CharacterAttributes
+					{
+						"move speed bonus"	0.7
+						"damage force reduction" 0.3
+						"airblast vulnerability multiplier" 0.3
+						"override footstep sound set" 2
+						"rage giving scale" 0.1
+						"cancel falling damage" 1
+						"gesture speed increase" 1.5
+					}
+				}
+
+				Shotgun_Action_ResupplyShotgun
+				{
+					WeaponRestrictions SecondaryOnly
+					Attributes HoldFireUntilFullReload
+					Item "Panic Attack Shotgun"
+					Item "Necro Smasher"
+					ItemAttributes
+					{
+						ItemName "Panic Attack Shotgun"
+						"bullets per shot bonus" 1.5
+						"fixed_shot_pattern" 0
+						"damage penalty" 0.9
+						"mult_spread_scales_consecutive" 0
+						"move speed bonus" 1.1
+
+						"fire rate bonus with reduced health" 1.0
+						"fire rate bonus HIDDEN" 0.2
+						"reload time decreased" 0.4
+						"paintkit_proto_def_index" 215
+						"set_item_texture_wear" 0
+					}
+					CharacterAttributes
+					{
+						"move speed bonus"	0.7
+						"damage force reduction" 0.3
+						"airblast vulnerability multiplier" 0.3
+						"override footstep sound set" 2
+						"rage giving scale" 0.1
+						"cancel falling damage" 1
+						"gesture speed increase" 1.5
+					}
+				}
+
+				Melee_Action
+				{
+					WeaponRestrictions MeleeOnly
+					Item "TF_WEAPON_MINIGUN"
+					Item "TF_WEAPON_SHOTGUN_HWG"
+					Item "Advanced Training Gauntlets"
+					ItemAttributes
+					{
+						ItemName "Advanced Training Gauntlets"
+						"melee cleave attack" 1
+						"fire rate bonus" 0.9
+						"melee range multiplier" 1.3
+						"move speed bonus" 2.0
+						"health regen" 0.0
+						"set item tint RGB" 14197
+					}
+					CharacterAttributes
+					{
+						"move speed bonus"	0.65
+						"damage force reduction" 0.3
+						"airblast vulnerability multiplier" 0.3
+						"override footstep sound set" 2
+						"rage giving scale" 0.1
+						"cancel falling damage" 1
+						"gesture speed increase" 1.5
+					}
+				}
+
+				Sandvich_Action
+				{
+					WeaponRestrictions SecondaryOnly
+					Attributes AlwaysFireWeapon
+					Item "The Robo-Sandvich"
+					ItemAttributes
+					{
+						ItemName "The Robo-Sandvich"
+						"lunchbox healing decreased" 180
+						"mult_item_meter_charge_rate" 0.01
+					}
+					CharacterAttributes
+					{
+						"move speed bonus"	0.7
+						"damage force reduction" 0.3
+						"airblast vulnerability multiplier" 0.3
+						"override footstep sound set" 2
+						"rage giving scale" 0.1
+						"cancel falling damage" 1
+						"gesture speed increase" 1.0
+					}
+				}
+			}
+		}
+	}
+
+	ClassLimit [$SIGSEGV]
+	{
+		Scout 0
+		Soldier 0
+		Pyro 0
+		Demoman 0
+		Engineer 0
+		Medic 0
+		Sniper 0
+		Spy 0
+	}
+
+	//CustomWeapon [$SIGSEGV]
+	//{
+		//"Killerwatt"
+		//{
+			//OriginalItemname "Tomislav"
+			//"maxammo primary reduced" 0.5
+			//"mult dmg vs tanks" 0.35
+			//"damage penalty" 0.5
+			//"energy weapon penetration" 1
+			//"override projectile type" 13
+			//"aiming movespeed decreased" 0.7
+			//"crit mod disabled" 0
+			//"minigun spinup time decreased" 1.0
+			//"paintkit_proto_def_index" 218
+			//"attach particle effect" 92
+			//"projectile lifetime" 0.6
+			//"projectile speed increased" 1.4
+			//"fire rate penalty" 1.5
+
+			//"special item description" "Fires bison projectiles | Cannot random crit"
+			//"special item description 2" "-30% move speed while deployed | Fires 50% slower"
+			//"special item description 3" "Very good crowd controller but lacks ammo and is a bad tank buster. Be sure to grab ammo canteens or ammo capacity"
+		//}
+	//}
+
+	CustomWeapon [$SIGSEGV]
+	{
+		"Resupply Packed Shotgun"
+		{
+			OriginalItemname "Panic Attack Shotgun"
+
+			"bullets per shot bonus" 1.0
+			"fixed_shot_pattern" 0
+			"damage penalty" 1.0
+			"mult_spread_scales_consecutive" 0
+
+			"fire rate bonus with reduced health" 0.5
+			"fire rate bonus HIDDEN" 0.7
+			"reload time decreased" 0.5
+			"weapon spread bonus" 0.8
+			"clip size penalty HIDDEN" 0.66
+			"auto fires full clip" 1
+			"paintkit_proto_def_index" 215
+			"maxammo primary reduced" 0
+			"move speed bonus" 1.3
+			"damage bonus" 1.25
+			"projectile penetration" 1
+
+			"special item description" "Gun Mettle Panic Attack"
+			"special item description 2" "Primary weapon removed | 30% faster movement speed | +20% tighter bullet spread"
+			"special item description 3" "Supply other teammates with max reserve ammo by interacting them with your special attack button"
+		}
+	}
+
+	CustomWeapon [$SIGSEGV]
+	{
+		"Advanced Training Gauntlets"
+		{
+			OriginalItemname "Fists of Steel"
+
+			"dmg from ranged reduced" 0.8
+			"dmg from melee increased" 1.0
+			"single wep holster time increased" 1.1
+			"patient overheal penalty" 1.0
+			"health from healers reduced" 1.0
+
+			"provide on active" 1
+			"move speed bonus" 1.3
+			"heal on kill" 50.0
+			"dmg bonus while half dead" 1.25
+			"dmg penalty while half alive" 0.75
+			"health regen" -3.0
+			"SPELL: set item tint RGB" 5
+			"set item tint RGB" 7667712
+			"item color rgb" 7667712
+			"melee cleave attack" 1
+			"melee range multiplier" 1.7
+			"melee bounds multiplier" 1.55
+
+			"special item description" "Deals 25% less/more damage when above/below 50% health | Cleaves nearby targets | 70% extra melee range | 55% higher hitbox bounds"
+			"special item description 2" "-3 health regen | Restores 50 health on kill | 20% resistance from ranged sources when the weapon is active"
+			"special item description 3" "30% faster movement speed when the weapon is active"
+			"special item description 4" "Best used for risk based melee playstyles."
+		}
+	}
+
+	CustomWeapon [$SIGSEGV]
+	{
+		"Dragonsbreath"
+		{
+			OriginalItemname "upgradeable TF_WEAPON_SHOTGUN_PRIMARY"
+
+			"damage bonus HIDDEN" 1.1
+			"bullets per shot bonus" 0.8
+			"weapon spread bonus" 1.1
+			"Set DamageType Ignite" 1
+			"weapon burn dmg reduced" 2.0
+			"fire rate penalty" 1.1
+			"paintkit_proto_def_index" 390
+			"set_item_texture_wear" 0
+
+			"special item description" "Fires 20% less bullets | +10% wider bullet spread | Fires 10% slower"
+			"special item description 2" "Ignites targets on hit | +100% increased afterburn damage"
+			"special item description 3" "Go cook some scrap metal with this weapon!"
+		}
+	}
+
+	ExtendedUpgrades [$SIGSEGV]
+	{
+		extra_damage
+		{
+			Name "+25% Damage Bonus"
+			Attribute "damage bonus"
+			Cap 2
+			Increment 0.25
+			Cost 250
+			AllowedWeapons
+			{
+				ItemName "Resupply Packed Shotgun"
+				ItemName "Advanced Training Gauntlets"
+				ItemName "The Family Business"
+				ItemName "tf_weapon_shotgun_hwg"
+				ItemName "upgradeable TF_WEAPON_SHOTGUN_PRIMARY"
+				ItemName "Panic Attack Shotgun"
+				ItemName "Festive Shotgun"
+				ItemName "Dragonsbreath"
+			}
+		}
+
+		//crit_on_kill
+		//{
+			//Name "+2s Crits On Kill"
+			//Attribute "critboost on kill"
+			//Cap 4
+			//Increment 2
+			//Cost 350
+			//AllowedWeapons
+			//{
+				//ItemName "Advanced Training Gauntlets"
+			//}
+		//}
+
+		speed_boost_on_kill
+		{
+			Name "+4s Speedboost On Kill"
+			Attribute "speed_boost_on_kill"
+			Cap 8
+			Increment 4
+			Cost 250
+			AllowedWeapons
+			{
+				ItemName "Advanced Training Gauntlets"
+			}
+		}
+
+		no_negative_health_regen
+		{
+			Name "Remove -3 Health Regen"
+			Attribute "sapper damage penalty hidden"
+			Cap 2
+			Increment 1
+			Cost 250
+			AllowedWeapons
+			{
+				ItemName "Advanced Training Gauntlets"
+			}
+			SecondaryAttributes
+			{
+				"health regen" 3
+			}
+		}
+
+		afterburn_damage
+		{
+			Name "+25% Afterburn Damage"
+			Attribute "weapon burn dmg increased"
+			Cap 2
+			Increment 0.25
+			Cost 250
+			AllowedWeapons
+			{
+				ItemName "Dragonsbreath"
+			}
+		}
+
+		more_lunchbox_items
+		{
+			Name "+2 Max Lunchbox Items"
+			Attribute "maxammo grenades1 increased"
+			Cap 10
+			Increment 2
+			Cost 100
+			AllowedWeapons
+			{
+				ItemName "The Sandvich"
+				ItemName "The Buffalo Steak Sandvich"
+				ItemName "The Dalokohs Bar"
+				ItemName "The Second Banana"
+				ItemName "Festive Sandvich"
+			}
+		}
+
+		removed_damage_vulnerability_steak
+		{
+			Name "Remove 20% Damage Taken"
+			Attribute "sapper damage penalty hidden"
+			Cap 2
+			Increment 1
+			Cost 300
+			AllowedWeapons
+			{
+				ItemName "The Buffalo Steak Sandvich"
+			}
+			SecondaryAttributes
+			{
+				"energy_buff_dmg_taken_multiplier" -0.2
+			}
+		}
+	}
+
+	ExtraLoadoutItems [$SIGSEGV]
+	{
+		HeavyWeapons
+		{
+			//Primary "Killerwatt"
+			Secondary "Resupply Packed Shotgun"
+			Secondary "Dragonsbreath"
+			Melee "Advanced Training Gauntlets"
+		}
+	}
+
+	PointTemplates [$SIGSEGV]
+	{
+		Dispenser
+		{
+			NoFixup 1
+			obj_dispenser
+			{
+				"origin" "0 0 0"
+				"teamnum" "2"
+				"SolidToPlayer" "0"
+				"defaultupgrade" "2"
+			}
+		}
+
+		item_support_shotgun
+		{
+			OnSpawnOutput
+			{
+				Target !activator
+				Action RunScriptCode
+				Param "RedWorld.SupportShotgun.call(this)"
+			}
+		}
+
+		OnWaveEndRelays
+		{
+			logic_relay
+			{
+				"targetname" "kill_buildings"
+				"OnTrigger" "obj_dispenser, RemoveHealth, 5000, 0, -1"
+			}
+
+			OnSpawnOutput
+			{
+				Target wave_finished_relay
+				Action AddOutput
+				Param "OnTrigger kill_buildings:Trigger:0:0"
+			}
+		}
+
+		PopulatorInterface
+		{
+			point_populator_interface
+			{
+				"targetname" "pop_interface"
+			}
+		}
+
+		W7Teleporter
+		{
+			NoFixup 1
+			trigger_multiple
+			{
+				"origin" "0 -288 152"
+				"mins" "-576 -288 -152"
+				"maxs" "576 288 152"
+				"spawnflags" "1"
+				"filtername" "filter_redteam"
+				"OnStartTouch" "!activatorRunScriptCodeRedWorld.RandomizeTeleport(self, `w7_teleport_destination`)0.0-1"
+			}
+
+			info_target
+			{
+				"targetname" "w7_teleport_destination"
+				"origin" "352 192 96"
+				"angles" "0.0 90.0 0.0"
+			}
+
+			info_target
+			{
+				"targetname" "w7_teleport_destination"
+				"origin" "256 192 96"
+				"angles" "0.0 90.0 0.0"
+			}
+
+			info_target
+			{
+				"targetname" "w7_teleport_destination"
+				"origin" "160 192 96"
+				"angles" "0.0 90.0 0.0"
+			}
+
+			info_target
+			{
+				"targetname" "w7_teleport_destination"
+				"origin" "-160 192 96"
+				"angles" "0.0 90.0 0.0"
+			}
+
+			info_target
+			{
+				"targetname" "w7_teleport_destination"
+				"origin" "-256 192 96"
+				"angles" "0.0 90.0 0.0"
+			}
+
+			info_target
+			{
+				"targetname" "w7_teleport_destination"
+				"origin" "-352 192 96"
+				"angles" "0.0 90.0 0.0"
+			}
+		}
+	}
+
+	PlayerItemEquipSpawnTemplate [$SIGSEGV]
+	{
+		Name "item_support_shotgun"
+		ItemName "Resupply Packed Shotgun"
+	}
+
+	SpawnTemplate "OnWaveEndRelays" [$SIGSEGV]
+	SpawnTemplate "PopulatorInterface" [$SIGSEGV]
+
+	Mission
+	{
+		Objective Spy
+		Where spawnbot_mission_spy
+		BeginAtWave 3
+		RunForThisManyWaves 1
+		InitialCooldown 35
+		CooldownTime 35
+		DesiredCount 2
+		TFBot
+		{
+			Template T_TFBot_Spy
+		}
+	}
+
+	Mission
+	{
+		Objective Spy
+		Where spawnbot_mission_spy
+		BeginAtWave 6
+		RunForThisManyWaves 1
+		InitialCooldown 35
+		CooldownTime 35
+		DesiredCount 2
+		TFBot
+		{
+			Template T_TFBot_Spy
+		}
+	}
+
+	//==========================
+	//			Wave 1 $800
+	//==========================
+	Wave
+	{
+		StartWaveOutput
+		{
+			Target bignet
+			Action RunScriptCode
+			Param "EntFire(`wave_start_relay`, `Trigger`);
+			RedWorld.SpawnAllDispensers();"
+		}
+		DoneOutput
+		{
+			Target bignet
+			Action RunScriptCode
+			Param "EntFire(`wave_finished_relay`, `Trigger`);
+			RedWorld.KillAllDispensers();
+			RedWorld.CleanAllUpgradeStations();"
+		}
+		InitWaveOutput
+		{
+			Target bignet
+			Action RunScriptCode
+			Param "
+				if (!(`mvm_meltdown_red_world` in getroottable()))
+				{
+					IncludeScript(`mvm_meltdown_red_world`, getroottable());
+				}
+				RedWorld.SpawnUpgradeTable(Vector(0.0, -150.0, 45.0), QAngle(0.0, -90.0, 0.0), Vector(0.0, -64.0, 205.0), QAngle(0.0, -90.0, 0.0));
+			"
+		}
+
+		WaveSpawn
+		{
+			Name "01"
+			Where spawnbot
+			TotalCount 15
+			MaxActive 9
+			SpawnCount 3
+			WaitBeforeStarting 5
+			WaitBetweenSpawns 22
+			TotalCurrency 200
+
+			Squad
+			{
+				TFBot
+				{
+					Template T_TFBot_Giant_Demo_RapidFire
+					Name "Giant Demoman"
+				}
+
+				TFBot
+				{
+					Template T_TFBot_Medic_BigHeal
+					Item "The Surgeon's Stahlhelm"
+					Name "Big-Heal Medic"
+				}
+
+				TFBot
+				{
+					Template T_TFBot_Medic_BigHeal
+					Item "The Surgeon's Stahlhelm"
+					Name "Big-Heal Medic"
+				}
+			}
+		}
+
+		WaveSpawn
+		{
+			Name "01"
+			Where spawnbot
+			TotalCount 36
+			MaxActive 8
+			SpawnCount 4
+			WaitBeforeStarting 1
+			WaitBetweenSpawns 8
+			TotalCurrency 50
+
+			TFBot
+			{
+				Template T_TFBot_Heavyweapons_Shotgun
+				Skill Easy
+			}
+		}
+
+		WaveSpawn
+		{
+			Name "01"
+			Where spawnbot
+			TotalCount 36
+			MaxActive 8
+			SpawnCount 1
+			WaitBeforeStarting 5
+			WaitBetweenSpawns 1.5
+			TotalCurrency 50
+
+			TFBot
+			{
+				Template T_TFBot_Scout_Melee
+				ClassIcon scout_bat_nys
+				Name "Bat Scout"
+			}
+		}
+
+		WaveSpawn
+		{
+			Where spawnbot
+			TotalCount 30
+			MaxActive 6
+			SpawnCount 3
+			WaitBeforeStarting 3
+			WaitBetweenSpawns 9
+			TotalCurrency 100
+
+			TFBot
+			{
+				Template T_TFBot_Soldier_Bison
+				Skill Normal
+			}
+		}
+
+		//WaveSpawn
+		//{
+			//Name "02"
+			//WaitForAllSpawned "01"
+			//Where spawnbot
+			//TotalCount 15
+			//MaxActive 6
+			//SpawnCount 3
+			//WaitBeforeStarting 10
+			//WaitBetweenSpawns 7.5
+			//TotalCurrency 50
+
+			//TFBot
+			//{
+				//Class Heavyweapons
+				//Skill Easy
+			//}
+		//}
+
+		//WaveSpawn
+		//{
+			//Name "02"
+			//WaitForAllSpawned "01"
+			//Where spawnbot
+			//TotalCount 30
+			//MaxActive 12
+			//SpawnCount 6
+			//WaitBeforeStarting 10
+			//WaitBetweenSpawns 9
+			//TotalCurrency 50
+
+			//TFBot
+			//{
+				//Class Pyro
+				//Skill Easy
+			//}
+		//}
+
+		WaveSpawn
+		{
+			Name "03"
+			WaitForAllSpawned "01"
+			Where spawnbot
+			TotalCount 2
+			MaxActive 2
+			SpawnCount 1
+			WaitBeforeStarting 15
+			WaitBetweenSpawns 24
+			TotalCurrency 200
+
+			TFBot
+			{
+				Template T_TFBot_Giant_Armored_Heavyweapons
+				Skill Easy
+			}
+		}
+
+		WaveSpawn
+		{
+			Name "03"
+			WaitForAllSpawned "01"
+			Where spawnbot
+			TotalCount 30
+			MaxActive 10
+			SpawnCount 5
+			WaitBeforeStarting 10
+			WaitBetweenSpawns 10
+			TotalCurrency 100
+			Support 1
+
+			RandomChoice
+			{
+				TFBot
+				{
+					Class Scout
+					Skill Easy
+				}
+
+				TFBot
+				{
+					Template T_TFBot_Scout_Melee
+				}
+			}
+		}
+
+		WaveSpawn
+		{
+			Name "03"
+			WaitForAllSpawned "01"
+			Where spawnbot
+			TotalCount 12
+			MaxActive 3
+			SpawnCount 1
+			WaitBeforeStarting 10
+			WaitBetweenSpawns 20
+			TotalCurrency 100
+			Support 1
+
+			TFBot
+			{
+				Template T_TFBot_Medic_QuickFix
+				ClassIcon medic_giant
+			}
+		}
+	}
+
+	//==========================
+	//			Wave 2 $900
+	//==========================
+	Wave
+	{
+		StartWaveOutput
+		{
+			Target bignet
+			Action RunScriptCode
+			Param "EntFire(`wave_start_relay`, `Trigger`);
+			RedWorld.SpawnAllDispensers();"
+		}
+		DoneOutput
+		{
+			Target bignet
+			Action RunScriptCode
+			Param "EntFire(`wave_finished_relay`, `Trigger`);
+			RedWorld.KillAllDispensers();
+			RedWorld.CleanAllUpgradeStations();"
+		}
+		InitWaveOutput
+		{
+			Target bignet
+			Action RunScriptCode
+			Param "
+				if (!(`mvm_meltdown_red_world` in getroottable()))
+				{
+					IncludeScript(`mvm_meltdown_red_world`, getroottable());
+				}
+				RedWorld.SpawnUpgradeTable(Vector(0.0, -150.0, 45.0), QAngle(0.0, -90.0, 0.0), Vector(0.0, -64.0, 205.0), QAngle(0.0, -90.0, 0.0));
+			"
+		}
+
+		WaveSpawn
+		{
+			Name "01"
+			Where spawnbot
+			TotalCount 3
+			MaxActive 3
+			SpawnCount 1
+			WaitBeforeStarting 0
+			WaitBetweenSpawns 17
+			TotalCurrency 150
+
+			TFBot
+			{
+				Template T_TFBot_Giant_Demo_RapidFire
+				Name "Giant Demoman"
+			}
+		}
+
+		WaveSpawn
+		{
+			Name "01"
+			Where spawnbot
+			TotalCount 20
+			MaxActive 8
+			SpawnCount 4
+			WaitBeforeStarting 4
+			WaitBetweenSpawns 8
+			TotalCurrency 100
+
+			TFBot
+			{
+				Template T_TFBot_Sniper_Huntsman
+			}
+		}
+
+		WaveSpawn
+		{
+			Name "01"
+			Where spawnbot
+			TotalCount 20
+			MaxActive 8
+			SpawnCount 4
+			WaitBeforeStarting 4
+			WaitBetweenSpawns 8
+			TotalCurrency 100
+
+			TFBot
+			{
+				Template T_TFBot_Demoman_Knight
+			}
+		}
+
+		WaveSpawn
+		{
+			Name "02"
+			WaitForAllSpawned "01"
+			Where spawnbot
+			TotalCount 3
+			MaxActive 3
+			SpawnCount 1
+			WaitBeforeStarting 4
+			WaitBetweenSpawns 17
+			TotalCurrency 200
+
+			TFBot
+			{
+				Template T_TFBot_Giant_Sniper_Huntsman
+			}
+		}
+
+		WaveSpawn
+		{
+			Name "02"
+			WaitForAllSpawned "01"
+			Where spawnbot
+			TotalCount 20
+			MaxActive 10
+			SpawnCount 1
+			WaitBeforeStarting 6
+			WaitBetweenSpawns 1
+			TotalCurrency 75
+
+			TFBot
+			{
+				Class Pyro
+				Skill Normal
+			}
+		}
+
+		WaveSpawn
+		{
+			Name "02"
+			WaitForAllSpawned "01"
+			Where spawnbot
+			TotalCount 16
+			MaxActive 8
+			SpawnCount 2
+			WaitBeforeStarting 6
+			WaitBetweenSpawns 1.5
+			TotalCurrency 75
+
+			TFBot
+			{
+				Class Demoman
+				Skill Normal
+			}
+		}
+
+		WaveSpawn
+		{
+			Name "03"
+			WaitForAllSpawned "02"
+			Where spawnbot
+			TotalCount 12
+			MaxActive 12
+			SpawnCount 3
+			WaitBeforeStarting 6
+			WaitBetweenSpawns 19
+			TotalCurrency 100
+
+			Squad
+			{
+				TFBot
+				{
+					Template T_TFBot_Giant_Pyro
+				}
+
+				TFBot
+				{
+					Template T_TFBot_Medic_BigHeal
+					Item "The Surgeon's Stahlhelm"
+					Name "Big-Heal Medic"
+				}
+
+				TFBot
+				{
+					Template T_TFBot_Medic_BigHeal
+					Item "The Surgeon's Stahlhelm"
+					Name "Big-Heal Medic"
+				}
+			}
+		}
+
+		WaveSpawn
+		{
+			Name "03"
+			WaitForAllSpawned "02"
+			Where spawnbot
+			TotalCount 30
+			MaxActive 9
+			SpawnCount 3
+			WaitBeforeStarting 6
+			WaitBetweenSpawns 7
+			TotalCurrency 50
+			Support 1
+
+			TFBot
+			{
+				Template T_TFBot_Heavyweapons_Shotgun
+				Skill Normal
+			}
+		}
+
+		WaveSpawn
+		{
+			Where spawnbot
+			TotalCount 16
+			MaxActive 4
+			SpawnCount 2
+			WaitBeforeStarting 10
+			WaitBetweenSpawns 12
+			TotalCurrency 50
+			Support 1
+
+			TFBot
+			{
+				Template T_TFBot_Soldier_Bison
+				Skill Normal
+			}
+		}
+	}
+
+	//==========================
+	//			Wave 3 $900
+	//==========================
+	Wave
+	{
+		StartWaveOutput
+		{
+			Target bignet
+			Action RunScriptCode
+			Param "EntFire(`wave_start_relay`, `Trigger`);
+			RedWorld.SpawnAllDispensers();"
+		}
+		DoneOutput
+		{
+			Target bignet
+			Action RunScriptCode
+			Param "EntFire(`wave_finished_relay`, `Trigger`);
+			RedWorld.KillAllDispensers();
+			RedWorld.CleanAllUpgradeStations();"
+		}
+		InitWaveOutput
+		{
+			Target bignet
+			Action RunScriptCode
+			Param "
+				if (!(`mvm_meltdown_red_world` in getroottable()))
+				{
+					IncludeScript(`mvm_meltdown_red_world`, getroottable());
+				}
+				RedWorld.SpawnUpgradeTable(Vector(0.0, -150.0, 45.0), QAngle(0.0, -90.0, 0.0), Vector(0.0, -64.0, 205.0), QAngle(0.0, -90.0, 0.0));
+			"
+		}
+
+		WaveSpawn
+		{
+			Name "01"
+			Where spawnbot
+			TotalCount 2
+			MaxActive 2
+			SpawnCount 1
+			WaitBeforeStarting 0
+			WaitBetweenSpawns 20
+			TotalCurrency 400
+
+			TFBot
+			{
+				Template T_TFBot_Giant_Armored_Heavyweapons
+				Skill Easy
+			}
+		}
+
+		WaveSpawn
+		{
+			Name "01"
+			Where spawnbot
+			TotalCount 25
+			MaxActive 10
+			SpawnCount 2
+			WaitBeforeStarting 5
+			WaitBetweenSpawns 2.5
+			TotalCurrency 100
+
+			TFBot
+			{
+				Template T_TFBot_Scout_Bonk
+				Name "Bonk Scout"
+			}
+		}
+
+		WaveSpawn
+		{
+			Name "01"
+			Where spawnbot
+			TotalCount 20
+			MaxActive 8
+			SpawnCount 4
+			WaitBeforeStarting 5
+			WaitBetweenSpawns 9
+			TotalCurrency 100
+
+			TFBot
+			{
+				Class Soldier
+				Skill Easy
+			}
+		}
+
+		//WaveSpawn
+		//{
+			//Name "02"
+			//WaitForAllSpawned "01"
+			//Where spawnbot
+			//TotalCount 4
+			//MaxActive 4
+			//SpawnCount 1
+			//WaitBeforeStarting 8
+			//WaitBetweenSpawns 17
+			//TotalCurrency 100
+
+			//TFBot
+			//{
+				//Template T_TFBot_Giant_Soldier_Spammer
+			//}
+		//}
+
+		//WaveSpawn
+		//{
+			//Name "02"
+			//WaitForAllSpawned "01"
+			//Where spawnbot
+			//TotalCount 30
+			//MaxActive 10
+			//SpawnCount 5
+			//WaitBeforeStarting 12
+			//WaitBetweenSpawns 8
+			//TotalCurrency 75
+
+			//TFBot
+			//{
+				//Template T_TFBot_Demo_Burst
+			//}
+		//}
+
+		//WaveSpawn
+		//{
+			//Name "02"
+			//WaitForAllSpawned "01"
+			//Where spawnbot
+			//TotalCount 10
+			//MaxActive 8
+			//SpawnCount 2
+			//WaitBeforeStarting 12
+			//WaitBetweenSpawns 10
+			//TotalCurrency 100
+
+			//TFBot
+			//{
+				//Template T_TFBot_Pyro_DF
+				//ClassIcon pyro_dragon_fury_armored
+				//Health 750
+				//Scale 1.37
+				//Name "Armored Dragon's Fury Pyro"
+			//}
+		//}
+
+		WaveSpawn
+		{
+			Name "03"
+			WaitForAllSpawned "01"
+			Where spawnbot
+			TotalCount 12
+			MaxActive 9
+			SpawnCount 3
+			WaitBeforeStarting 12
+			WaitBetweenSpawns 23
+			TotalCurrency 100
+
+			Squad
+			{
+				TFBot
+				{
+					Template T_TFBot_Giant_Soldier_BigrockBurstNoDamage
+				}
+
+				TFBot
+				{
+					Template T_TFBot_Medic_BigHeal
+					Item "The Surgeon's Stahlhelm"
+					Name "Big-Heal Medic"
+				}
+
+				TFBot
+				{
+					Template T_TFBot_Medic_BigHeal
+					Item "The Surgeon's Stahlhelm"
+					Name "Big-Heal Medic"
+				}
+			}
+		}
+
+		WaveSpawn
+		{
+			Name "03"
+			WaitForAllSpawned "01"
+			Where spawnbot
+			TotalCount 9
+			MaxActive 6
+			SpawnCount 1
+			WaitBeforeStarting 8
+			WaitBetweenSpawns 10
+			TotalCurrency 50
+
+			TFBot
+			{
+				Template T_TFBot_Sniper_Huntsman_Spammer
+				ClassIcon sniper_bow_multi
+			}
+		}
+
+		WaveSpawn
+		{
+			Where spawnbot
+			TotalCount 16
+			MaxActive 6
+			SpawnCount 2
+			WaitBeforeStarting 16
+			WaitBetweenSpawns 4
+			TotalCurrency 50
+			Support 1
+
+			TFBot
+			{
+				Template T_TFBot_Demoman_Knight
+			}
+		}
+
+		WaveSpawn
+		{
+			WaitForAllSpawned "01"
+			Where spawnbot
+			TotalCount 15
+			MaxActive 6
+			SpawnCount 2
+			WaitBeforeStarting 8
+			WaitBetweenSpawns 8
+			TotalCurrency 50
+			Support 1
+
+			TFBot
+			{
+				Class Pyro
+				Skill Easy
+				Attributes AlwaysFireWeapon
+			}
+		}
+
+		WaveSpawn
+		{
+			WaitForAllSpawned "01"
+			Where spawnbot
+			TotalCount 15
+			MaxActive 6
+			SpawnCount 2
+			WaitBeforeStarting 8
+			WaitBetweenSpawns 8
+			TotalCurrency 50
+			Support 1
+
+			TFBot
+			{
+				Template T_TFBot_Heavyweapons_Shotgun
+				Skill Normal
+			}
+		}
+	}
+
+	//==========================
+	//			Wave 4 $800
+	//==========================
+	Wave
+	{
+		StartWaveOutput
+		{
+			Target bignet
+			Action RunScriptCode
+			Param "EntFire(`wave_start_relay`, `Trigger`);
+			RedWorld.SpawnAllDispensers();"
+		}
+		DoneOutput
+		{
+			Target bignet
+			Action RunScriptCode
+			Param "EntFire(`wave_finished_relay`, `Trigger`);
+			RedWorld.KillAllDispensers();
+			RedWorld.CleanAllUpgradeStations();"
+		}
+		InitWaveOutput
+		{
+			Target bignet
+			Action RunScriptCode
+			Param "
+				if (!(`mvm_meltdown_red_world` in getroottable()))
+				{
+					IncludeScript(`mvm_meltdown_red_world`, getroottable());
+				}
+				RedWorld.SpawnUpgradeTable(Vector(0.0, -150.0, 45.0), QAngle(0.0, -90.0, 0.0), Vector(0.0, -64.0, 205.0), QAngle(0.0, -90.0, 0.0));
+			"
+		}
+
+		WaveSpawn
+		{
+			Name "01"
+			TotalCount 1
+			MaxActive  1
+			TotalCurrency 200
+
+			FirstSpawnOutput
+			{
+				Target boss_spawn_relay
+				Action Trigger
+			}
+
+			Tank
+			{
+				Health 20000
+				Speed 75
+				StartingPathTrackNode boss_path_1
+				OnKilledOutput
+				{
+					Target boss_dead_relay
+					Action Trigger
+				}
+				OnBombDroppedOutput
+				{
+					Target boss_deploy_relay
+					Action Trigger
+				}
+			}
+		}
+
+		WaveSpawn
+		{
+			Name "01"
+			Where spawnbot
+			TotalCount 6
+			MaxActive 6
+			SpawnCount 2
+			WaitBeforeStarting 3
+			WaitBetweenSpawns 20
+			TotalCurrency 100
+
+			TFBot
+			{
+				Template T_TFBot_Giant_Sniper_Huntsman_Spammer
+			}
+		}
+
+		WaveSpawn
+		{
+			Name "01"
+			Where spawnbot
+			TotalCount 40
+			MaxActive 20
+			SpawnCount 10
+			WaitBeforeStarting 4
+			WaitBetweenSpawns 10
+			TotalCurrency 50
+
+			Squad
+			{
+				TFBot
+				{
+					Template T_TFBot_Heavyweapons_Shotgun
+					Skill Normal
+				}
+
+				TFBot
+				{
+					Template T_TFBot_Medic_QuickFix
+				}
+			}
+		}
+
+		//WaveSpawn
+		//{
+			//Name "02"
+			//WaitForAllSpawned "01"
+			//Where spawnbot
+			//TotalCount 16
+			//MaxActive 16
+			//SpawnCount 4
+			//WaitBeforeStarting 6
+			//WaitBetweenSpawns 19
+			//TotalCurrency 100
+
+			//Squad
+			//{
+				//TFBot
+				//{
+					//Template T_TFBot_Giant_Pyro_DF
+				//}
+
+				//TFBot
+				//{
+					//Template T_TFBot_Medic_Kritzkrieg
+				//}
+
+				//TFBot
+				//{
+					//Template T_TFBot_Medic_Kritzkrieg
+				//}
+
+				//TFBot
+				//{
+					//Template T_TFBot_Medic_Kritzkrieg
+				//}
+			//}
+		//}
+
+		//WaveSpawn
+		//{
+			//Name "02"
+			//WaitForAllSpawned "01"
+			//Where spawnbot
+			//TotalCount 6
+			//MaxActive 4
+			//SpawnCount 1
+			//WaitBeforeStarting 8
+			//WaitBetweenSpawns 9
+			//TotalCurrency 50
+
+			//TFBot
+			//{
+				//Template T_TFBot_Soldier_SlowBarrage
+			//}
+		//}
+
+		//WaveSpawn
+		//{
+			//Name "02"
+			//WaitForAllSpawned "01"
+			//Where spawnbot
+			//TotalCount 24
+			//MaxActive 16
+			//SpawnCount 4
+			//WaitBeforeStarting 8
+			//WaitBetweenSpawns 9
+			//TotalCurrency 50
+
+			//TFBot
+			//{
+				//Class Heavyweapons
+				//Skill Easy
+			//}
+		//}
+
+		WaveSpawn
+		{
+			Name "03"
+			WaitForAllSpawned "01"
+			Where spawnbot
+			TotalCount 12
+			MaxActive 12
+			SpawnCount 3
+			WaitBeforeStarting 5
+			WaitBetweenSpawns 19
+			TotalCurrency 100
+
+			Squad
+			{
+				TFBot
+				{
+					Template T_TFBot_Giant_Pyro
+					Attributes AlwaysFireWeapon
+				}
+
+				TFBot
+				{
+					Template T_TFBot_Medic_BigHeal
+					Item "The Surgeon's Stahlhelm"
+					Name "Big-Heal Medic"
+				}
+
+				TFBot
+				{
+					Template T_TFBot_Medic_BigHeal
+					Item "The Surgeon's Stahlhelm"
+					Name "Big-Heal Medic"
+				}
+			}
+		}
+
+		WaveSpawn
+		{
+			Name "03"
+			WaitForAllSpawned "01"
+			Where spawnbot
+			TotalCount 30
+			MaxActive 10
+			SpawnCount 2
+			WaitBeforeStarting 8
+			WaitBetweenSpawns 2
+			TotalCurrency 50
+
+			TFBot
+			{
+				Template T_TFBot_Soldier_Bison_Spammer
+				MaxVisionRange 1350
+			}
+		}
+
+		WaveSpawn
+		{
+			Name "03"
+			WaitForAllSpawned "01"
+			Where spawnbot
+			TotalCount 24
+			MaxActive 8
+			SpawnCount 4
+			WaitBeforeStarting 8
+			WaitBetweenSpawns 8
+			TotalCurrency 50
+
+			TFBot
+			{
+				Template T_TFBot_Scout_Bonk
+				Name "Bonk Scout"
+			}
+		}
+
+		WaveSpawn
+		{
+			Name "04"
+			WaitForAllSpawned "03"
+			TotalCount 1
+			MaxActive  1
+			WaitBeforeStarting 5
+			TotalCurrency 200
+
+			FirstSpawnOutput
+			{
+				Target boss_spawn_relay
+				Action Trigger
+			}
+
+			Tank
+			{
+				Health 20000
+				Speed 75
+				StartingPathTrackNode tank_path_alt
+				OnKilledOutput
+				{
+					Target boss_dead_relay
+					Action Trigger
+				}
+				OnBombDroppedOutput
+				{
+					Target boss_deploy_relay
+					Action Trigger
+				}
+			}
+		}
+
+		WaveSpawn
+		{
+			Name "04"
+			WaitForAllSpawned "03"
+			Where spawnbot
+			TotalCount 6
+			MaxActive 6
+			SpawnCount 3
+			WaitBeforeStarting 8
+			WaitBetweenSpawns 32
+			TotalCurrency 50
+
+			Squad
+			{
+				TFBot
+				{
+					Template T_TFBot_Giant_Soldier_Extended_Battalion
+					Name "Giant Battalion Soldier"
+				}
+
+				TFBot
+				{
+					Template T_TFBot_Giant_Soldier
+				}
+
+				TFBot
+				{
+					Template T_TFBot_Giant_Soldier
+				}
+			}
+		}
+
+		WaveSpawn
+		{
+			Name "04"
+			WaitForAllSpawned "03"
+			Where spawnbot
+			TotalCount 30
+			MaxActive 10
+			SpawnCount 5
+			WaitBeforeStarting 11
+			WaitBetweenSpawns 9
+			TotalCurrency 0
+			Support 1
+
+			TFBot
+			{
+				Class Scout
+				Skill Normal
+			}
+		}
+
+		WaveSpawn
+		{
+			Name "04"
+			WaitForAllSpawned "03"
+			Where spawnbot
+			TotalCount 24
+			MaxActive 8
+			SpawnCount 4
+			WaitBeforeStarting 11
+			WaitBetweenSpawns 9
+			TotalCurrency 0
+			Support 1
+
+			TFBot
+			{
+				Template T_TFBot_Soldier_Bison
+			}
+		}
+	}
+
+	//==========================
+	//			Wave 5 $900
+	//==========================
+	Wave
+	{
+		StartWaveOutput
+		{
+			Target bignet
+			Action RunScriptCode
+			Param "EntFire(`wave_start_relay`, `Trigger`);
+			RedWorld.SpawnAllDispensers();"
+		}
+		DoneOutput
+		{
+			Target bignet
+			Action RunScriptCode
+			Param "EntFire(`wave_finished_relay`, `Trigger`);
+			RedWorld.KillAllDispensers();
+			RedWorld.CleanAllUpgradeStations();"
+		}
+		InitWaveOutput
+		{
+			Target bignet
+			Action RunScriptCode
+			Param "
+				if (!(`mvm_meltdown_red_world` in getroottable()))
+				{
+					IncludeScript(`mvm_meltdown_red_world`, getroottable());
+				}
+				RedWorld.SpawnUpgradeTable(Vector(0.0, -150.0, 45.0), QAngle(0.0, -90.0, 0.0), Vector(0.0, -64.0, 205.0), QAngle(0.0, -90.0, 0.0));
+			"
+		}
+
+		WaveSpawn
+		{
+			Name "01"
+			Where spawnbot
+			TotalCount 8
+			MaxActive 8
+			SpawnCount 4
+			WaitBeforeStarting 0
+			WaitBetweenSpawns 23
+			TotalCurrency 150
+
+			Squad
+			{
+				TFBot
+				{
+					Template T_TFBot_Demoman_GigaRapidFire
+				}
+
+				TFBot
+				{
+					Template T_TFBot_Giant_Soldier
+				}
+
+				TFBot
+				{
+					Template T_TFBot_Giant_Soldier
+				}
+
+				TFBot
+				{
+					Template T_TFBot_Giant_Soldier
+				}
+			}
+		}
+
+		WaveSpawn
+		{
+			Where spawnbot
+			TotalCount 65
+			MaxActive 10
+			SpawnCount 5
+			WaitBeforeStarting 3
+			WaitBetweenSpawns 10.0
+			TotalCurrency 200
+
+			TFBot
+			{
+				Class Spy
+				Skill Expert
+			}
+		}
+
+		WaveSpawn
+		{
+			Name "01_S"
+			Where spawnbot
+			TotalCount 21
+			MaxActive 6
+			SpawnCount 3
+			WaitBeforeStarting 5
+			WaitBetweenSpawns 10
+			TotalCurrency 100
+			Support Limited
+
+			TFBot
+			{
+				Template T_TFBot_Heavyweapons_SteelFist
+			}
+		}
+		WaveSpawn
+		{
+			Name "02"
+			WaitForAllSpawned "01"
+			Where spawnbot
+			TotalCount 3
+			MaxActive 3
+			SpawnCount 1
+			WaitBeforeStarting 20
+			WaitBetweenSpawns 23
+			TotalCurrency 100
+
+			TFBot
+			{
+				Template T_TFBot_Giant_Armored_Heavyweapons
+				Skill Normal
+			}
+		}
+
+		WaveSpawn
+		{
+			Name "02_S"
+			WaitForAllSpawned "01_S"
+			Where spawnbot
+			TotalCount 24
+			MaxActive 6
+			SpawnCount 3
+			WaitBeforeStarting 9
+			WaitBetweenSpawns 10.5
+			TotalCurrency 100
+			Support Limited
+
+			TFBot
+			{
+				Class Soldier
+				Skill Easy
+			}
+		}
+
+		WaveSpawn
+		{
+			Name "03"
+			WaitForAllSpawned "02"
+			Where spawnbot
+			TotalCount 3
+			MaxActive 3
+			SpawnCount 1
+			WaitBeforeStarting 5
+			WaitBetweenSpawns 22
+			TotalCurrency 150
+
+			DoneOutput
+			{
+				Target bignet
+				Action RunScriptCode
+				Param "RedWorld.KillAllBots()"
+			}
+
+			TFBot
+			{
+				Template T_TFBot_Giant_Soldier_SlowBarrage
+			}
+		}
+
+		WaveSpawn
+		{
+			Name "03_S"
+			WaitForAllSpawned "02_S"
+			Where spawnbot
+			TotalCount 24
+			MaxActive 6
+			SpawnCount 3
+			WaitBeforeStarting 8
+			WaitBetweenSpawns 9
+			TotalCurrency 100
+			Support 1
+
+			TFBot
+			{
+				Template T_TFBot_Sniper_Huntsman
+			}
+		}
+	}
+
+	//==========================
+	//			Wave 6 $700
+	//==========================
+	Wave
+	{
+		StartWaveOutput
+		{
+			Target bignet
+			Action RunScriptCode
+			Param "EntFire(`wave_start_relay`, `Trigger`);
+			RedWorld.SpawnAllDispensers();"
+		}
+		DoneOutput
+		{
+			Target bignet
+			Action RunScriptCode
+			Param "EntFire(`wave_finished_relay`, `Trigger`);
+			RedWorld.KillAllDispensers();
+			RedWorld.CleanAllUpgradeStations();"
+		}
+		InitWaveOutput
+		{
+			Target bignet
+			Action RunScriptCode
+			Param "
+				if (!(`mvm_meltdown_red_world` in getroottable()))
+				{
+					IncludeScript(`mvm_meltdown_red_world`, getroottable());
+				}
+				RedWorld.SpawnUpgradeTable(Vector(0.0, -150.0, 45.0), QAngle(0.0, -90.0, 0.0), Vector(0.0, -64.0, 205.0), QAngle(0.0, -90.0, 0.0));
+			"
+		}
+
+		WaveSpawn
+		{
+			Name "01"
+			TotalCount 1
+			MaxActive  1
+			TotalCurrency 100
+
+			FirstSpawnOutput
+			{
+				Target boss_spawn_relay
+				Action Trigger
+			}
+
+			Tank
+			{
+				Health 25000
+				Speed 75
+				Skin 1
+				StartingPathTrackNode boss_path_1
+				OnKilledOutput
+				{
+					Target boss_dead_relay
+					Action Trigger
+				}
+				OnBombDroppedOutput
+				{
+					Target boss_deploy_relay
+					Action Trigger
+				}
+			}
+		}
+
+		WaveSpawn
+		{
+			Name "01"
+			Where spawnbot
+			TotalCount 3
+			MaxActive 3
+			SpawnCount 1
+			WaitBeforeStarting 0
+			WaitBetweenSpawns 18
+			TotalCurrency 100
+
+			TFBot
+			{
+				Template T_TFBot_Giant_Heavyweapons_BrassBeast_Fix
+			}
+		}
+
+		WaveSpawn
+		{
+			Name "01"
+			Where spawnbot
+			TotalCount 24
+			MaxActive 12
+			SpawnCount 4
+			WaitBeforeStarting 5
+			WaitBetweenSpawns 8
+			TotalCurrency 50
+
+			TFBot
+			{
+				Template T_TFBot_Pyro_DF
+			}
+		}
+
+		WaveSpawn
+		{
+			Name "02"
+			WaitForAllSpawned "01"
+			Where spawnbot
+			TotalCount 6
+			MaxActive 6
+			SpawnCount 2
+			WaitBeforeStarting 5
+			WaitBetweenSpawns 18
+			TotalCurrency 100
+
+			Squad
+			{
+				TFBot
+				{
+					Template T_TFBot_Soldier_GigaRapidFire
+				}
+
+				TFBot
+				{
+					Template T_TFBot_Demoman_GigaRapidFire
+				}
+			}
+		}
+
+		WaveSpawn
+		{
+			Name "02"
+			WaitForAllSpawned "01"
+			Where spawnbot
+			TotalCount 24
+			MaxActive 8
+			SpawnCount 4
+			WaitBeforeStarting 7
+			WaitBetweenSpawns 8
+			TotalCurrency 50
+
+			TFBot
+			{
+				Class Heavyweapons
+				Skill Normal
+				MaxVisionRange 1000
+			}
+		}
+
+		WaveSpawn
+		{
+			Name "02"
+			WaitForAllSpawned "01"
+			Where spawnbot
+			TotalCount 18
+			MaxActive 6
+			SpawnCount 3
+			WaitBeforeStarting 7
+			WaitBetweenSpawns 8
+			TotalCurrency 75
+
+			TFBot
+			{
+				Template T_TFBot_Heavy_IronFist_Airblast
+				ClassIcon heavy_steelfist_push_yoovy
+			}
+		}
+
+		WaveSpawn
+		{
+			Name "03"
+			WaitForAllSpawned "02"
+			Where spawnbot
+			TotalCount 5
+			MaxActive 5
+			SpawnCount 1
+			WaitBeforeStarting 5
+			WaitBetweenSpawns 18
+			TotalCurrency 125
+
+			TFBot
+			{
+				Template T_TFBot_Giant_Pyro_DF
+				ClassIcon pyro_dragonfury_giant
+			}
+		}
+
+		WaveSpawn
+		{
+			Name "03"
+			WaitForAllSpawned "02"
+			Where spawnbot
+			TotalCount 16
+			MaxActive 8
+			SpawnCount 2
+			WaitBeforeStarting 7
+			WaitBetweenSpawns 9
+			TotalCurrency 50
+
+			Squad
+			{
+				TFBot
+				{
+					Template T_TFBot_Soldier_SlowBarrage
+					MaxVisionRange 1200
+				}
+
+				TFBot
+				{
+					Template T_TFBot_Medic_BigHeal
+					Item "The Surgeon's Stahlhelm"
+					Name "Big-Heal Medic"
+				}
+			}
+		}
+
+		WaveSpawn
+		{
+			Name "03"
+			WaitForAllSpawned "02"
+			Where spawnbot
+			TotalCount 55
+			MaxActive 15
+			SpawnCount 5
+			WaitBeforeStarting 7
+			WaitBetweenSpawns 8
+			TotalCurrency 50
+
+			TFBot
+			{
+				Class Scout
+				Skill Normal
+			}
+		}
+	}
+
+	//==========================
+	//			Wave 7
+	//==========================
+	Wave
+	{
+		StartWaveOutput
+		{
+			Target gamerules
+			Action RunScriptCode
+			Param "EntFire(`wave_start_relay`, `Trigger`);
+			EntFire(`door1_trigger`, `Disable`);
+			EntFire(`door1_door`, `Close`);
+			EntFire(`door1_door`, `Lock`);
+			EntFire(`door2_trigger`, `Disable`);
+			EntFire(`door2_door`, `Close`);
+			EntFire(`door2_door`, `Lock`);
+			RedWorld.AllRedDeathCheck = true;
+			RedWorld.DoGiantSpawnSound = true;
+			AlternateWaves.ClearWaveIcons();
+			AlternateWaves.AddWaveIcons([
+					[ `heavy_titanium`, 1, MVM_CLASS_FLAG_MINIBOSS ],
+					[ `scout`, 1, MVM_CLASS_FLAG_NORMAL | MVM_CLASS_FLAG_SUPPORT ],
+					[ `soldier`, 1, MVM_CLASS_FLAG_NORMAL | MVM_CLASS_FLAG_SUPPORT ],
+					[ `pyro`, 1, MVM_CLASS_FLAG_NORMAL | MVM_CLASS_FLAG_SUPPORT ],
+					[ `demo`, 1, MVM_CLASS_FLAG_NORMAL | MVM_CLASS_FLAG_SUPPORT ],
+					[ `heavy`, 1, MVM_CLASS_FLAG_NORMAL | MVM_CLASS_FLAG_SUPPORT ]
+			]);
+			RedWorld.SpawnAllDispensers();
+			EntFire(`gamerules`, `SetRedTeamRespawnWaveTime`, `15.0`, 0.1);
+			"
+		}
+		DoneOutput
+		{
+			Target gamerules
+			Action RunScriptCode
+			Param "EntFire(`wave_finished_relay`, `Trigger`)
+			RedWorld.KillAllDispensers();
+			RedWorld.AllRedDeathCheck = false;
+			AlternateWaves.bTrackIcons = true;
+			RedWorld.DoGiantSpawnSound = false;
+			RedWorld.CleanAllUpgradeStations();
+
+			for (local i = 1, player; i <= MaxClients().tointeger(); i++)
+			{
+				if ((player = PlayerInstanceFromIndex(i)) != null)
+				{
+					EmitSoundEx({
+						sound_name = `#mentrillum/mvm/music/red_alert_3_hell_march_3.wav`
+						entity = player
+						filter_type = 4
+						flags = 4
+					})
+				}
+			}
+
+			Convars.SetValue(`tf_allow_sliding_taunt`, 0);"
+		}
+		InitWaveOutput
+		{
+			Target bignet
+			Action RunScriptCode
+			Param "
+				EntFire(`boss_pit_close_door`, `Trigger`)
+				if (!(`alternatewaves` in getroottable()))
+				{
+					IncludeScript(`alternatewaves`, getroottable());
+				}
+				AlternateWaves.bTrackIcons = false;
+				AlternateWaves.ClearWaveIcons();
+				AlternateWaves.AddWaveIcons([
+					[ `heavy_titanium`, 1, MVM_CLASS_FLAG_MINIBOSS ],
+					[ `scout`, 1, MVM_CLASS_FLAG_NORMAL | MVM_CLASS_FLAG_SUPPORT ],
+					[ `soldier`, 1, MVM_CLASS_FLAG_NORMAL | MVM_CLASS_FLAG_SUPPORT ],
+					[ `pyro`, 1, MVM_CLASS_FLAG_NORMAL | MVM_CLASS_FLAG_SUPPORT ],
+					[ `demo`, 1, MVM_CLASS_FLAG_NORMAL | MVM_CLASS_FLAG_SUPPORT ],
+					[ `heavy`, 1, MVM_CLASS_FLAG_NORMAL | MVM_CLASS_FLAG_SUPPORT ]
+				])
+				if (!(`mvm_meltdown_red_world` in getroottable()))
+				{
+					IncludeScript(`mvm_meltdown_red_world`, getroottable());
+				}
+				RedWorld.AllRedDeathCheck = false;
+				RedWorld.DoGiantSpawnSound = false;
+				RedWorld.DeleteAllNavs();
+				RedWorld.SpawnUpgradeTable(Vector(0.0, -150.0, 45.0), QAngle(0.0, -90.0, 0.0), Vector(0.0, -64.0, 205.0), QAngle(0.0, -90.0, 0.0));
+				PrecacheSound(`#mentrillum/mvm/music/red_alert_3_hell_march_3.wav`);
+				PrecacheSound(`)mentrillum/mvm/sfx/attack_groundpound.wav`);
+				PrecacheSound(`)mentrillum/mvm/sfx/attack_chestbeam.wav`);
+				for (local i = 1, player; i <= MaxClients().tointeger(); i++)
+				{
+					if ((player = PlayerInstanceFromIndex(i)) != null)
+					{
+						EmitSoundEx({
+							sound_name = `#mentrillum/mvm/music/red_alert_3_hell_march_3.wav`
+							entity = player
+							filter_type = 4
+							flags = 4
+						})
+					}
+				}
+				Convars.SetValue(`tf_allow_sliding_taunt`, 1); // For Tonka Weapons's sandvich eating
+			"
+		}
+
+		Explanation [$SIGSEGV]
+		{
+			Line "{FF2626}WARNING: {FFFFFF}If everyone dies at the same time the wave instantly fails."
+			Line "{FFFFFF}Respawn times have been extended and the spawn doors will be locked on wave start."
+			Line "{FFFFFF}Look out for the upgrade table to buy upgrades, check out what it looks like in spawn..."
+		}
+
+		SpawnTemplate "W7Teleporter" [$SIGSEGV]
+
+		WaveSpawn
+		{
+			Name "intro"
+			Where spawnbot
+			WaitBeforeStarting 1.0
+			FirstSpawnOutput
+			{
+				Target bignet
+				Action RunScriptCode
+				Param "RedWorld.ShuffleBossSpawn()"
+			}
+		}
+
+		WaveSpawn
+		{
+			Name "boss"
+			WaitForAllSpawned "intro"
+			Where spawnbot
+			TotalCount 1
+			MaxActive 1
+			SpawnCount 1
+			WaitBeforeStarting 8.65
+			WaitBetweenSpawns 0
+
+			TFBot
+			{
+				Template T_TFBot_Chief_Armored_Heavy
+			}
+		}
+
+		WaveSpawn
+		{
+			Name "phase0_bots"
+			Where spawnbot
+			TotalCount 50
+			MaxActive 18
+			SpawnCount 1
+			WaitBeforeStarting 20
+			WaitBetweenSpawns 2.5
+			Support Limited
+			TotalCurrency 400
+
+			RandomChoice
+			{
+				TFBot
+				{
+					Class Scout
+					Skill Easy
+					//Attributes AlwaysCrit
+					MaxVisionRange 1500
+					ClassIcon scout
+					WeaponRestrictions MeleeOnly
+					Action Mobber [$SIGSEGV]
+				}
+
+				TFBot
+				{
+					Template T_TFBot_Pyro_Detonator
+					MaxVisionRange 1000
+					ClassIcon pyro
+					Action Mobber [$SIGSEGV]
+				}
+
+				TFBot
+				{
+					Template T_TFBot_Heavyweapons_Heavyweight_Champ
+					MaxVisionRange 1500
+					ClassIcon heavy
+					Action Mobber [$SIGSEGV]
+				}
+			}
+		}
+
+		//WaveSpawn
+		//{
+			//Name "phase1_bots"
+			//Where spawnbot
+			//TotalCount 6
+			//MaxActive 6
+			//SpawnCount 1
+			//WaitBeforeStarting 2.0
+			//WaitBetweenSpawns 15
+			//StartDisabled 1 [$SIGSEGV]
+			//Support Limited
+
+			//RandomChoice
+			//{
+				//TFBot
+				//{
+					//Template T_TFBot_Giant_Scout
+					//Attributes AlwaysCrit
+					//MaxVisionRange 1000
+					//ClassIcon scout_giant
+					//Tag bot_giant
+					//Action Mobber [$SIGSEGV]
+				//}
+
+				//TFBot
+				//{
+					//Template T_TFBot_Giant_Soldier
+					//MaxVisionRange 1000
+					//ClassIcon soldier_giant
+					//Tag bot_giant
+					//Action Mobber [$SIGSEGV]
+				//}
+
+				//TFBot
+				//{
+					//Template T_TFBot_Giant_Pyro
+					//MaxVisionRange 1000
+					//ClassIcon pyro_giant
+					//Tag bot_giant
+					//Action Mobber [$SIGSEGV]
+				//}
+
+				//TFBot
+				//{
+					//Template T_TFBot_Giant_DemoMan_PrinceTavish
+					//MaxVisionRange 1000
+					//ClassIcon demo_giant
+					//Tag bot_giant
+					//Action Mobber [$SIGSEGV]
+				//}
+
+				//TFBot
+				//{
+					//Template T_TFBot_Giant_Boxing_Heavy
+					//MaxVisionRange 1000
+					//ClassIcon heavy_giant
+					//Tag bot_giant
+					//Action Mobber [$SIGSEGV]
+				//}
+			//}
+		//}
+
+		WaveSpawn
+		{
+			Name "phase1_bots"
+			Where spawnbot
+			TotalCount 50
+			MaxActive 18
+			SpawnCount 1
+			WaitBeforeStarting 0.0
+			WaitBetweenSpawns 2
+			StartDisabled 1 [$SIGSEGV]
+			Support Limited
+			TotalCurrency 400
+
+			RandomChoice
+			{
+				TFBot
+				{
+					Class Scout
+					Skill Easy
+					//Attributes AlwaysCrit
+					MaxVisionRange 1500
+					ClassIcon scout
+					Action Mobber [$SIGSEGV]
+				}
+
+				TFBot
+				{
+					Template T_TFBot_Soldier_Bison
+					MaxVisionRange 1500
+					ClassIcon soldier
+					Action Mobber [$SIGSEGV]
+				}
+
+				TFBot
+				{
+					Class Pyro
+					Skill Easy
+					MaxVisionRange 1500
+					ClassIcon pyro
+					Action Mobber [$SIGSEGV]
+				}
+
+				TFBot
+				{
+					Template T_TFBot_Demoman_Knight
+					MaxVisionRange 1500
+					ClassIcon demo
+					Action Mobber [$SIGSEGV]
+				}
+
+				TFBot
+				{
+					Template T_TFBot_Heavyweapons_SteelFist
+					MaxVisionRange 1500
+					ClassIcon heavy
+					Action Mobber [$SIGSEGV]
+				}
+			}
+		}
+
+		//WaveSpawn
+		//{
+			//Name "phase2_bots"
+			//Where spawnbot
+			//TotalCount 6
+			//MaxActive 6
+			//SpawnCount 1
+			//WaitBeforeStarting 2.0
+			//WaitBetweenSpawns 17.5
+			//StartDisabled 1 [$SIGSEGV]
+			//Support Limited
+
+			//RandomChoice
+			//{
+				//TFBot
+				//{
+					//Template T_TFBot_Giant_Scout_Fan_o_War
+					//MaxVisionRange 1000
+					//ClassIcon scout_giant
+					//Action Mobber [$SIGSEGV]
+				//}
+
+				//TFBot
+				//{
+					//Template T_TFBot_Giant_Soldier
+					//ItemAttributes
+					//{
+						//ItemName "TF_WEAPON_ROCKETLAUNCHER"
+						//"faster reload rate" -0.8
+					//}
+					//MaxVisionRange 1000
+					//ClassIcon soldier_giant
+					//Tag bot_giant
+					//Skill Expert
+					//Action Mobber [$SIGSEGV]
+				//}
+
+				//TFBot
+				//{
+					//Template T_TFBot_Giant_Pyro_Flare_Spammer
+					//MaxVisionRange 1000
+					//ClassIcon pyro_giant
+					//Tag bot_giant
+					//Attributes AlwaysCrit
+					//Action Mobber [$SIGSEGV]
+				//}
+
+				//TFBot
+				//{
+					//Template T_TFBot_Giant_Demoknight_Persian
+					//Attributes AlwaysCrit
+					//MaxVisionRange 1000
+					//ClassIcon demo_giant
+					//Action Mobber [$SIGSEGV]
+				//}
+
+				//TFBot
+				//{
+					//Template T_TFBot_Giant_Heavyweapons_Rocket
+					//MaxVisionRange 1000
+					//ClassIcon heavy_giant
+					//Action Mobber [$SIGSEGV]
+				//}
+			//}
+		//}
+
+		WaveSpawn
+		{
+			Name "phase2_bots"
+			Where spawnbot
+			TotalCount 50
+			MaxActive 18
+			SpawnCount 1
+			WaitBeforeStarting 0.0
+			WaitBetweenSpawns 2
+			StartDisabled 1 [$SIGSEGV]
+			Support Limited
+			TotalCurrency 350
+
+			RandomChoice
+			{
+				TFBot
+				{
+					Template T_TFBot_Scout_Popper
+					//Attributes AlwaysCrit
+					MaxVisionRange 1100
+					ClassIcon scout
+					Action Mobber [$SIGSEGV]
+				}
+
+				TFBot
+				{
+					Template T_TFBot_Soldier_Bazooka
+					MaxVisionRange 1500
+					ClassIcon soldier
+					Action Mobber [$SIGSEGV]
+				}
+
+				TFBot
+				{
+					Template T_TFBot_Pyro_BackBurner
+					MaxVisionRange 1500
+					ClassIcon pyro
+					Action Mobber [$SIGSEGV]
+				}
+
+				TFBot
+				{
+					Template T_TFBot_Demoknight_Caber
+					//Attributes AlwaysCrit
+					MaxVisionRange 1500
+					ClassIcon demo
+					Action Mobber [$SIGSEGV]
+				}
+
+				TFBot
+				{
+					Template T_TFBot_Heavyweapons_Shotgun
+					Skill Normal
+					MaxVisionRange 1500
+					ClassIcon heavy
+					Action Mobber [$SIGSEGV]
+				}
+			}
+		}
+
+		//WaveSpawn
+		//{
+			//Name "phase3_bots"
+			//Where spawnbot
+			//TotalCount 6
+			//MaxActive 6
+			//SpawnCount 1
+			//WaitBeforeStarting 2.0
+			//WaitBetweenSpawns 18
+			//StartDisabled 1 [$SIGSEGV]
+			//Support Limited
+
+			//RandomChoice
+			//{
+				//TFBot
+				//{
+					//Template T_TFBot_Giant_Scout_Popper
+					//MaxVisionRange 1000
+					//Attributes AlwaysCrit
+					//ClassIcon scout_giant
+					//Action Mobber [$SIGSEGV]
+				//}
+
+				//TFBot
+				//{
+					//Template T_TFBot_Giant_Soldier_Spammer
+					//MaxVisionRange 1000
+					//ClassIcon soldier_giant
+					//Action Mobber [$SIGSEGV]
+				//}
+
+				//TFBot
+				//{
+					//Template T_TFBot_Giant_Pyro_DF
+					//ClassIcon pyro_giant
+					//Action Mobber [$SIGSEGV]
+				//}
+
+				//TFBot
+				//{
+					//Template T_TFBot_Giant_Demo_RapidFire
+					//Name "Giant Demoman"
+					//MaxVisionRange 1000
+					//ClassIcon demo_giant
+					//Action Mobber [$SIGSEGV]
+				//}
+
+				//TFBot
+				//{
+					//Template T_TFBot_Giant_Heavyweapons
+					//MaxVisionRange 1000
+					//ClassIcon heavy_giant
+					//Tag bot_giant
+					//Action Mobber [$SIGSEGV]
+					//ItemAttributes
+					//{
+						//ItemName "TF_WEAPON_MINIGUN"
+						//"damage bonus" 0.75 // +50% damage bonus is cancer here, nerf it
+					//}
+				//}
+			//}
+		//}
+
+		WaveSpawn
+		{
+			Name "phase3_bots"
+			Where spawnbot
+			TotalCount 50
+			MaxActive 18
+			SpawnCount 1
+			WaitBeforeStarting 0.0
+			WaitBetweenSpawns 2
+			StartDisabled 1 [$SIGSEGV]
+			Support Limited
+			TotalCurrency 250
+
+			RandomChoice
+			{
+				TFBot
+				{
+					Template T_TFBot_Scout_Shortstop_Small
+					//Attributes AlwaysCrit
+					MaxVisionRange 1500
+					ClassIcon scout
+					Action Mobber [$SIGSEGV]
+				}
+
+				TFBot
+				{
+					Template T_TFBot_Scout_Shortstop_Small
+					//Attributes AlwaysCrit
+					MaxVisionRange 1500
+					ClassIcon scout
+					Action Mobber [$SIGSEGV]
+				}
+
+				TFBot
+				{
+					Class Soldier
+					Skill Normal
+					MaxVisionRange 1500
+					ClassIcon soldier
+					Action Mobber [$SIGSEGV]
+				}
+
+				TFBot
+				{
+					Class Soldier
+					Skill Normal
+					MaxVisionRange 1500
+					ClassIcon soldier
+					Action Mobber [$SIGSEGV]
+				}
+
+				TFBot
+				{
+					Template T_TFBot_Pyro_DF
+					ClassIcon pyro
+					Action Mobber [$SIGSEGV]
+				}
+
+				TFBot
+				{
+					Template T_TFBot_Demoman_Targe
+					MaxVisionRange 1500
+					ClassIcon demo
+					Action Mobber [$SIGSEGV]
+				}
+
+				TFBot
+				{
+					Template T_TFBot_Heavyweapons_Tomislav
+					MaxVisionRange 1500
+					ClassIcon heavy
+					Action Mobber [$SIGSEGV]
+				}
+			}
+		}
+
+		WaveSpawn
+		{
+			WaitForAllDead "boss"
+			WaitBeforeStarting 5
+
+			FirstSpawnOutput
+			{
+				Target "pop_interface"
+				Action $FinishWave
+				Delay 0
+			}
+		}
+	}
+}

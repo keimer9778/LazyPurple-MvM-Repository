@@ -1,0 +1,2450 @@
+//[U:1:169916051]
+#base robot_giant.pop
+#base robot_standard.pop
+#base robot_gatebot.pop
+#base robot_trashbin.pop
+#base robot_wonders.pop
+WaveSchedule
+{
+	StartingCurrency	1000
+	RespawnWaveTime	4
+	CanBotsAttackWhileInSpawnRoom	no
+	AddSentryBusterWhenKillCountExceeds	25
+	Templates
+	{    
+	    T_TFBot_Giant_Soldier_SlowBarrage
+		{
+			ClassIcon	soldier_barrage
+			Health	4000
+			Name	"Colonel Barrage"
+			Class	Soldier
+			Skill	Expert
+			WeaponRestrictions	PrimaryOnly
+			Tag	"bot_giant"
+			Attributes	"MiniBoss"
+			Attributes	"HoldFireUntilFullReload"
+			ItemAttributes
+			{
+				ItemName	tf_weapon_rocketlauncher
+				"clip size upgrade atomic"	26.0
+				"faster reload rate"	0.22
+				"fire rate bonus"	0.2
+				"projectile spread angle penalty"	5
+			}
+			CharacterAttributes
+			{
+				"health regen"	40
+				"move speed bonus"	0.5
+				"damage bonus"	1.5
+				"damage force reduction"	0.4
+				"airblast vulnerability multiplier"	0.4
+				"override footstep sound set"	3
+				"airblast vertical vulnerability multiplier"	0.1
+				"Projectile speed increased"	0.4
+			}
+		}
+		T_TFBot_Giant_Scout_Armored
+		{
+			ClassIcon	scout_armored_pda
+			Health	2500
+			Name	"Armored Giant Scout"
+			Class	Scout
+			Skill	Expert
+			WeaponRestrictions	PrimaryOnly
+			Attributes	"MiniBoss"
+			Attributes	"HoldFireUntilFullReload"
+			Item "Das Metalmeatencasen"
+			CharacterAttributes
+			{
+				"damage force reduction"	0.7
+				"airblast vulnerability multiplier"	0.7
+				"override footstep sound set"	5
+				"move speed bonus"	0.75
+			}
+		}
+		T_TFBot_Hanami_SentryBuster_Bomber
+        {
+                Class Demoman
+                Name "Blue Baller"
+                ClassIcon sentry_buster
+                Skill Expert
+                Health 2500
+                WeaponRestrictions PrimaryOnly
+                Attributes MiniBoss
+                Attributes AlwaysFireWeapon
+                Attributes DisableDodge
+                Item "The Iron Bomber"
+                Item "Legendary Lid"
+                ItemAttributes
+                {
+                    ItemName "The Iron Bomber"
+                    "damage penalty"                    0.25
+                    "fire rate bonus"                    0.2
+                    "faster reload rate"                -0.8
+                    "Projectile speed increased"        0.01
+                    "projectile spread angle penalty"    3
+                    "fuse bonus"                        3
+                    "blast dmg to self increased"        0
+                }
+                CharacterAttributes
+                {
+                    "move speed bonus"                    1.85
+                    "head scale"                        3.2
+                    "torso scale"                        0
+                    "damage force reduction"            0.5
+                    "airblast vulnerability multiplier"    0.5
+                    "override footstep sound set"        7
+                    "cannot be backstabbed"                1
+                }
+        }
+		
+	}
+	Mission
+	{
+		Objective	DestroySentries
+		Where spawnbot_right
+		Where spawnbot_left
+		BeginAtWave	1
+		RunForThisManyWaves	6
+		InitialCooldown	60
+		CooldownTime	60
+		DesiredCount	1
+		RandomChoice
+		{
+		    TFBot
+		    {
+			      Template	T_TFBot_SentryBuster
+		    }
+			TFBot
+		    {
+			      Template	T_TFBot_Hanami_SentryBuster_Bomber
+		    }
+		}
+	}
+	Mission
+	{
+		Objective	Spy
+		Where	spawnbot_mission_spy
+		BeginAtWave	2
+		RunForThisManyWaves	1
+		InitialCooldown	30
+		CooldownTime	60
+		DesiredCount	2
+		TFBot
+		{
+		    ClassIcon         spy_kunai
+			Template	T_TFBot_Spy
+			Skill       Hard
+			Item		"Spy Oni Mask"
+			Item		"The Conniver's Kunai"
+			Item        "hong kong cone"
+		}
+	}
+	Mission
+	{
+		Objective	Spy
+		Where	spawnbot_mission_spy
+		BeginAtWave	5
+		RunForThisManyWaves	2
+		InitialCooldown	30
+		CooldownTime	45
+		DesiredCount	2
+		TFBot
+		{
+		    ClassIcon         spy_kunai
+			Template	T_TFBot_Spy
+			Skill       Expert
+			Item		"Spy Oni Mask"
+			Item		"The Conniver's Kunai"
+			Item        "Legendary Lid"
+		}
+	}
+	Mission
+	{
+		Objective	Sniper
+		Where	spawnbot_mission_sniper
+		BeginAtWave	1
+		RunForThisManyWaves	1
+		InitialCooldown	30
+		CooldownTime	30
+		DesiredCount	2
+		TFBot
+		{
+			Template	T_TFBot_Sniper
+			Skill		Normal
+		}
+	}
+	Mission
+	{
+		Objective	Sniper
+		Where	spawnbot_mission_sniper
+		BeginAtWave	3
+		RunForThisManyWaves	1
+		InitialCooldown	30
+		CooldownTime	30
+		DesiredCount	1
+		TFBot
+		{
+			Template	T_TFBot_Sniper_Sydney_Sleeper
+		}
+	}
+	Mission
+	{
+		Objective	Sniper
+		Where	spawnbot_mission_sniper
+		BeginAtWave	5
+		RunForThisManyWaves	2
+		InitialCooldown	30
+		CooldownTime	30
+		DesiredCount	2
+		TFBot
+		{
+			Template	T_TFBot_Sniper
+		}
+	}
+
+	Wave  // Wave 1 - Credits: 650
+	{
+		StartWaveOutput
+		{
+			Target	wave_start_classic_relay
+			Action	Trigger
+		}
+		DoneOutput
+		{
+			Target	wave_finished_relay
+			Action	Trigger
+		}
+		WaveSpawn
+		{
+			Name	"Squad 1"
+			TotalCurrency	100
+			TotalCount	2
+			MaxActive	2
+			SpawnCount	1
+			WaitBeforeStarting	10
+			WaitBetweenSpawns	20
+			Where spawnbot_right
+			
+			
+				TFBot
+				{
+					 ClassIcon      pyro_dragon_fury_swordstone
+					Name	"Giant Dragon's Fury Pyro"
+					Scale	1.8
+					MaxVisionRange	1000
+					Template	T_TFBot_Giant_Pyro
+					Item	"the sengoku scorcher"
+					Item    "The Dragon's Fury"
+					Item	"hong kong cone"
+					Item    "The Fire Breather"
+				}
+			
+		}
+
+		WaveSpawn
+		{
+			Name	"Squad 1"
+			TotalCurrency	100
+			TotalCount	24
+			MaxActive	6
+			SpawnCount	3
+			WaitBeforeStarting	5
+			WaitBetweenSpawns	5
+			Where spawnbot_right
+			
+			
+				TFBot
+				{
+					Scale	1.0
+					MaxVisionRange	1000
+					Template	T_TFBot_Sniper_Huntsman
+					Item	"the fortified compound"
+					Item	"hong kong cone"
+				}
+			
+		}
+
+		WaveSpawn
+		{
+			Name	"Squad 1"
+			TotalCurrency	100
+			TotalCount	12
+			MaxActive	6
+			SpawnCount	2
+			WaitBeforeStarting	5
+			WaitBetweenSpawns	8
+			Where spawnbot_middle
+			Where spawnbot_left
+		    
+				TFBot
+				{
+				    ClassIcon            demoknight_samurai
+					AutoJumpMin	8
+					AutoJumpMax	8
+					Name	"Samurai Knight"
+					Scale	1.0
+					MaxVisionRange	500
+					Template	T_TFBot_Demoman_Knight
+					Attributes	"AutoJump"
+					CharacterAttributes
+					{
+						"increased jump height"	1.8
+						"charge time increased"	1.5
+						"charge recharge rate increased" 2.5
+						"cancel falling damage"	1
+					}
+					Item	"the splendid screen"
+					Item	"the half-zatoichi"
+					Item	"demo kabuto"
+				}
+		}
+		WaveSpawn
+		{
+			Name	"Giants 2"
+			WaitForAllDead	"Squad 1"
+			TotalCurrency	100
+			TotalCount	2
+			MaxActive	2
+			SpawnCount	1
+			WaitBeforeStarting	10
+			WaitBetweenSpawns	20
+			Where spawnbot_middle
+			
+			
+				TFBot
+				{
+				    ClassIcon      pyro_dragon_fury_swordstone
+					Name	"Giant Dragon's Fury Pyro"
+					Scale	1.8
+					MaxVisionRange	1000
+					Template	T_TFBot_Giant_Pyro
+					Item	"the sengoku scorcher"
+					Item    "The Dragon's Fury"
+					Item	"hong kong cone"
+					Item    "The Fire Breather"
+				}
+			
+		}
+		WaveSpawn
+		{
+			Name	Butcher
+			WaitForAllDead	"Squad 1"
+			TotalCurrency	100
+			TotalCount	15
+			MaxActive	10
+			SpawnCount	5
+			WaitBeforeStarting	5
+			WaitBetweenSpawns	6
+			Where spawnbot_left
+			
+			
+				TFBot
+				{
+					ClassIcon	scout_cleaver
+					Health	125
+					Name	"Butcher Scout"
+					Scale	1.0
+					Class	Scout
+					Skill	Normal
+					MaxVisionRange	1000
+					WeaponRestrictions	SecondaryOnly
+					Attributes	"AlwaysFireWeapon"
+					ItemAttributes
+					{
+						ItemName	"the flying guillotine"
+						"effect bar recharge rate increased"	0.1
+						"bleeding duration"	8
+					}
+					Item	"the flying guillotine"
+					Item	"Connoisseur's Cap"
+				}
+			
+		}
+		WaveSpawn
+		{
+			Name	Ninjas
+			WaitForAllDead	"Squad 1"
+			TotalCurrency	50
+			TotalCount	26
+			MaxActive	10
+			SpawnCount	2
+			WaitBeforeStarting	3
+			WaitBetweenSpawns	3
+			Where spawnbot_right
+			
+			
+				TFBot
+				{
+					ClassIcon	scout_threerune_daan
+					Health	125
+					AutoJumpMin	8
+					AutoJumpMax	8
+					Name	"Ninja Scout"
+					Scale	1.0
+					Class	Scout
+					Skill	Normal
+					MaxVisionRange	800
+					WeaponRestrictions	MeleeOnly
+					Attributes	"AutoJump"
+					ItemAttributes
+					{
+						ItemName	"three-rune blade"
+						"fire rate bonus"	0.5
+						"damage bonus"	0.8
+						"hit self on miss" 0
+					}
+					CharacterAttributes
+					{
+						"increased jump height"	1.3
+						"no double jump"	1
+						"move speed bonus"	1.6
+						"cancel falling damage"	1
+					}
+					Item	"three-rune blade"
+					Item	"the frickin' sweet ninja hood"
+					Item	"the southie shinobi"
+				}
+			
+		}
+		WaveSpawn
+		{
+			Name	Gburst
+			WaitForAllDead	"Giants 2"
+			TotalCurrency	100
+			TotalCount	4
+			MaxActive	4
+			SpawnCount	4
+			WaitBeforeStarting	0
+			WaitBetweenSpawns	0
+			Where spawnbot_middle
+			Squad
+			{
+				TFBot
+				{
+					ClassIcon	demo_burst
+					Health	3300
+					Name	"Giant Burst Fire Demoman"
+					Scale	1.8
+					Class	Demoman
+					Skill	Expert
+					MaxVisionRange	1000
+					WeaponRestrictions	PrimaryOnly
+					Attributes	"MiniBoss"
+					Attributes	"HoldFireUntilFullReload"
+					ItemAttributes
+					{
+						ItemName	tf_weapon_grenadelauncher
+						"fire rate bonus"	0.1
+						"clip size upgrade atomic"	7.0
+						"faster reload rate"	0.5
+						"projectile spread angle penalty"	5
+					}
+					CharacterAttributes
+					{
+						"move speed bonus"	0.5
+						"damage force reduction"	0.4
+						"airblast vulnerability multiplier"	0.4
+						"override footstep sound set"	4
+						"no self blast dmg"	1
+					}
+					Item	"hong kong cone"
+				}
+				TFBot
+				{
+					Scale	1.0
+					MaxVisionRange	500
+					Template	T_TFBot_Medic_QuickFix
+					Item	"hong kong cone"
+				}
+				TFBot
+				{
+					Scale	1.0
+					MaxVisionRange	500
+					Template	T_TFBot_Medic_QuickFix
+					Item	"hong kong cone"
+				}
+				TFBot
+				{
+					Scale	1.0
+					MaxVisionRange	500
+					Template	T_TFBot_Medic_QuickFix
+					Item	"hong kong cone"
+				}
+			}
+		}
+		WaveSpawn
+		{
+			Name	Slugger
+			TotalCurrency	0
+			TotalCount	10
+			MaxActive	3
+			SpawnCount	1
+			WaitBeforeStarting	5
+			WaitBetweenSpawns	5
+			Support	1
+			Where spawnbot_middle
+			
+			
+				TFBot
+				{
+				    ClassIcon     scout_slug_shot
+					Health	100
+					Name	"Slugger Scout"
+					Scale	1.0
+					Class	Scout
+					Skill	Hard
+					MaxVisionRange	1000
+					WeaponRestrictions	PrimaryOnly
+					Attributes	"HoldFireUntilFullReload"
+					ItemAttributes
+					{
+						ItemName	"baby face's blaster"
+						"faster reload rate"	1.4
+						"bullets per shot bonus"	0.1
+						"damage bonus"	8
+						"fire rate bonus"	1.35
+						"weapon spread bonus" 0.25
+					}
+					CharacterAttributes
+					{
+						"selfmade description"	"Fires high-damage slugs."
+						"crit mod disabled"	1
+					}
+					Item	"baby face's blaster"
+					Item	"hong kong cone"
+				}
+			
+		}
+		WaveSpawn
+		{
+			Name	Conch
+			TotalCurrency	0
+			TotalCount	10
+			MaxActive	2
+			SpawnCount	2
+			WaitBeforeStarting	45
+			WaitBetweenSpawns	45
+			Support	1
+			Where spawnbot_right
+			Where spawnbot_left
+			
+			
+				TFBot
+				{
+					Scale	1.0
+					MaxVisionRange	1000
+					WeaponRestrictions	PrimaryOnly
+					Template	TBSoldier_Conch
+					Attributes	"HoldFireUntilFullReload"
+				}
+			
+		}
+		WaveSpawn // Hidden
+		{
+			Name	"Support Scouts"
+			WaitForAllDead	Ninjas
+			TotalCurrency	0
+			TotalCount	16
+			MaxActive	16
+			SpawnCount	1
+			WaitBeforeStarting	1
+			WaitBetweenSpawns	1
+			Support	1
+			Where spawnbot_right
+			Where spawnbot_left
+			
+				RandomChoice
+				{
+					Squad
+					{
+						TFBot
+						{
+							ClassIcon	scout
+							Health	125
+							Name    Scout
+							Scale	1.0
+							Class	Scout
+							Skill	Normal
+							MaxVisionRange	1000
+							WeaponRestrictions	PrimaryOnly
+							Attributes	"HoldFireUntilFullReload"
+						}
+					}
+				}
+		}
+	}
+	Wave  // Wave 2 - Credits: 750
+	{
+		StartWaveOutput
+		{
+			Target	wave_start_classic_relay
+			Action	Trigger
+		}
+
+		DoneOutput
+		{
+			Target	wave_finished_relay
+			Action	Trigger
+		}
+
+		WaveSpawn
+		{
+			Name "Caber Demos"
+			TotalCurrency 80
+			TotalCount 30
+			MaxActive 4
+			SpawnCount 2
+			WaitBeforeStarting 0
+			WaitBetweenSpawns 8
+			Where spawnbot_left
+			Where spawnbot_right
+			RandomSpawn 1
+
+			TFBot
+			{
+				Template TBDemoman_Caber
+				Name "Kamikaze Demo"
+			}
+		}
+
+		WaveSpawn
+		{
+			Name "Giant Sandman Scouts"
+			TotalCurrency 80
+			TotalCount 4
+			MaxActive 4
+			SpawnCount 1
+			WaitBeforeStarting 15
+			WaitBetweenSpawns 22
+			Where spawnbot_left
+
+			TFBot
+			{
+				Template T_TFBot_Giant_Scout_Baseball
+				Name "Giant Sandman Scout"
+			}
+		}
+
+		WaveSpawn
+		{
+			Name "Giant Samurai Demos"
+			TotalCurrency 100
+			TotalCount 2
+			MaxActive 1
+			SpawnCount 1
+			WaitForAllDead "Giant Sandman Scouts"
+			WaitBeforeStarting 1
+			WaitBetweenSpawns 0
+			Where spawnbot_middle
+			RandomSpawn 1
+
+			TFBot
+			{
+				Template TBDemoman_Samurai_Giant
+			}
+		}
+
+		WaveSpawn
+		{
+			Name "Tank"
+			TotalCurrency 200
+			TotalCount 1
+			WaitForAllDead "Giant Samurai Demos"
+
+			Tank
+			{
+				Health 25000
+				Speed 75
+				StartingPathTrackNode "tank_path1"
+
+				OnKilledOutput                                  
+				{
+					Target boss_dead_relay
+					Action Trigger                         
+				}
+				
+				OnBombDroppedOutput                             
+				{
+					Target boss_deploy_relay 
+					Action Trigger                         
+				}
+			}
+		}
+
+		WaveSpawn
+		{
+			Name "Conch Soldiers"
+			TotalCurrency 80
+			TotalCount 16
+			MaxActive 2
+			SpawnCount 1
+			WaitBeforeStarting 2
+			WaitBetweenSpawns 5
+			Where spawnbot_left
+			Where spawnbot_middle
+			Where spawnbot_right
+			RandomSpawn 1
+
+			TFBot
+			{
+				Template TBSoldier_Conch
+			}
+		}
+
+		WaveSpawn
+		{
+			Name "Samurai Soldiers Intro"
+			TotalCurrency 80
+			TotalCount 8
+			MaxActive 2
+			SpawnCount 1
+			WaitBeforeStarting 5
+			WaitBetweenSpawns 10
+			Where spawnbot_left
+			Where spawnbot_right
+			RandomSpawn 1
+
+			TFBot
+			{
+				Template TBSoldier_Samurai_Armored
+			}
+		}
+
+		WaveSpawn
+		{
+			Name "Samurai Soldiers Mid"
+			TotalCurrency 80
+			TotalCount 8
+			MaxActive 4
+			SpawnCount 2
+			WaitForAllDead "Samurai Soldiers Intro"
+			WaitBeforeStarting 5
+			WaitBetweenSpawns 12
+			Where spawnbot_left
+			Where spawnbot_middle
+			Where spawnbot_right
+			RandomSpawn 1
+
+			Squad
+			{
+				TFBot
+				{
+					Template TBSoldier_Samurai_Armored
+				}
+
+				TFBot
+				{
+					Template T_TFBot_Medic_QuickUber
+				}
+			}
+		}
+
+		WaveSpawn
+		{
+			Name "Airblast Pyros"
+			TotalCurrency 50
+			TotalCount 25
+			MaxActive 2
+			SpawnCount 1
+			WaitBeforeStarting 10
+			WaitBetweenSpawns 10
+			Where spawnbot_left
+			Where spawnbot_middle
+			Where spawnbot_right
+			RandomSpawn 1
+
+			Support Limited
+
+			TFBot
+			{
+				Template TBPyro_Airblast
+			}
+		}
+
+		WaveSpawn
+		{
+			Name "Cola Scouts"
+			MaxActive 4
+			SpawnCount 2
+			WaitBeforeStarting 5
+			WaitBetweenSpawns 9
+			Where spawnbot_left
+			Where spawnbot_middle
+			Where spawnbot_right
+			RandomSpawn 1
+
+			Support 1
+
+			TFBot
+			{
+				Template TBScout_Cola
+			}
+		}
+	}
+	Wave  // Wave 3 - Credits: 950
+	{		
+		StartWaveOutput
+		{
+			Target	wave_start_classic_relay
+			Action	Trigger
+		}
+
+		DoneOutput
+		{
+			Target	wave_finished_relay
+			Action	Trigger
+		}
+
+		WaveSpawn
+		{
+			Name "DF Pyros"
+			TotalCurrency 100
+			TotalCount 28
+			MaxActive 10
+			SpawnCount 1
+			WaitBeforeStarting 0
+			WaitBetweenSpawns 2
+			Where spawnbot_left
+			Where spawnbot_middle
+			Where spawnbot_right
+			RandomSpawn 1
+
+			TFBot
+			{
+				Template TBPyro_Fury
+			}
+		}
+
+		WaveSpawn
+		{
+			Name "Cola Scouts"
+			TotalCurrency 30
+			TotalCount 16
+			MaxActive 6
+			SpawnCount 2
+			WaitBeforeStarting 0
+			WaitBetweenSpawns 6
+			Where spawnbot_left
+			Where spawnbot_middle
+			Where spawnbot_right
+			RandomSpawn 1
+
+			TFBot
+			{
+			        ClassIcon scout_cola_popper
+				Template TBScout_Cola
+				Skill Hard
+				Item "The Soda Popper"
+			}
+		}
+
+		WaveSpawn
+		{
+			Name "Giant Bowmen 1"
+			TotalCurrency 50
+			TotalCount 2
+			MaxActive 1
+			SpawnCount 1
+			WaitBeforeStarting 5
+			WaitBetweenSpawns 30
+			Where spawnbot_left
+			
+			TFBot
+			{
+				Template TBSniper_Huntsman_Rapid_Giant
+			}
+		}
+
+		WaveSpawn
+		{
+			Name "Giant Bowmen 2"
+			TotalCurrency 150
+			TotalCount 2
+			MaxActive 2
+			SpawnCount 2
+			WaitBeforeStarting 30
+			WaitBetweenSpawns 0
+			WaitForAllSpawned "Giant Bowmen 1"
+			Where spawnbot_left
+
+			Squad
+			{
+				TFBot
+				{
+					Template TBSniper_Huntsman_Rapid_Giant
+				}
+
+				TFBot
+				{
+					Template T_TFBot_Medic_QuickUber
+				}
+			}
+		}
+
+		WaveSpawn
+		{
+			Name "Marking Bowmen"
+			TotalCurrency 100
+			TotalCount 36
+			MaxActive 6
+			SpawnCount 3
+			WaitBeforeStarting 2
+			WaitBetweenSpawns 3
+			WaitForAllSpawned "DF Pyros"
+			Where spawnbot_left
+			Where spawnbot_middle
+			Where spawnbot_right
+			RandomSpawn 1
+
+			TFBot
+			{
+				Template TBSniper_Huntsman_Mark
+			}
+		}
+
+		WaveSpawn
+		{
+			Name "Banner Soldiers"
+			TotalCurrency 60
+			TotalCount 24
+			MaxActive 4
+			SpawnCount 1
+			WaitBeforeStarting 0
+			WaitBetweenSpawns 2
+			WaitForAllSpawned "DF Pyros"
+			Where spawnbot_left
+			Where spawnbot_middle
+			RandomSpawn 1
+
+			RandomChoice
+			{
+				TFBot
+				{
+					ClassIcon soldier_banner_trio
+				}
+
+				TFBot
+				{
+					ClassIcon soldier_banner_trio
+					Template TBSoldier_Buff
+				}
+
+				TFBot
+				{
+					ClassIcon soldier_banner_trio
+					Template TBSoldier_Backup
+				}
+
+				TFBot
+				{
+					ClassIcon soldier_banner_trio
+					Template TBSoldier_Conch
+				}
+
+				TFBot
+				{
+					ClassIcon soldier_banner_trio
+					Template TBSoldier_Conch
+				}
+			}
+		}
+
+		WaveSpawn
+		{
+			Name "Bushwacka Snipers"
+			TotalCurrency 40
+			TotalCount 4
+			MaxActive 2
+			SpawnCount 1
+			WaitBeforeStarting 5
+			WaitBetweenSpawns 14
+			WaitForAllSpawned "DF Pyros"
+			Where spawnbot_left
+			
+			Squad
+			{
+			    TFBot
+				{
+				    Template      TBSniper_Bushwacka_Armored
+				}
+			}
+		}
+
+		WaveSpawn
+		{
+			Name "Giant Armored Scouts"
+			TotalCurrency 30
+			TotalCount 3
+			MaxActive 1
+			SpawnCount 1
+			WaitBeforeStarting 12
+			WaitBetweenSpawns 20
+			WaitForAllSpawned "DF Pyros"
+			Where spawnbot_right
+
+			TFBot
+			{
+			    Scale   1.8
+				Template    T_TFBot_Giant_Scout_Armored
+				MaxVisionRange      1000
+			}
+		}
+		
+		WaveSpawn
+		{
+			Name "Giant Crit Soldiers"
+			TotalCurrency 200
+			TotalCount 4
+			MaxActive 4
+			SpawnCount 4
+			WaitBeforeStarting 6
+			WaitBetweenSpawns 0
+			WaitForAllSpawned "Giant Armored Scouts"
+			Where spawnbot_left
+
+			Squad
+			{
+				TFBot
+				{
+					Template T_TFBot_Giant_Soldier_Spammer_Reload
+				}
+
+				TFBot
+				{
+					Template T_TFBot_Medic
+				}
+
+				TFBot
+				{
+					Template T_TFBot_Medic
+				}
+
+				TFBot
+				{
+					Template T_TFBot_Medic
+				}
+			}
+		}
+
+        WaveSpawn
+		{
+			Name "Giant Shortstop Scouts"
+			TotalCurrency 20
+			TotalCount 2
+			MaxActive 2
+			SpawnCount 1
+			WaitBeforeStarting 12
+			WaitBetweenSpawns 10
+			WaitForAllDead "Bushwacka Snipers"
+			Where spawnbot_left
+			Where spawnbot_right
+			RandomSpawn 1
+
+			TFBot
+			{
+				Template TBScout_Shortstop_Giant
+			}
+		}
+        
+		WaveSpawn
+		{
+			Name "Caber Demos"
+			TotalCurrency 100
+			TotalCount 50
+			MaxActive 3
+			SpawnCount 1
+			WaitBeforeStarting 2
+			WaitBetweenSpawns 3
+			Where spawnbot_left
+			Where spawnbot_middle
+			Where spawnbot_right
+			RandomSpawn 1
+
+			Support Limited
+
+			TFBot
+			{
+				Template TBDemoman_Caber
+				Name "Kamikaze Demo"
+			}
+		}
+
+		WaveSpawn
+		{
+			Name "Fan Scouts"
+			TotalCurrency 70
+			TotalCount 70
+			MaxActive 3
+			SpawnCount 1
+			WaitBeforeStarting 10
+			WaitBetweenSpawns 2
+			WaitForAllDead "Cola Scouts"
+			Where spawnbot_left
+			Where spawnbot_middle
+			Where spawnbot_right
+			RandomSpawn 1
+			
+			Support Limited
+
+			TFBot
+			{
+				Template TBScout_Fanowar
+				Item "Hong Kong Cone"
+			}
+		}
+		
+	}
+    
+	 Wave  // wave 4 - 800 Credits
+	{
+		StartWaveOutput
+		{
+			Target	wave_start_classic_relay
+			Action	Trigger
+		}
+		DoneOutput
+		{
+			Target	wave_finished_relay
+			Action	Trigger
+		}
+		WaveSpawn
+		{
+			Name	"Pyros"
+			TotalCurrency	50
+			TotalCount	28
+			MaxActive	10
+			SpawnCount	2
+			WaitBeforeStarting	3
+			WaitBetweenSpawns   5
+			Where spawnbot_right
+			Where spawnbot_left
+			
+			
+				TFBot
+				{
+				    ClassIcon         pyro
+					Health    175
+					Class	Pyro
+					Skill	Normal
+					Scale   1.0
+					MaxVisionRange	600
+					WeaponRestrictions	PrimaryOnly
+				}
+			
+		}
+		WaveSpawn
+		{
+			Name	"Heavies"
+			TotalCurrency	50
+			TotalCount	16
+			MaxActive	6
+			SpawnCount	2
+			WaitBeforeStarting	6
+			WaitBetweenSpawns	4
+			Where spawnbot_right
+			Where spawnbot_left
+			
+			
+			        TFBot
+				    {
+					          ClassIcon	 heavy_heater_nys
+					          Health	300
+					          Name	"Heater Heavy"
+					          Scale	1.0
+					          Class	HeavyWeapons
+					          Skill	Normal
+					          MaxVisionRange	1000
+					          WeaponRestrictions	PrimaryOnly
+					          Item	"the huo long heatmaker"
+					          Item	"the bunsen brave"
+				    }
+			
+		}
+		WaveSpawn
+		{
+			Name	"Giants 1"
+			TotalCurrency	100
+			TotalCount	2
+			MaxActive	1
+			SpawnCount	1
+			WaitBeforeStarting	10
+			WaitBetweenSpawns	18
+			Where spawnbot_left
+			
+			
+				TFBot
+				{
+					Name	"Giant Concheror Soldier"
+					Scale	1.8
+					MaxVisionRange	1000
+					Template	T_TFBot_Giant_Soldier_Extended_Concheror
+					Attributes	HoldFireUntilFullReload
+					Item	"soldier samurai hat"
+					Item	"the shogun's shoulder guard"
+				}
+			
+		}
+		WaveSpawn
+		{
+			Name	"Giants 1"
+			TotalCurrency	100
+			TotalCount	3
+			MaxActive	2
+			SpawnCount	1
+			WaitBeforeStarting	15
+			WaitBetweenSpawns	25
+			Where spawnbot_right
+			
+			
+				TFBot
+				{
+					Scale	1.8
+					MaxVisionRange	500
+					Template	T_TFBot_Giant_Scout_Fast
+				}
+		}
+		WaveSpawn
+		{
+			Name	"Tank 1"
+			WaitForAllDead	"Giants 1"
+			TotalCurrency	100
+			TotalCount	1
+			MaxActive	1
+			SpawnCount	1
+			WaitBeforeStarting	30
+			WaitBetweenSpawns	0
+			
+			
+				Tank
+				{
+					Health	20000
+					Name	Tank
+					Speed	75
+					StartingPathTrackNode "tank_path1"
+					OnKilledOutput
+					{
+						Target	boss_dead_relay
+						Action	Trigger
+					}
+					OnBombDroppedOutput
+					{
+						Target	boss_deploy_relay
+						Action	Trigger
+					}
+				}
+		}
+		WaveSpawn
+		{
+			Name	"Giants 2"
+			WaitForAllDead	"Giants 1"
+			TotalCurrency	100
+			TotalCount	6
+			MaxActive	3
+			SpawnCount	3
+			WaitBeforeStarting	8
+			WaitBetweenSpawns	20
+			Where spawnbot_middle
+			Squad
+			{
+				TFBot
+				{
+					ClassIcon	demo_burst
+					Health	3300
+					Name	"Giant Burst Fire Demoman"
+					Scale	1.8
+					Class	Demoman
+					Skill	Expert
+					MaxVisionRange	1000
+					WeaponRestrictions	PrimaryOnly
+					Attributes	"MiniBoss"
+					Attributes	"HoldFireUntilFullReload"
+					ItemAttributes
+					{
+						ItemName	tf_weapon_grenadelauncher
+						"fire rate bonus"	0.1
+						"clip size upgrade atomic"	7.0
+						"faster reload rate"	0.5
+						"projectile spread angle penalty"	5
+					}
+					CharacterAttributes
+					{
+						"move speed bonus"	0.5
+						"damage force reduction"	0.4
+						"airblast vulnerability multiplier"	0.4
+						"override footstep sound set"	4
+						"no self blast dmg"	1
+					}
+					Item	"hong kong cone"
+				}
+				TFBot
+				{
+                  	ClassIcon      medic_kritz2
+					Name	"KritzKrieg Medic"
+                	Health	250
+					Scale	1.0
+					MaxVisionRange	500
+					WeaponRestrictions	SecondaryOnly
+					Template	T_TFBot_Medic
+                    ItemAttributes
+              		{
+                  		ItemName "The Kritzkrieg"
+                 	    "uber duration bonus" 600
+                 	    "bot medic uber health threshold" 600
+                	}
+					ItemAttributes
+					{
+						ItemName "hong kong cone"
+						"set item tint RGB" 53503
+					}
+					Item	"the kritzkrieg"
+					Item	"hong kong cone"
+				}
+				TFBot
+				{
+                  	ClassIcon      medic_kritz2
+					Name	"KritzKrieg Medic"
+                	Health	250
+					Scale	1.0
+					MaxVisionRange	500
+					WeaponRestrictions	SecondaryOnly
+					Template	T_TFBot_Medic
+                    ItemAttributes
+              	    {
+                  		ItemName "The Kritzkrieg"
+                 	    "uber duration bonus" 600
+                 	    "bot medic uber health threshold" 600
+                    }
+					ItemAttributes
+					{
+						ItemName "hong kong cone"
+						"set item tint RGB" 53503
+					}
+					Item	"the kritzkrieg"
+					Item	"hong kong cone"
+				}
+			}
+		}
+		WaveSpawn
+		{
+			Name	"Giants 2"
+			WaitForAllDead	"Giants 1"
+			TotalCurrency	100
+			TotalCount	1
+			MaxActive	1
+			SpawnCount	1
+			WaitBeforeStarting	10
+			WaitBetweenSpawns	0
+			Where spawnbot_right
+			
+			
+				TFBot
+				{
+				    ClassIcon      demo_loch_targe
+					Name	"Giant Charging Loch-n-Load Demo"
+					Scale	1.8
+					MaxVisionRange	1000
+					WeaponRestrictions	PrimaryOnly
+					Template	T_TFBot_Giant_DemoMan_PrinceTavish
+					Attributes	"HoldFireUntilFullReload"
+					Item	"the loch-n-load"
+					Item	"the shogun's shoulder guard"
+				}
+		}
+		WaveSpawn
+		{
+			Name	"Giants 2.5"
+			WaitForAllSpawned	"Giants 2"
+			TotalCurrency	100
+			TotalCount	2
+			MaxActive	2
+			SpawnCount	1
+			WaitBeforeStarting	15
+			WaitBetweenSpawns 	20
+			Where spawnbot_right
+			
+			
+				TFBot
+				{
+				    ClassIcon      demo_loch_targe
+					Name	"Giant Charging Loch-n-Load Demo"
+					Scale	1.8
+					MaxVisionRange	1000
+					WeaponRestrictions	PrimaryOnly
+					Template	T_TFBot_Giant_DemoMan_PrinceTavish
+					Attributes	"HoldFireUntilFullReload"
+					Item	"the loch-n-load"
+					Item	"the shogun's shoulder guard"
+				}
+		}
+		WaveSpawn
+		{
+			Name	"Giants 3"
+			WaitForAllDead	"Giants 2"
+			TotalCurrency	100
+			TotalCount	9
+			MaxActive	9
+			SpawnCount	3
+			WaitBeforeStarting	8
+			WaitBetweenSpawns	16
+			Where spawnbot_left
+			Squad
+			{
+				TFBot
+				{
+				    	Template TBSniper_SMG_Giant
+						Item    "Liquidator's Lid"
+				}
+				TFBot
+				{
+					Scale	1.0
+					MaxVisionRange	500
+					WeaponRestrictions	SecondaryOnly
+					Template	T_TFBot_Medic
+					Item	"medic geisha hair"
+				}
+				TFBot
+				{
+					Scale	1.0
+					MaxVisionRange	500
+					WeaponRestrictions	SecondaryOnly
+					Template	T_TFBot_Medic
+					Item	"medic geisha hair"
+				}
+			}
+		}
+		WaveSpawn
+		{
+			Name	"Final Super Scout"
+			WaitForAllDead	"Giants 2"
+			TotalCurrency	0
+			TotalCount	1
+			MaxActive	1
+			SpawnCount	1
+			WaitBeforeStarting	20
+			WaitBetweenSpawns	0
+			Where spawnbot_right
+			
+			
+				TFBot
+				{
+					Scale	1.8
+					MaxVisionRange	500
+					Template	T_TFBot_Giant_Scout_Fast
+				}
+		}
+		WaveSpawn
+		{
+			Name	"Random Mafia"
+			WaitForAllDead	"Heavies"
+			TotalCount	14
+			MaxActive	14
+			SpawnCount	2
+			WaitBeforeStarting	3
+			WaitBetweenSpawns	4
+			Support	1
+			Where spawnbot_right
+			Where spawnbot_left
+			
+			RandomChoice
+			{
+					TFBot
+					{
+						ClassIcon	heavy_mobster
+						Health	300
+						Name	"Yakuza Bruiser"
+						Scale	1.0
+						Class	HeavyWeapons
+						Skill	Expert
+						MaxVisionRange	500
+						WeaponRestrictions	MeleeOnly
+						Item	"the eviction notice"
+						Item	"capone's capper"
+						CharacterAttributes
+						{
+							"move speed bonus" 1.2
+						}
+					}
+					TFBot
+					{
+						ClassIcon	heavy_mobster
+						Health	300
+						Name	"Tommy Gunner"
+						Scale	1.0
+						Class	HeavyWeapons
+						Skill	Normal
+						MaxVisionRange	1000
+						WeaponRestrictions	PrimaryOnly
+						Item	"tomislav"
+						Item	"capone's capper"
+					}
+					TFBot
+				    {
+					       ClassIcon	heavy_mobster
+					       Health	300
+					       Name	    "Japanese Businessman"
+					       Scale	1.0
+					       Class	HeavyWeapons
+					       Skill	Normal
+					       MaxVisionRange	1000
+					       WeaponRestrictions	SecondaryOnly
+					       Item	    "the family business"
+					       Item	    "Brothers in Blues"
+						Item		"The Siberian Sophisticate"
+
+						ItemAttributes
+						{
+							ItemName "the family business"
+							"fire rate bonus" 0.75
+						}
+				    }
+					TFBot
+					{
+						ClassIcon	heavy_mobster
+						Health  125
+						Name 	"Fed Fighter"
+						Class 	Scout
+						Skill 	Normal
+						MaxVisionRange	1000
+						WeaponRestrictions	SecondaryOnly
+						Item	"the fed-fightin' fedora"
+						Item	"pretty boy's pocket pistol"
+						ItemAttributes
+						{
+							ItemName "pretty boy's pocket pistol"
+							"damage bonus" 1.2
+						}
+					}
+					TFBot
+					{
+						ClassIcon	heavy_mobster
+						Health	125
+						Name	"Mafia Marksman"
+						Scale	1.0
+						Class	Sniper
+						Skill	Hard
+						MaxVisionRange	1000
+						WeaponRestrictions	SecondaryOnly
+						ItemAttributes
+						{
+							ItemName	"the cleaner's carbine"
+							"minicritboost on kill"	5
+						}
+						Item	"the cleaner's carbine"
+						Item    "liquidator's lid"
+					}
+			}
+		}
+	}
+	
+    Wave //    Wave 5 - 850 credits
+	{
+		WaitWhenDone	65
+		Checkpoint	Yes
+		StartWaveOutput
+		{
+			Target	wave_start_classic_relay
+			Action	Trigger
+		}
+		DoneOutput
+		{
+			Target	wave_finished_relay
+			Action	Trigger
+		}
+		WaveSpawn
+		{
+			Name	"Squad 1"
+			TotalCurrency	100
+			TotalCount	9
+			MaxActive	3
+			SpawnCount	3
+			WaitBeforeStarting	8
+			WaitBetweenSpawns	10
+			Where	spawnbot_middle
+			Squad
+			{
+				TFBot
+				{
+				    ClassIcon         soldier_spammer
+					Name	"Giant Rapid Fire Soldier"
+					Scale	1.8
+					MaxVisionRange	1000
+					Template	T_TFBot_Giant_Soldier
+					ItemAttributes
+					{
+						ItemName	tf_weapon_rocketlauncher
+						"fire rate bonus"	0.5
+					}
+					Item	"the warsworn helmet"
+				}
+				TFBot
+				{
+				    ClassIcon          medic_uber_armored
+				    Health	650
+					Name	"Armored Uber Medic"
+					Scale	1.3
+					MaxVisionRange	500
+					WeaponRestrictions	SecondaryOnly
+					Template	T_TFBot_Medic
+					CharacterAttributes
+					{
+						"bot medic uber health threshold"	100
+					}
+					Item	"bunnyhopper's ballistics vest"
+					Item	"berlin brain bowl"
+				}
+				TFBot
+				{
+				    ClassIcon          medic_uber_armored
+					Health	650
+					Name	"Armored Uber Medic"
+					Scale	1.3
+					MaxVisionRange	500
+					WeaponRestrictions	SecondaryOnly
+					Template	T_TFBot_Medic
+					CharacterAttributes
+					{
+						"bot medic uber health threshold"	100
+					}
+					Item	"berlin brain bowl"
+					Item	"bunnyhopper's ballistics vest"
+				}
+			}
+		}
+		WaveSpawn
+		{
+			Name	"Squad 1"
+			TotalCurrency	50
+			TotalCount	30
+			MaxActive	14
+			SpawnCount	2
+			WaitBeforeStarting	3
+			WaitBetweenSpawns	3
+			Where	spawnbot_left
+			Where	spawnbot_right
+			
+			
+			
+				TFBot
+				{
+					ClassIcon	scout_pistol_nys
+					Health	125
+					Name	"Pistol Scout"
+					Scale	1.0
+					Class	Scout
+					Skill	Normal
+					MaxVisionRange	1000
+					WeaponRestrictions	SecondaryOnly
+					Item	"hong kong cone"
+				}
+			
+		}
+		WaveSpawn
+		{
+			Name	"Squad 1"
+			TotalCurrency	50
+			TotalCount	18
+			MaxActive	6
+			SpawnCount	3
+			WaitBeforeStarting	8
+			WaitBetweenSpawns	8
+			Where	spawnbot_left
+			Where	spawnbot_middle
+			
+			
+			
+				TFBot
+				{
+					ClassIcon	heavy_deflector
+					Health	300
+					Name	"Deflector Heavy"
+					Scale	1.0
+					Class	HeavyWeapons
+					Skill	Normal
+					MaxVisionRange	1000
+					WeaponRestrictions	PrimaryOnly
+					ItemAttributes
+					{
+						ItemName	tf_weapon_minigun
+						"attack projectiles"	1
+					}
+					Item	"The U-clank-a"
+				}
+			
+		}
+		WaveSpawn
+		{
+			Name	"Squad 2"
+			WaitForAllDead	"Squad 1"
+			TotalCurrency	100
+			TotalCount	12
+			MaxActive	6
+			SpawnCount	2
+			WaitBeforeStarting	8
+			WaitBetweenSpawns	10
+			Where spawnbot_left
+			Where spawnbot_middle
+			
+			
+			
+				TFBot
+				{
+				    ClassIcon     heavy_steelfist_push_yoovy
+					MaxVisionRange	500
+					Template	T_TFBot_Heavy_IronFist_Airblast
+					Attributes	"AlwaysCrit"
+					Item	"hong kong cone"
+				}
+			
+		}
+		WaveSpawn
+		{
+			Name	"Final Tank"
+			WaitForAllDead	"Squad 1"
+			TotalCurrency	200
+			TotalCount	1
+			MaxActive	1
+			SpawnCount	1
+			WaitBeforeStarting	20
+			WaitBetweenSpawns	20
+			
+			
+			
+				Tank
+				{
+					Health	30000
+					Name	Tank
+					Speed	75
+					Skin	1
+					StartingPathTrackNode "tank_path1"
+					OnKilledOutput
+					{
+						Target	boss_dead_relay
+						Action	Trigger
+					}
+					OnBombDroppedOutput
+					{
+						Target	boss_deploy_relay
+						Action	Trigger
+					}
+				}
+			
+		}
+		WaveSpawn
+		{
+			Name	"Squad 2"
+			WaitForAllDead	"Squad 1"
+			TotalCurrency	0
+			TotalCount	32
+			MaxActive	8
+			SpawnCount	4
+			WaitBeforeStarting	5
+			WaitBetweenSpawns	5
+			Where spawnbot_left
+			Where spawnbot_middle
+			Where spawnbot_right
+			RandomSpawn 1
+			
+			
+	        TFBot
+			{
+			    ClassIcon scout_cola_popper
+				Template TBScout_Cola
+				Skill Hard
+				Item "The Soda Popper"
+			}
+			
+		}
+		WaveSpawn
+		{
+			Name	"Squad 3"
+			WaitForAllDead	"Squad 2"
+			TotalCurrency	100
+			TotalCount	4
+			MaxActive	4
+			SpawnCount	2
+			WaitBeforeStarting	8
+			WaitBetweenSpawns	20
+			Where	spawnbot_middle
+			Squad
+			{
+				TFBot
+				{
+					Scale	1.8
+					MaxVisionRange	1000
+					Template	T_TFBot_Giant_Soldier_SlowBarrage
+					Item	"the patriot peak"
+					Item	"the diplomat"
+				}
+			    TFBot
+				{
+                    ClassIcon        medic_kritz2_giant
+					Name	"Giant KritzKrieg Medic"
+					Scale	1.8
+					MaxVisionRange	500
+					Template	T_TFBot_Giant_Medic
+                    ItemAttributes
+                    {
+                        ItemName "The Kritzkrieg"
+                        "uber duration bonus" 6000
+                        "bot medic uber health threshold" 6000
+                    }
+					Item	"the kritzkrieg"
+					Item	"medic's mountain cap"
+				}
+			}
+		}
+		WaveSpawn
+		{
+			Name	"Squad 3"
+			WaitForAllDead	"Squad 2"
+			TotalCurrency	50
+			TotalCount	18
+			MaxActive	8
+			SpawnCount	2
+			WaitBeforeStarting	3
+			WaitBetweenSpawns	5
+			Where	spawnbot_left
+			Where   spawnbot_right
+			
+			
+				TFBot
+				{
+				    ClassIcon          demo_burst
+					Health  175
+					Name    "Burst Demoman"
+					Class   Demoman
+			        Skill   Normal
+					Scale	1.0
+					MaxVisionRange	1000
+					WeaponRestrictions	PrimaryOnly
+					Attributes	"HoldFireUntilFullReload"
+					ItemAttributes
+					{
+						ItemName	tf_weapon_grenadelauncher
+						"fire rate bonus"	0.1
+						"clip size upgrade atomic"	2.0
+						"faster reload rate"	0.8
+						"projectile spread angle penalty"	3
+					}
+					Item	"hong kong cone"
+				}
+			
+		}
+		WaveSpawn
+		{
+			Name	"Squad 3"
+			WaitForAllDead	"Squad 2"
+			TotalCurrency	0
+			TotalCount	8
+			MaxActive	4
+			SpawnCount	1
+			WaitBeforeStarting	5
+			WaitBetweenSpawns	5
+			Where spawnbot_middle
+			
+			
+				TFBot
+				{
+		            ClassIcon          Pyro_phlog
+					Health  650
+					Name    "Armored Phlog Pyro"
+					Class   pyro
+			        Skill   Normal
+					Scale	1.3
+					MaxVisionRange	1000
+					WeaponRestrictions	PrimaryOnly
+					ItemAttributes
+					{
+						ItemName	"the phlogistinator"
+						"Critboost on kill"   8
+					}
+					CharacterAttributes
+					{
+					    "move speed bonus"	0.8
+					}
+					Item	"hong kong cone"
+					Item    "the phlogistinator"
+				}
+			
+		}
+		WaveSpawn
+		{
+			Name	"Crit Burst"
+			WaitForAllDead	"Squad 3"
+			TotalCurrency	200
+			TotalCount	4
+			MaxActive	4
+			SpawnCount	4
+			WaitBeforeStarting	10
+			WaitBetweenSpawns	0
+			Where spawnbot_right
+			Squad
+			{
+				TFBot
+				{
+					Template T_TFBot_Giant_Heavyweapons_Deflector
+					ClassIcon heavy_deflector_giant
+					Attributes AlwaysCrit
+				}
+				TFBot
+				{
+					Scale	1.0
+					MaxVisionRange	500
+					WeaponRestrictions	SecondaryOnly
+					Template	T_TFBot_Medic
+					Item	"medic geisha hair"
+				}
+				TFBot
+				{
+					Scale	1.0
+					MaxVisionRange	500
+					WeaponRestrictions	SecondaryOnly
+					Template	T_TFBot_Medic
+					Item	"hong kong cone"
+				}
+				TFBot
+				{
+					Scale	1.0
+					MaxVisionRange	500
+					WeaponRestrictions	SecondaryOnly
+					Template	T_TFBot_Medic
+					Item	"berlin brain bowl"
+				}
+			}
+		}
+		WaveSpawn
+		{
+			Name	"Crit Burst Support"
+			WaitForAllDead	"Squad 3"
+			TotalCurrency	0
+			TotalCount	10
+			MaxActive	10
+			SpawnCount	2
+			WaitBeforeStarting	3
+			WaitBetweenSpawns	3
+			Support	1
+			Where spawnbot_middle
+			Where spawnbot_left
+			
+			
+				TFBot
+				{
+					ClassIcon	scout_threerune_daan
+					Health	125
+					AutoJumpMin	8
+					AutoJumpMax	8
+					Name	"Ninja Scout"
+					Scale	1.0
+					Class	Scout
+					Skill	Normal
+					MaxVisionRange	800
+					WeaponRestrictions	MeleeOnly
+					Attributes	"AutoJump"
+					Attributes	"AlwaysCrit"
+					ItemAttributes
+					{
+						ItemName	"three-rune blade"
+						"fire rate bonus"	0.5
+						"damage bonus"	0.8
+						"hit self on miss" 0
+					}
+					CharacterAttributes
+					{
+						"increased jump height"	1.3
+						"no double jump"	1
+						"move speed bonus"	1.6
+						"cancel falling damage"	1
+					}
+					Item	"three-rune blade"
+					Item	"the frickin' sweet ninja hood"
+					Item	"the southie shinobi"
+				}
+		}
+	}
+
+	Wave
+	{
+		StartWaveOutput
+		{
+			Target	wave_start_classic_relay
+			Action	Trigger
+		}
+
+		DoneOutput
+		{
+			Target	wave_finished_relay
+			Action	Trigger
+		}
+
+		WaveSpawn
+		{
+			Name "Giant Shotgun Heavies"
+			TotalCurrency 100
+			TotalCount 2
+			MaxActive 1
+			SpawnCount 1
+			WaitBeforeStarting 6
+			WaitBetweenSpawns 18
+			Where spawnbot_left
+			
+			TFBot
+			{
+				Template TBHeavy_Shotgun_Burst_Giant
+			}
+		}
+
+		WaveSpawn
+		{
+			Name "Giant Ninja Scouts"
+			TotalCurrency 120
+			TotalCount 3
+			MaxActive 1
+			SpawnCount 1
+			WaitBeforeStarting 8
+			WaitBetweenSpawns 24
+			Where spawnbot_middle
+			Where spawnbot_right
+			RandomSpawn 1
+
+			TFBot
+			{
+				Template TBScout_Ninja_Giant
+				ClassIcon scout_threerune_daan
+			}
+		}
+
+		WaveSpawn
+		{
+			Name "Homewrecker Pyros"
+			TotalCurrency 30
+			TotalCount 6
+			MaxActive 2
+			SpawnCount 1
+			WaitBeforeStarting 2
+			WaitBetweenSpawns 5
+			Where spawnbot_left
+			Where spawnbot_middle
+			RandomSpawn 1
+
+			TFBot
+			{
+				Template TBPyro_Homewrecker_Armored
+			}
+		}
+
+		WaveSpawn
+		{
+			Name "Crit Cleaver Scouts"
+			TotalCurrency 50
+			TotalCount 24
+			MaxActive 6
+			SpawnCount 2
+			WaitBeforeStarting 0
+			WaitBetweenSpawns 4
+			Where spawnbot_left
+			Where spawnbot_middle
+			RandomSpawn 1
+
+			TFBot
+			{
+				Template TBScout_Cleaver
+				Item "Legendary Lid"
+				Attributes AlwaysCrit
+			}			
+		}
+
+		WaveSpawn
+		{
+			Name "Conch Soldiers"
+			TotalCurrency 60
+			TotalCount 12
+			MaxActive 2
+			SpawnCount 1
+			WaitBeforeStarting 1
+			WaitBetweenSpawns 3
+			Where spawnbot_left
+			Where spawnbot_middle
+			RandomSpawn 1
+
+			TFBot
+			{
+				Template TBSoldier_Conch
+				Item "Furious Fukaamigasa"
+			}
+		}
+
+		WaveSpawn
+		{
+			Name "Giant Rapid Fire DF Pyros"
+			TotalCurrency 120
+			TotalCount 6
+			MaxActive 4
+			SpawnCount 2
+			WaitBeforeStarting 0
+			WaitBetweenSpawns 10
+			WaitForAllDead "Giant Shotgun Heavies"
+			WaitForAllSpawned "Conch Soldiers"
+			Where spawnbot_left
+
+			Squad
+			{
+				TFBot
+				{
+					Template TBPyro_Fury_Rapid_Giant
+					Item "Hong Kong Cone"
+					Item "The Sengoku Scorcher"
+	
+					ItemAttributes
+					{
+						ItemName "Hong Kong Cone"
+						"attach particle effect" 14
+					}
+				}
+
+				TFBot
+				{
+					Template T_TFBot_Medic_QuickUber
+					Item "Medic Geisha Hair"
+				}
+			}
+		}
+
+		WaveSpawn
+		{
+			Name "Giant Bonk Scouts"
+			TotalCurrency 50
+			TotalCount 2
+			MaxActive 2
+			SpawnCount 1
+			WaitBeforeStarting 6
+			WaitBetweenSpawns 12
+			WaitForAllDead "Giant Shotgun Heavies"
+			WaitForAllSpawned "Conch Soldiers"
+			Where spawnbot_left
+			Where spawnbot_middle
+			RandomSpawn 1
+			
+			TFBot
+			{
+				Template T_TFBot_Giant_Scout_Bonk
+				ClassIcon scout_bonk_nys
+				Name "Giant Bonk Scout"
+			}
+		}
+
+		WaveSpawn
+		{
+			Name "Giant Caberknight"
+			TotalCurrency 40
+			TotalCount 1
+			MaxActive 1
+			SpawnCount 1
+			WaitBeforeStarting 15
+			WaitBetweenSpawns 0
+			WaitForAllDead "Giant Shotgun Heavies"
+			WaitForAllSpawned "Conch Soldiers"
+			Where spawnbot_left
+
+			TFBot
+			{
+				Template TBDemoman_Caberknight_Giant
+				Name "Giant Kamikaze Demo"
+			}
+		}
+
+		WaveSpawn
+		{
+			Name "Homewrecker Pyros 2"
+			TotalCurrency 50
+			TotalCount 10
+			MaxActive 2
+			SpawnCount 1
+			WaitBeforeStarting 2
+			WaitBetweenSpawns 6
+			WaitForAllDead "Giant Shotgun Heavies"
+			WaitForAllSpawned "Conch Soldiers"
+			Where spawnbot_left
+			Where spawnbot_middle
+			RandomSpawn 1
+
+			TFBot
+			{
+				Template TBPyro_Homewrecker_Armored
+			}
+		}
+
+		WaveSpawn
+		{
+			Name "Crit Sandman Scouts"
+			TotalCurrency 30
+			TotalCount 18
+			MaxActive 3
+			SpawnCount 1
+			WaitBeforeStarting 0
+			WaitBetweenSpawns 2
+			WaitForAllDead "Giant Shotgun Heavies"
+			WaitForAllSpawned "Conch Soldiers"
+			Where spawnbot_left
+
+			TFBot
+			{
+				Template TBScout_Sandman_Rapid
+				Attributes AlwaysCrit
+			}
+		}
+
+		WaveSpawn
+		{
+			Name "Conch Soldiers 2"
+			TotalCurrency 50
+			TotalCount 12
+			MaxActive 6
+			SpawnCount 2
+			WaitBeforeStarting 4
+			WaitBetweenSpawns 6
+			WaitForAllDead "Conch Soldiers"
+			Where spawnbot_left
+			Where spawnbot_middle
+			RandomSpawn 1
+
+			TFBot
+			{
+				Template TBSoldier_Conch
+			}
+		}
+
+		WaveSpawn
+		{
+			Name "Giant Caberknights Final"
+			TotalCurrency 100
+			TotalCount 3
+			MaxActive 3
+			SpawnCount 1
+			WaitBeforeStarting 3
+			WaitBetweenSpawns 15
+			WaitForAllDead "Giant Bonk Scouts"
+			WaitForAllDead "Giant Caberknight"
+			Where spawnbot_left
+			Where spawnbot_middle
+			RandomSpawn 1
+
+			TFBot
+			{
+				Template TBDemoman_Caberknight_Giant
+				Name "Giant Kamikaze Demo"
+			}
+		}
+
+		WaveSpawn
+		{
+			Name "Giant Ninja Scouts Final"
+			TotalCurrency 100
+			TotalCount 3
+			MaxActive 2
+			SpawnCount 1
+			WaitBeforeStarting 8
+			WaitBetweenSpawns 18
+			WaitForAllDead "Giant Bonk Scouts"
+			WaitForAllDead "Giant Caberknight"
+			Where spawnbot_middle
+			Where spawnbot_right
+			RandomSpawn 1
+
+			TFBot
+			{
+				Template TBScout_Ninja_Giant
+				ClassIcon scout_threerune_daan
+			}
+		}
+
+		WaveSpawn
+		{
+			Name "Conch Soldier Boss"
+			TotalCurrency 0
+			TotalCount 2
+			MaxActive 2
+			SpawnCount 2
+			WaitBeforeStarting 15 
+			WaitBetweenSpawns 0
+			WaitForAllDead "Giant Bonk Scouts"
+			WaitForAllDead "Giant Caberknight"
+			Where spawnbot_left
+
+			Squad
+			{
+				TFBot
+				{
+					Template TBSoldier_Conch_Boss
+					Item "Soldier Samurai Hat"
+				}
+
+				TFBot
+				{
+					Template TBMedic_Kritz_Armored_Giant
+				}
+			}
+		}
+
+		WaveSpawn
+		{
+			Name "Caberknights"
+			TotalCurrency 100
+			TotalCount 50
+			MaxActive 3
+			SpawnCount 1
+			WaitBeforeStarting 2
+			WaitBetweenSpawns 4
+			Where spawnbot_left
+			Where spawnbot_middle
+			Where spawnbot_right
+			WaitForAllDead "Giant Shotgun Heavies"
+			WaitForAllSpawned "Conch Soldiers"
+			RandomSpawn 1
+
+			Support Limited
+
+			TFBot
+			{
+				Template TBDemoman_Caberknight
+			}
+		}
+
+		WaveSpawn
+		{
+			Name "Support Final"
+			TotalCount 100
+			MaxActive 10
+			SpawnCount 1
+			WaitBeforeStarting 5
+			WaitBetweenSpawns 2
+			Where spawnbot_left
+			Where spawnbot_middle
+			Where spawnbot_right
+			WaitForAllDead "Giant Caberknight"
+			WaitForAllDead "Giant Bonk Scouts"
+			RandomSpawn 1
+
+			Support 1
+
+			RandomChoice
+			{
+				TFBot
+				{
+					ClassIcon support_cone_capper
+					Health 300
+					Name "Yakuza Bruiser"
+					Scale 1.0
+					Class HeavyWeapons
+					Skill Expert
+					MaxVisionRange 500
+					WeaponRestrictions MeleeOnly
+					Item "the eviction notice"
+					Item "capone's capper"
+
+					CharacterAttributes
+					{
+						"move speed bonus" 1.2
+					}
+				}
+
+				TFBot
+				{
+					ClassIcon support_cone_capper
+					Health 300
+					Name "Tommy Gunner"
+					Scale 1.0
+					Class HeavyWeapons
+					Skill Normal
+					MaxVisionRange 1000
+					WeaponRestrictions PrimaryOnly
+					Item "tomislav"
+					Item "capone's capper"
+				}
+				
+                		TFBot
+			    	{
+					ClassIcon support_cone_capper
+					Health	300
+					Name	    "Japanese Businessman"
+					Scale	1.0
+					Class	HeavyWeapons
+					Skill	Normal
+					MaxVisionRange	1000
+					WeaponRestrictions	SecondaryOnly
+					Item	    "the family business"
+					Item	    "Brothers In Blues"
+					Item "the siberian sophisticate"
+
+					ItemAttributes
+					{
+						ItemName "the family business"
+						"fire rate bonus" 0.75
+					}
+				}
+				
+				TFBot
+				{
+					ClassIcon support_cone_capper
+					Health 125
+					Name "Fed Fighter"
+					Class Scout
+					Skill Normal
+					MaxVisionRange 1000
+					WeaponRestrictions SecondaryOnly
+					Item "the fed-fightin' fedora"
+					Item "pretty boy's pocket pistol"
+
+					ItemAttributes
+					{
+						ItemName "pretty boy's pocket pistol"
+						"damage bonus" 1.2
+					}
+				}
+
+				TFBot
+				{
+					ClassIcon support_cone_capper
+					Health	125
+					Name "Mafia Marksman"
+					Scale 1.0
+					Class Sniper
+					Skill Hard
+					MaxVisionRange 1000
+					WeaponRestrictions SecondaryOnly
+
+					ItemAttributes
+					{
+						ItemName "the cleaner's carbine"
+						"minicritboost on kill"	5
+					}
+
+					Item	"the cleaner's carbine"
+					Item	"liquidator's lid"
+				}
+
+				TFBot
+				{
+					ClassIcon support_cone_capper
+					Template TBScout_Fanowar
+					Item "Hong Kong Cone"
+				}
+
+				TFBot
+				{
+					ClassIcon support_cone_capper
+					Template TBPyro_Fury
+					Item "Hong Kong Cone"
+					Item "The Sengoku Scorcher"
+				}
+
+				TFBot
+				{
+					ClassIcon support_cone_capper
+					Template TBSoldier_Conch
+					Item "Furious Fukaamigasa"
+				}
+			}
+		}
+	}
+}

@@ -1,0 +1,3325 @@
+#base robot_giant.pop
+#base robot_standard.pop
+#base datbots.pop
+
+//Drop points
+//Fronts:
+// 784 3000 1036  
+// -74 3000 1036
+// -606 3000 1036
+// -606 3690 1036
+// -606 4600 1036
+// -330 4930 1036
+// 150 4930 1036
+// 616 4930 1036
+// 653 4600 1036
+// 653 3800 1036
+// 653 3400 1036	
+// 1000 3000 1036	
+// -1000 3000 1036	
+// -24 4200 1036
+// -72 3650 1036	//Middle Front
+//Mids
+// -150 1130 1036
+// -1700 1600 1036
+// 1024 1300 1036
+// -530 -144 1036
+// 199 -144 1036
+// -1800 505 1036
+// 840 -610 1036
+//Hatch Flanks
+// 457 -1628 1036
+// -800 -1628 1036
+// -1420 -1568 1036
+population
+{
+	ClassLimit [$SIGSEGV] //Limits the number of specified classes
+    {
+		Scout 0
+		Soldier 0
+        Pyro 0
+		Demoman 0
+		Heavyweapons 0
+		Engineer 0
+		Medic 0
+		Spy 0
+    }
+	SpawnTemplate [$SIGSEGV]
+		{
+			Name "teleportexample"
+		}
+	StartingCurrency	850
+	RespawnWaveTime	5
+	AllowBotExtraSlots 1
+	RobotLimit 25
+	AddSentryBusterWhenDamageDealtExceeds	2000
+	AddSentryBusterWhenKillCountExceeds	12
+	CanBotsAttackWhileInSpawnRoom	no
+	ForceRedMoney 1 [$SIGSEGV]
+	ExtraSpawnPoint
+	{
+       Name "Airdrop"
+        TeamNum 3
+        X    "-1811.355225"
+        Y    "489.016632"
+        Z    "409.031311"
+	}
+	Templates
+	{
+
+	}
+	PointTemplates	[$SIGSEGV] 
+	{
+		teleportexample
+	{
+            NoFixup 1
+            KeepAlive 1
+            filter_activator_tfteam
+            {
+                "Negated" "0"
+                "TeamNum" "2"
+                "targetname" "filter_teleportmid"
+            }
+            
+            trigger_teleport
+            {
+                "targetname" "trigger_midteleporter"
+                "target" "midtp_destination"
+                "filtername" "filter_teleportmid"
+                "spawnflags" "1"
+                "mins" "-50 -50 -50"
+                "maxs" "50 50 50"
+                "origin" "-141.013794 -5074.305176 225.031311"
+            }
+            info_teleport_destination
+            {
+                "targetname" "midtp_destination"
+                "origin" "-146.550552 1911.998413 517.315063"
+            }
+            logic_relay
+            {
+            "targetname" "midteleporter_relay"
+            "OnTrigger" "trigger_midteleporter,toggle,,0,-1"
+            }
+			prop_dynamic
+            {        
+                    targetname "props_dynamic"
+                    Model "models/buildables/teleporter.mdl"
+                    "angles" "0 0 0"
+                    "origin" "-141.013794 -4882 158"
+                    "modelscale" "1"
+            }
+	}
+	}
+	ExtendedUpgrades [$SIGSEGV]
+	{
+		upgrade
+		{
+			Name "+20 Max Health per tick" // Custom name of the upgrade displayed on the menu. If absent, uses the attribute localized name instead
+			Attribute "max health additive bonus" // The attribute name
+			Cap 60 // Maximum amount of the attribute
+			Increment 20 // Attribute increment value per level
+			Cost 250 // Cost of the upgrade per level
+			PlayerUpgrade 0 // Is the upgrade a player upgrade
+			//AllowPlayerClass Scout // Allow only specied classes if set 
+			//AllowPlayerClass Heavyweapons
+			//AllowPlayerClass Demoman
+			RequiredWeapons // The player must have these items equipped for the upgrade to work
+			{
+				ItemName "The Tribalman's Shiv"
+			}
+			AllowedWeapons // Restricts upgrade to specified weapons
+			{
+				ItemName "The Tribalman's Shiv"
+			}
+			RequiredWeaponsString "You need Tribalman's Shiv equipped" // The requirement text displayed if the player does not have the required items equipped
+			
+			// ForceUpgradeSlot 1 // When upgraded, upgrade weapon on this slot instead of the selected weapon. Use -1 to upgrade the player instead
+			// UIGroup 2 // UIGroup 2 - Canteens
+			// Tier 1 // Marks the upgrade as tieried. Tiered upgrades on the same level share special exclusivity rules, and one can only be bought if an upgrade of previous tier is bought beforehand
+		}
+		upgrade
+		{
+			Name "Heal On Hit" // Custom name of the upgrade displayed on the menu. If absent, uses the attribute localized name instead
+			Attribute "heal on hit for rapidfire" // The attribute name
+			Description "Gives +5 hp (per tick), this includes every bleed damage tick."
+			Cap 15 // Maximum amount of the attribute
+			Increment 5 // Attribute increment value per level
+			Cost 200 // Cost of the upgrade per level
+			PlayerUpgrade 0 // Is the upgrade a player upgrade
+			//AllowPlayerClass Scout // Allow only specied classes if set 
+			//AllowPlayerClass Heavyweapons
+			//AllowPlayerClass Demoman
+			RequiredWeapons // The player must have these items equipped for the upgrade to work
+			{
+				ItemName "The Tribalman's Shiv"
+			}
+			AllowedWeapons // Restricts upgrade to specified weapons
+			{
+				ItemName "The Tribalman's Shiv"
+			}
+			RequiredWeaponsString "You need The Tribalman's Shiv equipped" // The requirement text displayed if the player does not have the required items equipped
+			
+			// ForceUpgradeSlot 1 // When upgraded, upgrade weapon on this slot instead of the selected weapon. Use -1 to upgrade the player instead
+			// UIGroup 2 // UIGroup 2 - Canteens
+			// Tier 1 // Marks the upgrade as tieried. Tiered upgrades on the same level share special exclusivity rules, and one can only be bought if an upgrade of previous tier is bought beforehand
+		}
+		upgrade
+		{
+			Name "Crit Boost On Kill" // Custom name of the upgrade displayed on the menu. If absent, uses the attribute localized name instead
+			Attribute "critboost on kill" // The attribute name
+			Description "Adds +2 seconds (per tick) of crits on kill with this weapon."
+			Cap 6 // Maximum amount of the attribute
+			Increment 2 // Attribute increment value per level
+			Cost 150 // Cost of the upgrade per level
+			PlayerUpgrade 0 // Is the upgrade a player upgrade
+			//AllowPlayerClass Scout // Allow only specied classes if set 
+			//AllowPlayerClass Heavyweapons
+			//AllowPlayerClass Demoman
+			RequiredWeapons // The player must have these items equipped for the upgrade to work
+			{
+				ItemName "The Shahanshah"
+			}
+			AllowedWeapons // Restricts upgrade to specified weapons
+			{
+				ItemName "The Shahanshah"
+			}
+			RequiredWeaponsString "You need The Shahanshah equipped" // The requirement text displayed if the player does not have the required items equipped
+			
+			// ForceUpgradeSlot 1 // When upgraded, upgrade weapon on this slot instead of the selected weapon. Use -1 to upgrade the player instead
+			// UIGroup 2 // UIGroup 2 - Canteens
+			// Tier 1 // Marks the upgrade as tieried. Tiered upgrades on the same level share special exclusivity rules, and one can only be bought if an upgrade of previous tier is bought beforehand
+		}
+		upgrade
+		{
+			Name "Mark Enemies On Hit" // Custom name of the upgrade displayed on the menu. If absent, uses the attribute localized name instead
+			Attribute "mark for death" // The attribute name
+			Cap 1 // Maximum amount of the attribute
+			Increment 1 // Attribute increment value per level
+			Cost 300 // Cost of the upgrade per level
+			PlayerUpgrade 0 // Is the upgrade a player upgrade
+			//AllowPlayerClass Scout // Allow only specied classes if set 
+			//AllowPlayerClass Heavyweapons
+			//AllowPlayerClass Demoman
+			RequiredWeapons // The player must have these items equipped for the upgrade to work
+			{
+				ItemName "The Bushwacka"
+			}
+			AllowedWeapons // Restricts upgrade to specified weapons
+			{
+				ItemName "The Bushwacka"
+			}
+			RequiredWeaponsString "You need The Bushwacka equipped" // The requirement text displayed if the player does not have the required items equipped
+			
+			// ForceUpgradeSlot 1 // When upgraded, upgrade weapon on this slot instead of the selected weapon. Use -1 to upgrade the player instead
+			// UIGroup 2 // UIGroup 2 - Canteens
+			// Tier 1 // Marks the upgrade as tieried. Tiered upgrades on the same level share special exclusivity rules, and one can only be bought if an upgrade of previous tier is bought beforehand
+		}
+		upgrade
+		{
+			Name "Mini-Crits Become Crits" // Custom name of the upgrade displayed on the menu. If absent, uses the attribute localized name instead
+			Attribute "minicrits become crits" // The attribute name
+			Cap 1 // Maximum amount of the attribute
+			Increment 1 // Attribute increment value per level
+			Cost 500 // Cost of the upgrade per level
+			PlayerUpgrade 0 // Is the upgrade a player upgrade
+			//AllowPlayerClass Scout // Allow only specied classes if set 
+			//AllowPlayerClass Heavyweapons
+			//AllowPlayerClass Demoman
+			RequiredWeapons // The player must have these items equipped for the upgrade to work
+			{
+				ItemName "The Cleaner's Carbine"
+			}
+			AllowedWeapons // Restricts upgrade to specified weapons
+			{
+				ItemName "The Cleaner's Carbine"
+			}
+			RequiredWeaponsString "You need The Cleaner's Carbine equipped" // The requirement text displayed if the player does not have the required items equipped
+			
+			// ForceUpgradeSlot 1 // When upgraded, upgrade weapon on this slot instead of the selected weapon. Use -1 to upgrade the player instead
+			// UIGroup 2 // UIGroup 2 - Canteens
+			// Tier 1 // Marks the upgrade as tieried. Tiered upgrades on the same level share special exclusivity rules, and one can only be bought if an upgrade of previous tier is bought beforehand
+		}
+		upgrade
+		{
+			Name "+20% Damage per tick" // Custom name of the upgrade displayed on the menu. If absent, uses the attribute localized name instead
+			Attribute "damage bonus" // The attribute name
+			Cap 1.8 // Maximum amount of the attribute
+			Increment 0.2 // Attribute increment value per level
+			Cost 300 // Cost of the upgrade per level
+			PlayerUpgrade 0 // Is the upgrade a player upgrade
+			//AllowPlayerClass Scout // Allow only specied classes if set 
+			//AllowPlayerClass Heavyweapons
+			//AllowPlayerClass Demoman
+			RequiredWeapons // The player must have these items equipped for the upgrade to work
+			{
+				ItemName "The Cleaner's Carbine"
+			}
+			AllowedWeapons // Restricts upgrade to specified weapons
+			{
+				ItemName "The Cleaner's Carbine"
+			}
+			RequiredWeaponsString "You need The Cleaner's Carbine equipped" // The requirement text displayed if the player does not have the required items equipped
+			
+			// ForceUpgradeSlot 1 // When upgraded, upgrade weapon on this slot instead of the selected weapon. Use -1 to upgrade the player instead
+			// UIGroup 2 // UIGroup 2 - Canteens
+			// Tier 1 // Marks the upgrade as tieried. Tiered upgrades on the same level share special exclusivity rules, and one can only be bought if an upgrade of previous tier is bought beforehand
+		}
+		upgrade
+		{
+			Name "Laser Gun" // Custom name of the upgrade displayed on the menu. If absent, uses the attribute localized name instead
+			Attribute "energy weapon penetration" // The attribute name
+			Description "Weapon now fires bison projectiles."
+			Cap 1 // Maximum amount of the attribute
+			Increment 1 // Attribute increment value per level
+			Cost 500 // Cost of the upgrade per level
+			PlayerUpgrade 0 // Is the upgrade a player upgrade
+			//AllowPlayerClass Scout // Allow only specied classes if set 
+			//AllowPlayerClass Heavyweapons
+			//AllowPlayerClass Demoman
+			RequiredWeapons // The player must have these items equipped for the upgrade to work
+			{
+				ItemName "The Classic"
+			}
+			AllowedWeapons // Restricts upgrade to specified weapons
+			{
+				ItemName "The Classic"
+			}
+			SecondaryAttributes //Secondary attributes applied when upgrade is applied, for each upgrade level
+			{
+				"override projectile type" 13
+				"dmg penalty vs players" 1.35
+			}
+			RequiredWeaponsString "You need The Classic equipped" // The requirement text displayed if the player does not have the required items equipped
+			
+			// ForceUpgradeSlot 1 // When upgraded, upgrade weapon on this slot instead of the selected weapon. Use -1 to upgrade the player instead
+			// UIGroup 2 // UIGroup 2 - Canteens
+			// Tier 1 // Marks the upgrade as tieried. Tiered upgrades on the same level share special exclusivity rules, and one can only be bought if an upgrade of previous tier is bought beforehand
+		}
+		upgrade
+		{
+			Name "Railgun" // Custom name of the upgrade displayed on the menu. If absent, uses the attribute localized name instead
+			Attribute "sniper full charge damage bonus" // The attribute name
+			Description "Has to cool down between shots but more damage on full charge"
+			Cap 1.75 // Maximum amount of the attribute
+			Increment 0.75 // Attribute increment value per level
+			Cost 450 // Cost of the upgrade per level
+			PlayerUpgrade 0 // Is the upgrade a player upgrade
+			//AllowPlayerClass Scout // Allow only specied classes if set 
+			//AllowPlayerClass Heavyweapons
+			//AllowPlayerClass Demoman
+			//RequiredWeapons // The player must have these items equipped for the upgrade to work
+			//{
+			//	ItemName "The Classic"
+			//}
+			AllowedWeapons // Restricts upgrade to specified weapons
+			{
+				ItemName "The Machina"
+			}
+			SecondaryAttributes //Secondary attributes applied when upgrade is applied, for each upgrade level
+			{
+				"fire rate bonus" 3.5
+			}
+			RequiredWeaponsString "You need The Machina equipped" // The requirement text displayed if the player does not have the required items equipped
+			
+			// ForceUpgradeSlot 1 // When upgraded, upgrade weapon on this slot instead of the selected weapon. Use -1 to upgrade the player instead
+			// UIGroup 2 // UIGroup 2 - Canteens
+			// Tier 1 // Marks the upgrade as tieried. Tiered upgrades on the same level share special exclusivity rules, and one can only be bought if an upgrade of previous tier is bought beforehand
+		}
+		upgrade
+		{
+			Name "Flame Bow" // Custom name of the upgrade displayed on the menu. If absent, uses the attribute localized name instead
+			Attribute "damage bonus vs burning" // The attribute name
+			Description "Adds fire damage but you deal less damage to already burning targets."
+			Cap 0.5 // Maximum amount of the attribute
+			Increment -0.5 // Attribute increment value per level
+			Cost 500 // Cost of the upgrade per level
+			PlayerUpgrade 0 // Is the upgrade a player upgrade
+			//AllowPlayerClass Scout // Allow only specied classes if set 
+			//AllowPlayerClass Heavyweapons
+			//AllowPlayerClass Demoman
+			//RequiredWeapons // The player must have these items equipped for the upgrade to work
+			//{
+			//	ItemName	"The Huntsman"
+			//}
+			AllowedWeapons // Restricts upgrade to specified weapons
+			{
+				ItemName "The Huntsman"
+				ItemName "The Fortified Compound"
+			}
+			SecondaryAttributes //Secondary attributes applied when upgrade is applied, for each upgrade level
+			{
+				"Set DamageType Ignite" 1
+			}
+			//RequiredWeaponsString "You need a Bow Equipped" // The requirement text displayed if the player does not have the required items equipped
+			
+			// ForceUpgradeSlot 1 // When upgraded, upgrade weapon on this slot instead of the selected weapon. Use -1 to upgrade the player instead
+			// UIGroup 2 // UIGroup 2 - Canteens
+			// Tier 1 // Marks the upgrade as tieried. Tiered upgrades on the same level share special exclusivity rules, and one can only be bought if an upgrade of previous tier is bought beforehand
+		}
+		upgrade
+		{
+			Name "Explosive Piss" // Custom name of the upgrade displayed on the menu. If absent, uses the attribute localized name instead
+			Attribute "grenade explode on impact" // The attribute name
+			Description "Your piss now explodes."
+			Cap 1 // Maximum amount of the attribute
+			Increment 1 // Attribute increment value per level
+			Cost 350 // Cost of the upgrade per level
+			PlayerUpgrade 0 // Is the upgrade a player upgrade
+			//AllowPlayerClass Scout // Allow only specied classes if set 
+			//AllowPlayerClass Heavyweapons
+			//AllowPlayerClass Demoman
+			//RequiredWeapons // The player must have these items equipped for the upgrade to work
+			//{
+			//	ItemName	"The Huntsman"
+			//}
+			AllowedWeapons // Restricts upgrade to specified weapons
+			{
+				ItemName "Jarate"
+			}
+			SecondaryAttributes //Secondary attributes applied when upgrade is applied, for each upgrade level
+			{
+                "override projectile type" 3
+                "custom projectile model" "models/weapons/c_models/urinejar.mdl"
+                "explosion particle" "peejar_impact"
+                "custom kill icon" "skull"
+                "add cond on hit" 24
+                "add cond on hit duration" 8
+				"damage bonus" 30
+				"Blast radius increased" 1.15
+			}
+			//RequiredWeaponsString "You need a Bow Equipped" // The requirement text displayed if the player does not have the required items equipped
+			
+			// ForceUpgradeSlot 1 // When upgraded, upgrade weapon on this slot instead of the selected weapon. Use -1 to upgrade the player instead
+			// UIGroup 2 // UIGroup 2 - Canteens
+			// Tier 1 // Marks the upgrade as tieried. Tiered upgrades on the same level share special exclusivity rules, and one can only be bought if an upgrade of previous tier is bought beforehand
+		}
+		upgrade
+		{
+			Name "Multi-Shot" // Custom name of the upgrade displayed on the menu. If absent, uses the attribute localized name instead
+			Attribute "mult projectile count" // The attribute name
+			Description "Fires 3 weaker arrows at a time."
+			Cap 3 // Maximum amount of the attribute
+			Increment 2 // Attribute increment value per level
+			Cost 600 // Cost of the upgrade per level
+			PlayerUpgrade 0 // Is the upgrade a player upgrade
+			//AllowPlayerClass Scout // Allow only specied classes if set 
+			//AllowPlayerClass Heavyweapons
+			//AllowPlayerClass Demoman
+			//RequiredWeapons // The player must have these items equipped for the upgrade to work
+			//{
+			//	ItemName	"The Huntsman"
+			//}
+			AllowedWeapons // Restricts upgrade to specified weapons
+			{
+				ItemName "The Huntsman"
+				ItemName "The Fortified Compound"
+			}
+			SecondaryAttributes //Secondary attributes applied when upgrade is applied, for each upgrade level
+			{
+				"dmg penalty vs players" 0.55
+				"projectile spread angle penalty" 1.15
+			}
+			//RequiredWeaponsString "You need a Bow Equipped" // The requirement text displayed if the player does not have the required items equipped
+			
+			// ForceUpgradeSlot 1 // When upgraded, upgrade weapon on this slot instead of the selected weapon. Use -1 to upgrade the player instead
+			// UIGroup 2 // UIGroup 2 - Canteens
+			// Tier 1 // Marks the upgrade as tieried. Tiered upgrades on the same level share special exclusivity rules, and one can only be bought if an upgrade of previous tier is bought beforehand
+		}
+		upgrade
+		{
+			Name "Shrapnal" // Custom name of the upgrade displayed on the menu. If absent, uses the attribute localized name instead
+			Attribute "bleeding duration" // The attribute name
+			Description "Adds 4 (per tick) seconds of bleed"
+			Cap 8 // Maximum amount of the attribute
+			Increment 4 // Attribute increment value per level
+			Cost 300 // Cost of the upgrade per level
+			PlayerUpgrade 0 // Is the upgrade a player upgrade
+			//AllowPlayerClass Scout // Allow only specied classes if set 
+			//AllowPlayerClass Heavyweapons
+			//AllowPlayerClass Demoman
+			//RequiredWeapons // The player must have these items equipped for the upgrade to work
+			//{
+			//	ItemName	"The Huntsman"
+			//}
+			AllowedWeapons // Restricts upgrade to specified weapons
+			{
+				ItemName "TF_WEAPON_SNIPERRIFLE"
+			}
+			//SecondaryAttributes //Secondary attributes applied when upgrade is applied, for each upgrade level
+			//{
+			//}
+			//RequiredWeaponsString "You need a Bow Equipped" // The requirement text displayed if the player does not have the required items equipped
+			
+			// ForceUpgradeSlot 1 // When upgraded, upgrade weapon on this slot instead of the selected weapon. Use -1 to upgrade the player instead
+			// UIGroup 2 // UIGroup 2 - Canteens
+			// Tier 1 // Marks the upgrade as tieried. Tiered upgrades on the same level share special exclusivity rules, and one can only be bought if an upgrade of previous tier is bought beforehand
+		}
+		upgrade
+		{
+			Name "Magic Arrows" // Custom name of the upgrade displayed on the menu. If absent, uses the attribute localized name instead
+			Attribute "Projectile speed increased" // The attribute name
+			Description "Grants homing arrows at the cost of projectile speed"
+			Cap 0.55 // Maximum amount of the attribute
+			Increment -0.45 // Attribute increment value per level
+			Cost 500 // Cost of the upgrade per level
+			PlayerUpgrade 0 // Is the upgrade a player upgrade
+			//AllowPlayerClass Scout // Allow only specied classes if set 
+			//AllowPlayerClass Heavyweapons
+			//AllowPlayerClass Demoman
+			//RequiredWeapons // The player must have these items equipped for the upgrade to work
+			//{
+			//	ItemName	"The Huntsman"
+			//}
+			AllowedWeapons // Restricts upgrade to specified weapons
+			{
+				ItemName "The Huntsman"
+				ItemName "The Fortified Compound"
+			}
+			SecondaryAttributes //Secondary attributes applied when upgrade is applied, for each upgrade level
+			{
+				"mod projectile heat seek power" 15
+				"mod projectile heat aim error" 25
+				"projectile trail particle" eyeboss_projectile
+			 	"mod projectile heat aim time" 1.5
+			}
+			//RequiredWeaponsString "You need a Bow Equipped" // The requirement text displayed if the player does not have the required items equipped
+			
+			// ForceUpgradeSlot 1 // When upgraded, upgrade weapon on this slot instead of the selected weapon. Use -1 to upgrade the player instead
+			// UIGroup 2 // UIGroup 2 - Canteens
+			// Tier 1 // Marks the upgrade as tieried. Tiered upgrades on the same level share special exclusivity rules, and one can only be bought if an upgrade of previous tier is bought beforehand
+		}
+		upgrade
+		{
+			Name "More damage when damaged" // Custom name of the upgrade displayed on the menu. If absent, uses the attribute localized name instead
+			Attribute "dmg bonus while half dead" // The attribute name
+			Description "Deal +25% per tick extra damage while below half hp."
+			Cap 2 // Maximum amount of the attribute
+			Increment 0.25 // Attribute increment value per level
+			Cost 250 // Cost of the upgrade per level
+			PlayerUpgrade 0 // Is the upgrade a player upgrade
+			//AllowPlayerClass Scout // Allow only specied classes if set 
+			//AllowPlayerClass Heavyweapons
+			//AllowPlayerClass Demoman
+			//RequiredWeapons // The player must have these items equipped for the upgrade to work
+			//{
+			//	ItemName	"The Huntsman"
+			//}
+			AllowedWeapons // Restricts upgrade to specified weapons
+			{
+				ItemName "TF_WEAPON_SMG"
+			}
+			//SecondaryAttributes //Secondary attributes applied when upgrade is applied, for each upgrade level
+			//{
+			//
+			//}
+			//RequiredWeaponsString "You need a Bow Equipped" // The requirement text displayed if the player does not have the required items equipped
+			
+			// ForceUpgradeSlot 1 // When upgraded, upgrade weapon on this slot instead of the selected weapon. Use -1 to upgrade the player instead
+			// UIGroup 2 // UIGroup 2 - Canteens
+			// Tier 1 // Marks the upgrade as tieried. Tiered upgrades on the same level share special exclusivity rules, and one can only be bought if an upgrade of previous tier is bought beforehand
+		}
+		upgrade
+		{
+			Name "Headshots" // Custom name of the upgrade displayed on the menu. If absent, uses the attribute localized name instead
+			Attribute "dmg bonus while half dead" // The attribute name
+			Description "Deals mini-crit damage on headshot"
+			Cap 1 // Maximum amount of the attribute
+			Increment 1 // Attribute increment value per level
+			Cost 250 // Cost of the upgrade per level
+			PlayerUpgrade 0 // Is the upgrade a player upgrade
+			//AllowPlayerClass Scout // Allow only specied classes if set 
+			//AllowPlayerClass Heavyweapons
+			//AllowPlayerClass Demoman
+			//RequiredWeapons // The player must have these items equipped for the upgrade to work
+			//{
+			//	ItemName	"The Huntsman"
+			//}
+			AllowedWeapons // Restricts upgrade to specified weapons
+			{
+				ItemName "TF_WEAPON_SMG"
+			}
+			//SecondaryAttributes //Secondary attributes applied when upgrade is applied, for each upgrade level
+			//{
+			//
+			//}
+			//RequiredWeaponsString "You need a Bow Equipped" // The requirement text displayed if the player does not have the required items equipped
+			
+			// ForceUpgradeSlot 1 // When upgraded, upgrade weapon on this slot instead of the selected weapon. Use -1 to upgrade the player instead
+			// UIGroup 2 // UIGroup 2 - Canteens
+			// Tier 1 // Marks the upgrade as tieried. Tiered upgrades on the same level share special exclusivity rules, and one can only be bought if an upgrade of previous tier is bought beforehand
+		}
+		upgrade
+		{
+			Name "More damage against burning targets" // Custom name of the upgrade displayed on the menu. If absent, uses the attribute localized name instead
+			Attribute "damage bonus vs burning" // The attribute name
+			Description "Deal +125% damage (per tick) against burning enemies (best paired with flame bow)"
+			Cap 6 // Maximum amount of the attribute
+			Increment 1.25 // Attribute increment value per level
+			Cost 250 // Cost of the upgrade per level
+			PlayerUpgrade 0 // Is the upgrade a player upgrade
+			//AllowPlayerClass Scout // Allow only specied classes if set 
+			//AllowPlayerClass Heavyweapons
+			//AllowPlayerClass Demoman
+			//RequiredWeapons // The player must have these items equipped for the upgrade to work
+			//{
+			//	ItemName	"The Huntsman"
+			//}
+			AllowedWeapons // Restricts upgrade to specified weapons
+			{
+				ItemName "TF_WEAPON_CLUB"
+			}
+			//SecondaryAttributes //Secondary attributes applied when upgrade is applied, for each upgrade level
+			//{
+			//
+			//}
+			//RequiredWeaponsString "You need a Bow Equipped" // The requirement text displayed if the player does not have the required items equipped
+			
+			// ForceUpgradeSlot 1 // When upgraded, upgrade weapon on this slot instead of the selected weapon. Use -1 to upgrade the player instead
+			// UIGroup 2 // UIGroup 2 - Canteens
+			// Tier 1 // Marks the upgrade as tieried. Tiered upgrades on the same level share special exclusivity rules, and one can only be bought if an upgrade of previous tier is bought beforehand
+		}
+	}
+	Mission
+	{
+		Objective	Engineer
+		Where	spawnbot
+		BeginAtWave	7
+		RunForThisManyWaves	1
+		InitialCooldown	25
+		CooldownTime	35
+		DesiredCount	1
+		TFBot
+		{
+			Template	T_TFBot_Armored_Engineer
+		}
+	}
+	Mission
+	{
+		Objective	Sniper
+		Where	spawnbot
+		BeginAtWave	6
+		RunForThisManyWaves	1
+		InitialCooldown	30
+		CooldownTime	30
+		DesiredCount	2
+		TFBot
+		{
+			Template	T_TFBot_Sniper
+		}
+	}
+	Mission
+	{
+		Objective	Spy
+		Where	spawnbot_mission_spy
+		BeginAtWave	7
+		RunForThisManyWaves	1
+		InitialCooldown	30
+		CooldownTime	30
+		DesiredCount	2
+		TFBot
+		{
+			Template	T_TFBot_Spy
+		}
+	}
+	Mission
+	{
+		Objective	Spy
+		Where	spawnbot_mission_spy
+		BeginAtWave	2
+		RunForThisManyWaves	1
+		InitialCooldown	30
+		CooldownTime	30
+		DesiredCount	2
+		TFBot
+		{
+			Template	T_TFBot_Spy
+		}
+	}
+	Mission
+	{
+		Objective	Spy
+		Where	spawnbot_mission_spy
+		BeginAtWave	4
+		RunForThisManyWaves	1
+		InitialCooldown	30
+		CooldownTime	30
+		DesiredCount	2
+		TFBot
+		{
+			Template	T_TFBot_Spy
+		}
+	}
+	Mission
+	{
+		Objective	Sniper
+		Where	spawnbot
+		BeginAtWave	4
+		RunForThisManyWaves	1
+		InitialCooldown	28
+		CooldownTime	25
+		DesiredCount	3
+		TFBot
+		{
+			Template	T_TFBot_Sniper
+		}
+	}
+	Wave
+	{
+		Explanation [$SIGSEGV]  //Dispayed once the wave is initialized
+		{
+			Line "{blue}I have augmented your loadouts with custom upgrades."
+			Line "{blue}Use these to repel the forces of Grey Mann more effectively."
+		}
+		WaitWhenDone	65
+		Checkpoint	Yes
+		StartWaveOutput
+		{
+			Target	wave_start_relay
+			Action	Trigger
+		}
+		InitWaveOutput
+        {
+            Target wave_initial_relay
+            Action Trigger
+        }
+		DoneOutput
+		{
+			Target	wave_finished_relay
+			Action	Trigger
+		}
+		WaveSpawn
+		{
+			Name	A1
+			TotalCurrency	115
+			TotalCount	24
+			MaxActive	12
+			SpawnCount	1
+			WaitBeforeStarting	2
+			WaitBetweenSpawns	2
+			Where	spawnbot
+			TFBot
+				{
+					Template	T_TFBot_Scout_Babyface
+				}
+		}
+		WaveSpawn
+		{
+			TotalCurrency	100
+			TotalCount	2
+			MaxActive	2
+			SpawnCount	1
+			WaitBeforeStarting	0
+			WaitBetweenSpawns	24
+			Where	spawnbot
+			TFBot
+				{
+					Template	T_TFBot_Giant_Heavyweapons_Brass
+				}
+		}
+		WaveSpawn
+		{
+			Name	A2A
+			WaitForAllSpawned	A1
+			TotalCurrency	80
+			TotalCount	20
+			MaxActive	20
+			SpawnCount	1
+			WaitBeforeStarting	2
+			WaitBetweenSpawns	0.04
+			Where	spawnbot
+			TFBot
+				{
+					Template	T_TFBot_Soldier_Escape
+					Skill	Hard
+					Attributes	"AlwaysCrit"
+				}
+		}
+		WaveSpawn
+		{
+			WaitForAllSpawned A1
+			TotalCurrency	80
+			TotalCount	8
+			MaxActive	5
+			SpawnCount	1
+			WaitBeforeStarting	6
+			WaitBetweenSpawns	4.5
+			Where	spawnbot
+			TFBot
+				{
+					Template	T_TFBot_Armored_Soldier_Charged
+					Skill	Hard
+				}
+		}
+		WaveSpawn
+		{
+			WaitForAllSpawned A2A
+			TotalCurrency	80
+			TotalCount	24
+			MaxActive	9
+			SpawnCount	3
+			WaitBeforeStarting	2
+			WaitBetweenSpawns	4
+			Where	spawnbot
+			TFBot
+				{
+					Template	T_TFBot_Demo_Loch
+					Skill	Normal
+				}
+		}
+		WaveSpawn
+		{
+			WaitForAllDead	A2A
+			TotalCurrency	95
+			TotalCount	1
+			MaxActive	1
+			SpawnCount	1
+			WaitBeforeStarting	5
+			WaitBetweenSpawns	4
+			Where	spawnbot
+			TFBot
+				{
+					Template	T_TFBot_Giant_Armored_Fury_Pyro
+				}
+		}
+		WaveSpawn
+		{
+			WaitForAllSpawned A2A
+			TotalCurrency	100
+			TotalCount	25
+			MaxActive	8
+			SpawnCount	1
+			WaitBeforeStarting	1
+			WaitBetweenSpawns	2
+			Where	spawnbot_flankers
+			Support	1
+			TFBot
+				{
+					Template	T_TFBot_Scout_Basher
+					Skill	Expert
+				}
+		}
+	}
+	Wave
+	{
+		WaitWhenDone	65
+		Checkpoint	Yes
+		StartWaveOutput
+		{
+			Target	wave_start_relay
+			Action	Trigger
+		}
+		InitWaveOutput
+        {
+            Target wave_initial_relay
+            Action Trigger
+        }
+		DoneOutput
+		{
+			Target	wave_finished_relay
+			Action	Trigger
+		}
+		WaveSpawn
+		{
+			Name	A1
+			TotalCurrency	100
+			TotalCount	24
+			MaxActive	12
+			SpawnCount	6
+			WaitBeforeStarting	0
+			WaitBetweenSpawns	8
+			Where	spawnbot
+			TFBot
+				{
+					Template	T_TFBot_Sniper_Huntsman
+				}
+		}
+		WaveSpawn
+		{
+			Name	A1
+			TotalCurrency	60
+			TotalCount	4
+			MaxActive	4
+			SpawnCount	1
+			WaitBeforeStarting	5
+			WaitBetweenSpawns	1
+			Where	spawnbot
+			TFBot
+				{
+					Template	T_TFBot_Soldier_Trolldier
+				}
+		}
+		WaveSpawn
+		{
+			WaitForAllSpawned	A1
+			TotalCurrency	80
+			TotalCount	6
+			MaxActive	6
+			SpawnCount	3
+			WaitBeforeStarting	0
+			WaitBetweenSpawns	20
+			Where	spawnbot
+			Squad
+			{
+				TFBot
+				{
+					Template	T_TFBot_Giant_Sniper_Burst_Bowman
+					Action	FetchFlag	[$SIGSEGV]
+				}
+				TFBot
+				{
+					Template	T_TFBot_Medic_Shield
+				}
+				TFBot
+				{
+					Template	T_TFBot_Medic_Shield
+				}
+			}
+		}
+		WaveSpawn
+		{
+			Name	A2
+			WaitForAllSpawned	A1
+			TotalCurrency	120
+			TotalCount	30
+			MaxActive	14
+			SpawnCount	3
+			WaitBeforeStarting	4
+			WaitBetweenSpawns	4
+			Where	spawnbot
+			TFBot
+				{
+					Template	T_TFBot_Soldier_Direct
+					Skill	Normal
+				}
+		}
+		WaveSpawn
+		{
+			Name	A3
+			WaitForAllSpawned	A2
+			TotalCurrency	80
+			TotalCount	40
+			MaxActive	10
+			SpawnCount	5
+			WaitBeforeStarting	5
+			WaitBetweenSpawns	10
+			Where	spawnbot
+			Support	1
+			TFBot
+				{
+					Template	T_TFBot_Demoman_Knight
+				}
+		}
+		WaveSpawn
+		{
+			Name	A3
+			WaitForAllSpawned	A2
+			TotalCurrency	50
+			TotalCount	50
+			MaxActive	10
+			SpawnCount	5
+			WaitBeforeStarting	5
+			WaitBetweenSpawns	10
+			Where	spawnbot
+			Support	1
+			TFBot
+				{
+					Template	T_TFBot_Pyro_No_Airblast
+				}
+		}
+		WaveSpawn
+		{
+			Name	A3
+			WaitForAllSpawned	A2
+			TotalCurrency	120
+			TotalCount	6
+			MaxActive	6
+			SpawnCount	6
+			WaitBeforeStarting	18
+			WaitBetweenSpawns	10
+			Where	spawnbot
+			Squad
+			{
+				TFBot
+				{
+					Template	T_TFBot_Giant_Soldier_Battalion_Spammer
+				}
+				TFBot
+				{
+					Template	T_TFBot_Medic_Shield
+				}
+				TFBot
+				{
+					Template	T_TFBot_Medic_Shield
+				}
+				TFBot
+				{
+					Template	T_TFBot_Medic_Shield
+				}
+				TFBot
+				{
+					Template	T_TFBot_Medic_Shield
+				}
+				TFBot
+				{
+					Template	T_TFBot_Medic_Shield
+				}
+			}
+		}
+		WaveSpawn
+		{
+			Name	Tank
+			WaitForAllDead	A1
+			TotalCurrency	140
+			TotalCount	1
+			MaxActive	1
+			SpawnCount	1
+			WaitBeforeStarting	0
+			WaitBetweenSpawns	10
+			Where	spawnbot
+			Tank
+			{
+				Health	18000
+				Name	 Tank
+				Speed	75
+				StartingPathTrackNode	tank_path_1
+				OnKilledOutput
+				{
+					Target	boss_dead_relay
+					Action	Trigger
+				}
+				OnBombDroppedOutput
+				{
+					Target	boss_deploy_relay
+						Action	Trigger
+				}
+			}
+		}
+	}
+	Wave
+	{
+		Explanation [$SIGSEGV]  //Dispayed once the wave is initialized
+		{
+			Line "{blue}Haste Banner Soldiers will prove improved attack speed to nearby bots."
+			Line "{blue}Make sure to focus them when possible."
+		}
+		WaitWhenDone	65
+		Checkpoint	Yes
+		StartWaveOutput
+		{
+			Target	wave_start_relay
+			Action	Trigger
+		}
+		InitWaveOutput
+        {
+            Target wave_initial_relay
+            Action Trigger
+        }
+		DoneOutput
+		{
+			Target	wave_finished_relay
+			Action	Trigger
+		}
+		WaveSpawn
+		{
+			TotalCurrency	250
+			TotalCount	125
+			MaxActive	2
+			SpawnCount	2
+			WaitBeforeStarting	10
+			WaitBetweenSpawns	26
+			Where	spawnbot
+			Support	1
+			TFBot
+				{
+					Template	T_TFBot_Armored_Scout_Sunstick
+				}
+		}
+		WaveSpawn
+		{
+			Name	A1
+			TotalCurrency	100
+			TotalCount	24
+			MaxActive	12
+			SpawnCount	3
+			WaitBeforeStarting	0
+			WaitBetweenSpawns	5
+			Where	spawnbot
+			Squad
+			{
+				TFBot
+				{
+					Template	T_TFBot_Soldier_Haste_Banner
+					Skill	Expert
+				}
+				TFBot
+				{
+					Template	T_TFBot_Soldier
+					Skill	Normal
+				}
+				TFBot
+				{
+					Template	T_TFBot_Soldier
+					Skill	Normal
+				}
+			}
+		}
+		WaveSpawn
+		{
+			Name	Tank
+			TotalCurrency	150
+			TotalCount	2
+			MaxActive	1
+			SpawnCount	1
+			WaitBeforeStarting	12
+			WaitBetweenSpawns	85
+			Where	spawnbot
+			Tank
+			{
+				Health	28000
+				Name	 Tank
+				Speed	75
+				StartingPathTrackNode	tank_path_1
+				OnKilledOutput
+				{
+					Target	boss_dead_relay
+					Action	Trigger
+				}
+				OnBombDroppedOutput
+				{
+					Target	boss_deploy_relay
+						Action	Trigger
+				}
+			}
+		}
+		WaveSpawn
+		{
+			Name	A1
+			TotalCurrency	60
+			TotalCount	15
+			MaxActive	6
+			SpawnCount	1
+			WaitBeforeStarting	2
+			WaitBetweenSpawns	2.4
+			Where	spawnbot
+			TFBot
+			{
+				Template	T_TFBot_Soldier
+				Skill	Normal
+			}
+		}
+		WaveSpawn
+		{
+			Name	A2
+			WaitForAllSpawned	A1
+			TotalCurrency	60
+			TotalCount	20
+			MaxActive	8
+			SpawnCount	1
+			WaitBeforeStarting	2
+			WaitBetweenSpawns	2
+			Where	spawnbot
+			TFBot
+				{
+					Template	T_TFBot_Demoman
+					Skill	Expert
+				}
+		}
+		WaveSpawn
+		{
+			Name	A3
+			WaitForAllDead A2
+			TotalCurrency	60
+			TotalCount	15
+			MaxActive	15
+			SpawnCount	1
+			WaitBeforeStarting	0
+			WaitBetweenSpawns	0.1
+			Where	spawnbot
+			TFBot
+				{
+					Template	T_TFBot_Scout_Bonk_Scatter
+					Skill	Expert
+				}
+		}
+		WaveSpawn
+		{
+			WaitForAllDead	A1
+			TotalCurrency	75
+			TotalCount	25
+			MaxActive	5
+			SpawnCount	3
+			WaitBeforeStarting	2
+			WaitBetweenSpawns	8
+			Where	spawnbot
+			Support	1
+			TFBot
+				{
+					Template	T_TFBot_Sniper_SMG
+					Skill	Normal
+				}
+		}
+		WaveSpawn
+		{
+			WaitForAllSpawned	A1
+			TotalCurrency	95
+			TotalCount	5
+			MaxActive	3
+			SpawnCount	1
+			WaitBeforeStarting	18
+			WaitBetweenSpawns	14
+			Where	spawnbot
+			TFBot
+				{
+					Template	T_TFBot_Giant_Heavyweapons
+				}
+		}
+		WaveSpawn
+		{
+			WaitForAllSpawned	A1
+			TotalCurrency	0
+			TotalCount	25
+			MaxActive	2
+			SpawnCount	1
+			WaitBeforeStarting	10
+			WaitBetweenSpawns	24
+			Where	spawnbot
+			Support	1
+			TFBot
+				{
+					Template	T_TFBot_Engineer_Sentry_Teleporter
+					Attributes	"IgnoreFlag"
+				}
+		}
+	}
+	Wave
+	{
+		WaitWhenDone	65
+		Checkpoint	Yes
+		StartWaveOutput
+		{
+			Target	wave_dualbomb_start
+			Action	Trigger
+		}
+		InitWaveOutput
+        {
+            Target wave_dualbomb_initial
+            Action Trigger
+        }
+		DoneOutput
+		{
+			Target	wave_finished_relay
+			Action	Trigger
+		}
+		WaveSpawn
+		{
+			Name	A1
+			TotalCurrency	170
+			TotalCount	1
+			MaxActive	1
+			SpawnCount	1
+			WaitBeforeStarting	0
+			WaitBetweenSpawns	12
+			Where	spawnbot
+			FirstSpawnWarningSound "Vo\mvm\norm\Heavy_mvm_domination01.mp3"
+			TFBot
+				{
+					Template	T_TFBot_Chief_Boxing_Heavy
+					Health	37500
+				}
+		}
+		WaveSpawn
+		{
+			Name	A1
+			TotalCurrency	175
+			TotalCount	1
+			MaxActive	1
+			SpawnCount	1
+			WaitBeforeStarting	4
+			WaitBetweenSpawns	12
+			Where	spawnbot
+			FirstSpawnWarningSound "Vo\mvm\norm\Demoman_mvm_dominationengineer06.mp3"
+			TFBot
+				{
+					Template	T_TFBot_Chief_Demoman_Loch [$SIGSEGV]
+					Health	28000
+				}
+		}
+		WaveSpawn
+		{
+			Name	A1
+			TotalCurrency	80
+			TotalCount	20
+			MaxActive	8
+			SpawnCount	2
+			WaitBeforeStarting	15
+			WaitBetweenSpawns	3
+			Where	spawnbot
+			TFBot
+				{
+					Template	T_TFBot_Pyro_Phlog
+					Skill	Hard
+				}
+		}
+		WaveSpawn
+		{
+			Name	A2
+			WaitForAllSpawned	A1
+			TotalCurrency	125
+			TotalCount	34
+			MaxActive	10
+			SpawnCount	1
+			WaitBeforeStarting	10
+			WaitBetweenSpawns	1.5
+			Where	spawnbot
+			TFBot
+				{
+					Template	T_TFBot_Heavyweapons_Shotgun_Conch
+					Skill	Normal
+				}
+		}
+		WaveSpawn
+		{
+			Name	Tank
+			WaitForAllDead	A1
+			TotalCurrency  130
+			TotalCount	1
+			MaxActive	1
+			SpawnCount	1
+			WaitBeforeStarting	6
+			WaitBetweenSpawns	10
+			Where	spawnbot
+			Tank
+			{
+				Health	27500
+				Name	 Tank
+				Speed	75
+				StartingPathTrackNode	tank_path_1
+				OnKilledOutput
+				{
+					Target	boss_dead_relay
+					Action	Trigger
+				}
+				OnBombDroppedOutput
+				{
+					Target	boss_deploy_relay
+						Action	Trigger
+				}
+			}
+		}
+		WaveSpawn
+		{
+			Name	A2
+			WaitForAllSpawned	A1
+			TotalCurrency	60
+			TotalCount	6
+			MaxActive	6
+			SpawnCount	2
+			WaitBeforeStarting	5
+			WaitBetweenSpawns	28
+			Where	spawnbot
+			Squad
+			{
+				TFBot
+				{
+					Template	T_TFBot_Giant_Pyro_Flare_Spammer_Homing
+				}
+				TFBot
+				{
+					Template	T_TFBot_Giant_Medic_Shield
+				}
+			}
+		}
+		WaveSpawn
+		{
+			Name	A3
+			WaitForAllSpawned	A2
+			TotalCurrency	60
+			TotalCount	30
+			MaxActive	12
+			SpawnCount	1
+			WaitBeforeStarting	6
+			WaitBetweenSpawns	1
+			Where	spawnbot
+			Support	1
+			TFBot
+				{
+					Template	T_TFBot_Scout_Wrap
+					Attributes	"AlwaysCrit"
+					Skill	Expert
+				}
+		}
+		WaveSpawn
+		{
+			WaitForAllSpawned	A2
+			TotalCurrency	100
+			TotalCount	5
+			MaxActive	5
+			SpawnCount	1
+			WaitBeforeStarting	14
+			WaitBetweenSpawns	10
+			Where	spawnbot
+			TFBot
+				{
+					Template	T_TFBot_Giant_Soldier_Charged_Spammer
+				}
+		}
+	}
+	Wave
+	{
+		Explanation [$SIGSEGV]  //Dispayed once the wave is initialized
+		{
+			Line "{red}!!WARNING!!"
+			Line "{red}Grey Mann is launching an aerial invasion this wave."
+			Line "{green}Keep an eye on the skies."
+		}
+		WaitWhenDone	65
+		Checkpoint	Yes
+		StartWaveOutput
+		{
+			Target	wave_start_relay
+			Action	Trigger
+		}
+		InitWaveOutput
+        {
+            Target wave_initial_relay
+            Action Trigger
+        }
+		DoneOutput
+		{
+			Target	wave_finished_relay
+			Action	Trigger
+		}
+		WaveSpawn
+		{
+			TotalCurrency	80
+			TotalCount	2
+			MaxActive	1
+			SpawnCount	1
+			WaitBeforeStarting	0
+			WaitBetweenSpawns 45
+			Where	Airdrop
+			TFBot
+			{
+				Template	T_TFBot_Giant_Heavyweapons_Tomislav
+				Attributes	"Parachute"
+				Item	"The B.A.S.E. Jumper"
+				FireInput
+       			{
+            		Target "!self"
+            		Action "$SetLocalOrigin"
+            		Param "-72 3650 1036"
+            		Delay -1
+            		Repeats 1
+        		}
+			}
+		}
+		WaveSpawn
+		{
+			TotalCurrency	80
+			TotalCount	2
+			MaxActive	2
+			SpawnCount	2
+			WaitBeforeStarting	15
+			WaitBetweenSpawns 45
+			Where	Airdrop
+			Squad
+			{
+				TFBot
+				{
+					Template	T_TFBot_Giant_Sniper_Burst_Bowman
+					Attributes	"Parachute"
+					Item	"The B.A.S.E. Jumper"
+					FireInput
+       				{
+            			Target "!self"
+            			Action "$SetLocalOrigin"
+            			Param "-72 3650 1036"
+            			Delay -1
+            			Repeats 1
+        			}
+				}
+				TFBot
+				{
+					Template	T_TFBot_Giant_Medic_Kritz
+					Attributes	"Parachute"
+					Item	"The B.A.S.E. Jumper"
+					FireInput
+       				{
+            			Target "!self"
+            			Action "$SetLocalOrigin"
+            			Param "-72 3650 1036"
+            			Delay -1
+            			Repeats 1
+        			}
+				}
+			}
+		}
+		WaveSpawn
+		{
+			Name	A1
+			TotalCurrency	100
+			TotalCount	25
+			MaxActive	8
+			SpawnCount	1
+			WaitBeforeStarting	0.2
+			WaitBetweenSpawns	2
+			Where	spawnbot
+				TFBot
+				{
+					Template	T_TFBot_Soldier_Haste_Banner
+					Skill	Normal
+				}
+		}
+		WaveSpawn
+		{
+			Name	A1
+			TotalCurrency	100
+			TotalCount	25
+			MaxActive	8
+			SpawnCount	1
+			WaitBeforeStarting	0.2
+			WaitBetweenSpawns	2
+			Where	Airdrop
+			RandomChoice
+			{
+				TFBot
+				{
+					Template	T_TFBot_Scout_Shortstop_Small
+					Skill	Normal
+					Attributes	"Parachute"
+					Item	"The B.A.S.E. Jumper"
+					FireInput
+       				{
+            			Target "!self"
+            			Action "$SetLocalOrigin"
+            			Param "-24 4200 1036"
+            			Delay -1
+            			Repeats 1
+        			}
+				}
+				TFBot
+				{
+					Template	T_TFBot_Scout_Shortstop_Small
+					Skill	Normal
+					Attributes	"Parachute"
+					Item	"The B.A.S.E. Jumper"
+					FireInput
+       				{
+            			Target "!self"
+            			Action "$SetLocalOrigin"
+            			Param "-72 3650 1036"
+            			Delay -1
+            			Repeats 1
+        			}
+				}
+				TFBot
+				{
+					Template	T_TFBot_Scout_Shortstop_Small
+					Skill	Normal
+					Attributes	"Parachute"
+					Item	"The B.A.S.E. Jumper"
+					FireInput
+       				{
+            			Target "!self"
+            			Action "$SetLocalOrigin"
+            			Param "1000 3000 1036"
+            			Delay -1
+            			Repeats 1
+        			}
+				}
+				TFBot
+				{
+					Template	T_TFBot_Scout_Shortstop_Small
+					Skill	Normal
+					Attributes	"Parachute"
+					Item	"The B.A.S.E. Jumper"
+					FireInput
+       				{
+            			Target "!self"
+            			Action "$SetLocalOrigin"
+            			Param "-1000 3000 1036"
+            			Delay -1
+            			Repeats 1
+        			}
+				}
+				TFBot
+				{
+					Template	T_TFBot_Scout_Shortstop_Small
+					Skill	Normal
+					Attributes	"Parachute"
+					Item	"The B.A.S.E. Jumper"
+					FireInput
+       				{
+            			Target "!self"
+            			Action "$SetLocalOrigin"
+            			Param "653 3800 1036"
+            			Delay -1
+            			Repeats 1
+        			}
+				}
+				TFBot
+				{
+					Template	T_TFBot_Scout_Shortstop_Small
+					Skill	Normal
+					Attributes	"Parachute"
+					Item	"The B.A.S.E. Jumper"
+					FireInput
+       				{
+            			Target "!self"
+            			Action "$SetLocalOrigin"
+            			Param "653 3400 1036"
+            			Delay -1
+            			Repeats 1
+        			}
+				}
+				TFBot
+				{
+					Template	T_TFBot_Scout_Shortstop_Small
+					Skill	Normal
+					Attributes	"Parachute"
+					Item	"The B.A.S.E. Jumper"
+					FireInput
+       				{
+            			Target "!self"
+            			Action "$SetLocalOrigin"
+            			Param "616 4930 1036"
+            			Delay -1
+            			Repeats 1
+        			}
+				}
+				TFBot
+				{
+					Template	T_TFBot_Scout_Shortstop_Small
+					Skill	Normal
+					Attributes	"Parachute"
+					Item	"The B.A.S.E. Jumper"
+					FireInput
+       				{
+            			Target "!self"
+            			Action "$SetLocalOrigin"
+            			Param "653 4600 1036"
+            			Delay -1
+            			Repeats 1
+        			}
+				}
+				TFBot
+				{
+					Template	T_TFBot_Scout_Shortstop_Small
+					Skill	Normal
+					Attributes	"Parachute"
+					Item	"The B.A.S.E. Jumper"
+					FireInput
+       				{
+            			Target "!self"
+            			Action "$SetLocalOrigin"
+            			Param "150 4930 1036"
+            			Delay -1
+            			Repeats 1
+        			}
+				}
+				TFBot
+				{
+					Template	T_TFBot_Scout_Shortstop_Small
+					Skill	Normal
+					Attributes	"Parachute"
+					Item	"The B.A.S.E. Jumper"
+					FireInput
+       				{
+            			Target "!self"
+            			Action "$SetLocalOrigin"
+            			Param "-330 4930 1036"
+            			Delay -1
+            			Repeats 1
+        			}
+				}
+				TFBot
+				{
+					Template	T_TFBot_Scout_Shortstop_Small
+					Skill	Normal
+					Attributes	"Parachute"
+					Item	"The B.A.S.E. Jumper"
+					FireInput
+       				{
+            			Target "!self"
+            			Action "$SetLocalOrigin"
+            			Param "-606 4600 1036"
+            			Delay -1
+            			Repeats 1
+        			}
+				}
+				TFBot
+				{
+					Template	T_TFBot_Scout_Shortstop_Small
+					Skill	Normal
+					Attributes	"Parachute"
+					Item	"The B.A.S.E. Jumper"
+					FireInput
+       				{
+            			Target "!self"
+            			Action "$SetLocalOrigin"
+            			Param "-606 3690 1036"
+            			Delay -1
+            			Repeats 1
+        			}
+				}
+				TFBot
+				{
+					Template	T_TFBot_Scout_Shortstop_Small
+					Skill	Normal
+					Attributes	"Parachute"
+					Item	"The B.A.S.E. Jumper"
+					FireInput
+       				{
+            			Target "!self"
+            			Action "$SetLocalOrigin"
+            			Param "-606 3000 1036"
+            			Delay -1
+            			Repeats 1
+        			}
+				}
+				TFBot
+				{
+					Template	T_TFBot_Scout_Shortstop_Small
+					Skill	Normal
+					Attributes	"Parachute"
+					Item	"The B.A.S.E. Jumper"
+					FireInput
+       				{
+            			Target "!self"
+            			Action "$SetLocalOrigin"
+            			Param "-74 3000 1036"
+            			Delay -1
+            			Repeats 1
+        			}
+				}
+				TFBot
+				{
+					Template	T_TFBot_Scout_Shortstop_Small
+					Skill	Normal
+					Attributes	"Parachute"
+					Item	"The B.A.S.E. Jumper"
+					FireInput
+       				{
+            			Target "!self"
+            			Action "$SetLocalOrigin"
+            			Param "784 3000 1036"
+            			Delay -1
+            			Repeats 1
+        			}
+				}
+			}
+		}
+		WaveSpawn
+		{
+			Name	A2
+			WaitForAllSpawned	A1
+			TotalCurrency	100
+			TotalCount	24
+			MaxActive	7
+			SpawnCount	6
+			WaitBeforeStarting	10
+			WaitBetweenSpawns	10
+			Where	Airdrop
+			RandomChoice
+			{
+				TFBot
+				{
+					Template	T_TFBot_Pyro_Flare_Spammer
+					Skill	Expert
+					Attributes	"Parachute"
+					Item	"The B.A.S.E. Jumper"
+					FireInput
+       				{
+            			Target "!self"
+            			Action "$SetLocalOrigin"
+            			Param "-24 4200 1036"
+            			Delay -1
+            			Repeats 1
+        			}
+				}
+				TFBot
+				{
+					Template	T_TFBot_Pyro_Flare_Spammer
+					Skill	Expert
+					Attributes	"Parachute"
+					Item	"The B.A.S.E. Jumper"
+					FireInput
+       				{
+            			Target "!self"
+            			Action "$SetLocalOrigin"
+            			Param "-72 3650 1036"
+            			Delay -1
+            			Repeats 1
+        			}
+				}
+				TFBot
+				{
+					Template	T_TFBot_Pyro_Flare_Spammer
+					Skill	Expert
+					Attributes	"Parachute"
+					Item	"The B.A.S.E. Jumper"
+					FireInput
+       				{
+            			Target "!self"
+            			Action "$SetLocalOrigin"
+            			Param "1000 3000 1036"
+            			Delay -1
+            			Repeats 1
+        			}
+				}
+				TFBot
+				{
+					Template	T_TFBot_Pyro_Flare_Spammer
+					Skill	Expert
+					Attributes	"Parachute"
+					Item	"The B.A.S.E. Jumper"
+					FireInput
+       				{
+            			Target "!self"
+            			Action "$SetLocalOrigin"
+            			Param "-1000 3000 1036"
+            			Delay -1
+            			Repeats 1
+        			}
+				}
+				TFBot
+				{
+					Template	T_TFBot_Pyro_Flare_Spammer
+					Skill	Expert
+					Attributes	"Parachute"
+					Item	"The B.A.S.E. Jumper"
+					FireInput
+       				{
+            			Target "!self"
+            			Action "$SetLocalOrigin"
+            			Param "653 3800 1036"
+            			Delay -1
+            			Repeats 1
+        			}
+				}
+				TFBot
+				{
+					Template	T_TFBot_Pyro_Flare_Spammer
+					Skill	Expert
+					Attributes	"Parachute"
+					Item	"The B.A.S.E. Jumper"
+					FireInput
+       				{
+            			Target "!self"
+            			Action "$SetLocalOrigin"
+            			Param "653 3400 1036"
+            			Delay -1
+            			Repeats 1
+        			}
+				}
+				TFBot
+				{
+					Template	T_TFBot_Pyro_Flare_Spammer
+					Skill	Expert
+					Attributes	"Parachute"
+					Item	"The B.A.S.E. Jumper"
+					FireInput
+       				{
+            			Target "!self"
+            			Action "$SetLocalOrigin"
+            			Param "616 4930 1036"
+            			Delay -1
+            			Repeats 1
+        			}
+				}
+				TFBot
+				{
+					Template	T_TFBot_Pyro_Flare_Spammer
+					Skill	Expert
+					Attributes	"Parachute"
+					Item	"The B.A.S.E. Jumper"
+					FireInput
+       				{
+            			Target "!self"
+            			Action "$SetLocalOrigin"
+            			Param "653 4600 1036"
+            			Delay -1
+            			Repeats 1
+        			}
+				}
+				TFBot
+				{
+					Template	T_TFBot_Pyro_Flare_Spammer
+					Skill	Expert
+					Attributes	"Parachute"
+					Item	"The B.A.S.E. Jumper"
+					FireInput
+       				{
+            			Target "!self"
+            			Action "$SetLocalOrigin"
+            			Param "150 4930 1036"
+            			Delay -1
+            			Repeats 1
+        			}
+				}
+				TFBot
+				{
+					Template	T_TFBot_Pyro_Flare_Spammer
+					Skill	Expert
+					Attributes	"Parachute"
+					Item	"The B.A.S.E. Jumper"
+					FireInput
+       				{
+            			Target "!self"
+            			Action "$SetLocalOrigin"
+            			Param "-330 4930 1036"
+            			Delay -1
+            			Repeats 1
+        			}
+				}
+				TFBot
+				{
+					Template	T_TFBot_Pyro_Flare_Spammer
+					Skill	Expert
+					Attributes	"Parachute"
+					Item	"The B.A.S.E. Jumper"
+					FireInput
+       				{
+            			Target "!self"
+            			Action "$SetLocalOrigin"
+            			Param "-606 4600 1036"
+            			Delay -1
+            			Repeats 1
+        			}
+				}
+				TFBot
+				{
+					Template	T_TFBot_Pyro_Flare_Spammer
+					Skill	Expert
+					Attributes	"Parachute"
+					Item	"The B.A.S.E. Jumper"
+					FireInput
+       				{
+            			Target "!self"
+            			Action "$SetLocalOrigin"
+            			Param "-606 3690 1036"
+            			Delay -1
+            			Repeats 1
+        			}
+				}
+				TFBot
+				{
+					Template	T_TFBot_Pyro_Flare_Spammer
+					Skill	Expert
+					Attributes	"Parachute"
+					Item	"The B.A.S.E. Jumper"
+					FireInput
+       				{
+            			Target "!self"
+            			Action "$SetLocalOrigin"
+            			Param "-606 3000 1036"
+            			Delay -1
+            			Repeats 1
+        			}
+				}
+				TFBot
+				{
+					Template	T_TFBot_Pyro_Flare_Spammer
+					Skill	Expert
+					Attributes	"Parachute"
+					Item	"The B.A.S.E. Jumper"
+					FireInput
+       				{
+            			Target "!self"
+            			Action "$SetLocalOrigin"
+            			Param "-74 3000 1036"
+            			Delay -1
+            			Repeats 1
+        			}
+				}
+				TFBot
+				{
+					Template	T_TFBot_Pyro_Flare_Spammer
+					Skill	Expert
+					Attributes	"Parachute"
+					Item	"The B.A.S.E. Jumper"
+					FireInput
+       				{
+            			Target "!self"
+            			Action "$SetLocalOrigin"
+            			Param "784 3000 1036"
+            			Delay -1
+            			Repeats 1
+        			}
+				}
+				TFBot
+				{
+					Template	T_TFBot_Pyro_Flare_Spammer
+					Skill	Expert
+					Attributes	"Parachute"
+					Item	"The B.A.S.E. Jumper"
+					FireInput
+       				{
+            			Target "!self"
+            			Action "$SetLocalOrigin"
+            			Param "-150 1130 1036"
+            			Delay -1
+            			Repeats 1
+        			}
+				}
+				TFBot
+				{
+					Template	T_TFBot_Pyro_Flare_Spammer
+					Skill	Expert
+					Attributes	"Parachute"
+					Item	"The B.A.S.E. Jumper"
+					FireInput
+       				{
+            			Target "!self"
+            			Action "$SetLocalOrigin"
+            			Param "-1700 1600 1036"
+            			Delay -1
+            			Repeats 1
+        			}
+				}
+				TFBot
+				{
+					Template	T_TFBot_Pyro_Flare_Spammer
+					Skill	Expert
+					Attributes	"Parachute"
+					Item	"The B.A.S.E. Jumper"
+					FireInput
+       				{
+            			Target "!self"
+            			Action "$SetLocalOrigin"
+            			Param "1024 1300 1036"
+            			Delay -1
+            			Repeats 1
+        			}
+				}
+				TFBot
+				{
+					Template	T_TFBot_Pyro_Flare_Spammer
+					Skill	Expert
+					Attributes	"Parachute"
+					Item	"The B.A.S.E. Jumper"
+					FireInput
+       				{
+            			Target "!self"
+            			Action "$SetLocalOrigin"
+            			Param "-530 -144 1036"
+            			Delay -1
+            			Repeats 1
+        			}
+				}
+				TFBot
+				{
+					Template	T_TFBot_Pyro_Flare_Spammer
+					Skill	Expert
+					Attributes	"Parachute"
+					Item	"The B.A.S.E. Jumper"
+					FireInput
+       				{
+            			Target "!self"
+            			Action "$SetLocalOrigin"
+            			Param "199 -144 1036"
+            			Delay -1
+            			Repeats 1
+        			}
+				}
+				TFBot
+				{
+					Template	T_TFBot_Pyro_Flare_Spammer
+					Skill	Expert
+					Attributes	"Parachute"
+					Item	"The B.A.S.E. Jumper"
+					FireInput
+       				{
+            			Target "!self"
+            			Action "$SetLocalOrigin"
+            			Param "-1800 505 1036"
+            			Delay -1
+            			Repeats 1
+        			}
+				}
+				TFBot
+				{
+					Template	T_TFBot_Pyro_Flare_Spammer
+					Skill	Expert
+					Attributes	"Parachute"
+					Item	"The B.A.S.E. Jumper"
+					FireInput
+       				{
+            			Target "!self"
+            			Action "$SetLocalOrigin"
+            			Param "840 -610 1036"
+            			Delay -1
+            			Repeats 1
+        			}
+				}
+			}
+		}
+		WaveSpawn
+		{
+			Name	A2
+			WaitForAllSpawned	A1
+			TotalCurrency	100
+			TotalCount	20
+			MaxActive	6
+			SpawnCount	5
+			WaitBeforeStarting	10
+			WaitBetweenSpawns	10
+			Where	Airdrop
+			RandomChoice
+			{
+				TFBot
+				{
+					Template	T_TFBot_Heavy
+					Skill	Normal
+					Attributes	"Parachute"
+					Item	"The B.A.S.E. Jumper"
+					FireInput
+       				{
+            			Target "!self"
+            			Action "$SetLocalOrigin"
+            			Param "-24 4200 1036"
+            			Delay -1
+            			Repeats 1
+        			}
+				}
+				TFBot
+				{
+					Template	T_TFBot_Heavy
+					Skill	Normal
+					Attributes	"Parachute"
+					Item	"The B.A.S.E. Jumper"
+					FireInput
+       				{
+            			Target "!self"
+            			Action "$SetLocalOrigin"
+            			Param "-72 3650 1036"
+            			Delay -1
+            			Repeats 1
+        			}
+				}
+				TFBot
+				{
+					Template	T_TFBot_Heavy
+					Skill	Normal
+					Attributes	"Parachute"
+					Item	"The B.A.S.E. Jumper"
+					FireInput
+       				{
+            			Target "!self"
+            			Action "$SetLocalOrigin"
+            			Param "1000 3000 1036"
+            			Delay -1
+            			Repeats 1
+        			}
+				}
+				TFBot
+				{
+					Template	T_TFBot_Heavy
+					Skill	Normal
+					Attributes	"Parachute"
+					Item	"The B.A.S.E. Jumper"
+					FireInput
+       				{
+            			Target "!self"
+            			Action "$SetLocalOrigin"
+            			Param "-1000 3000 1036"
+            			Delay -1
+            			Repeats 1
+        			}
+				}
+				TFBot
+				{
+					Template	T_TFBot_Heavy
+					Skill	Normal
+					Attributes	"Parachute"
+					Item	"The B.A.S.E. Jumper"
+					FireInput
+       				{
+            			Target "!self"
+            			Action "$SetLocalOrigin"
+            			Param "653 3800 1036"
+            			Delay -1
+            			Repeats 1
+        			}
+				}
+				TFBot
+				{
+					Template	T_TFBot_Heavy
+					Skill	Normal
+					Attributes	"Parachute"
+					Item	"The B.A.S.E. Jumper"
+					FireInput
+       				{
+            			Target "!self"
+            			Action "$SetLocalOrigin"
+            			Param "653 3400 1036"
+            			Delay -1
+            			Repeats 1
+        			}
+				}
+				TFBot
+				{
+					Template	T_TFBot_Heavy
+					Skill	Normal
+					Attributes	"Parachute"
+					Item	"The B.A.S.E. Jumper"
+					FireInput
+       				{
+            			Target "!self"
+            			Action "$SetLocalOrigin"
+            			Param "616 4930 1036"
+            			Delay -1
+            			Repeats 1
+        			}
+				}
+				TFBot
+				{
+					Template	T_TFBot_Heavy
+					Skill	Normal
+					Attributes	"Parachute"
+					Item	"The B.A.S.E. Jumper"
+					FireInput
+       				{
+            			Target "!self"
+            			Action "$SetLocalOrigin"
+            			Param "653 4600 1036"
+            			Delay -1
+            			Repeats 1
+        			}
+				}
+				TFBot
+				{
+					Template	T_TFBot_Heavy
+					Skill	Normal
+					Attributes	"Parachute"
+					Item	"The B.A.S.E. Jumper"
+					FireInput
+       				{
+            			Target "!self"
+            			Action "$SetLocalOrigin"
+            			Param "150 4930 1036"
+            			Delay -1
+            			Repeats 1
+        			}
+				}
+				TFBot
+				{
+					Template	T_TFBot_Heavy
+					Skill	Normal
+					Attributes	"Parachute"
+					Item	"The B.A.S.E. Jumper"
+					FireInput
+       				{
+            			Target "!self"
+            			Action "$SetLocalOrigin"
+            			Param "-330 4930 1036"
+            			Delay -1
+            			Repeats 1
+        			}
+				}
+				TFBot
+				{
+					Template	T_TFBot_Heavy
+					Skill	Normal
+					Attributes	"Parachute"
+					Item	"The B.A.S.E. Jumper"
+					FireInput
+       				{
+            			Target "!self"
+            			Action "$SetLocalOrigin"
+            			Param "-606 4600 1036"
+            			Delay -1
+            			Repeats 1
+        			}
+				}
+				TFBot
+				{
+					Template	T_TFBot_Heavy
+					Skill	Normal
+					Attributes	"Parachute"
+					Item	"The B.A.S.E. Jumper"
+					FireInput
+       				{
+            			Target "!self"
+            			Action "$SetLocalOrigin"
+            			Param "-606 3690 1036"
+            			Delay -1
+            			Repeats 1
+        			}
+				}
+				TFBot
+				{
+					Template	T_TFBot_Heavy
+					Skill	Normal
+					Attributes	"Parachute"
+					Item	"The B.A.S.E. Jumper"
+					FireInput
+       				{
+            			Target "!self"
+            			Action "$SetLocalOrigin"
+            			Param "-606 3000 1036"
+            			Delay -1
+            			Repeats 1
+        			}
+				}
+				TFBot
+				{
+					Template	T_TFBot_Heavy
+					Skill	Normal
+					Attributes	"Parachute"
+					Item	"The B.A.S.E. Jumper"
+					FireInput
+       				{
+            			Target "!self"
+            			Action "$SetLocalOrigin"
+            			Param "-74 3000 1036"
+            			Delay -1
+            			Repeats 1
+        			}
+				}
+				TFBot
+				{
+					Template	T_TFBot_Heavy
+					Skill	Normal
+					Attributes	"Parachute"
+					Item	"The B.A.S.E. Jumper"
+					FireInput
+       				{
+            			Target "!self"
+            			Action "$SetLocalOrigin"
+            			Param "784 3000 1036"
+            			Delay -1
+            			Repeats 1
+        			}
+				}
+				TFBot
+				{
+					Template	T_TFBot_Heavy
+					Skill	Normal
+					Attributes	"Parachute"
+					Item	"The B.A.S.E. Jumper"
+					FireInput
+       				{
+            			Target "!self"
+            			Action "$SetLocalOrigin"
+            			Param "-150 1130 1036"
+            			Delay -1
+            			Repeats 1
+        			}
+				}
+				TFBot
+				{
+					Template	T_TFBot_Heavy
+					Skill	Normal
+					Attributes	"Parachute"
+					Item	"The B.A.S.E. Jumper"
+					FireInput
+       				{
+            			Target "!self"
+            			Action "$SetLocalOrigin"
+            			Param "-1700 1600 1036"
+            			Delay -1
+            			Repeats 1
+        			}
+				}
+				TFBot
+				{
+					Template	T_TFBot_Heavy
+					Skill	Normal
+					Attributes	"Parachute"
+					Item	"The B.A.S.E. Jumper"
+					FireInput
+       				{
+            			Target "!self"
+            			Action "$SetLocalOrigin"
+            			Param "1024 1300 1036"
+            			Delay -1
+            			Repeats 1
+        			}
+				}
+				TFBot
+				{
+					Template	T_TFBot_Heavy
+					Skill	Normal
+					Attributes	"Parachute"
+					Item	"The B.A.S.E. Jumper"
+					FireInput
+       				{
+            			Target "!self"
+            			Action "$SetLocalOrigin"
+            			Param "-530 -144 1036"
+            			Delay -1
+            			Repeats 1
+        			}
+				}
+				TFBot
+				{
+					Template	T_TFBot_Heavy
+					Skill	Normal
+					Attributes	"Parachute"
+					Item	"The B.A.S.E. Jumper"
+					FireInput
+       				{
+            			Target "!self"
+            			Action "$SetLocalOrigin"
+            			Param "199 -144 1036"
+            			Delay -1
+            			Repeats 1
+        			}
+				}
+				TFBot
+				{
+					Template	T_TFBot_Heavy
+					Skill	Normal
+					Attributes	"Parachute"
+					Item	"The B.A.S.E. Jumper"
+					FireInput
+       				{
+            			Target "!self"
+            			Action "$SetLocalOrigin"
+            			Param "-1800 505 1036"
+            			Delay -1
+            			Repeats 1
+        			}
+				}
+				TFBot
+				{
+					Template	T_TFBot_Heavy
+					Skill	Normal
+					Attributes	"Parachute"
+					Item	"The B.A.S.E. Jumper"
+					FireInput
+       				{
+            			Target "!self"
+            			Action "$SetLocalOrigin"
+            			Param "840 -610 1036"
+            			Delay -1
+            			Repeats 1
+        			}
+				}
+			}
+		}
+		WaveSpawn
+		{
+			WaitForAllSpawned	A1
+			TotalCurrency	80
+			TotalCount	8
+			MaxActive	4
+			SpawnCount	4
+			WaitBeforeStarting	12
+			WaitBetweenSpawns 25
+			Where	Airdrop
+			Squad
+			{
+				TFBot
+				{
+					Template	T_TFBot_Giant_Soldier_Ballistics
+					Attributes	"Parachute"
+					Item	"The B.A.S.E. Jumper"
+					FireInput
+       				{
+            			Target "!self"
+            			Action "$SetLocalOrigin"
+            			Param "150 4930 1036"
+            			Delay -1
+            			Repeats 1
+        			}
+				}
+				TFBot
+				{
+					Template	T_TFBot_Medic_SlowRecharge
+					Attributes	"Parachute"
+					Item	"The B.A.S.E. Jumper"
+					FireInput
+       				{
+            			Target "!self"
+            			Action "$SetLocalOrigin"
+            			Param "150 4930 1036"
+            			Delay -1
+            			Repeats 1
+        			}
+				}
+				TFBot
+				{
+					Template	T_TFBot_Medic_SlowRecharge
+					Attributes	"Parachute"
+					Item	"The B.A.S.E. Jumper"
+					FireInput
+       				{
+            			Target "!self"
+            			Action "$SetLocalOrigin"
+            			Param "150 4930 1036"
+            			Delay -1
+            			Repeats 1
+        			}
+				}
+				TFBot
+				{
+					Template	T_TFBot_Medic_SlowRecharge
+					Attributes	"Parachute"
+					Item	"The B.A.S.E. Jumper"
+					FireInput
+       				{
+            			Target "!self"
+            			Action "$SetLocalOrigin"
+            			Param "150 4930 1036"
+            			Delay -1
+            			Repeats 1
+        			}
+				}
+			}
+		}
+		WaveSpawn
+		{
+			WaitForAllSpawned	A1
+			TotalCurrency	70
+			TotalCount	8
+			MaxActive	4
+			SpawnCount	4
+			WaitBeforeStarting	27
+			WaitBetweenSpawns 15
+			Where	Airdrop
+			Squad
+			{
+				TFBot
+				{
+					Template	T_TFBot_Giant_Soldier_Ballistics
+					Attributes	"Parachute"
+					Item	"The B.A.S.E. Jumper"
+					FireInput
+       				{
+            			Target "!self"
+            			Action "$SetLocalOrigin"
+            			Param "-24 4200 1036"
+            			Delay -1
+            			Repeats 1
+        			}
+				}
+				TFBot
+				{
+					Template	T_TFBot_Medic_SlowRecharge
+					Attributes	"Parachute"
+					Item	"The B.A.S.E. Jumper"
+					FireInput
+       				{
+            			Target "!self"
+            			Action "$SetLocalOrigin"
+            			Param "-24 4200 1036"
+            			Delay -1
+            			Repeats 1
+        			}
+				}
+				TFBot
+				{
+					Template	T_TFBot_Medic_SlowRecharge
+					Attributes	"Parachute"
+					Item	"The B.A.S.E. Jumper"
+					FireInput
+       				{
+            			Target "!self"
+            			Action "$SetLocalOrigin"
+            			Param "-24 4200 1036"
+            			Delay -1
+            			Repeats 1
+        			}
+				}
+				TFBot
+				{
+					Template	T_TFBot_Medic_SlowRecharge
+					Attributes	"Parachute"
+					Item	"The B.A.S.E. Jumper"
+					FireInput
+       				{
+            			Target "!self"
+            			Action "$SetLocalOrigin"
+            			Param "-24 4200 1036"
+            			Delay -1
+            			Repeats 1
+        			}
+				}
+			}
+		}
+		WaveSpawn
+		{
+			WaitForAllSpawned	A2
+			TotalCurrency	60
+			TotalCount	3
+			MaxActive	3
+			SpawnCount	1
+			WaitBeforeStarting	6
+			WaitBetweenSpawns 2
+			Where	Airdrop
+			StartWaveOutput
+			{
+    			Target wav_nuke_alarm
+   				Action Trigger
+			}
+			RandomChoice
+			{
+				TFBot
+				{
+					Template	T_TFBot_Giant_Scout_FAN
+					Attributes	"Parachute"
+					Item	"The B.A.S.E. Jumper"
+					FireInput
+       				{
+            			Target "!self"
+            			Action "$SetLocalOrigin"
+            			Param "457 -1628 1036"
+            			Delay -1
+            			Repeats 1
+        			}
+				}
+				TFBot
+				{
+					Template	T_TFBot_Giant_Scout_FAN
+					Attributes	"Parachute"
+					Item	"The B.A.S.E. Jumper"
+					FireInput
+       				{
+            			Target "!self"
+            			Action "$SetLocalOrigin"
+            			Param "-800 -1628 1036"
+            			Delay -1
+            			Repeats 1
+        			}
+				}
+				TFBot
+				{
+					Template	T_TFBot_Giant_Scout_FAN
+					Attributes	"Parachute"
+					Item	"The B.A.S.E. Jumper"
+					FireInput
+       				{
+            			Target "!self"
+            			Action "$SetLocalOrigin"
+            			Param "-1420 -1568 1036"
+            			Delay -1
+            			Repeats 1
+        			}
+				}
+			}
+		}
+		WaveSpawn
+		{
+			WaitForAllSpawned	A2
+			TotalCurrency	180
+			TotalCount	4
+			MaxActive	4
+			SpawnCount	4
+			WaitBeforeStarting	4
+			WaitBetweenSpawns 45
+			Where	Airdrop
+			RandomChoice
+			{
+				TFBot
+				{
+					Template	T_TFBot_Giant_Sniper_Burst_Bowman
+					Attributes	"Parachute"
+					Item	"The B.A.S.E. Jumper"
+					FireInput
+       				{
+            			Target "!self"
+            			Action "$SetLocalOrigin"
+            			Param "-150 2000 1036"
+            			Delay -1
+            			Repeats 1
+        			}
+				}
+				TFBot
+				{
+					Template	T_TFBot_Giant_Sniper_Burst_Bowman
+					Attributes	"Parachute"
+					Item	"The B.A.S.E. Jumper"
+					FireInput
+       				{
+            			Target "!self"
+            			Action "$SetLocalOrigin"
+            			Param "-150 1130 1036"
+            			Delay -1
+            			Repeats 1
+        			}
+				}
+				TFBot
+				{
+					Template	T_TFBot_Giant_Sniper_Burst_Bowman
+					Attributes	"Parachute"
+					Item	"The B.A.S.E. Jumper"
+					FireInput
+       				{
+            			Target "!self"
+            			Action "$SetLocalOrigin"
+            			Param "-1700 1600 1036"
+            			Delay -1
+            			Repeats 1
+        			}
+				}
+				TFBot
+				{
+					Template	T_TFBot_Giant_Sniper_Burst_Bowman
+					Attributes	"Parachute"
+					Item	"The B.A.S.E. Jumper"
+					FireInput
+       				{
+            			Target "!self"
+            			Action "$SetLocalOrigin"
+            			Param "1024 1300 1036"
+            			Delay -1
+            			Repeats 1
+        			}
+				}
+				TFBot
+				{
+					Template	T_TFBot_Giant_Sniper_Burst_Bowman
+					Attributes	"Parachute"
+					Item	"The B.A.S.E. Jumper"
+					FireInput
+       				{
+            			Target "!self"
+            			Action "$SetLocalOrigin"
+            			Param "-530 -144 1036"
+            			Delay -1
+            			Repeats 1
+        			}
+				}
+				TFBot
+				{
+					Template	T_TFBot_Giant_Sniper_Burst_Bowman
+					Attributes	"Parachute"
+					Item	"The B.A.S.E. Jumper"
+					FireInput
+       				{
+            			Target "!self"
+            			Action "$SetLocalOrigin"
+            			Param "199 -144 1036"
+            			Delay -1
+            			Repeats 1
+        			}
+				}
+				TFBot
+				{
+					Template	T_TFBot_Giant_Sniper_Burst_Bowman
+					Attributes	"Parachute"
+					Item	"The B.A.S.E. Jumper"
+					FireInput
+       				{
+            			Target "!self"
+            			Action "$SetLocalOrigin"
+            			Param "-1800 505 1036"
+            			Delay -1
+            			Repeats 1
+        			}
+				}
+				TFBot
+				{
+					Template	T_TFBot_Giant_Sniper_Burst_Bowman
+					Attributes	"Parachute"
+					Item	"The B.A.S.E. Jumper"
+					FireInput
+       				{
+            			Target "!self"
+            			Action "$SetLocalOrigin"
+            			Param "840 -610 1036"
+            			Delay -1
+            			Repeats 1
+        			}
+				}
+			}
+		}
+	}
+	Wave
+	{
+		Explanation [$SIGSEGV]  //Dispayed once the wave is initialized
+		{
+			Line "{blue}Grey Mann is bringing in some heavy tanks this wave!"
+			Line "{blue}Make sure you bring your top quality tank-busting loadouts."
+		}
+		WaitWhenDone	65
+		Checkpoint	Yes
+		StartWaveOutput
+		{
+			Target	wave_start_relay
+			Action	Trigger
+		}
+		DoneOutput
+		{
+			Target	wave_finished_relay
+			Action	Trigger
+		}
+		InitWaveOutput
+		{
+			Target bignet
+			Action RunScriptCode
+			Param "
+					IncludeScript(`tankextensions_main`, getroottable())
+					IncludeScript(`tankextensions/teletank`, getroottable())
+					IncludeScript(`tankextensions/combattank`, getroottable())
+					IncludeScript(`tankextensions/combattank_weapons/railgun`, getroottable())
+					IncludeScript(`tankextensions/vactank`, getroottable())
+					EntFire(`wave_initial_relay`, `Trigger`)"
+		}
+		WaveSpawn
+		{
+			Name	A1
+			TotalCurrency	80
+			TotalCount	16
+			MaxActive	16
+			SpawnCount	1
+			WaitBeforeStarting	0
+			WaitBetweenSpawns	1.2
+			Where	spawnbot
+			TFBot
+				{
+					Template	T_TFBot_Soldier_Extended_Buff_Banner
+				}
+		}
+		WaveSpawn
+		{
+			Name	A1
+			TotalCurrency	60
+			TotalCount	4
+			MaxActive	4
+			SpawnCount	2
+			WaitBeforeStarting	2
+			WaitBetweenSpawns	15
+			Where	spawnbot
+			TFBot
+				{
+					Template	T_TFBot_Giant_Demo_Burst
+				}
+		}
+		WaveSpawn
+		{
+			TotalCurrency	75
+			TotalCount	1
+			MaxActive	1
+			SpawnCount	1
+			WaitBeforeStarting	18
+			WaitBetweenSpawns	0
+			Where	spawnbot
+			Tank
+			{
+				Health	47500
+				Name	Combattank_bomb|railgun|railgun
+				ClassIcon tank_combat_railgun [$SIGSEGV]
+				Speed	75
+				StartingPathTrackNode	tank_path_1
+				OnKilledOutput
+				{
+					Target	boss_dead_relay
+					Action	Trigger
+				}
+				OnBombDroppedOutput
+				{
+					Target	boss_deploy_relay
+					Action	Trigger
+				}
+			}
+		}
+		WaveSpawn
+		{
+			Name	A2
+			WaitForAllSpawned	A1
+			TotalCurrency	60
+			TotalCount	6
+			MaxActive	2
+			SpawnCount	1
+			WaitBeforeStarting	12
+			WaitBetweenSpawns	10
+			Where	spawnbot
+			TFBot
+				{
+					Template	T_TFBot_Giant_Scout_Fast
+				}
+		}
+		WaveSpawn
+		{
+			Name	A2
+			WaitForAllSpawned	A1
+			TotalCurrency	30
+			TotalCount	6
+			MaxActive	6
+			SpawnCount	2
+			WaitBeforeStarting	8
+			WaitBetweenSpawns	18
+			Where	spawnbot
+			TFBot
+				{
+					Template	T_TFBot_Soldier_Trolldier
+				}
+		}
+		WaveSpawn
+		{
+			Name	A2
+			WaitForAllSpawned	A1
+			TotalCurrency	120
+			TotalCount	30
+			MaxActive	12
+			SpawnCount	2
+			WaitBeforeStarting	10
+			WaitBetweenSpawns	4
+			Where	spawnbot
+			Squad
+			{
+				TFBot
+				{
+					Template	T_TFBot_Pyro_Dragon_Fury
+					Skill	Normal
+				}
+				TFBot
+				{
+					Template	T_TFBot_Medic_QuickUber
+				}
+			}
+		}
+		WaveSpawn
+		{
+			WaitForAllSpawned	A2
+			TotalCurrency	75
+			TotalCount	1
+			MaxActive	1
+			SpawnCount	1
+			WaitBeforeStarting	0
+			WaitBetweenSpawns	0
+			Where	spawnbot
+			Tank
+			{
+				Health	50000
+				Name	teletank
+				ClassIcon tank_tele [$SIGSEGV]
+				Speed	75
+				StartingPathTrackNode	tank_path_1
+				OnKilledOutput
+				{
+					Target	boss_dead_relay
+					Action	Trigger
+				}
+				OnBombDroppedOutput
+				{
+					Target	boss_deploy_relay
+					Action	Trigger
+				}
+			}
+		}
+		WaveSpawn
+		{
+			Name	A3
+			WaitForAllSpawned	A2
+			TotalCurrency	50
+			TotalCount	32
+			MaxActive	10
+			SpawnCount	8
+			WaitBeforeStarting	8
+			WaitBetweenSpawns	20
+			Where	spawnbot
+			TFBot
+				{
+					Template	T_TFBot_Demo_Knight_Charger
+					Tag	bot_teletank
+				}
+		}
+		WaveSpawn
+		{
+			Name	A3
+			WaitForAllSpawned	A2
+			TotalCurrency	75
+			TotalCount	3
+			MaxActive	2
+			SpawnCount	1
+			WaitBeforeStarting	16
+			WaitBetweenSpawns	16
+			Where	spawnbot
+			TFBot
+				{
+					Template	T_TFBot_Giant_Soldier_Spammer
+					Attributes	"AlwaysCrit"
+					Tag	bot_teletank
+				}
+		}
+		WaveSpawn
+		{
+			Name	A3
+			WaitForAllSpawned	A2
+			TotalCurrency	50
+			TotalCount	32
+			MaxActive	10
+			SpawnCount	2
+			WaitBeforeStarting	18
+			WaitBetweenSpawns	2.5
+			Where	spawnbot
+			TFBot
+				{
+					Template	T_TFBot_Heavyweapons_Heavyweight_Champ_Fast
+					Attributes	"AlwaysCrit"
+					Tag	bot_teletank
+				}
+		}
+		WaveSpawn
+		{
+			WaitForAllSpawned	A2
+			TotalCurrency	75
+			TotalCount	1
+			MaxActive	1
+			SpawnCount	1
+			WaitBeforeStarting	72
+			WaitBetweenSpawns	0
+			Where	spawnbot
+			Tank
+			{
+				Health	24500
+				Name	Vactank_fire_blast_bullet
+				Speed	75
+				ClassIcon	tank_vac_melee_lite [$SIGSEGV]
+				StartingPathTrackNode	tank_path_1
+				OnKilledOutput
+				{
+					Target	boss_dead_relay
+					Action	Trigger
+				}
+				OnBombDroppedOutput
+				{
+					Target	boss_deploy_relay
+					Action	Trigger
+				}
+			}
+		}
+		WaveSpawn
+		{
+			WaitForAllSpawned	A3
+			TotalCurrency	40
+			TotalCount	4
+			MaxActive	4
+			SpawnCount	1
+			WaitBeforeStarting	1
+			WaitBetweenSpawns	10
+			Where	spawnbot
+			TFBot
+				{
+					Template	T_TFBot_Giant_Armored_Fury_Pyro
+				}
+		}
+		WaveSpawn
+		{
+			WaitForAllSpawned	A3
+			TotalCurrency	60
+			TotalCount	60
+			MaxActive	16
+			SpawnCount	6
+			WaitBeforeStarting	5
+			WaitBetweenSpawns	7
+			Where	spawnbot
+			Support	1
+			TFBot
+				{
+					Template	T_TFBot_Scout_Sandman
+					Attributes	"AlwaysCrit"
+					Tag	bot_teletank
+				}
+		}
+	}
+	Wave
+	{
+		Explanation [$SIGSEGV]  //Dispayed once the wave is initialized
+		{
+			Line "{blue}Nice work dealing with those tanks."
+			Line "{blue}Be mindful of those titanium fist heavies."
+			Line "{red}They take almost no damage from ranged, get in close to eliminate them."
+		}
+		WaitWhenDone	65
+		Checkpoint	Yes
+		StartWaveOutput
+		{
+			Target	wave_dualbomb_start
+			Action	Trigger
+		}
+		InitWaveOutput
+        {
+            Target wave_dualbomb_initial
+            Action Trigger
+        }
+		DoneOutput
+		{
+			Target	wave_finished_relay
+			Action	Trigger
+		}
+		WaveSpawn
+		{
+			TotalCurrency	60
+			TotalCount	30
+			MaxActive	6
+			SpawnCount	2
+			WaitBeforeStarting	0
+			WaitBetweenSpawns	2
+			Where	spawnbot
+			TFBot
+				{
+					Template	T_TFBot_Scout_Fast
+					Attributes	"AlwaysCrit"
+					Skill	Expert
+				}
+		}
+		WaveSpawn
+		{
+			Name	A1
+			TotalCurrency	30
+			TotalCount	6
+			MaxActive	6
+			SpawnCount	1
+			WaitBeforeStarting	0.1
+			WaitBetweenSpawns	0.5
+			Where	spawnbot
+			TFBot
+				{
+					Template	T_TFBot_Armored_Heavy_Titanium_Fist
+				}
+		}
+		WaveSpawn
+		{
+			Name	A1
+			TotalCurrency	60
+			TotalCount	12
+			MaxActive	5
+			SpawnCount	2
+			WaitBeforeStarting	12
+			WaitBetweenSpawns	8
+			Where	spawnbot
+			TFBot
+				{
+					Template	T_TFBot_Armored_Heavy_Titanium_Fist
+				}
+		}
+		WaveSpawn
+		{
+			Name	A1
+			TotalCurrency	50
+			TotalCount	24
+			MaxActive	6
+			SpawnCount	3
+			WaitBeforeStarting	6
+			WaitBetweenSpawns	5
+			Where	spawnbot
+			TFBot
+				{
+					Template	T_TFBot_Demo_Loch
+					Skill	Hard
+					Attributes	"AlwaysCrit"
+				}
+		}
+		WaveSpawn
+		{
+			Name	A1
+			TotalCurrency	50
+			TotalCount	25
+			MaxActive	7
+			SpawnCount	1
+			WaitBeforeStarting	15
+			WaitBetweenSpawns	1.2
+			Where	spawnbot
+			TFBot
+				{
+					Template	T_TFBot_Soldier_Haste_Banner
+					Attributes	"AlwaysCrit"
+					Skill	Expert
+				}
+		}
+		WaveSpawn
+		{
+			TotalCurrency	60
+			TotalCount	1
+			MaxActive	1
+			SpawnCount	1
+			WaitBeforeStarting	12
+			WaitBetweenSpawns	85
+			Where	spawnbot
+			Tank
+			{
+				Health	38000
+				Name	 Tank
+				Speed	75
+				StartingPathTrackNode	tank_path_1
+				OnKilledOutput
+				{
+					Target	boss_dead_relay
+					Action	Trigger
+				}
+				OnBombDroppedOutput
+				{
+					Target	boss_deploy_relay
+						Action	Trigger
+				}
+			}
+		}
+		WaveSpawn
+		{
+			WaitForAllSpawned	A1
+			TotalCurrency	60
+			TotalCount	1
+			MaxActive	1
+			SpawnCount	1
+			WaitBeforeStarting	2
+			WaitBetweenSpawns	0
+			Where	spawnbot
+			Tank
+			{
+				Health	45000
+				Name	 Tank
+				Speed	75
+				StartingPathTrackNode	tank_path_1
+				OnKilledOutput
+				{
+					Target	boss_dead_relay
+					Action	Trigger
+				}
+				OnBombDroppedOutput
+				{
+					Target	boss_deploy_relay
+						Action	Trigger
+				}
+			}
+		}
+		WaveSpawn
+		{
+			Name	A2
+			WaitForAllSpawned	A1
+			TotalCurrency	100
+			TotalCount	20
+			MaxActive	10
+			SpawnCount	2
+			WaitBeforeStarting	10
+			WaitBetweenSpawns	3
+			Where	spawnbot
+			Squad
+			{
+				TFBot
+				{
+					Template	T_TFBot_Soldier_Homing_Backup
+					Skill	Expert
+				}
+				TFBot
+				{
+					Template	T_TFBot_Medic_Uber_Shield
+				}
+			}
+		}
+		WaveSpawn
+		{
+			Name	A2
+			WaitForAllSpawned	A1
+			TotalCurrency	100
+			TotalCount	18
+			MaxActive	12
+			SpawnCount	3
+			WaitBeforeStarting	12
+			WaitBetweenSpawns	8
+			Where	spawnbot
+			TFBot
+				{
+					Template	T_TFBot_Armored_Pyro
+				}
+		}
+		WaveSpawn
+		{
+			WaitForAllSpawned	A2
+			TotalCurrency	50
+			TotalCount	50
+			MaxActive	6
+			SpawnCount	1
+			WaitBeforeStarting	8
+			WaitBetweenSpawns	1
+			Where	spawnbot
+			Support	1
+			TFBot
+				{
+					Template	T_TFBot_Scout_Bonk_Scatter
+					Skill	Expert
+				}
+		}
+		WaveSpawn
+		{
+			WaitForAllSpawned	A2
+			TotalCurrency	50
+			TotalCount	50
+			MaxActive	6
+			SpawnCount	3
+			WaitBeforeStarting	8
+			WaitBetweenSpawns	1
+			Where	spawnbot
+			Support	1
+			TFBot
+				{
+					Template	T_TFBot_Sniper_Huntsman
+					Attributes	"AlwaysCrit"
+					Skill	Expert
+				}
+		}
+		WaveSpawn
+		{
+			WaitForAllSpawned	A2
+			TotalCurrency	50
+			TotalCount	24
+			MaxActive	6
+			SpawnCount	1
+			WaitBeforeStarting	12
+			WaitBetweenSpawns	2
+			Where	spawnbot
+			Support	1
+			TFBot
+				{
+					Template	T_TFBot_Armored_Heavy_Titanium_Fist
+				}
+		}
+		WaveSpawn
+		{
+			Name	A3
+			WaitForAllSpawned	A2
+			TotalCurrency	240
+			TotalCount	10
+			MaxActive	6
+			SpawnCount	2
+			WaitBeforeStarting	12
+			WaitBetweenSpawns	15
+			Where	spawnbot
+			Squad
+			{
+				TFBot
+				{
+					Template	T_TFBot_Giant_Heavyweapons_Deflector
+					Attributes	"AlwaysCrit"
+				}
+				TFBot
+				{
+					Template	T_TFBot_Giant_Medic_Shield
+				}
+			}
+		}
+		WaveSpawn
+		{
+			WaitForAllDead	A2
+			TotalCurrency	40
+			TotalCount	1
+			MaxActive	1
+			SpawnCount	1
+			WaitBeforeStarting	16
+			WaitBetweenSpawns	0
+			Where	spawnbot
+			Tank
+			{
+				Health	40000
+				Name	 Tank
+				Speed	75
+				StartingPathTrackNode	tank_path_1
+				OnKilledOutput
+				{
+					Target	boss_dead_relay
+					Action	Trigger
+				}
+				OnBombDroppedOutput
+				{
+					Target	boss_deploy_relay
+						Action	Trigger
+				}
+			}
+		}
+	}
+}

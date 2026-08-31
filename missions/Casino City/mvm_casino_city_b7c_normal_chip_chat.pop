@@ -1,0 +1,921 @@
+//mission by randomguy
+#base robot_randomguy.pop
+#base robot_gatebot_randomguy.pop
+
+WaveSchedule
+{
+	CanBotsAttackWhileInSpawnRoom no
+	RespawnWaveTime	2
+	StartingCurrency 500
+	Advanced 1
+	AddSentryBusterWhenDamageDealtExceeds 4500
+	AddSentryBusterWhenKillCountExceeds	30
+	// EventPopFile Halloween
+	Templates
+	{
+			boss
+			{
+				Class Heavyweapons
+				Name "The Godfather"
+				ClassIcon heavy_mafia
+				Item "Tomislav"
+				Item "capone's capper"
+				Skill Expert
+				Health 20000
+				WeaponRestrictions PrimaryOnly
+				Attributes MiniBoss Tag bot_giant
+				Attributes UseBossHealthBar
+				Attributes AlwaysCrit
+				ItemAttributes
+				{
+					ItemName "Tomislav"
+					"damage penalty" 0.75
+				}
+				CharacterAttributes
+				{
+					"move speed bonus"	0.5
+					"damage force reduction" 0.0 // 0.3
+					"airblast vulnerability multiplier" 0.0 //0.3
+					"override footstep sound set" 2
+				}
+			}
+	}
+	
+	Mission
+	{
+		Objective Spy
+
+		InitialCooldown 15
+		Where spawnbot
+		BeginAtWave 0
+		RunForThisManyWaves 1
+		CooldownTime 40
+		DesiredCount 2
+
+		TFBot
+		{
+			Template T_TFBot_Spy
+		}
+	}
+	
+	Mission
+	{
+		Objective Sniper
+		
+		Where spawnbot_mission_sniper
+		BeginAtWave 0
+		RunForThisManyWaves 1
+		InitialCooldown 25
+		CooldownTime 40
+		DesiredCount 1
+		TFBot
+		{
+			Template T_TFBot_Sniper
+		}
+	}
+	
+	Mission
+	{
+		Objective	DestroySentries
+		
+		Where spawnbot
+		InitialCooldown 60
+		CooldownTime 45
+		BeginAtWave 1
+		RunForThisManyWaves 10
+		TFBot
+		{
+			Template T_TFBot_SentryBuster
+			Name "Police Buster"
+		}
+	}
+	
+//WAVE 1 //////////CURRENCY 700///////////////////////////////////
+	Wave
+	{
+		StartWaveOutput
+		{
+			Target wave_start_relay
+			Action Trigger
+		}
+		DoneOutput
+		{
+			Target wave_finished_relay
+			Action trigger
+		}
+		
+		WaveSpawn
+		{
+			Name "CHIPS"
+			Where spawnbot_chips				//VERY IMPORTANT. Otherwise the bot will spawn without the chips case.
+			TotalCount 6
+			MaxActive 1							//There can be as many MaxActive at once as you like. However, more than 1 will cause the hud to be confused.
+			SpawnCount 1						//DO NOT SPAWN MORE THAN ONE CHIPSBOT AT A TIME!!
+			WaitBeforeStarting 15 				//must spawn after first regular bot. Chips bot cannot be the first bot to spawn!
+			WaitBetweenSpawnsAfterDeath 10		//Allow a minimum of at least 3 seconds between spawns.
+			Support 1							//Not necessary, but provides infinite spawning
+			
+			TFBot
+			{
+				Template T_TFBot_Scout_Melee
+				ClassIcon chip 					//the name of the custom hud icon
+				Name "Chip Sprinter" 			//can be whatever name you like
+				Item "MvM GateBot Light Scout" 	//make sure to use the correct hat for the class, the gatebot hat is not required, but it makes the bot more noticeable
+			}
+		}
+		
+		WaveSpawn
+		{
+			Name stage1
+			Where spawnbot
+			TotalCount 24
+			MaxActive 12
+			SpawnCount 3
+			WaitBeforeStarting 3
+			WaitBetweenSpawns 3
+			TotalCurrency 200
+			RandomSpawn 1
+			
+			
+			RandomChoice
+			{
+				TFBot
+				{
+					Template T_TFBot_HeavyWeapons_HeavyWeight_Champ_Fast
+					Name "Chip Rusher"
+				}
+				
+				TFBot
+				{
+					Template T_TFBot_HeavyWeapons_HeavyWeight_Champ_Fast
+					Name "Chip Rusher"
+				}
+				
+				TFBot
+				{
+					Template T_TFBot_HeavyWeapons_HeavyWeight_Champ_Fast
+					Name "Chip Rusher"
+				}
+				
+				TFBot
+				{
+					Template T_TFBot_HeavyWeapons_HeavyWeight_Champ
+					Name "Chip Smasher"
+				}
+				
+				TFBot
+				{
+					Template T_TFBot_HeavyWeapons_HeavyWeight_Champ
+					Name "Chip Smasher"
+				}
+				
+				TFBot
+				{
+					Template T_TFBot_HeavyWeapons_Gnome
+					Name "Chipped Comedian"
+				}
+			}
+		}
+		
+		WaveSpawn
+		{
+			Name stage2
+			WaitForAllSpawned stage1
+			Where spawnbot
+			TotalCount 36
+			MaxActive 16
+			SpawnCount 4
+			WaitBeforeStarting 10
+			WaitBetweenSpawns 3
+			TotalCurrency 300
+			RandomSpawn 1
+			
+			
+			Squad
+			{
+				TFBot
+				{
+					Class Pyro
+					Skill Easy
+					Name "Chip Boiler"
+				}
+				
+				TFBot
+				{
+					Template T_TFBot_HeavyWeapons_HeavyWeight_Champ
+					Name "Chip Puncher"
+				}
+				
+				TFBot
+				{
+					Template T_TFBot_HeavyWeapons_HeavyWeight_Champ
+					Name "Chip Boxer"
+				}
+				
+				TFBot
+				{
+					Template T_TFBot_HeavyWeapons_HeavyWeight_Champ
+					Name "Chip Brawler"
+				}
+			}
+		}
+		
+		WaveSpawn
+		{
+			Name giant1
+			Where spawnbot_center
+			TotalCount 1
+			MaxActive 1
+			SpawnCount 1
+			WaitBeforeStarting 0
+			TotalCurrency 100
+			
+			
+				TFBot
+				{
+					Template T_TFBot_Giant_Soldier
+					Name "Big Chip Launcher"
+				}
+				
+				DoneOutput
+				{
+					Target chips_add_1_relay
+					Action Trigger
+				}
+		}
+		
+		WaveSpawn
+		{
+			Name stage2
+			WaitForAllSpawned stage1
+			WaitForAllDead giant1
+			Where spawnbot_center
+			TotalCount 1
+			MaxActive 1
+			SpawnCount 1
+			WaitBeforeStarting 20
+			TotalCurrency 100
+			
+			
+				TFBot
+				{
+					Template T_TFBot_Giant_Soldier
+					Name "Big Chip Launcher"
+				}
+				
+				DoneOutput
+				{
+					Target chips_add_1_relay
+					Action Trigger
+				}
+		}
+	}
+	
+	//WAVE 2 //////////CURRENCY 700///////////////////////////////////
+	Wave
+	{
+		StartWaveOutput
+		{
+			Target wave_start_relay
+			Action Trigger
+		}
+		DoneOutput
+		{
+			Target wave_finished_relay
+			Action trigger
+		}
+		
+		WaveSpawn
+		{
+			Name "CHIPS"
+			Where spawnbot_chips				//VERY IMPORTANT. Otherwise the bot will spawn without the chips case.
+			TotalCount 6
+			MaxActive 1							//There can be as many MaxActive at once as you like. However, more than 1 will cause the hud to be confused.
+			SpawnCount 1						//DO NOT SPAWN MORE THAN ONE CHIPSBOT AT A TIME!!
+			WaitBeforeStarting 15 				//must spawn after first regular bot. Chips bot cannot be the first bot to spawn!
+			WaitBetweenSpawnsAfterDeath 10		//Allow a minimum of at least 3 seconds between spawns.
+			Support 1							//Not necessary, but provides infinite spawning
+			
+			TFBot
+			{
+				Template T_TFBot_HeavyWeapons_Gnome
+				ClassIcon chip 					//the name of the custom hud icon
+				Name "Chip Laugher" 			//can be whatever name you like
+				Item "MvM GateBot Light Heavy" 	//make sure to use the correct hat for the class, the gatebot hat is not required, but it makes the bot more noticeable
+			}
+		}
+		
+		WaveSpawn
+		{
+			Name stage1
+			Where spawnbot_center
+			TotalCount 6
+			MaxActive 6
+			SpawnCount 6
+			WaitBeforeStarting 0
+			WaitBetweenSpawns 0
+			TotalCurrency 70
+			RandomSpawn 1
+			
+			
+				TFBot
+				{
+					Class Soldier
+					Skill Easy
+					Name "Broke Blaster"
+				}
+		}
+		
+		WaveSpawn
+		{
+			Name stage1
+			Where spawnbot_right
+			TotalCount 6
+			MaxActive 6
+			SpawnCount 6
+			WaitBeforeStarting 5
+			WaitBetweenSpawns 0
+			TotalCurrency 60
+			RandomSpawn 1
+			
+			
+				TFBot
+				{
+					Class Scout
+					Skill Easy
+					Name "Broke Bostonian"
+				}
+		}
+		
+		WaveSpawn
+		{
+			Name stage1
+			Where spawnbot_left
+			TotalCount 6
+			MaxActive 6
+			SpawnCount 6
+			WaitBeforeStarting 5
+			WaitBetweenSpawns 0
+			TotalCurrency 70
+			RandomSpawn 1
+			
+			
+				TFBot
+				{
+					Class Pyro
+					Skill Easy
+					Name "Broke Pyromaniac"
+				}
+		}
+		
+		WaveSpawn
+		{
+			Name stage2
+			WaitForAllDead stage1
+			Where spawnbot_center
+			TotalCount 18
+			MaxActive 9
+			SpawnCount 3
+			WaitBetweenSpawns 5
+			TotalCurrency 200
+			RandomSpawn 1
+			
+			
+				TFBot
+				{
+					Class Heavy
+					MaxVisionRange 600
+					Skill Easy
+					Name "Broke Blaster"
+				}
+		}
+		
+		WaveSpawn
+		{
+			Name stage2
+			WaitForAllDead stage1
+			Where spawnbot_left
+			Where spawnbot_right
+			TotalCount 12
+			MaxActive 12
+			SpawnCount 6
+			WaitBetweenSpawns 25
+			TotalCurrency 200
+			RandomSpawn 1
+			
+			
+				TFBot
+				{
+					Template T_TFBot_Pyro_Gas_Passer
+					MaxVisionRange 400
+					Skill Easy
+					Name "Broke Stinker"
+				}
+		}
+		
+		WaveSpawn
+		{
+			Name stage3
+			WaitForAllSpawned stage2
+			Where spawnbot_center
+			TotalCount 1
+			MaxActive 1
+			SpawnCount 1
+			TotalCurrency 100
+			
+			
+				TFBot
+				{
+					Template T_TFBot_Giant_Pyro
+					Skill Easy
+					Name "Giant Debtor Pyro"
+				}
+				
+				DoneOutput
+				{
+					Target chips_add_1_relay
+					Action Trigger
+				}
+				
+		}
+	}
+	
+	//WAVE 3 //////////CURRENCY 800///////////////////////////////////
+	Wave
+	{
+		StartWaveOutput
+		{
+			Target wave_start_relay
+			Action Trigger
+		}
+		DoneOutput
+		{
+			Target wave_finished_relay
+			Action trigger
+		}
+		
+		WaveSpawn
+		{
+			Name "CHIPS"
+			Where spawnbot_chips				//VERY IMPORTANT. Otherwise the bot will spawn without the chips case.
+			TotalCount 6
+			MaxActive 1							//There can be as many MaxActive at once as you like. However, more than 1 will cause the hud to be confused.
+			SpawnCount 1						//DO NOT SPAWN MORE THAN ONE CHIPSBOT AT A TIME!!
+			WaitBeforeStarting 15 				//must spawn after first regular bot. Chips bot cannot be the first bot to spawn!
+			WaitBetweenSpawnsAfterDeath 11		//Allow a minimum of at least 3 seconds between spawns.
+			Support 1							//Not necessary, but provides infinite spawning
+			
+			TFBot
+			{
+				Template T_TFBot_Pyro_ShotGun
+				ClassIcon chip 					//the name of the custom hud icon
+				Name "Chip Shooter" 			//can be whatever name you like
+				Item "MvM GateBot Light Pyro" 	//make sure to use the correct hat for the class, the gatebot hat is not required, but it makes the bot more noticeable
+			}
+		}
+		
+		WaveSpawn
+		{
+			Name stage1
+			Where spawnbot_center
+			TotalCount 1
+			MaxActive 1
+			SpawnCount 1
+			WaitBeforeStarting 0
+			WaitBetweenSpawns 0
+			TotalCurrency 50
+			RandomSpawn 1
+			
+			
+				TFBot
+				{
+					Template T_TFBot_HeavyWeapons_Fist
+					Name "Alcoholic Gauntlet"
+				}
+		}
+		
+		WaveSpawn
+		{
+			Name stage1
+			Where spawnbot
+			TotalCount 32
+			MaxActive 16
+			SpawnCount 4
+			WaitBeforeStarting 3
+			WaitBetweenSpawns 5
+			TotalCurrency 300
+			RandomSpawn 0
+			
+			
+				TFBot
+				{
+					Class Demoman
+					Skill Easy
+					MaxVisionRange 400
+					WeaponRestrictions MeleeOnly
+					ClassIcon demo_knight_bottle
+					Name "Drunkard"
+				}
+		}
+		
+		WaveSpawn
+		{
+			Name stage2
+			WaitForAllDead stage1
+			Where spawnbot_center
+			TotalCount 2
+			MaxActive 2
+			SpawnCount 1
+			WaitBeforeStarting 0
+			WaitBetweenSpawns 5
+			TotalCurrency 100
+			RandomSpawn 1
+			
+			
+				TFBot
+				{
+					Template T_TFBot_HeavyWeapons_Fist
+					Name "Alcoholic Gauntlet"
+				}
+		}
+		
+		WaveSpawn
+		{
+			Name stage2
+			WaitForAllDead stage1
+			Where spawnbot_center
+			TotalCount 18
+			MaxActive 18
+			SpawnCount 6
+			WaitBeforeStarting 0
+			WaitBetweenSpawns 8
+			TotalCurrency 200
+			RandomSpawn 1
+			
+			
+				TFBot
+				{
+					Class Pyro
+					Skill Easy
+					MaxVisionRange 350
+					Name "Alcoholic Pyromaniac"
+				}
+		}
+		
+		WaveSpawn
+		{
+			Name stage2
+			WaitForAllDead stage1
+			Where spawnbot_center
+			TotalCount 1
+			MaxActive 1
+			SpawnCount 1
+			WaitBeforeStarting 0
+			WaitBetweenSpawns 8
+			TotalCurrency 150
+			RandomSpawn 1
+			
+			
+				TFBot
+				{
+					Template T_TFBot_Giant_Demoman
+					Name "Big Ale Addicted Demolitionist"
+				}
+				
+				DoneOutput
+				{
+					Target chips_add_1_relay
+					Action Trigger
+				}
+		}
+	}
+	
+	//WAVE 4 //////////CURRENCY 800///////////////////////////////////
+	Wave
+	{
+		StartWaveOutput
+		{
+			Target wave_start_relay
+			Action Trigger
+		}
+		DoneOutput
+		{
+			Target wave_finished_relay
+			Action trigger
+		}
+		
+		WaveSpawn
+		{
+			Name "CHIPS"
+			Where spawnbot_chips				//VERY IMPORTANT. Otherwise the bot will spawn without the chips case.
+			TotalCount 6
+			MaxActive 1							//There can be as many MaxActive at once as you like. However, more than 1 will cause the hud to be confused.
+			SpawnCount 1						//DO NOT SPAWN MORE THAN ONE CHIPSBOT AT A TIME!!
+			WaitBeforeStarting 15 				//must spawn after first regular bot. Chips bot cannot be the first bot to spawn!
+			WaitBetweenSpawnsAfterDeath 12		//Allow a minimum of at least 3 seconds between spawns.
+			Support 1							//Not necessary, but provides infinite spawning
+			
+			TFBot
+			{
+				Template T_TFBot_Scout_Sandman
+				ClassIcon chip 					//the name of the custom hud icon
+				Name "Chip Baller" 				//can be whatever name you like
+				Item "MvM GateBot Light Scout" 	//make sure to use the correct hat for the class, the gatebot hat is not required, but it makes the bot more noticeable
+			}
+		}
+		
+		WaveSpawn
+		{
+			Name support
+			Where spawnbot
+			MaxActive 12
+			SpawnCount 6
+			WaitBeforeStarting 10
+			WaitBetweenSpawns 10
+			Support 1
+			
+			
+				TFBot
+				{
+					Template T_TFBot_Soldier_Shovel
+					Health 150
+					Name "Mafioso Grave Digger"
+				}
+		}
+		
+		WaveSpawn
+		{
+			Name support2
+			WaitForAllDead stage1
+			Where spawnbot
+			MaxActive 10
+			SpawnCount 5
+			WaitBeforeStarting 10
+			WaitBetweenSpawns 8
+			Support 2
+			
+			
+				TFBot
+				{
+					Template T_TFBot_Scout_Melee
+					Health 100
+					Name "Mafioso Concussioner"
+				}
+		}
+		
+		WaveSpawn
+		{
+			Name stage1
+			Where spawnbot_center
+			TotalCount 8
+			MaxActive 4
+			SpawnCount 4
+			WaitBeforeStarting 0
+			WaitBetweenSpawnsAfterDeath 10
+			TotalCurrency 400
+			
+			
+			Squad
+			{
+				TFBot
+				{
+					Template T_TFBot_Giant_Soldier_Crit
+					Name "Big Mafioso Soldier"
+				}
+				
+				TFBot
+				{
+					Template T_TFBot_Medic_BigHeal
+					Name "Mafioso Medic"
+				}
+				
+				TFBot
+				{
+					Template T_TFBot_Medic_BigHeal
+					Name "Mafioso Medic"
+				}
+				
+				TFBot
+				{
+					Template T_TFBot_Medic_BigHeal
+					Name "Mafioso Medic"
+				}
+			}
+			
+				DoneOutput
+				{
+					Target chips_add_1_relay
+					Action Trigger
+				}
+		}
+		
+		WaveSpawn
+		{
+			Name stage2
+			WaitForAllSpawned stage1
+			TotalCount 1
+			SpawnCount 1
+			WaitBeforeStarting 15
+			TotalCurrency 400
+			FirstSpawnWarningSound "mvm/mvm_tank_start.wav" //sound
+			
+			
+			Tank
+			{
+				Health 20000
+				Speed 75
+				Name "tankboss"
+				Skin 0									// 0 - normal skin, 1 - final wave skin
+				StartingPathTrackNode "tank_path_a_1"		// if this is not here have fun with the hatch tank
+				
+				OnKilledOutput							// output sent when the Tank is killed (almost never used)
+				{
+					Target tank_died_relay
+					Action Trigger                         
+				}
+
+				OnBombDroppedOutput						// output sent when the Tank drops its bomb once it reaches the end of its path 
+				{
+					Target boss_deploy_relay
+					Action Trigger                         
+				}
+			}
+			
+				StartWaveOutput
+				{
+					Target chips_add_1_relay
+					Action Trigger
+				}
+				
+				DoneOutput
+				{
+					Target chips_add_5_relay
+					Action Trigger
+				}
+		}
+	}
+	
+	//WAVE 5 //////////CURRENCY 1000///////////////////////////////////
+	Wave
+	{
+		StartWaveOutput
+		{
+			Target wave_start_relay
+			Action Trigger
+		}
+		DoneOutput
+		{
+			Target wave_finished_relay
+			Action trigger
+		}
+		
+		WaveSpawn
+		{
+			Name support
+			Where spawnbot
+			MaxActive 12
+			SpawnCount 6
+			WaitBeforeStarting 5
+			WaitBetweenSpawns 10
+			Support 1
+			
+			
+				TFBot
+				{
+					Template T_TFBot_HeavyWeapons_HeavyWeight_Champ
+					Item "capone's capper"
+					Health 200
+					Name "Russian Mafioso Smasher"
+				}
+		}
+		
+		WaveSpawn
+		{
+			Name stage1
+			Where spawnbot_center
+			TotalCount 4
+			MaxActive 4
+			SpawnCount 4
+			TotalCurrency 400
+			
+			
+			Squad
+			{
+				TFBot
+				{
+					Template T_TFBot_Giant_HeavyWeapons_Tom
+					Name "Big Russian Mafia Heavy"
+					Item "capone's capper"
+				}
+				
+				TFBot
+				{
+					Template T_TFBot_Medic_QuickUber_SlowCharge
+					Name "Russian Mafia Medic"
+					Item "capone's capper"
+				}
+				
+				TFBot
+				{
+					Template T_TFBot_Medic_QuickUber_SlowCharge
+					Name "Russian Mafia Medic"
+					Item "capone's capper"
+				}
+				
+				TFBot
+				{
+					Template T_TFBot_Medic_QuickUber_SlowCharge
+					Name "Russian Mafia Medic"
+					Item "capone's capper"
+				}
+			}
+		}
+		
+		WaveSpawn
+		{
+			Name stage1
+			Where spawnbot
+			TotalCount 3
+			MaxActive 3
+			SpawnCount 1
+			WaitBeforeStarting 0
+			WaitBetweenSpawns 20
+			TotalCurrency 300
+			RandomSpawn 0
+			
+			
+				TFBot
+				{
+					Template T_TFBot_Giant_Demoman_SlowFire
+					Name "Big Mafia Demolitionist"
+					Item "capone's capper"
+				}
+		}
+		
+		WaveSpawn
+		{
+			Name stage2
+			WaitForAllDead stage1
+			Where spawnbot_center
+			TotalCount 10
+			MaxActive 10
+			SpawnCount 10
+			TotalCurrency 100
+			
+			
+				TFBot
+				{
+					Template T_TFBot_Scout_Sandman
+					Name "Mafia Mobber"
+					Item "capone's capper"
+				}
+		}
+		
+		WaveSpawn
+		{
+			Name stage2
+			WaitForAllDead stage1
+			TotalCount 1
+			SpawnCount 1
+			TotalCurrency 200
+			FirstSpawnWarningSound "mvm/mvm_tank_start.wav" //sound
+			
+			
+			Tank
+			{
+				Health 30000
+				Speed 75
+				Name "tankboss"
+				Skin 1									// 0 - normal skin, 1 - final wave skin
+				StartingPathTrackNode "tank_path_b_1"		// if this is not here have fun with the hatch tank
+				
+				OnKilledOutput							// output sent when the Tank is killed (almost never used)
+				{
+					Target tank_died_relay
+					Action Trigger                         
+				}
+
+				OnBombDroppedOutput						// output sent when the Tank drops its bomb once it reaches the end of its path 
+				{
+					Target boss_deploy_relay
+					Action Trigger                         
+				}
+			}
+		}
+		
+		WaveSpawn
+		{
+			WaitForAllDead stage2
+			Where spawnbot_center
+			TotalCount 1
+			SpawnCount 1
+			WaitBeforeStarting 5
+			
+			
+				TFBot
+				{
+					Template boss
+				}
+		}
+	}
+}

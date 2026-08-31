@@ -1,0 +1,4411 @@
+#base robot_giant.pop
+#base robot_standard.pop
+
+WaveSchedule
+{
+	StartingCurrency 1500
+	CanBotsAttackWhileInSpawnRoom No
+	RespawnWaveTime 2
+
+	MaxSpeedLimit 840 [$SIGSEGV]
+	RobotLimit 45 [$SIGSEGV]
+	ForceRedMoney 1 [$SIGSEGV]
+	AllowBotExtraSlots 1 [$SIGSEGV]
+	LuaScriptFile "scripts/collateral_damage.lua" //Example name for lua script file
+
+	PrecacheSound "busterparty/start.wav" [$SIGSEGV]
+	PrecacheSound "busterparty/normalend.wav" [$SIGSEGV]
+	PrecacheSound "busterparty/frustration.wav" [$SIGSEGV]
+	PrecacheSound "busterparty/frustrationend.wav" [$SIGSEGV]
+	PrecacheSound "busterparty/wave6intro.wav" [$SIGSEGV]
+	
+	PrecacheModel "models/bots/demo/bot_sentry_buster_healing.mdl" [$SIGSEGV]
+	PrecacheModel "models/bots/demo/bot_sentry_buster_antigravity.mdl" [$SIGSEGV]
+	PrecacheModel "models/bots/demo/bot_sentry_buster_inferno.mdl" [$SIGSEGV]
+	PrecacheModel "models/bots/demo/bot_sentry_buster_reusable.mdl" [$SIGSEGV]
+	PrecacheModel "models/bots/demo/bot_sentry_buster_flash.mdl" [$SIGSEGV]
+	PrecacheModel "models/bots/demo/bot_sentry_buster_skunkface.mdl" [$SIGSEGV]
+	PrecacheModel "models/bots/demo/bot_sentry_buster_blackhole.mdl" [$SIGSEGV]
+	PrecacheModel "models/bots/demo/bot_sentry_buster_doomsday.mdl" [$SIGSEGV]
+
+	// Download custom upgrades files.
+	PrecacheGeneric "scripts/items/mvm_upgrades_stinky.txt" [$SIGSEGV]
+	PrecacheGeneric "scripts/items/mvm_upgrades_stinky_3.txt" [$SIGSEGV]
+
+    ItemAttributes [$SIGSEGV] //Adds attributes to specified item given to players
+    {
+        ItemName "Battery Canteens"
+        "powerup max charges" 6
+    }
+
+    ItemAttributes [$SIGSEGV] //Adds attributes to specified item given to players
+    {
+        ItemName "Default Power Up Canteen (MvM)"
+        "powerup max charges" 6
+    }
+
+    ItemAttributes [$SIGSEGV] //Adds attributes to specified item given to players
+    {
+        ItemName "Kritz Or Treat Canteen"
+        "powerup max charges" 6
+    }
+
+    ItemAttributes [$SIGSEGV] //Adds attributes to specified item given to players
+    {
+        ItemName "Power Up Canteen (MvM)"
+        "powerup max charges" 6
+    }
+
+	PointTemplates [$SIGSEGV]
+	{
+		FakeIcon
+        {
+            NoFixup 1
+            logic_auto
+            {
+                "OnMapSpawn" "!self,Kill,,0,-1"
+                "targetname" "yes"
+            }
+        }
+		logic
+		{
+			NoFixup 1
+            logic_auto
+            {
+				"onmapspawn" "wave_finished_relay,AddOutput,OnTrigger sentrybuster_entrancesound:StopSound:0:0:-1,0,-1"
+				"onmapspawn" "wave_finished_relay,AddOutput,OnTrigger sentrybuster_loopsound:StopSound:0:0:-1,0,-1"
+				"onmapspawn" "wave_finished_relay,AddOutput,OnTrigger sentrybuster_entrancesound:StopSound:0:2:-1,0,-1"
+				"onmapspawn" "wave_finished_relay,AddOutput,OnTrigger sentrybuster_loopsound:StopSound:0:2:-1,0,-1"
+				"onmapspawn" "wave_finished_relay,AddOutput,OnTrigger sentrybuster_entrancesound:StopSound:0:3:-1,0,-1"
+				"onmapspawn" "wave_finished_relay,AddOutput,OnTrigger sentrybuster_loopsound:StopSound:0:3:-1,0,-1"
+				"onmapspawn" "wave_finished_relay,AddOutput,OnTrigger sentrybuster_entrancesound:StopSound:0:5:-1,0,-1"
+				"onmapspawn" "wave_finished_relay,AddOutput,OnTrigger sentrybuster_loopsound:StopSound:0:5:-1,0,-1"
+				"onmapspawn" "wave_finished_relay,AddOutput,OnTrigger sentrybuster_entrancesound:StopSound:0:6:-1,0,-1"
+				"onmapspawn" "wave_finished_relay,AddOutput,OnTrigger sentrybuster_loopsound:StopSound:0:6:-1,0,-1"
+				"onmapspawn" "building_can_discount_sign,Enable,0,0,-1"
+				"onmapspawn" "gamerules,SetCustomUpgradesFile,scripts/items/mvm_upgrades_stinky.txt,0,-1"
+            }
+			training_annotation
+			{
+				"targetname" "hint1"
+				"origin" "-204 3540 -34"
+				"display_text" "Put your sentry guns near robots!"
+				"lifetime" "5"
+			}
+			training_annotation
+			{
+				"targetname" "hint2"
+				"origin" "-204 3540 -34"
+				"display_text" "Use sentry busters to your advantage!"
+				"lifetime" "5"
+			}
+			logic_relay
+			{
+				"targetname" "wave_finished_w6_relay"
+				"ontrigger" "wave_finished_relay,Trigger,0,0,-1"
+				"ontrigger" "blackhole*,Kill,0,0,-1"
+			}
+			filter_tf_condition
+            {
+                "condition" "65"
+                "Negated" "0"
+                "targetname" "filter_antigravity_affected"
+            }
+            trigger_hurt
+            {
+                "targetname" "fakebuster_killer"
+                "origin" "0 0 0"
+                "mins" "-128 -128 -128" //Trigger bounds, relative to origin
+				"maxs" "128 128 128"
+                "damage" "99999"
+                "damagecap" "99999"
+                "damagemodel" "0"
+                "damagetype" "0"
+                "nodmgforce" "1"
+                "spawnflags" "1"
+                "filtername" "filter_fakebuster"
+                "StartDisabled" "0"
+            }
+			func_nobuild
+            {
+                "origin" "504 3528 76"
+                "mins" "-136 -72 -148" //Trigger bounds, relative to origin
+				"maxs" "136 72 148"
+                "AllowDispenser" "0"
+				"AllowSentry" "0"
+				"AllowTeleporters" "0"
+				"StartDisabled" "0"
+				"TeamNum" "0"
+            }
+			func_flagdetectionzone
+            {
+                "targetname" "bombresetter_w7"
+                "origin" "0 0 0"
+                "mins" "-128 -128 -128" //Trigger bounds, relative to origin
+				"maxs" "128 128 128"
+                "StartDisabled" "1"
+				"OnStartTouchFlag" "item_teamflag,ForceReset,0,0,-1"
+            }
+			trigger_multiple
+            {
+                "targetname" "blackholebuster_killer"
+                "origin" "0 3472 936"
+                "mins" "-640 -112 -1112" //Trigger bounds, relative to origin
+				"maxs" "640 112 1112"
+                "spawnflags" "1"
+                "filtername" "filter_blackholebuster"
+                "onstarttouch" "!activator,SetHealth,1,0,-1"
+            }
+			trigger_push
+            {
+                "alternateticksfix" "0"
+                "filtername" "filter_antigravity_affected"
+                "pushdir" "-90 0 0"
+                "spawnflags" "1"
+                "speed" "1200"
+                "StartDisabled" "0"
+                "targetname" "antigravitybustertrigger"
+				"origin" "0 0 0"
+                "mins" "-5000 -5000 -5000" //Trigger bounds, relative to origin
+				"maxs" "5000 5000 5000"
+            }
+			trigger_multiple
+            {
+                "targetname" "w5fodderbotskiller"
+                "origin" "0 0 0"
+                "mins" "-5000 -5000 -5000" //Trigger bounds, relative to origin
+				"maxs" "5000 5000 5000"
+                "onstarttouch" "!activator,$Suicide,1,0,-1"
+                "spawnflags" "1"
+                "filtername" "filter_w5fodderbots"
+                "StartDisabled" "1"
+            }
+            ambient_generic
+            {
+                "targetname" "sentrybuster_entrancesound"
+                "message" "mvm\sentrybuster\mvm_sentrybuster_intro.wav"
+                "health" "8"
+                "radius" "2100"
+                "spawnflags" "17"
+                "origin" "0 0 100"
+            }
+            ambient_generic
+            {
+                "targetname" "sentrybuster_loopsound"
+                "message" "mvm\sentrybuster\mvm_sentrybuster_loop.wav"
+                "health" "8"
+                "radius" "2100"
+                "spawnflags" "17"
+                "origin" "0 0 100"
+            }
+			ambient_generic
+            {
+                "targetname" "sentrybuster_armsound"
+                "message" "mvm\sentrybuster\mvm_sentrybuster_spin.wav"
+                "health" "9"
+                "radius" "2100"
+                "spawnflags" "17"
+                "origin" "0 0 100"
+            }
+			ambient_generic
+            {
+                "targetname" "sentrybuster_explodesound"
+                "message" "mvm\sentrybuster\mvm_sentrybuster_explode.wav"
+                "health" "9"
+                "radius" "2100"
+                "spawnflags" "49"
+                "origin" "0 0 100"
+            }
+			logic_case
+			{
+				"targetname" "announcer_sentrybusterwarning_random"
+				"oncase01" "announcer_sentrybusterwarning_01,PlaySound,0,0,-1"
+                "oncase02" "announcer_sentrybusterwarning_02,PlaySound,0,0,-1"
+                "oncase03" "announcer_sentrybusterwarning_03,PlaySound,0,0,-1"
+                "oncase04" "announcer_sentrybusterwarning_04,PlaySound,0,0,-1"
+                "oncase05" "announcer_sentrybusterwarning_05,PlaySound,0,0,-1"
+                "oncase06" "announcer_sentrybusterwarning_06,PlaySound,0,0,-1"
+                "oncase07" "announcer_sentrybusterwarning_07,PlaySound,0,0,-1"
+			}
+			ambient_generic
+            {
+                "targetname" "announcer_sentrybusterwarning_01"
+                "message" "vo/mvm_sentry_buster_alerts01.mp3"
+                "health" "10"
+                "radius" "2100"
+                "spawnflags" "49"
+                "origin" "0 0 100"
+            }
+            ambient_generic
+            {
+                "targetname" "announcer_sentrybusterwarning_02"
+                "message" "vo/mvm_sentry_buster_alerts02.mp3"
+                "health" "10"
+                "radius" "2100"
+                "spawnflags" "49"
+                "origin" "0 0 100"
+            }
+            ambient_generic
+            {
+                "targetname" "announcer_sentrybusterwarning_03"
+                "message" "vo/mvm_sentry_buster_alerts03.mp3"
+                "health" "10"
+                "radius" "2100"
+                "spawnflags" "49"
+                "origin" "0 0 100"
+            }
+            ambient_generic
+            {
+                "targetname" "announcer_sentrybusterwarning_04"
+                "message" "vo/mvm_sentry_buster_alerts04.mp3"
+                "health" "10"
+                "radius" "2100"
+                "spawnflags" "49"
+                "origin" "0 0 100"
+            }
+            ambient_generic
+            {
+                "targetname" "announcer_sentrybusterwarning_05"
+                "message" "vo/mvm_sentry_buster_alerts05.mp3"
+                "health" "10"
+                "radius" "2100"
+                "spawnflags" "49"
+                "origin" "0 0 100"
+            }
+            ambient_generic
+            {
+                "targetname" "announcer_sentrybusterwarning_06"
+                "message" "vo/mvm_sentry_buster_alerts06.mp3"
+                "health" "10"
+                "radius" "2100"
+                "spawnflags" "49"
+                "origin" "0 0 100"
+            }
+            ambient_generic
+            {
+                "targetname" "announcer_sentrybusterwarning_07"
+                "message" "vo/mvm_sentry_buster_alerts07.mp3"
+                "health" "10"
+                "radius" "2100"
+                "spawnflags" "49"
+                "origin" "0 0 100"
+            }
+            ambient_generic
+            {
+                "targetname" "announcer_sentrybusterwarning_01"
+                "message" "vo/mvm_sentry_buster_alerts01.mp3"
+                "health" "10"
+                "radius" "2100"
+                "spawnflags" "49"
+                "origin" "0 0 100"
+            }
+            ambient_generic
+            {
+                "targetname" "announcer_sentrybusterwarning_02"
+                "message" "vo/mvm_sentry_buster_alerts02.mp3"
+                "health" "10"
+                "radius" "2100"
+                "spawnflags" "49"
+                "origin" "0 0 100"
+            }
+            ambient_generic
+            {
+                "targetname" "announcer_sentrybusterwarning_03"
+                "message" "vo/mvm_sentry_buster_alerts03.mp3"
+                "health" "10"
+                "radius" "2100"
+                "spawnflags" "49"
+                "origin" "0 0 100"
+            }
+            ambient_generic
+            {
+                "targetname" "announcer_sentrybusterwarning_04"
+                "message" "vo/mvm_sentry_buster_alerts04.mp3"
+                "health" "10"
+                "radius" "2100"
+                "spawnflags" "49"
+                "origin" "0 0 100"
+            }
+            ambient_generic
+            {
+                "targetname" "announcer_sentrybusterwarning_05"
+                "message" "vo/mvm_sentry_buster_alerts05.mp3"
+                "health" "10"
+                "radius" "2100"
+                "spawnflags" "49"
+                "origin" "0 0 100"
+            }
+            ambient_generic
+            {
+                "targetname" "announcer_sentrybusterwarning_06"
+                "message" "vo/mvm_sentry_buster_alerts06.mp3"
+                "health" "10"
+                "radius" "2100"
+                "spawnflags" "49"
+                "origin" "0 0 100"
+            }
+            ambient_generic
+            {
+                "targetname" "announcer_sentrybusterwarning_07"
+                "message" "vo/mvm_sentry_buster_alerts07.mp3"
+                "health" "10"
+                "radius" "2100"
+                "spawnflags" "49"
+                "origin" "0 0 100"
+            }
+			filter_tf_bot_has_tag
+            {
+                "Negated" "0"
+                "require_all_tags" "1"
+                "tags" "bot_giant"
+                "targetname" "filter_giant"
+            }
+            filter_tf_bot_has_tag
+            {
+                "Negated" "1"
+                "require_all_tags" "0"
+                "tags" "bot_giant"
+                "targetname" "filter_common"
+            }
+            filter_tf_bot_has_tag
+            {
+                "Negated" "0"
+                "require_all_tags" "0"
+                "tags" "fakebuster"
+                "targetname" "filter_fakebuster"
+            }
+			filter_tf_bot_has_tag
+            {
+                "Negated" "0"
+                "require_all_tags" "0"
+                "tags" "specialbuster"
+                "targetname" "filter_specialbuster"
+            }
+			filter_tf_bot_has_tag
+            {
+                "Negated" "0"
+                "require_all_tags" "0"
+                "tags" "reusablebuster"
+                "targetname" "filter_reusablebuster"
+            }
+			filter_tf_bot_has_tag
+            {
+                "Negated" "0"
+                "require_all_tags" "0"
+                "tags" "blackholebuster"
+                "targetname" "filter_blackholebuster"
+            }
+			filter_tf_bot_has_tag
+            {
+                "Negated" "0"
+                "require_all_tags" "0"
+                "tags" "w5fodderbots"
+                "targetname" "filter_w5fodderbots"
+            }
+			logic_relay
+            {
+                "targetname" "reusablebuster_tts_intro"
+				"ontrigger" "player,$PlaySoundToSelf,=140|busterparty/start.wav,0,-1"
+				"ontrigger" "player,$PlaySoundToSelf,=140|busterparty/start.wav,0,-1"
+				"ontrigger" "player,$PlaySoundToSelf,=140|busterparty/start.wav,0,-1"
+				"ontrigger" "popscript,$ReusableBusterTtsIntro,0,0,-1"
+            }
+			logic_relay
+            {
+                "targetname" "reusablebuster_tts_end"
+				"ontrigger" "player,$PlaySoundToSelf,=140|busterparty/normalend.wav,0.1,-1"
+				"ontrigger" "player,$PlaySoundToSelf,=140|busterparty/normalend.wav,0.1,-1"
+				"ontrigger" "player,$PlaySoundToSelf,=140|busterparty/normalend.wav,0.1,-1"
+				"ontrigger" "popscript,$ReusableBusterTtsEnd,0.1,0,-1"
+				"ontrigger" "gamerules,SetCustomUpgradesFile,scripts/items/mvm_upgrades_stinky_3.txt,0.1,-1"
+            }
+			logic_relay
+            {
+                "targetname" "reusablebuster_tts_frustration"
+                "ontrigger" "player,$PlaySoundToSelf,=140|busterparty/frustration.wav,0,-1"
+				"ontrigger" "player,$PlaySoundToSelf,=140|busterparty/frustration.wav,0,-1"
+				"ontrigger" "player,$PlaySoundToSelf,=140|busterparty/frustration.wav,0,-1"
+				"ontrigger" "popscript,$ReusableBusterTtsFrustration,0,0,-1"
+            }
+			logic_relay
+            {
+                "targetname" "reusablebuster_tts_frustrationend"
+                "ontrigger" "player,$PlaySoundToSelf,=140|busterparty/frustrationend.wav,0,-1"
+				"ontrigger" "player,$PlaySoundToSelf,=140|busterparty/frustrationend.wav,0,-1"
+				"ontrigger" "player,$PlaySoundToSelf,=140|busterparty/frustrationend.wav,0,-1"
+				"ontrigger" "popscript,$ReusableBusterTtsFrustrationEnd,0,0,-1"
+            }
+			logic_relay
+            {
+                "targetname" "reusablebuster_tts_wavesix"
+                "ontrigger" "player,$PlaySoundToSelf,=140|busterparty/wave6intro.wav,0,-1"
+				"ontrigger" "player,$PlaySoundToSelf,=140|busterparty/wave6intro.wav,0,-1"
+				"ontrigger" "player,$PlaySoundToSelf,=140|busterparty/wave6intro.wav,0,-1"
+				"ontrigger" "popscript,$ReusableBusterTtsWave6,0,0,-1"
+            }
+			filter_multi
+            {
+                "Filter01" "filter_specialbuster"
+                "Filter02" "filter_reusablebuster"
+                "filtertype" "1"
+                "Negated" "0"
+                "targetname" "filter_duobuster"
+            }
+			filter_damage_type
+            {
+                "damagetype" "262144"
+                "Negated" "0"
+                "targetname" "filter_invulnerable"
+            }
+            filter_damage_type
+            {
+                "damagetype" "262144"
+                "Negated" "1"
+                "targetname" "filter_nodmgfilter"
+            }
+			filter_tf_condition
+            {
+                "condition" "5"
+                "Negated" "1"
+                "targetname" "invulnfilter"
+            }
+            filter_tf_condition
+            {
+                "condition" "52"
+                "Negated" "1"
+                "targetname" "ubercanteenfilter"
+            }
+            filter_multi
+            {
+                "Filter01" "filter_redteam"
+                "Filter02" "invulnfilter"
+                "Filter03" "ubercanteenfilter"
+                "filtertype" "0"
+                "Negated" "0"
+                "targetname" "filter_red_notubered"
+            }
+			
+		}
+		DefaultBuster
+        {
+            KeepAlive 1
+            OnParentKilledOutput //kill players after the carrier was dead
+			{
+				Target "defaultbuster_forcedetonate"
+				Action "trigger"
+				Delay 0.00
+				Param 1
+			}
+            logic_auto
+            {
+                "onmapspawn" "sentrybuster_entrancesound,PlaySound,0,0,-1"
+                "onmapspawn" "sentrybuster_loopsound,PlaySound,0,5,-1"
+            }
+            logic_relay
+            {
+                "targetname" "defaultbuster_forcedetonate"
+				"ontrigger" "sentrybuster_explodesound,StopSound,0,-1,-1"
+                "ontrigger" "sentrybuster_explodesound,PlaySound,0,0,-1"
+                "ontrigger" "defaultbuster_explode_particle,Start,0,0,-1"
+                "ontrigger" "defaultbuster_explode_particle,Kill,0,3,-1"
+                "ontrigger" "sentrybuster_entrancesound,StopSound,0,0,-1"
+                "ontrigger" "sentrybuster_loopsound,StopSound,0,0,-1"
+                "ontrigger" "!self,Kill,0,3,-1"
+            }
+            info_particle_system
+            {
+                "origin" "0 0 0"
+                "targetname" "defaultbuster_explode_particle"
+                "start_active" "0"
+                "flag_as_weather" "0"
+                "effect_name" "buster_expl_short"
+            }
+        }
+		HealBusterAura
+        {
+            OnSpawnOutput
+			{
+				Target "healbuster_particle"
+				Action "$SetFakeParent"
+				Delay 0.00
+				Param "!activator"
+			}
+			info_particle_system
+            {
+                "origin" "0 0 107"
+                "targetname" "healbuster_particle"
+                "start_active" "1"
+                "flag_as_weather" "0"
+                "effect_name" "healbuster_aura"
+				"$modules" "fakeparent"
+				"$bone" "bip_spine_0"
+				"parentname" "!parent"
+            }
+
+        }
+        HealBuster
+        {
+            KeepAlive 1
+            OnParentKilledOutput //kill players after the carrier was dead
+			{
+				Target "healbuster_forcedetonate"
+				Action "trigger"
+				Delay 0.00
+				Param 1
+			}
+            logic_auto
+            {
+                "onmapspawn" "sentrybuster_entrancesound,PlaySound,0,0,-1"
+                "onmapspawn" "sentrybuster_loopsound,PlaySound,0,5,-1"
+            }
+            logic_relay
+            {
+                "targetname" "healbuster_forcedetonate"
+				"ontrigger" "sentrybuster_explodesound,StopSound,0,-1,-1"
+                "ontrigger" "sentrybuster_explodesound,PlaySound,0,0,-1"
+                "ontrigger" "healbuster_explode_particle,Start,0,0,-1"
+                "ontrigger" "healbuster_explode_particle,Kill,0,3,-1"
+                "ontrigger" "sentrybuster_entrancesound,StopSound,0,0,-1"
+                "ontrigger" "sentrybuster_loopsound,StopSound,0,0,-1"
+                "ontrigger" "!self,Kill,0,3,-1"
+            }
+            info_particle_system
+            {
+                "origin" "0 0 0"
+                "targetname" "healbuster_explode_particle"
+                "start_active" "0"
+                "flag_as_weather" "0"
+                "effect_name" "buster_expl_healing"
+            }
+        }
+		AntiGravityBusterAura
+        {
+            OnSpawnOutput
+			{
+				Target "antigravitybuster_particle"
+				Action "$SetFakeParent"
+				Delay 0.00
+				Param "!activator"
+			}
+			info_particle_system
+            {
+                "origin" "0 0 107"
+                "targetname" "antigravitybuster_particle"
+                "start_active" "1"
+                "flag_as_weather" "0"
+                "effect_name" "antigravitybuster_aura"
+				"$modules" "fakeparent"
+				"$bone" "bip_spine_0"
+				"parentname" "!parent"
+            }
+        }
+        AntiGravityBuster
+        {
+            KeepAlive 1
+            OnParentKilledOutput //kill players after the carrier was dead
+			{
+				Target "antigravitybuster_forcedetonate"
+				Action "trigger"
+				Delay 0.00
+				Param 1
+			}
+            logic_auto
+            {
+                "onmapspawn" "sentrybuster_entrancesound,PlaySound,0,0,-1"
+                "onmapspawn" "sentrybuster_loopsound,PlaySound,0,5,-1"
+            }
+            logic_relay
+            {
+                "targetname" "antigravitybuster_forcedetonate"
+				"ontrigger" "sentrybuster_explodesound,StopSound,0,-1,-1"
+                "ontrigger" "sentrybuster_explodesound,PlaySound,0,0,-1"
+                "ontrigger" "antigravitybuster_explode_particle,Start,0,0,-1"
+                "ontrigger" "antigravitybuster_explode_particle,Kill,0,3,-1"
+                "ontrigger" "sentrybuster_entrancesound,StopSound,0,0,-1"
+                "ontrigger" "sentrybuster_loopsound,StopSound,0,0,-1"
+                "ontrigger" "!self,Kill,0,3,-1"
+            }
+            info_particle_system
+            {
+                "origin" "0 0 0"
+                "targetname" "antigravitybuster_explode_particle"
+                "start_active" "0"
+                "flag_as_weather" "0"
+                "effect_name" "buster_expl_antigravity"
+            }
+        }
+		FakeBusterAura
+        {
+            info_particle_system
+            {
+                "origin" "0 0 0"
+                "targetname" "fakebuster_particle"
+                "start_active" "1"
+                "flag_as_weather" "0"
+                "effect_name" "fakebuster_aura"
+				"parentname" "!parent"
+            }
+        }
+		
+		InfernoBusterAura
+        {
+            info_particle_system
+            {
+                "origin" "0 0 7"
+                "targetname" "infernobuster_particle"
+                "start_active" "1"
+                "flag_as_weather" "0"
+                "effect_name" "infernobuster_aura"
+				"parentname" "!parent"
+            }
+        }
+        InfernoBuster
+        {
+            KeepAlive 1
+            OnParentKilledOutput //kill players after the carrier was dead
+			{
+				Target "infernobuster_forcedetonate"
+				Action "trigger"
+				Delay 0.00
+				Param 1
+			}
+            logic_auto
+            {
+                "onmapspawn" "sentrybuster_entrancesound,PlaySound,0,0,-1"
+                "onmapspawn" "sentrybuster_loopsound,PlaySound,0,5,-1"
+            }
+			ambient_generic
+            {
+                "targetname" "infernobuster_sound"
+                "message" "ambient\fire\firebig.wav"
+                "health" "10"
+                "radius" "2100"
+                "spawnflags" "16"
+                "origin" "0 0 100"
+            }
+			trigger_ignite
+            {
+                "targetname" "infernobuster_passiveignite"
+                "origin" "0 0 16"
+                "mins" "-48 -48 -72"
+                "maxs" "48 48 72"
+                "burn_duration" "4"
+                "damage_percent_per_second" "25"
+                "spawnflags" "1"
+                "StartDisabled" "0"
+            }
+			trigger_ignite
+            {
+                "targetname" "infernobuster_triggerignite"
+                "origin" "0 0 16"
+                "mins" "-144 -144 -144"
+                "maxs" "144 144 144"
+                "burn_duration" "4"
+                "damage_percent_per_second" "40"
+                "filtername" "filter_red_notubered"
+                "spawnflags" "1"
+                "StartDisabled" "1"
+            }
+			trigger_ignite
+            {
+                "targetname" "infernobuster_triggerignite"
+                "origin" "0 0 16"
+                "mins" "-144 -144 -144"
+                "maxs" "144 144 144"
+                "burn_duration" "4"
+                "damage_percent_per_second" "100"
+                "filtername" "filter_blueteam"
+                "spawnflags" "1"
+                "StartDisabled" "1"
+            }
+            logic_relay
+            {
+                "targetname" "infernobuster_forcedetonate"
+				"ontrigger" "sentrybuster_explodesound,StopSound,0,-1,-1"
+                "ontrigger" "sentrybuster_explodesound,PlaySound,0,0,-1"
+                "ontrigger" "infernobuster_explode_particle,Start,0,0,-1"
+                "ontrigger" "infernobuster_explode_particle,Kill,0,3,-1"
+                "ontrigger" "sentrybuster_entrancesound,StopSound,0,0,-1"
+                "ontrigger" "sentrybuster_loopsound,StopSound,0,0,-1"
+				"ontrigger" "infernobuster_triggerignite,Enable,0,0,-1"
+                "ontrigger" "infernobuster_sound,PlaySound,0,0.25,-1"
+                "ontrigger" "infernobuster_sound,StopSound,0,3.75,-1"
+                "ontrigger" "infernobuster_triggerignite,Kill,0,3.5,-1"
+				"ontrigger" "infernobuster_passiveignite,Kill,0,3.5,-1"
+                "ontrigger" "!self,Kill,0,3,-1"
+            }
+            info_particle_system
+            {
+                "origin" "0 0 0"
+                "targetname" "infernobuster_explode_particle"
+                "start_active" "0"
+                "flag_as_weather" "0"
+                "effect_name" "buster_expl_inferno"
+            }
+        }
+		ReusableBuster
+        {
+            NoFixup 1
+            KeepAlive 1
+            OnParentKilledOutput //kill players after the carrier was dead
+			{
+				Target "reusablebuster_sound*"
+				Action "Kill"
+				Delay 0.00
+				Param 1
+			}
+            OnParentKilledOutput //kill players after the carrier was dead
+			{
+				Target "reusablebuster_explode*"
+				Action "Kill"
+				Delay 5.00
+				Param 1
+			}
+            ambient_generic
+            {
+                "targetname" "reusablebuster_sound_entrance"
+                "message" "mvm\sentrybuster\mvm_sentrybuster_intro.wav"
+                "health" "10"
+                "radius" "2100"
+                "spawnflags" "17"
+                "origin" "0 0 100"
+            }
+            ambient_generic
+            {
+                "targetname" "reusablebuster_sound_loop"
+                "message" "mvm\sentrybuster\mvm_sentrybuster_loop.wav"
+                "health" "10"
+                "radius" "2100"
+                "spawnflags" "17"
+                "origin" "0 0 100"
+            }
+            logic_auto
+            {
+                "onmapspawn" "reusablebuster_sound_entrance,PlaySound,0,0,-1"
+                "onmapspawn" "reusablebuster_sound_loop,PlaySound,0,5,-1"
+            }
+            logic_relay
+            {
+                "targetname" "reusablebuster_detonate"
+                "ontrigger" "sentrybuster_armsound,StopSound,0,-1,-1"
+                "ontrigger" "sentrybuster_armsound,PlaySound,0,0,-1"
+				"ontrigger" "sentrybuster_explodesound,StopSound,0,1.9,-1"
+                "ontrigger" "sentrybuster_explodesound,PlaySound,0,2,-1"
+                "ontrigger" "reusablebuster_explode_particle,Start,0,2,-1"
+                "ontrigger" "reusablebuster_explode_particle,Stop,0,3.5,-1"
+            }
+            info_particle_system
+            {
+                "origin" "0 0 0"
+                "targetname" "reusablebuster_explode_particle"
+                "start_active" "0"
+                "flag_as_weather" "0"
+                "effect_name" "buster_expl_short"
+            }
+        }
+		FlashBusterAura
+        {
+            OnSpawnOutput
+			{
+				Target "flashbuster_particle"
+				Action "$SetFakeParent"
+				Delay 0.00
+				Param "!activator"
+			}
+			info_particle_system
+            {
+                "origin" "0 0 107"
+                "targetname" "flashbuster_particle"
+                "start_active" "1"
+                "flag_as_weather" "0"
+                "effect_name" "flashbuster_aura"
+				"$modules" "fakeparent"
+				"$bone" "bip_spine_0"
+				"parentname" "!parent"
+            }
+        }
+        FlashBuster
+        {
+            KeepAlive 1
+            OnParentKilledOutput //kill players after the carrier was dead
+			{
+				Target "flashbuster_forcedetonate"
+				Action "trigger"
+				Delay 0.00
+				Param 1
+			}
+            logic_auto
+            {
+                "onmapspawn" "sentrybuster_entrancesound,PlaySound,0,0,-1"
+                "onmapspawn" "sentrybuster_loopsound,PlaySound,0,5,-1"
+            }
+            logic_relay
+            {
+                "targetname" "flashbuster_forcedetonate"
+				"ontrigger" "sentrybuster_explodesound,StopSound,0,-1,-1"
+                "ontrigger" "sentrybuster_explodesound,PlaySound,0,0,-1"
+                "ontrigger" "flashbuster_explode_particle,Start,0,0,-1"
+                "ontrigger" "flashbuster_explode_particle,Kill,0,3,-1"
+                "ontrigger" "sentrybuster_entrancesound,StopSound,0,0,-1"
+                "ontrigger" "sentrybuster_loopsound,StopSound,0,0,-1"
+                "ontrigger" "!self,Kill,0,3,-1"
+            }
+            info_particle_system
+            {
+                "origin" "0 0 0"
+                "targetname" "flashbuster_explode_particle"
+                "start_active" "0"
+                "flag_as_weather" "0"
+                "effect_name" "buster_expl_flash"
+            }
+        }
+		SkunkfaceBusterAura
+        {
+            OnSpawnOutput
+			{
+				Target "skunkfacebuster_particle"
+				Action "$SetFakeParent"
+				Delay 0.00
+				Param "!activator"
+			}
+			info_particle_system
+            {
+                "origin" "0 0 0"
+                "targetname" "skunkfacebuster_particle"
+                "start_active" "1"
+                "flag_as_weather" "0"
+                "effect_name" "skunkfacebuster_aura"
+				"parentname" "!parent"
+            }
+        }
+        SkunkfaceBuster
+        {
+            KeepAlive 1
+            OnParentKilledOutput //kill players after the carrier was dead
+			{
+				Target "skunkfacebuster_forcedetonate"
+				Action "trigger"
+				Delay 0.00
+				Param 1
+			}
+            logic_auto
+            {
+                "onmapspawn" "sentrybuster_entrancesound,PlaySound,0,0,-1"
+                "onmapspawn" "sentrybuster_loopsound,PlaySound,0,5,-1"
+            }
+            logic_relay
+            {
+                "targetname" "skunkfacebuster_forcedetonate"
+				"ontrigger" "sentrybuster_explodesound,StopSound,0,-1,-1"
+                "ontrigger" "sentrybuster_explodesound,PlaySound,0,0,-1"
+                "ontrigger" "skunkfacebuster_explode_particle,Start,0,0,-1"
+                "ontrigger" "skunkfacebuster_explode_particle,Kill,0,3,-1"
+                "ontrigger" "sentrybuster_entrancesound,StopSound,0,0,-1"
+                "ontrigger" "sentrybuster_loopsound,StopSound,0,0,-1"
+                "ontrigger" "!self,Kill,0,3,-1"
+            }
+            info_particle_system
+            {
+                "origin" "0 0 0"
+                "targetname" "skunkfacebuster_explode_particle"
+                "start_active" "0"
+                "flag_as_weather" "0"
+                "effect_name" "buster_expl_skunkface"
+            }
+        }
+		BlackHoleBusterAura
+        {
+            OnSpawnOutput
+			{
+				Target "blackholebuster_particle"
+				Action "$SetFakeParent"
+				Delay 0.00
+				Param "!activator"
+			}
+			info_particle_system
+            {
+                "origin" "0 0 7"
+                "targetname" "blackholebuster_particle"
+                "start_active" "1"
+                "flag_as_weather" "0"
+                "effect_name" "eb_tp_vortex01"
+				"$modules" "fakeparent"
+				"$bone" "bip_spine_0"
+				"parentname" "!parent"
+            }
+        }
+        BlackHoleBuster
+        {
+            KeepAlive 1
+            OnParentKilledOutput //kill players after the carrier was dead
+			{
+				Target "blackholebuster_forcedetonate"
+				Action "trigger"
+				Delay 0.00
+				Param 1
+			}
+            logic_auto
+            {
+                "onmapspawn" "sentrybuster_entrancesound,PlaySound,0,0,-1"
+                "onmapspawn" "sentrybuster_loopsound,PlaySound,0,5,-1"
+            }
+			point_push
+            {
+                "origin" "0 0 107"
+				"enabled" "0"
+                "inner_radius" "0"
+                "magnitude" "-140"
+                "radius" "4096"
+                "spawnflags" "8"
+                "targetname" "blackhole_vortex_sucker"
+            }
+			info_particle_system
+            {
+                "origin" "0 0 107"
+                "targetname" "blackholebuster_vortex_particle"
+                "start_active" "0"
+                "flag_as_weather" "0"
+                "effect_name" "eyeboss_tp_vortex"
+            }
+			trigger_hurt
+            {
+                "targetname" "blackholebuster_vortex_hurter"
+                "origin" "0 0 107"
+                "mins" "-144 -144 -144" //Trigger bounds, relative to origin
+				"maxs" "144 144 144"
+                "damage" "99999"
+                "damagecap" "99999"
+                "damagemodel" "0"
+                "damagetype" "0"
+                "nodmgforce" "1"
+                "spawnflags" "1"
+                "StartDisabled" "1"
+            }
+            logic_relay
+            {
+                "targetname" "blackholebuster_forcedetonate"
+				"ontrigger" "sentrybuster_explodesound,StopSound,0,-1,-1"
+                "ontrigger" "sentrybuster_explodesound,PlaySound,0,0,-1"
+                "ontrigger" "blackholebuster_explode_particle,Start,0,0,-1"
+                "ontrigger" "blackholebuster_explode_particle,Kill,0,3,-1"
+				"ontrigger" "blackhole_vortex_sucker,Enable,0,0,-1"
+				"ontrigger" "blackholebuster_vortex_particle,Start,0,0,-1"
+				"ontrigger" "blackholebuster_vortex_hurter,Enable,0,0,-1"
+                "ontrigger" "sentrybuster_entrancesound,StopSound,0,0,-1"
+                "ontrigger" "sentrybuster_loopsound,StopSound,0,0,-1"
+                "ontrigger" "!self,Kill,0,3,-1"
+            }
+            info_particle_system
+            {
+                "origin" "0 0 0"
+                "targetname" "blackholebuster_explode_particle"
+                "start_active" "0"
+                "flag_as_weather" "0"
+                "effect_name" "buster_expl_blackhole"
+            }
+        }
+		DoomsdayBusterAura
+        {
+            OnSpawnOutput
+			{
+				Target "doomsdaybuster_particle"
+				Action "$SetFakeParent"
+				Delay 0.00
+				Param "!activator"
+			}
+			logic_auto
+			{
+				"onmapspawn" "doomsdaybuster_particle,Start,0,3,-1"
+			}
+			info_particle_system
+            {
+                "origin" "0 0 125"
+                "targetname" "doomsdaybuster_particle"
+                "start_active" "0"
+                "flag_as_weather" "0"
+                "effect_name" "doomsdaybuster_chargeup"
+				"$modules" "fakeparent"
+				"$bone" "bip_spine_0"
+				"parentname" "!parent"
+            }
+			info_particle_system
+            {
+                "origin" "0 0 125"
+                "targetname" "doomsdaybuster_particle"
+                "start_active" "0"
+                "flag_as_weather" "0"
+                "effect_name" "doomsdaybuster_glow"
+				"$modules" "fakeparent"
+				"$bone" "bip_spine_0"
+				"parentname" "!parent"
+            }
+        }
+        DoomsdayBuster
+        {
+            NoFixup 1
+			KeepAlive 1
+            OnParentKilledOutput //kill players after the carrier was dead
+			{
+				Target "doomsdaybuster_forcedetonate"
+				Action "trigger"
+				Delay 0.00
+				Param 1
+			}
+            logic_auto
+            {
+                "onmapspawn" "sentrybuster_entrancesound,PlaySound,0,0,-1"
+                "onmapspawn" "sentrybuster_loopsound,PlaySound,0,5,-1"
+            }
+			env_fade
+			{
+				"targetname" "doomsdaybuster_fade"
+				"duration" "0.5"
+				"holdtime" "0.2"
+				"rendercolor" "255 0 0"
+				"spawnflags" "1"
+			}
+			env_shake
+            {
+                "targetname" "doomsdaybuster_shaker"
+				"spawnflags" "5"
+                "amplitude" "270"
+                "radius" "4000"
+                "duration" "5"
+                "frequency" "800"
+            }
+			phys_ragdollmagnet
+            {
+                "origin" "0 0 107"
+				"axis" "8.92 -11 -193"
+                "force" "-5000000"
+				"radius" "16384"
+				"StartDisabled" "1"
+                "targetname" "doomsdaybuster_pusher"
+            }
+			ambient_generic
+            {
+                "targetname" "doomsdaybuster_explodesound"
+                "message" "misc\doomsday_missile_explosion.wav"
+                "health" "10"
+                "radius" "2100"
+                "spawnflags" "49"
+                "origin" "0 0 100"
+            }
+			ambient_generic
+            {
+                "targetname" "doomsdaybuster_explodesound"
+                "message" "misc\doomsday_missile_explosion.wav"
+                "health" "10"
+                "radius" "2100"
+                "spawnflags" "49"
+                "origin" "0 0 100"
+            }
+			ambient_generic
+            {
+                "targetname" "doomsdaybuster_explodesound"
+                "message" "misc\doomsday_missile_explosion.wav"
+                "health" "10"
+                "radius" "2100"
+                "spawnflags" "49"
+                "origin" "0 0 100"
+            }
+            logic_relay
+            {
+                "targetname" "doomsdaybuster_forcedetonate"
+				"ontrigger" "doomsdaybuster_explodesound,StopSound,0,-1,-1"
+                "ontrigger" "doomsdaybuster_explodesound,PlaySound,0,0,-1"
+                "ontrigger" "doomsdaybuster_explode_particle,Start,0,0,-1"
+                "ontrigger" "doomsdaybuster_explode_particle,Kill,0,12,-1"
+				"ontrigger" "doomsdaybuster_pusher,Enable,0,0,-1"
+                "ontrigger" "sentrybuster_entrancesound,StopSound,0,0,-1"
+                "ontrigger" "sentrybuster_loopsound,StopSound,0,0,-1"
+				"ontrigger" "doomsdaybuster_shaker,StartShake,0,0,-1"
+                "ontrigger" "doomsdaybuster_fade,Fade,0,0,-1"
+				"ontrigger" "tankboss,$TakeDamage,999999,0,-1"
+                "ontrigger" "!self,Kill,0,12,-1"
+            }
+            info_particle_system
+            {
+                "origin" "0 0 0"
+                "targetname" "doomsdaybuster_explode_particle"
+                "start_active" "0"
+                "flag_as_weather" "0"
+                "effect_name" "buster_expl_doomsday"
+            }
+        }
+	}
+
+	ClassLimit [$SIGSEGV] //Limits the number of specified classes
+	{
+		Scout 0
+		Soldier 0
+		Pyro 0
+		Demoman 0
+		Heavyweapons 0
+		Medic 0
+		Sniper 0
+		Spy 0
+	}
+
+	Templates
+	{
+		
+		T_TFBot_Pyro_Deflector
+		{
+			Class Pyro
+			ItemAttributes
+			{
+				ItemName "tf_weapon_flamethrower"
+				"airblast_destroy_projectile" 1
+			}
+		}
+        T_TFBot_Giant_Heavyweapons_BrassBeast_Hatted
+		{
+			Class Heavyweapons
+			Name "Giant Brass Beast Heavy"
+			ClassIcon heavy_brassbeast
+			Item "The Brass Beast"
+			Item "The Eliminators Safeguard"
+			Skill Easy
+			Health 5000
+			WeaponRestrictions PrimaryOnly
+			Attributes MiniBoss
+			FireInput [$SIGSEGV] //Failsafe for if black hole doesnt suck them 
+            {
+                Target "!activator" //Entity name to use
+                Action "$Suicide" //Input to fire
+                Param "" //Parameter to use
+                Delay 50 //Delay before firing the input
+                Cooldown 1 //Cooldown between firing the input
+                Repeats 1 //How many times should the input be fired
+            }
+			ItemAttributes
+			{
+				ItemName "The Brass Beast"
+				"damage bonus"	2.25
+				"minigun spinup time increased" 6
+				"spunup_damage_resistance" 1
+			}
+            ItemAttributes
+			{
+				ItemName "The Eliminators Safeguard"
+                "set item tint RGB" 14727489
+			}
+			CharacterAttributes
+			{
+				"move speed bonus"	0.5
+				"damage force reduction" 0.3
+				"airblast vulnerability multiplier" 0.3
+				"override footstep sound set" 2
+			}
+		}
+		T_TFBot_Giant_Medic_Scary
+		{
+			Class Medic
+			Name "Giant Medic"
+			ClassIcon medic_giant
+			Skill Expert
+			Health 4500
+			Item "The Quick-Fix"
+			FireInput [$SIGSEGV] //Failsafe for if black hole doesnt suck them 
+            {
+                Target "!activator" //Entity name to use
+                Action "$Suicide" //Input to fire
+                Param "" //Parameter to use
+                Delay 50 //Delay before firing the input
+                Cooldown 1 //Cooldown between firing the input
+                Repeats 1 //How many times should the input be fired
+            }
+			// WeaponRestrictions SecondaryOnly
+			Attributes MiniBoss
+
+			ItemAttributes
+			{
+				ItemName "The Quick-Fix"
+				"ubercharge rate bonus" 0.01 // pretty much disables ubercharge
+			}
+			ItemAttributes
+			{
+				ItemName "TF_WEAPON_SYRINGEGUN_MEDIC"
+				"damage penalty" 0.1
+			}
+			CharacterAttributes
+			{
+				"move speed bonus"	0.5
+				"damage force reduction" 0.6
+				"airblast vulnerability multiplier" 0.6
+				"heal rate bonus" 200 // only works on mediguns that have this attribute ie quickfix
+				"health regen"	40
+			}
+		}
+		T_TFBot_Giant_Scout_Fast_Fix // fix for speedlimit
+		{
+			Class Scout
+			Name "Super Scout"
+			ClassIcon scout_giant_fast
+			Skill Easy
+			Item "The Bolt Boy"
+			Item "The Holy Mackerel"
+			Health 1200
+			WeaponRestrictions MeleeOnly
+			Attributes MiniBoss
+			CharacterAttributes
+			{
+				"move speed bonus"	1.3
+				"damage force reduction" 0.7
+				"airblast vulnerability multiplier" 0.7
+				"override footstep sound set" 5
+			}
+		}
+        T_TFBot_Medic_Placebo
+		{
+			Class Medic
+			Name "Quick-Fix Medic"
+			Skill Normal
+			Item "The Quick-Fix"
+			ItemAttributes
+			{
+				ItemName "The Quick-Fix"
+				"ubercharge rate bonus" 0.1
+			}
+			CharacterAttributes
+			{
+				"heal rate bonus" 0.35
+			}
+		}
+		T_TFBot_DefaultBuster
+		{
+			Class Demoman
+			Name "Sentry Buster"
+			Skill Expert
+			Health 2500
+			Item "The Ullapool Caber"
+			WeaponRestrictions MeleeOnly
+			ClassIcon sentry_buster
+			Attributes MiniBoss
+			Attributes DisableDodge
+			Attributes IgnoreEnemies
+			Attributes IgnoreFlag
+			//FastUpdate 1 [$SIGSEGV]
+			Tag specialbuster
+            UseCustomModel "models/bots/demo/bot_sentry_buster.mdl" [$SIGSEGV]
+            SpawnTemplate "DefaultBuster" [$SIGSEGV]
+			FireInput [$SIGSEGV] 
+            {
+                Target "sentrybuster_armsound" //Entity name to use
+                Action "StopSound" //Input to fire
+                Param "" //Parameter to use
+                Delay -1 //Delay before firing the input
+                Cooldown 1 //Cooldown between firing the input
+                Repeats 1 //How many times should the input be fired
+                IfHealthBelow 2 //When set, the task activates only when the bot health is below specified value
+            }
+			FireInput [$SIGSEGV] 
+            {
+                Target "sentrybuster_armsound" //Entity name to use
+                Action "PlaySound" //Input to fire
+                Param "" //Parameter to use
+                Delay 0 //Delay before firing the input
+                Cooldown 1 //Cooldown between firing the input
+                Repeats 1 //How many times should the input be fired
+                IfHealthBelow 2 //When set, the task activates only when the bot health is below specified value
+            }
+			FireInput [$SIGSEGV] 
+            {
+                Target "!activator" //Entity name to use
+                Action "SetDamageFilter" //Input to fire
+                Param "filter_invulnerable" //Parameter to use
+                Delay 0 //Delay before firing the input
+                Cooldown 1 //Cooldown between firing the input
+                Repeats 1 //How many times should the input be fired
+                IfHealthBelow 2 //When set, the task activates only when the bot health is below specified value
+            }
+			FireInput [$SIGSEGV] 
+            {
+                Target "!activator" //Entity name to use
+                Action "SetDamageFilter" //Input to fire
+                Param "filter_nodmgfilter" //Parameter to use
+                Delay 1.98 //Delay before firing the input
+                Cooldown 1 //Cooldown between firing the input
+                Repeats 1 //How many times should the input be fired
+                IfHealthBelow 2 //When set, the task activates only when the bot health is below specified value
+            }
+			FireInput [$SIGSEGV] 
+            {
+                Target "popscript" //Entity name to use
+                Action "$DefaultBusterExplode" //Input to fire
+                Param "" //Parameter to use
+                Delay 2 //Delay before firing the input
+                Cooldown 1 //Cooldown between firing the input
+                Repeats 1 //How many times should the input be fired
+                IfHealthBelow 2 //When set, the task activates only when the bot health is below specified value
+            }
+            FireInput [$SIGSEGV] 
+            {
+                Target "!activator" //Entity name to use
+                Action "$Suicide" //Input to fire
+                Param "" //Parameter to use
+                Delay 2 //Delay before firing the input
+                Cooldown 1 //Cooldown between firing the input
+                Repeats 1 //How many times should the input be fired
+                IfHealthBelow 2 //When set, the task activates only when the bot health is below specified value
+            }
+            Taunt [$SIGSEGV]  //Taunt periodically
+			{
+				Delay 0 //Time before the first taunt starts (Default: 10)
+				Cooldown 1 //Time between each taunt (Default: 10)
+				Repeats 1 //How many times the bot should taunt in total (Default: 0 - Infinite)
+				IfHealthBelow 2 //When set, the task activates only when the bot health is below specified value
+			}
+            AddCond [$SIGSEGV] //Adds conditions to bots
+            {
+                Index 70 //Condition index can be used instead
+            }
+			CharacterAttributes
+			{
+				"move speed bonus" 1.127
+				"damage force reduction" 0
+				"airblast vulnerability multiplier" 0
+				"airblast vertical vulnerability multiplier" 0
+				"override footstep sound set" 7
+				"cannot be backstabbed" 1
+                "not solid to players" 1
+				"allow friendly fire" 1
+                "voice pitch scale" 0
+                "always allow taunt" 1
+                "health from healers reduced" 0
+			}
+		}
+		T_TFBot_HealBuster
+		{
+			Class Demoman
+			Name "Healing Buster"
+			Skill Expert
+			Health 2500
+			Item "The Ullapool Caber"
+			WeaponRestrictions MeleeOnly
+			ClassIcon sentry_buster_healing
+			Attributes MiniBoss
+			Attributes DisableDodge
+			Attributes IgnoreEnemies
+			Attributes IgnoreFlag
+			//FastUpdate 1 [$SIGSEGV]
+			Tag specialbuster
+            UseCustomModel "models/bots/demo/bot_sentry_buster_healing.mdl" [$SIGSEGV]
+            SpawnTemplate [$SIGSEGV] //Spawn custom player template
+            {
+                Name "HealBusterAura"
+                Bone "bip_spine_0"
+            }
+            SpawnTemplate "HealBuster" [$SIGSEGV]
+			FireInput [$SIGSEGV] 
+            {
+                Target "sentrybuster_armsound" //Entity name to use
+                Action "StopSound" //Input to fire
+                Param "" //Parameter to use
+                Delay -1 //Delay before firing the input
+                Cooldown 1 //Cooldown between firing the input
+                Repeats 1 //How many times should the input be fired
+                IfHealthBelow 2 //When set, the task activates only when the bot health is below specified value
+            }
+			FireInput [$SIGSEGV] 
+            {
+                Target "sentrybuster_armsound" //Entity name to use
+                Action "PlaySound" //Input to fire
+                Param "" //Parameter to use
+                Delay 0 //Delay before firing the input
+                Cooldown 1 //Cooldown between firing the input
+                Repeats 1 //How many times should the input be fired
+                IfHealthBelow 2 //When set, the task activates only when the bot health is below specified value
+            }
+			FireInput [$SIGSEGV] 
+            {
+                Target "!activator" //Entity name to use
+                Action "SetDamageFilter" //Input to fire
+                Param "filter_invulnerable" //Parameter to use
+                Delay 0 //Delay before firing the input
+                Cooldown 1 //Cooldown between firing the input
+                Repeats 1 //How many times should the input be fired
+                IfHealthBelow 2 //When set, the task activates only when the bot health is below specified value
+            }
+			FireInput [$SIGSEGV] 
+            {
+                Target "!activator" //Entity name to use
+                Action "SetDamageFilter" //Input to fire
+                Param "filter_nodmgfilter" //Parameter to use
+                Delay 1.98 //Delay before firing the input
+                Cooldown 1 //Cooldown between firing the input
+                Repeats 1 //How many times should the input be fired
+                IfHealthBelow 2 //When set, the task activates only when the bot health is below specified value
+            }
+			FireInput [$SIGSEGV] 
+            {
+                Target "popscript" //Entity name to use
+                Action "$HealBusterExplode" //Input to fire
+                Param "" //Parameter to use
+                Delay 2 //Delay before firing the input
+                Cooldown 1 //Cooldown between firing the input
+                Repeats 1 //How many times should the input be fired
+                IfHealthBelow 2 //When set, the task activates only when the bot health is below specified value
+            }
+            FireInput [$SIGSEGV] 
+            {
+                Target "!activator" //Entity name to use
+                Action "$Suicide" //Input to fire
+                Param "" //Parameter to use
+                Delay 2 //Delay before firing the input
+                Cooldown 1 //Cooldown between firing the input
+                Repeats 1 //How many times should the input be fired
+                IfHealthBelow 2 //When set, the task activates only when the bot health is below specified value
+            }
+            Taunt [$SIGSEGV]  //Taunt periodically
+			{
+				Delay 0 //Time before the first taunt starts (Default: 10)
+				Cooldown 1 //Time between each taunt (Default: 10)
+				Repeats 1 //How many times the bot should taunt in total (Default: 0 - Infinite)
+				IfHealthBelow 2 //When set, the task activates only when the bot health is below specified value
+			}
+            AddCond [$SIGSEGV] //Adds conditions to bots
+            {
+                Index 70 //Condition index can be used instead
+            }
+			CharacterAttributes
+			{
+				"move speed bonus" 1.127
+				"damage force reduction" 0
+				"airblast vulnerability multiplier" 0
+				"airblast vertical vulnerability multiplier" 0
+				"override footstep sound set" 7
+				"cannot be backstabbed" 1
+                "not solid to players" 1
+				"allow friendly fire" 1
+                "voice pitch scale" 0
+                "always allow taunt" 1
+                "health from healers reduced" 0
+			}
+		}
+		T_TFBot_AntiGravityBuster
+		{
+			Class Demoman
+			Name "Anti-gravity Buster"
+			Skill Expert
+			Health 2500
+			Item "The Ullapool Caber"
+			WeaponRestrictions MeleeOnly
+			ClassIcon sentry_buster_antigravity
+			Attributes MiniBoss
+			Attributes DisableDodge
+			Attributes IgnoreEnemies
+			Attributes IgnoreFlag
+			//FastUpdate 1 [$SIGSEGV]
+			Tag specialbuster
+            UseCustomModel "models/bots/demo/bot_sentry_buster_antigravity.mdl" [$SIGSEGV]
+            SpawnTemplate [$SIGSEGV] //Spawn custom player template
+            {
+                Name "AntiGravityBusterAura"
+                Bone "bip_spine_0"
+            }
+            SpawnTemplate "AntiGravityBuster" [$SIGSEGV]
+			FireInput [$SIGSEGV] 
+            {
+                Target "sentrybuster_armsound" //Entity name to use
+                Action "StopSound" //Input to fire
+                Param "" //Parameter to use
+                Delay -1 //Delay before firing the input
+                Cooldown 1 //Cooldown between firing the input
+                Repeats 1 //How many times should the input be fired
+                IfHealthBelow 2 //When set, the task activates only when the bot health is below specified value
+            }
+			FireInput [$SIGSEGV] 
+            {
+                Target "sentrybuster_armsound" //Entity name to use
+                Action "PlaySound" //Input to fire
+                Param "" //Parameter to use
+                Delay 0 //Delay before firing the input
+                Cooldown 1 //Cooldown between firing the input
+                Repeats 1 //How many times should the input be fired
+                IfHealthBelow 2 //When set, the task activates only when the bot health is below specified value
+            }
+			FireInput [$SIGSEGV] 
+            {
+                Target "!activator" //Entity name to use
+                Action "SetDamageFilter" //Input to fire
+                Param "filter_invulnerable" //Parameter to use
+                Delay 0 //Delay before firing the input
+                Cooldown 1 //Cooldown between firing the input
+                Repeats 1 //How many times should the input be fired
+                IfHealthBelow 2 //When set, the task activates only when the bot health is below specified value
+            }
+			FireInput [$SIGSEGV] 
+            {
+                Target "!activator" //Entity name to use
+                Action "SetDamageFilter" //Input to fire
+                Param "filter_nodmgfilter" //Parameter to use
+                Delay 1.98 //Delay before firing the input
+                Cooldown 1 //Cooldown between firing the input
+                Repeats 1 //How many times should the input be fired
+                IfHealthBelow 2 //When set, the task activates only when the bot health is below specified value
+            }
+			FireInput [$SIGSEGV] 
+            {
+                Target "popscript" //Entity name to use
+                Action "$AntiGravityBusterExplode" //Input to fire
+                Param "" //Parameter to use
+                Delay 2 //Delay before firing the input
+                Cooldown 1 //Cooldown between firing the input
+                Repeats 1 //How many times should the input be fired
+                IfHealthBelow 2 //When set, the task activates only when the bot health is below specified value
+            }
+            FireInput [$SIGSEGV] 
+            {
+                Target "!activator" //Entity name to use
+                Action "$Suicide" //Input to fire
+                Param "" //Parameter to use
+                Delay 2 //Delay before firing the input
+                Cooldown 1 //Cooldown between firing the input
+                Repeats 1 //How many times should the input be fired
+                IfHealthBelow 2 //When set, the task activates only when the bot health is below specified value
+            }
+            Taunt [$SIGSEGV]  //Taunt periodically
+			{
+				Delay 0 //Time before the first taunt starts (Default: 10)
+				Cooldown 1 //Time between each taunt (Default: 10)
+				Repeats 1 //How many times the bot should taunt in total (Default: 0 - Infinite)
+				IfHealthBelow 2 //When set, the task activates only when the bot health is below specified value
+			}
+            AddCond [$SIGSEGV] //Adds conditions to bots
+            {
+                Index 70 //Condition index can be used instead
+            }
+			CharacterAttributes
+			{
+				"move speed bonus" 1.127
+				"damage force reduction" 0
+				"airblast vulnerability multiplier" 0
+				"airblast vertical vulnerability multiplier" 0
+				"override footstep sound set" 7
+				"cannot be backstabbed" 1
+                "not solid to players" 1
+				"allow friendly fire" 1
+                "voice pitch scale" 0
+                "always allow taunt" 1
+                "health from healers reduced" 0
+			}
+		}
+		T_TFBot_FakeBuster
+		{
+			Class Demoman
+			Name "Sentry Buster?"
+			Skill Expert
+			Health 2500
+			Item "The Ullapool Caber"
+			WeaponRestrictions MeleeOnly
+			ClassIcon sentry_buster_fake
+			Attributes MiniBoss
+			Attributes DisableDodge
+			Attributes IgnoreEnemies
+			//FastUpdate 1 [$SIGSEGV]
+			//Tag specialbuster
+			Tag fakebuster
+            UseCustomModel "models/bots/demo/bot_sentry_buster.mdl" [$SIGSEGV]
+            SpawnTemplate [$SIGSEGV] //Spawn custom player template
+            {
+                Name "FakeBusterAura"
+                Bone "bip_spine_0"
+            }
+            SpawnTemplate "DefaultBuster" [$SIGSEGV]
+			FireInput [$SIGSEGV] 
+            {
+                Target "sentrybuster_armsound" //Entity name to use
+                Action "StopSound" //Input to fire
+                Param "" //Parameter to use
+                Delay -1 //Delay before firing the input
+                Cooldown 1 //Cooldown between firing the input
+                Repeats 1 //How many times should the input be fired
+                IfHealthBelow 2 //When set, the task activates only when the bot health is below specified value
+            }
+			FireInput [$SIGSEGV] 
+            {
+                Target "sentrybuster_armsound" //Entity name to use
+                Action "PlaySound" //Input to fire
+                Param "" //Parameter to use
+                Delay 0 //Delay before firing the input
+                Cooldown 1 //Cooldown between firing the input
+                Repeats 1 //How many times should the input be fired
+                IfHealthBelow 2 //When set, the task activates only when the bot health is below specified value
+            }
+			FireInput [$SIGSEGV] 
+            {
+                Target "!activator" //Entity name to use
+                Action "SetDamageFilter" //Input to fire
+                Param "filter_invulnerable" //Parameter to use
+                Delay 0 //Delay before firing the input
+                Cooldown 1 //Cooldown between firing the input
+                Repeats 1 //How many times should the input be fired
+                IfHealthBelow 2 //When set, the task activates only when the bot health is below specified value
+            }
+			FireInput [$SIGSEGV] 
+            {
+                Target "!activator" //Entity name to use
+                Action "SetDamageFilter" //Input to fire
+                Param "filter_nodmgfilter" //Parameter to use
+                Delay 1.98 //Delay before firing the input
+                Cooldown 1 //Cooldown between firing the input
+                Repeats 1 //How many times should the input be fired
+                IfHealthBelow 2 //When set, the task activates only when the bot health is below specified value
+            }
+			FireInput [$SIGSEGV] 
+            {
+                Target "popscript" //Entity name to use
+                Action "$DefaultBusterExplode" //Input to fire
+                Param "" //Parameter to use
+                Delay 2 //Delay before firing the input
+                Cooldown 1 //Cooldown between firing the input
+                Repeats 1 //How many times should the input be fired
+                IfHealthBelow 2 //When set, the task activates only when the bot health is below specified value
+            }
+            FireInput [$SIGSEGV] 
+            {
+                Target "!activator" //Entity name to use
+                Action "$Suicide" //Input to fire
+                Param "" //Parameter to use
+                Delay 2 //Delay before firing the input
+                Cooldown 1 //Cooldown between firing the input
+                Repeats 1 //How many times should the input be fired
+                IfHealthBelow 2 //When set, the task activates only when the bot health is below specified value
+            }
+            Taunt [$SIGSEGV]  //Taunt periodically
+			{
+				Delay 0 //Time before the first taunt starts (Default: 10)
+				Cooldown 1 //Time between each taunt (Default: 10)
+				Repeats 1 //How many times the bot should taunt in total (Default: 0 - Infinite)
+				IfHealthBelow 2 //When set, the task activates only when the bot health is below specified value
+			}
+            AddCond [$SIGSEGV] //Adds conditions to bots
+            {
+                Index 70 //Condition index can be used instead
+            }
+			CharacterAttributes
+			{
+				"move speed bonus" 1.127
+				"damage force reduction" 0
+				"airblast vulnerability multiplier" 0
+				"airblast vertical vulnerability multiplier" 0
+				"override footstep sound set" 7
+				"cannot be backstabbed" 1
+                "not solid to players" 1
+				"allow friendly fire" 1
+                "voice pitch scale" 0
+                "always allow taunt" 1
+                "health from healers reduced" 0
+			}
+		}
+		T_TFBot_InfernoBuster
+		{
+			Class Demoman
+			Name "Inferno Buster"
+			Skill Expert
+			Health 2500
+			Item "The Ullapool Caber"
+			WeaponRestrictions MeleeOnly
+			ClassIcon sentry_buster_inferno
+			Attributes MiniBoss
+			Attributes DisableDodge
+			Attributes IgnoreEnemies
+			Attributes IgnoreFlag
+			//FastUpdate 1 [$SIGSEGV]
+			Tag specialbuster
+			
+            UseCustomModel "models/bots/demo/bot_sentry_buster_inferno.mdl" [$SIGSEGV]
+            SpawnTemplate [$SIGSEGV] //Spawn custom player template
+            {
+                Name "InfernoBusterAura"
+                Bone "bip_spine_0"
+            }
+            SpawnTemplate "InfernoBuster" [$SIGSEGV]
+			FireInput [$SIGSEGV] 
+            {
+                Target "sentrybuster_armsound" //Entity name to use
+                Action "StopSound" //Input to fire
+                Param "" //Parameter to use
+                Delay -1 //Delay before firing the input
+                Cooldown 1 //Cooldown between firing the input
+                Repeats 1 //How many times should the input be fired
+                IfHealthBelow 2 //When set, the task activates only when the bot health is below specified value
+            }
+			FireInput [$SIGSEGV] 
+            {
+                Target "sentrybuster_armsound" //Entity name to use
+                Action "PlaySound" //Input to fire
+                Param "" //Parameter to use
+                Delay 0 //Delay before firing the input
+                Cooldown 1 //Cooldown between firing the input
+                Repeats 1 //How many times should the input be fired
+                IfHealthBelow 2 //When set, the task activates only when the bot health is below specified value
+            }
+			FireInput [$SIGSEGV] 
+            {
+                Target "!activator" //Entity name to use
+                Action "SetDamageFilter" //Input to fire
+                Param "filter_invulnerable" //Parameter to use
+                Delay 0 //Delay before firing the input
+                Cooldown 1 //Cooldown between firing the input
+                Repeats 1 //How many times should the input be fired
+                IfHealthBelow 2 //When set, the task activates only when the bot health is below specified value
+            }
+			FireInput [$SIGSEGV] 
+            {
+                Target "!activator" //Entity name to use
+                Action "SetDamageFilter" //Input to fire
+                Param "filter_nodmgfilter" //Parameter to use
+                Delay 1.98 //Delay before firing the input
+                Cooldown 1 //Cooldown between firing the input
+                Repeats 1 //How many times should the input be fired
+                IfHealthBelow 2 //When set, the task activates only when the bot health is below specified value
+            }
+			FireInput [$SIGSEGV] 
+            {
+                Target "popscript" //Entity name to use
+                Action "$InfernoBusterExplode" //Input to fire
+                Param "" //Parameter to use
+                Delay 2 //Delay before firing the input
+                Cooldown 1 //Cooldown between firing the input
+                Repeats 1 //How many times should the input be fired
+                IfHealthBelow 2 //When set, the task activates only when the bot health is below specified value
+            }
+            FireInput [$SIGSEGV] 
+            {
+                Target "!activator" //Entity name to use
+                Action "$Suicide" //Input to fire
+                Param "" //Parameter to use
+                Delay 2 //Delay before firing the input
+                Cooldown 1 //Cooldown between firing the input
+                Repeats 1 //How many times should the input be fired
+                IfHealthBelow 2 //When set, the task activates only when the bot health is below specified value
+            }
+            Taunt [$SIGSEGV]  //Taunt periodically
+			{
+				Delay 0 //Time before the first taunt starts (Default: 10)
+				Cooldown 1 //Time between each taunt (Default: 10)
+				Repeats 1 //How many times the bot should taunt in total (Default: 0 - Infinite)
+				IfHealthBelow 2 //When set, the task activates only when the bot health is below specified value
+			}
+            AddCond [$SIGSEGV] //Adds conditions to bots
+            {
+                Index 70 //Condition index can be used instead
+            }
+			CharacterAttributes
+			{
+				"move speed bonus" 1.127
+				"damage force reduction" 0
+				"airblast vulnerability multiplier" 0
+				"airblast vertical vulnerability multiplier" 0
+				"override footstep sound set" 7
+				"cannot be backstabbed" 1
+                "not solid to players" 1
+				"allow friendly fire" 1
+                "voice pitch scale" 0
+                "always allow taunt" 1
+                "health from healers reduced" 0
+				"dmg taken from fire reduced" 0.01
+			}
+		}
+		T_TFBot_ReusableBuster
+		{
+			Class Demoman
+			Name "Reusable Sentry Buster"
+			Skill Expert
+			Health 100000
+			Item "The Ullapool Caber"
+			WeaponRestrictions MeleeOnly
+            Scale 1.9
+			ClassIcon sentry_buster_reusable
+			Attributes MiniBoss
+			Attributes DisableDodge
+			Attributes IgnoreEnemies
+			Attributes IgnoreFlag
+            Attributes UseBossHealthBar
+			//FastUpdate 1 [$SIGSEGV]
+			Tag reusablebuster
+            UseCustomModel "models/bots/demo/bot_sentry_buster_reusable.mdl" [$SIGSEGV]
+            SpawnTemplate "ReusableBuster" [$SIGSEGV]
+
+			FireInput [$SIGSEGV] 
+            {
+                Target "!activator" //Entity name to use
+                Action "SetDamageFilter" //Input to fire
+                Param "filter_invulnerable" //Parameter to use
+                Delay 0 //Delay before firing the input
+                Cooldown 1 //Cooldown between firing the input
+                Repeats 1 //How many times should the input be fired
+                IfHealthBelow 2 //When set, the task activates only when the bot health is below specified value
+            }
+			FireInput [$SIGSEGV] 
+            {
+                Target "w5fodderbotskiller" //Entity name to use
+                Action "Enable" //Input to fire
+                Param "0" //Parameter to use
+                Delay 0 //Delay before firing the input
+                Cooldown 1 //Cooldown between firing the input
+                Repeats 1 //How many times should the input be fired
+                IfHealthBelow 2 //When set, the task activates only when the bot health is below specified value
+            }
+			FireInput [$SIGSEGV] 
+            {
+                Target "w5fodderbotskiller" //Entity name to use
+                Action "Disable" //Input to fire
+                Param "0" //Parameter to use
+                Delay 15 //Delay before firing the input
+                Cooldown 1 //Cooldown between firing the input
+                Repeats 1 //How many times should the input be fired
+                IfHealthBelow 2 //When set, the task activates only when the bot health is below specified value
+            }
+			FireInput [$SIGSEGV] 
+            {
+                Target "!activator" //Entity name to use
+                Action "$Suicide" //Input to fire
+                Param "" //Parameter to use
+                Delay 15.5 //Delay before firing the input
+                Cooldown 1 //Cooldown between firing the input
+                Repeats 1 //How many times should the input be fired
+                IfHealthBelow 2 //When set, the task activates only when the bot health is below specified value
+            }
+			FireInput [$SIGSEGV] 
+            {
+                Target "reusablebuster_tts_intro" //Entity name to use
+                Action "Trigger" //Input to fire
+                Param "" //Parameter to use
+                Delay 0 //Delay before firing the input
+                Cooldown 1 //Cooldown between firing the input
+                Repeats 1 //How many times should the input be fired
+            }
+			FireInput [$SIGSEGV] 
+            {
+                Target "reusablebuster_tts_end" //Entity name to use
+                Action "Trigger" //Input to fire
+                Param "" //Parameter to use
+                Delay 0 //Delay before firing the input
+                Cooldown 1 //Cooldown between firing the input
+                Repeats 1 //How many times should the input be fired
+                IfHealthBelow 2 //When set, the task activates only when the bot health is below specified value
+            }
+			FireInput [$SIGSEGV] 
+            {
+                Target "popscript" //Entity name to use
+                Action "$RevertReusableBusterAi" //Input to fire
+                Param "" //Parameter to use
+                Delay 0 //Delay before firing the input
+                Cooldown 1 //Cooldown between firing the input
+                Repeats 1 //How many times should the input be fired
+                IfHealthBelow 2 //When set, the task activates only when the bot health is below specified value
+            }
+			FireInput [$SIGSEGV] 
+            {
+                Target "gamerules" //Entity name to use
+                Action "SetCustomUpgradesFile" //Input to fire
+                Param "scripts/items/mvm_upgrades_stinky_3.txt" //Parameter to use
+                Delay 10 //Delay before firing the input
+                Cooldown 1 //Cooldown between firing the input
+                Repeats 1 //How many times should the input be fired
+                IfHealthBelow 2 //When set, the task activates only when the bot health is below specified value
+            }
+			AddCond [$SIGSEGV] //Adds conditions to bots
+			{
+				Index 65 //Condition index can be used instead
+				Delay 10 // Delay before the condition activates (Default: 0)
+				Duration 99 // Duration of the condition effect (Default: -1 - infinite duration)
+				IfHealthBelow 2 //When set, the task activates only when the bot health is below specified value
+			}
+			AddCond [$SIGSEGV] //Adds conditions to bots
+            {
+                Index 70 //Condition index can be used instead
+            }
+			CharacterAttributes
+			{
+				"move speed bonus" 1.127
+				"damage force reduction" 0
+				"airblast vulnerability multiplier" 0
+				"airblast vertical vulnerability multiplier" 0
+				"override footstep sound set" 7
+				"cannot be backstabbed" 1
+                "not solid to players" 1
+				"allow friendly fire" 1
+				"ubercharge rate penalty" 269 //Dummy attribute for lua to identify reusable buster
+                "voice pitch scale" 0
+                "always allow taunt" 1
+                "health from healers reduced" 0
+                "cancel falling damage" 1
+			}
+		}
+		T_TFBot_ReusableBuster_WaveSix
+		{
+			//This reusable buster does not ascend to heaven
+			Class Demoman
+			Name "Recycleable Buster"
+			Skill Expert
+			Health 100000
+			Item "The Ullapool Caber"
+			WeaponRestrictions MeleeOnly
+            Scale 1.9
+			ClassIcon sentry_buster_reusable
+			Attributes MiniBoss
+			Attributes DisableDodge
+			Attributes IgnoreEnemies
+			Attributes IgnoreFlag
+            Attributes UseBossHealthBar
+			//FastUpdate 1 [$SIGSEGV]
+			Tag reusablebuster
+            UseCustomModel "models/bots/demo/bot_sentry_buster_reusable.mdl" [$SIGSEGV]
+            SpawnTemplate "ReusableBuster" [$SIGSEGV]
+			FireInput [$SIGSEGV] 
+            {
+                Target "reusablebuster_tts_wavesix" //Entity name to use
+                Action "Trigger" //Input to fire
+                Param "" //Parameter to use
+                Delay 0 //Delay before firing the input
+                Cooldown 1 //Cooldown between firing the input
+                Repeats 1 //How many times should the input be fired
+            }
+			CharacterAttributes
+			{
+				"move speed bonus" 1.127
+				"damage force reduction" 0
+				"airblast vulnerability multiplier" 0
+				"airblast vertical vulnerability multiplier" 0
+				"override footstep sound set" 7
+				"cannot be backstabbed" 1
+                "not solid to players" 1
+				"allow friendly fire" 1
+				"ubercharge rate penalty" 269 //Dummy attribute for lua to identify reusable buster
+                "voice pitch scale" 0
+                "always allow taunt" 1
+                "health from healers reduced" 0
+                "cancel falling damage" 1
+			}
+		}
+		T_TFBot_FlashBuster
+		{
+			Class Demoman
+			Name "Flash Buster"
+			Skill Expert
+			Health 2500
+			Item "The Ullapool Caber"
+			WeaponRestrictions MeleeOnly
+			ClassIcon sentry_buster_flash
+			Attributes MiniBoss
+			Attributes DisableDodge
+			Attributes IgnoreEnemies
+			Attributes IgnoreFlag
+			Tag specialbuster
+            UseCustomModel "models/bots/demo/bot_sentry_buster_flash.mdl" [$SIGSEGV]
+            SpawnTemplate [$SIGSEGV] //Spawn custom player template
+            {
+                Name "FlashBusterAura"
+                Bone "bip_spine_0"
+            }
+            SpawnTemplate "FlashBuster" [$SIGSEGV]
+			FireInput [$SIGSEGV] 
+            {
+                Target "sentrybuster_armsound" //Entity name to use
+                Action "StopSound" //Input to fire
+                Param "" //Parameter to use
+                Delay -1 //Delay before firing the input
+                Cooldown 1 //Cooldown between firing the input
+                Repeats 1 //How many times should the input be fired
+                IfHealthBelow 2 //When set, the task activates only when the bot health is below specified value
+            }
+			FireInput [$SIGSEGV] 
+            {
+                Target "sentrybuster_armsound" //Entity name to use
+                Action "PlaySound" //Input to fire
+                Param "" //Parameter to use
+                Delay 0 //Delay before firing the input
+                Cooldown 1 //Cooldown between firing the input
+                Repeats 1 //How many times should the input be fired
+                IfHealthBelow 2 //When set, the task activates only when the bot health is below specified value
+            }
+			FireInput [$SIGSEGV] 
+            {
+                Target "!activator" //Entity name to use
+                Action "SetDamageFilter" //Input to fire
+                Param "filter_invulnerable" //Parameter to use
+                Delay 0 //Delay before firing the input
+                Cooldown 1 //Cooldown between firing the input
+                Repeats 1 //How many times should the input be fired
+                IfHealthBelow 2 //When set, the task activates only when the bot health is below specified value
+            }
+			FireInput [$SIGSEGV] 
+            {
+                Target "!activator" //Entity name to use
+                Action "SetDamageFilter" //Input to fire
+                Param "filter_nodmgfilter" //Parameter to use
+                Delay 1.98 //Delay before firing the input
+                Cooldown 1 //Cooldown between firing the input
+                Repeats 1 //How many times should the input be fired
+                IfHealthBelow 2 //When set, the task activates only when the bot health is below specified value
+            }
+			FireInput [$SIGSEGV] 
+            {
+                Target "popscript" //Entity name to use
+                Action "$FlashBusterExplode" //Input to fire
+                Param "" //Parameter to use
+                Delay 2 //Delay before firing the input
+                Cooldown 1 //Cooldown between firing the input
+                Repeats 1 //How many times should the input be fired
+                IfHealthBelow 2 //When set, the task activates only when the bot health is below specified value
+            }
+            FireInput [$SIGSEGV] 
+            {
+                Target "!activator" //Entity name to use
+                Action "$Suicide" //Input to fire
+                Param "" //Parameter to use
+                Delay 2 //Delay before firing the input
+                Cooldown 1 //Cooldown between firing the input
+                Repeats 1 //How many times should the input be fired
+                IfHealthBelow 2 //When set, the task activates only when the bot health is below specified value
+            }
+            Taunt [$SIGSEGV]  //Taunt periodically
+			{
+				Delay 0 //Time before the first taunt starts (Default: 10)
+				Cooldown 1 //Time between each taunt (Default: 10)
+				Repeats 1 //How many times the bot should taunt in total (Default: 0 - Infinite)
+				IfHealthBelow 2 //When set, the task activates only when the bot health is below specified value
+			}
+            AddCond [$SIGSEGV] //Adds conditions to bots
+            {
+                Index 70 //Condition index can be used instead
+            }
+			CharacterAttributes
+			{
+				"move speed bonus" 3
+				"damage force reduction" 0
+				"airblast vulnerability multiplier" 0
+				"airblast vertical vulnerability multiplier" 0
+				"override footstep sound set" 7
+				"cannot be backstabbed" 1
+                "not solid to players" 1
+				"allow friendly fire" 1
+                "voice pitch scale" 0
+                "always allow taunt" 1
+                "health from healers reduced" 0
+			}
+		}
+		T_TFBot_SkunkfaceBuster
+		{
+			Class Demoman
+			Name "War Criminal Buster"
+			Skill Expert
+			Health 2500
+			Item "The Ullapool Caber"
+			WeaponRestrictions MeleeOnly
+			ClassIcon sentry_buster_skunkface
+			Attributes MiniBoss
+			Attributes DisableDodge
+			Attributes IgnoreEnemies
+			Attributes IgnoreFlag
+			Tag specialbuster
+			ItemAttributes
+			{
+				ItemName "The Ullapool Caber"
+				"custom kill icon" "fire"
+			}
+            UseCustomModel "models/bots/demo/bot_sentry_buster_skunkface.mdl" [$SIGSEGV]
+            SpawnTemplate [$SIGSEGV] //Spawn custom player template
+            {
+                Name "SkunkfaceBusterAura"
+                Bone "bip_spine_0"
+            }
+            SpawnTemplate "SkunkfaceBuster" [$SIGSEGV]
+			FireInput [$SIGSEGV] 
+            {
+                Target "sentrybuster_armsound" //Entity name to use
+                Action "StopSound" //Input to fire
+                Param "" //Parameter to use
+                Delay -1 //Delay before firing the input
+                Cooldown 1 //Cooldown between firing the input
+                Repeats 1 //How many times should the input be fired
+                IfHealthBelow 2 //When set, the task activates only when the bot health is below specified value
+            }
+			FireInput [$SIGSEGV] 
+            {
+                Target "sentrybuster_armsound" //Entity name to use
+                Action "PlaySound" //Input to fire
+                Param "" //Parameter to use
+                Delay 0 //Delay before firing the input
+                Cooldown 1 //Cooldown between firing the input
+                Repeats 1 //How many times should the input be fired
+                IfHealthBelow 2 //When set, the task activates only when the bot health is below specified value
+            }
+			FireInput [$SIGSEGV] 
+            {
+                Target "!activator" //Entity name to use
+                Action "SetDamageFilter" //Input to fire
+                Param "filter_invulnerable" //Parameter to use
+                Delay 0 //Delay before firing the input
+                Cooldown 1 //Cooldown between firing the input
+                Repeats 1 //How many times should the input be fired
+                IfHealthBelow 2 //When set, the task activates only when the bot health is below specified value
+            }
+			FireInput [$SIGSEGV] 
+            {
+                Target "!activator" //Entity name to use
+                Action "SetDamageFilter" //Input to fire
+                Param "filter_nodmgfilter" //Parameter to use
+                Delay 1.98 //Delay before firing the input
+                Cooldown 1 //Cooldown between firing the input
+                Repeats 1 //How many times should the input be fired
+                IfHealthBelow 2 //When set, the task activates only when the bot health is below specified value
+            }
+			FireInput [$SIGSEGV] 
+            {
+                Target "popscript" //Entity name to use
+                Action "$SkunkfaceBusterExplode" //Input to fire
+                Param "" //Parameter to use
+                Delay 2 //Delay before firing the input
+                Cooldown 1 //Cooldown between firing the input
+                Repeats 1 //How many times should the input be fired
+                IfHealthBelow 2 //When set, the task activates only when the bot health is below specified value
+            }
+            FireInput [$SIGSEGV] 
+            {
+                Target "!activator" //Entity name to use
+                Action "$Suicide" //Input to fire
+                Param "" //Parameter to use
+                Delay 2 //Delay before firing the input
+                Cooldown 1 //Cooldown between firing the input
+                Repeats 1 //How many times should the input be fired
+                IfHealthBelow 2 //When set, the task activates only when the bot health is below specified value
+            }
+            Taunt [$SIGSEGV]  //Taunt periodically
+			{
+				Delay 0 //Time before the first taunt starts (Default: 10)
+				Cooldown 1 //Time between each taunt (Default: 10)
+				Repeats 1 //How many times the bot should taunt in total (Default: 0 - Infinite)
+				IfHealthBelow 2 //When set, the task activates only when the bot health is below specified value
+			}
+            AddCond [$SIGSEGV] //Adds conditions to bots
+            {
+                Index 70 //Condition index can be used instead
+            }
+			CharacterAttributes
+			{
+				"move speed bonus" 1.127
+				"damage force reduction" 0
+				"airblast vulnerability multiplier" 0
+				"airblast vertical vulnerability multiplier" 0
+				"override footstep sound set" 7
+				"cannot be backstabbed" 1
+                "not solid to players" 1
+				"allow friendly fire" 1
+                "voice pitch scale" 0
+                "always allow taunt" 1
+                "health from healers reduced" 0
+			}
+		}
+		T_TFBot_BlackHoleBuster
+		{
+			Class Demoman
+			Name "Black Hole Buster"
+			Skill Expert
+			Health 2500
+			Item "The Ullapool Caber"
+			WeaponRestrictions MeleeOnly
+			ClassIcon sentry_buster_blackhole
+			Attributes MiniBoss
+			Attributes DisableDodge
+			Attributes IgnoreEnemies
+			Attributes IgnoreFlag
+			BehaviorModifiers Push
+			Tag specialbuster
+			Tag blackholebuster
+            UseCustomModel "models/bots/demo/bot_sentry_buster_blackhole.mdl" [$SIGSEGV]
+            SpawnTemplate [$SIGSEGV] //Spawn custom player template
+            {
+                Name "BlackHoleBusterAura"
+                Bone "bip_spine_0"
+            }
+            SpawnTemplate "BlackHoleBuster" [$SIGSEGV]
+			FireInput [$SIGSEGV] 
+            {
+                Target "sentrybuster_armsound" //Entity name to use
+                Action "StopSound" //Input to fire
+                Param "" //Parameter to use
+                Delay -1 //Delay before firing the input
+                Cooldown 1 //Cooldown between firing the input
+                Repeats 1 //How many times should the input be fired
+                IfHealthBelow 2 //When set, the task activates only when the bot health is below specified value
+            }
+			FireInput [$SIGSEGV] 
+            {
+                Target "sentrybuster_armsound" //Entity name to use
+                Action "PlaySound" //Input to fire
+                Param "" //Parameter to use
+                Delay 0 //Delay before firing the input
+                Cooldown 1 //Cooldown between firing the input
+                Repeats 1 //How many times should the input be fired
+                IfHealthBelow 2 //When set, the task activates only when the bot health is below specified value
+            }
+			FireInput [$SIGSEGV] 
+            {
+                Target "!activator" //Entity name to use
+                Action "SetDamageFilter" //Input to fire
+                Param "filter_invulnerable" //Parameter to use
+                Delay 0 //Delay before firing the input
+                Cooldown 1 //Cooldown between firing the input
+                Repeats 1 //How many times should the input be fired
+                IfHealthBelow 2 //When set, the task activates only when the bot health is below specified value
+            }
+			FireInput [$SIGSEGV] 
+            {
+                Target "!activator" //Entity name to use
+                Action "SetDamageFilter" //Input to fire
+                Param "filter_nodmgfilter" //Parameter to use
+                Delay 1.98 //Delay before firing the input
+                Cooldown 1 //Cooldown between firing the input
+                Repeats 1 //How many times should the input be fired
+                IfHealthBelow 2 //When set, the task activates only when the bot health is below specified value
+            }
+			FireInput [$SIGSEGV] 
+            {
+                Target "popscript" //Entity name to use
+                Action "$DefaultBusterExplode" //Input to fire
+                Param "" //Parameter to use
+                Delay 2 //Delay before firing the input
+                Cooldown 1 //Cooldown between firing the input
+                Repeats 1 //How many times should the input be fired
+                IfHealthBelow 2 //When set, the task activates only when the bot health is below specified value
+            }
+            FireInput [$SIGSEGV] 
+            {
+                Target "!activator" //Entity name to use
+                Action "$Suicide" //Input to fire
+                Param "" //Parameter to use
+                Delay 2 //Delay before firing the input
+                Cooldown 1 //Cooldown between firing the input
+                Repeats 1 //How many times should the input be fired
+                IfHealthBelow 2 //When set, the task activates only when the bot health is below specified value
+            }
+            Taunt [$SIGSEGV]  //Taunt periodically
+			{
+				Delay 0 //Time before the first taunt starts (Default: 10)
+				Cooldown 1 //Time between each taunt (Default: 10)
+				Repeats 1 //How many times the bot should taunt in total (Default: 0 - Infinite)
+				IfHealthBelow 2 //When set, the task activates only when the bot health is below specified value
+			}
+            AddCond [$SIGSEGV] //Adds conditions to bots
+            {
+                Index 70 //Condition index can be used instead
+            }
+			CharacterAttributes
+			{
+				"move speed bonus" 1.127
+				"damage force reduction" 0
+				"airblast vulnerability multiplier" 0
+				"airblast vertical vulnerability multiplier" 0
+				"override footstep sound set" 7
+				"cannot be backstabbed" 1
+                "not solid to players" 1
+				"allow friendly fire" 1
+                "voice pitch scale" 0
+                "always allow taunt" 1
+                "health from healers reduced" 0
+			}
+		}
+		T_TFBot_DoomsdayBuster
+		{
+			Class Demoman
+			Name "Doomsday Buster"
+			Skill Expert
+			Health 60000
+			Item "The Ullapool Caber"
+			WeaponRestrictions MeleeOnly
+			Scale 2.5
+			ClassIcon sentry_buster_doomsday
+			Attributes MiniBoss
+			Attributes DisableDodge
+			Attributes IgnoreEnemies
+			Attributes IgnoreFlag
+			Attributes UseBossHealthBar
+			Tag doomsdaybuster
+            UseCustomModel "models/bots/demo/bot_sentry_buster_doomsday.mdl" [$SIGSEGV]
+			Tag dontdoublehp
+			Message //Displays message in the chat
+			{
+				Name "{ff0000}Doomsday Buster: {ff7f7f} 60 seconds until total annihilation." //Message in the chat displayed
+				Delay 2 //Time before the message is first displayed (Default: 10)
+				Repeats 1 //How many times should bot display the message (Default: 0 - Infinite)
+			}
+			Message //Displays message in the chat
+			{
+				Name "{ff0000}Doomsday Buster: {ff7f7f} 30 seconds until total annihilation." //Message in the chat displayed
+				Delay 32 //Time before the message is first displayed (Default: 10)
+				Repeats 1 //How many times should bot display the message (Default: 0 - Infinite)
+			}
+			Message //Displays message in the chat
+			{
+				Name "{ff0000}Doomsday Buster: {ff7f7f} 10 seconds until total annihilation." //Message in the chat displayed
+				Delay 52 //Time before the message is first displayed (Default: 10)
+				Repeats 1 //How many times should bot display the message (Default: 0 - Infinite)
+			}
+			Message //Displays message in the chat
+			{
+				Name "{ff0000}Doomsday Buster: {ff7f7f} 5." //Message in the chat displayed
+				Delay 57 //Time before the message is first displayed (Default: 10)
+				Repeats 1 //How many times should bot display the message (Default: 0 - Infinite)
+			}
+			Message //Displays message in the chat
+			{
+				Name "{ff0000}Doomsday Buster: {ff7f7f} 4." //Message in the chat displayed
+				Delay 58 //Time before the message is first displayed (Default: 10)
+				Repeats 1 //How many times should bot display the message (Default: 0 - Infinite)
+			}
+			Message //Displays message in the chat
+			{
+				Name "{ff0000}Doomsday Buster: {ff7f7f} 3." //Message in the chat displayed
+				Delay 59 //Time before the message is first displayed (Default: 10)
+				Repeats 1 //How many times should bot display the message (Default: 0 - Infinite)
+			}
+			Message //Displays message in the chat
+			{
+				Name "{ff0000}Doomsday Buster: {ff7f7f} 2." //Message in the chat displayed
+				Delay 60 //Time before the message is first displayed (Default: 10)
+				Repeats 1 //How many times should bot display the message (Default: 0 - Infinite)
+			}
+			Message //Displays message in the chat
+			{
+				Name "{ff0000}Doomsday Buster: {ff7f7f} 1." //Message in the chat displayed
+				Delay 61 //Time before the message is first displayed (Default: 10)
+				Repeats 1 //How many times should bot display the message (Default: 0 - Infinite)
+			}
+			
+            SpawnTemplate [$SIGSEGV] //Spawn custom player template
+            {
+                Name "DoomsdayBusterAura"
+                Bone "bip_spine_0"
+            }
+            SpawnTemplate "DoomsdayBuster" [$SIGSEGV]
+			FireInput [$SIGSEGV] 
+            {
+                Target "sentrybuster_armsound" //Entity name to use
+                Action "StopSound" //Input to fire
+                Param "" //Parameter to use
+                Delay -1 //Delay before firing the input
+                Cooldown 1 //Cooldown between firing the input
+                Repeats 1 //How many times should the input be fired
+                IfHealthBelow 2001 //When set, the task activates only when the bot health is below specified value
+            }
+			FireInput [$SIGSEGV] 
+            {
+                Target "sentrybuster_armsound" //Entity name to use
+                Action "PlaySound" //Input to fire
+                Param "" //Parameter to use
+                Delay 0 //Delay before firing the input
+                Cooldown 1 //Cooldown between firing the input
+                Repeats 1 //How many times should the input be fired
+                IfHealthBelow 2001 //When set, the task activates only when the bot health is below specified value
+            }
+			FireInput [$SIGSEGV] 
+            {
+                Target "popscript" //Entity name to use
+                Action "$DoomsdayBusterExplode" //Input to fire
+                Param "" //Parameter to use
+                Delay 2 //Delay before firing the input
+                Cooldown 1 //Cooldown between firing the input
+                Repeats 1 //How many times should the input be fired
+                IfHealthBelow 2001 //When set, the task activates only when the bot health is below specified value
+            }
+            FireInput [$SIGSEGV] 
+            {
+                Target "!activator" //Entity name to use
+                Action "$Suicide" //Input to fire
+                Param "" //Parameter to use
+                Delay 2 //Delay before firing the input
+                Cooldown 1 //Cooldown between firing the input
+                Repeats 1 //How many times should the input be fired
+                IfHealthBelow 2001 //When set, the task activates only when the bot health is below specified value
+            }
+            Taunt [$SIGSEGV]  //Taunt periodically
+			{
+				Delay 0 //Time before the first taunt starts (Default: 10)
+				Cooldown 1 //Time between each taunt (Default: 10)
+				Repeats 1 //How many times the bot should taunt in total (Default: 0 - Infinite)
+				IfHealthBelow 2001 //When set, the task activates only when the bot health is below specified value
+			}
+            AddCond [$SIGSEGV] //Adds conditions to bots
+            {
+                Index 70 //Condition index can be used instead
+            }
+			InterruptAction [$SIGSEGV] // Stop current bot ai and force the bot to move to a location
+			{
+				Target "-106 4517 187" // Move target location
+				// Target "targetent" // Entity / bot / class name as an alternative. Also: RandomEnemy, ClosestPlayer
+				AimTarget "0 0 0" // Where the bot should look at
+				// AimTarget "targetent" // Entity / bot / class name as an alternative. Also: RandomEnemy, ClosestPlayer
+				// KillAimTarget 1 // Attack aim target (Default: 0)
+				Name "gotostandstillspot" // Name of the interrupt action. When the task is done, bot's $OnActionDone output is fired with name as parameter
+				
+				// AlwaysLook 1 // Normally, if KillAimTarget is set, the bot will not look at the target entity if its not in field of view. Set to 1 to always look at target (Default: 0)
+				Delay 1 // Time before the first task starts. Must be above 0, or it will not execute (Default: 10)
+				Repeats 1 // How many times should bot do the task in total (Default: 0 - Infinite)
+				Cooldown 3000 //Time between each task (Default: 10)
+				Duration 10000 // How long should the ai be interrupted
+
+				WaitUntilDone 1 // If set, duration timer only starts when the bot moves to the target location or the aim target is killed (Default: 0)
+				
+				Distance 50 // How close should bot move to the target (Default: 0)
+				AddToQueue 1 // If there is already another interrupt action active, start this action after previous interrupt action ends (Default: 0)
+				// StopCurrentInterruptAction 1 // If there is already another interrupt action active, completely stop previous action instead of suspending it (Default: 0)
+			}
+			CharacterAttributes
+			{
+				"move speed bonus" 1.127
+				"damage force reduction" 0
+				"airblast vulnerability multiplier" 0
+				"airblast vertical vulnerability multiplier" 0
+				"override footstep sound set" 7
+				"cannot be backstabbed" 1
+                "not solid to players" 1
+				"allow friendly fire" 1
+                "voice pitch scale" 0
+				"is suicide counter" 1000
+                "always allow taunt" 1
+                "health from healers reduced" 0
+			}
+		}
+	}
+
+	SpawnTemplate [$SIGSEGV] //Spawn template once the mission loads
+	{
+		Name "logic"
+		//Origin "0 0 0" //Position where to spawn the template
+		//Angles "0 0 0" //Rotation
+	}
+
+	Wave
+	{
+		Checkpoint Yes
+		
+		InitWaveOutput
+		{
+			Target	bombpath_choose_random_relay
+			Action	Trigger
+		}
+		StartWaveOutput
+		{
+			Target wave_start_relay
+			Action Trigger
+		}
+		DoneOutput					
+		{
+			Target wave_finished_relay
+			Action trigger
+		}
+		
+		WaveSpawn
+		{
+			WaitBetweenSpawns 0
+			WaitBeforeStarting 0
+			FirstSpawnOutput
+			{
+				Target	hint1
+				Action	Show
+			}
+		}
+
+		WaveSpawn
+		{
+			WaitBetweenSpawns 5
+			WaitBeforeStarting 5
+			FirstSpawnOutput
+			{
+				Target	hint2
+				Action	Show
+			}
+		}
+		
+		WaveSpawn
+		{
+			TotalCurrency 100
+			
+			Name "1a"
+			
+			Where spawnbot
+			TotalCount 36
+			SpawnCount 1
+			MaxActive 12
+			WaitBetweenSpawns 0.5
+			WaitBeforeStarting 10
+			RandomChoice
+            {
+                TFBot
+                {
+                    Class Scout
+                    Skill Easy
+                }
+                TFBot
+                {
+                    Class Scout
+                    Skill Easy
+                    WeaponRestrictions MeleeOnly
+                }
+            }
+		}
+
+        WaveSpawn
+		{
+			TotalCurrency 100
+			
+			Name "1a"
+			
+			Where spawnbot_right
+			TotalCount 12
+			SpawnCount 1
+			MaxActive 4
+			WaitBetweenSpawns 0.75
+			WaitBeforeStarting 11
+            TFBot
+            {
+                Class Demoman
+                Skill Normal
+				CharacterAttributes
+				{
+					"damage bonus" 0.5
+				}
+            }
+		}
+
+        WaveSpawn
+		{
+			TotalCurrency 200
+			
+			Name "1b"
+            WaitForAllSpawned "1a"
+			
+			Where spawnbot
+			TotalCount 2
+			SpawnCount 1
+			MaxActive 2
+			WaitBetweenSpawns 10
+			WaitBeforeStarting 2
+            TFBot
+            {
+                Template T_TFBot_Giant_Soldier_Crit
+                Tag forcefollowbombpath
+            }
+		}
+
+        WaveSpawn
+		{
+			TotalCurrency 800
+			
+			Name "1c"
+			WaitForAllDead "1b"
+
+			Where spawnbot
+			TotalCount 1
+			SpawnCount 1
+			MaxActive 1
+			WaitBetweenSpawns 0
+			WaitBeforeStarting 0
+            TFBot
+            {
+                Class Heavyweapons
+				Skill Expert
+				WeaponRestrictions MeleeOnly
+				Name "I HATE Sentry Busters"
+				ClassIcon heavy_chief
+				Health 60000
+				Scale 1.9
+				Item "War Head"
+				Item "Fists of Steel"
+				Attributes MiniBoss
+				Attributes UseBossHealthBar
+				CharacterAttributes
+				{
+					"move speed bonus"	0.4
+					"damage force reduction" 0.3
+					"airblast vulnerability multiplier" 0.3
+					"override footstep sound set" 2
+					"airblast vertical vulnerability multiplier" 0.1
+					"rage giving scale" 2
+				}
+            }
+		}
+
+		WaveSpawn
+		{
+			TotalCurrency 0
+
+			Where spawnbot
+			TotalCount 1
+			SpawnCount 1
+			MaxActive 3
+			Support 1
+			WaitBetweenSpawns 7
+			WaitBeforeStarting 20
+            TFBot
+            {
+                Template T_TFBot_DefaultBuster
+            }
+		}
+        WaveSpawn
+		{
+			TotalCurrency 0
+
+			Where spawnbot
+			TotalCount 7
+			SpawnCount 1
+			MaxActive 3
+			Support Limited
+			WaitBetweenSpawns 7
+			WaitBeforeStarting 22.66
+            TFBot
+            {
+                Template T_TFBot_DefaultBuster
+                ClassIcon sentry_buster_2
+            }
+		}
+        WaveSpawn
+		{
+			TotalCurrency 0
+
+			Where spawnbot
+			TotalCount 5
+			SpawnCount 1
+			MaxActive 3
+			Support Limited
+			WaitBetweenSpawns 7
+			WaitBeforeStarting 25.33
+            TFBot
+            {
+                Template T_TFBot_DefaultBuster
+                ClassIcon sentry_buster_3
+            }
+		}
+
+		WaveSpawn
+		{
+			TotalCurrency 0
+			
+			WaitForAllDead "1b"
+
+			Where spawnbot
+			TotalCount 1
+			SpawnCount 1
+			MaxActive 12
+			Support 1
+			WaitBetweenSpawns 4
+			WaitBeforeStarting 10
+            TFBot
+            {
+                Template T_TFBot_DefaultBuster
+                ClassIcon sentry_buster_3
+            }
+		}
+	}
+
+    Wave
+	{
+		Checkpoint Yes
+		
+		InitWaveOutput
+		{
+			Target	bombpath_choose_random_relay
+			Action	Trigger
+		}
+		StartWaveOutput
+		{
+			Target wave_start_relay
+			Action Trigger
+		}
+		DoneOutput					
+		{
+			Target wave_finished_relay
+			Action trigger
+		}
+
+        WaveSpawn
+		{
+			TotalCurrency 400
+			
+			Name "2a"
+			
+			Where spawnbot
+			TotalCount 24
+			SpawnCount 6
+			MaxActive 18
+			WaitBetweenSpawns 8
+			WaitBeforeStarting 0
+            TFBot
+            {
+                Template T_TFBot_Heavyweapons_Fist
+                Skill Easy
+				CharacterAttributes
+				{
+					"player gravity ballon head" -3
+					"dmg taken increased" 10
+					"dmg taken from fire reduced" 0.1
+					"dmg taken from bullets reduced" 0.1
+					"dmg taken from blast reduced" 0.1
+					"dmg taken from crit reduced" 0.1
+					"dmg from melee increased" 0.1
+                    "move speed bonus" 0.75
+                    "damage bonus" 0.5
+				}
+            }
+		}
+
+        WaveSpawn 
+		{	
+			WaitForAllDead "2a"
+			
+			Where spawnbot_right_front
+			TotalCount 20
+			MaxActive 20
+			SpawnCount 10
+			WaitBeforeStarting 0
+			WaitBetweenSpawns 20
+			TotalCurrency 400
+			
+			Squad 
+			{
+				TFBot
+				{
+					Template T_TFBot_Giant_Heavyweapons_Deflector
+                    Skill Easy
+					CharacterAttributes
+					{
+						"player gravity ballon head" -3
+						"dmg taken increased" 10
+						"dmg taken from fire reduced" 0.1
+						"dmg taken from bullets reduced" 0.1
+						"dmg taken from blast reduced" 0.1
+						"dmg taken from crit reduced" 0.1
+						"dmg from melee increased" 0.1
+						"move speed bonus"	0.5
+						"damage force reduction" 0.3
+						"airblast vulnerability multiplier" 0.3
+						"override footstep sound set" 2
+                        "damage penalty" 0.5
+					}
+				}
+				TFBot
+				{
+					Template T_TFBot_Medic_Placebo 
+					CharacterAttributes
+					{
+						"player gravity ballon head" -3
+						"dmg taken increased" 10
+						"dmg taken from fire reduced" 0.1
+						"dmg taken from bullets reduced" 0.1
+						"dmg taken from blast reduced" 0.1
+						"dmg taken from crit reduced" 0.1
+						"dmg from melee increased" 0.1
+						
+					}                                         
+				}
+				TFBot
+				{
+					Template T_TFBot_Medic_Placebo   
+					CharacterAttributes
+					{
+						"player gravity ballon head" -3
+						"dmg taken increased" 10
+						"dmg taken from fire reduced" 0.1
+						"dmg taken from bullets reduced" 0.1
+						"dmg taken from blast reduced" 0.1
+						"dmg taken from crit reduced" 0.1
+						"dmg from melee increased" 0.1
+						
+					}                                              
+				}
+				TFBot
+				{
+					Template T_TFBot_Medic_Placebo          
+					CharacterAttributes
+					{
+						"player gravity ballon head" -3
+						"dmg taken increased" 10
+						"dmg taken from fire reduced" 0.1
+						"dmg taken from bullets reduced" 0.1
+						"dmg taken from blast reduced" 0.1
+						"dmg taken from crit reduced" 0.1
+						"dmg from melee increased" 0.1
+						
+					}                                       
+				}
+				TFBot
+				{
+					Template T_TFBot_Medic_Placebo        
+					CharacterAttributes
+					{
+						"player gravity ballon head" -3
+						"dmg taken increased" 10
+						"dmg taken from fire reduced" 0.1
+						"dmg taken from bullets reduced" 0.1
+						"dmg taken from blast reduced" 0.1
+						"dmg taken from crit reduced" 0.1
+						"dmg from melee increased" 0.1
+						
+					}                                         
+				}
+				TFBot
+				{
+					Template T_TFBot_Medic_Placebo         
+					CharacterAttributes
+					{
+						"player gravity ballon head" -3
+						"dmg taken increased" 10
+						"dmg taken from fire reduced" 0.1
+						"dmg taken from bullets reduced" 0.1
+						"dmg taken from blast reduced" 0.1
+						"dmg taken from crit reduced" 0.1
+						"dmg from melee increased" 0.1
+						
+					}                                        
+				}
+				TFBot
+				{
+					Template T_TFBot_Medic_Placebo          
+					CharacterAttributes
+					{
+						"player gravity ballon head" -3
+						"dmg taken increased" 10
+						"dmg taken from fire reduced" 0.1
+						"dmg taken from bullets reduced" 0.1
+						"dmg taken from blast reduced" 0.1
+						"dmg taken from crit reduced" 0.1
+						"dmg from melee increased" 0.1
+						
+					}                                       
+				}
+				TFBot
+				{
+					Template T_TFBot_Medic_Placebo 
+					CharacterAttributes
+					{
+						"player gravity ballon head" -3
+						"dmg taken increased" 10
+						"dmg taken from fire reduced" 0.1
+						"dmg taken from bullets reduced" 0.1
+						"dmg taken from blast reduced" 0.1
+						"dmg taken from crit reduced" 0.1
+						"dmg from melee increased" 0.1
+						
+					}                                                
+				}
+				TFBot
+				{
+					Template T_TFBot_Medic_Placebo 
+					CharacterAttributes
+					{
+						"player gravity ballon head" -3
+						"dmg taken increased" 10
+						"dmg taken from fire reduced" 0.1
+						"dmg taken from bullets reduced" 0.1
+						"dmg taken from blast reduced" 0.1
+						"dmg taken from crit reduced" 0.1
+						"dmg from melee increased" 0.1
+						
+					}                                                
+				}
+				TFBot
+				{
+					Template T_TFBot_Medic_Placebo         
+					CharacterAttributes
+					{
+						"player gravity ballon head" -3
+						"dmg taken increased" 10
+						"dmg taken from fire reduced" 0.1
+						"dmg taken from bullets reduced" 0.1
+						"dmg taken from blast reduced" 0.1
+						"dmg taken from crit reduced" 0.1
+						"dmg from melee increased" 0.1
+						
+					}                                        
+				}
+			}
+		}
+
+		WaveSpawn
+		{
+			TotalCurrency 0
+
+			Where spawnbot
+			TotalCount 9
+			SpawnCount 1
+			MaxActive 6
+			Support Limited
+			WaitBetweenSpawns 7
+			WaitBeforeStarting 10
+			TFBot
+			{
+				Template T_TFBot_DefaultBuster
+			}
+		}
+        
+        WaveSpawn
+		{
+			TotalCurrency 0
+
+			Where spawnbot
+			TotalCount 1
+			SpawnCount 1
+			MaxActive 8
+			Support 1
+			WaitBetweenSpawns 4.6
+			WaitBeforeStarting 13.5
+			TFBot
+			{
+				Template T_TFBot_AntiGravityBuster
+			}
+		}
+	}
+    Wave
+	{
+		Checkpoint Yes
+		
+		InitWaveOutput
+		{
+			Target	bombpath_choose_random_relay
+			Action	Trigger
+		}
+		StartWaveOutput
+		{
+			Target wave_start_relay
+			Action Trigger
+		}
+		DoneOutput					
+		{
+			Target wave_finished_relay
+			Action trigger
+		}
+
+        WaveSpawn
+		{
+			TotalCurrency 100
+			
+			Where spawnbot
+			TotalCount 20
+			SpawnCount 1
+			MaxActive 16
+			WaitBetweenSpawns 0
+			WaitBeforeStarting 0.1
+            TFBot
+            {
+                Template T_TFBot_Sniper_Huntsman
+            }
+		}
+
+        WaveSpawn
+		{
+			TotalCurrency 0
+			
+            Name "3a"
+
+			Where spawnbot
+			TotalCount 1
+			SpawnCount 1
+			MaxActive 1
+            Support Limited
+			WaitBetweenSpawns 1
+			WaitBeforeStarting 10
+            TFBot
+            {
+                Template T_TFBot_FakeBuster
+            }
+		}
+
+        WaveSpawn 
+		{	
+			Name "3b"
+            WaitForAllDead "3a"
+			
+			Where spawnbot
+			TotalCount 32
+			MaxActive 12
+			SpawnCount 2
+			WaitBeforeStarting 3
+			WaitBetweenSpawns 2
+			TotalCurrency 200
+			
+			RandomChoice 
+			{
+				TFBot
+				{
+					Template T_TFBot_Demoman_Knight
+				}
+				TFBot
+				{
+					Template T_TFBot_Soldier_RocketShotgun                                        
+				}
+			}
+		}
+
+        WaveSpawn
+		{
+			TotalCurrency 600
+			
+			WaitForAllSpawned "3b"
+			
+			Where spawnbot
+			Where spawnbot_left
+			Where spawnbot_right
+			TotalCount 12
+			SpawnCount 1
+			MaxActive 12
+			WaitBetweenSpawns 1
+			WaitBeforeStarting 5
+
+            TFBot
+            {
+                Class Demoman
+				ClassIcon demoknight_giant
+				Name "Giant Demoknight"
+				Skill Expert
+				Health 3300
+				Item "Prince Tavish's Crown"
+				Item "The Eyelander"
+				Item "Ali Baba's Wee Booties"
+				WeaponRestrictions MeleeOnly
+				Attributes MiniBoss
+				CharacterAttributes
+				{
+					"move speed bonus" 0.4
+					"damage force reduction" 0.5
+					"airblast vulnerability multiplier" 0.5
+					"override footstep sound set" 4
+				}
+            }
+		}
+
+        WaveSpawn
+		{
+			TotalCurrency 0
+            WaitForAllDead "3a"
+
+			Where spawnbot
+			TotalCount 1
+			SpawnCount 1
+			MaxActive 6
+			Support 1
+			WaitBetweenSpawns 6
+			WaitBeforeStarting 13
+			TFBot
+			{
+				Template T_TFBot_InfernoBuster
+			}
+		}
+
+		WaveSpawn
+		{
+			TotalCurrency 0
+            WaitForAllSpawned "3b"
+
+			Where spawnbot
+			TotalCount 1
+			SpawnCount 1
+			MaxActive 4
+			Support 1
+			WaitBetweenSpawns 2.5
+			WaitBeforeStarting 13
+			TFBot
+			{
+				Template T_TFBot_InfernoBuster
+			}
+		}
+
+		WaveSpawn
+		{
+			TotalCurrency 0
+            WaitForAllDead "3a"
+
+			Where spawnbot
+			TotalCount 6
+			SpawnCount 3
+			MaxActive 3
+			Support 1
+			WaitBetweenSpawns 25
+			WaitBeforeStarting 22
+			TFBot
+			{
+				Template T_TFBot_DefaultBuster
+			}
+		}
+	}
+    Wave
+	{
+		Checkpoint Yes
+		
+		InitWaveOutput
+		{
+			Target	bombpath_choose_random_relay
+			Action	Trigger
+		}
+		StartWaveOutput
+		{
+			Target wave_start_relay
+			Action Trigger
+		}
+		DoneOutput					
+		{
+			Target wave_finished_relay
+			Action trigger
+		}
+		
+        PlayerAttributes [$SIGSEGV] //Add attributes to players when the wave is active
+		{
+			"damage force reduction" 0.01
+		}
+
+		WaveSpawn
+		{
+			TotalCurrency 40
+			
+			Name "4a"
+			
+			Where spawnbot
+			TotalCount 16
+			SpawnCount 16
+			MaxActive 16
+			WaitBetweenSpawns 0.5
+			WaitBeforeStarting 0
+			RandomChoice
+            {
+                TFBot
+                {
+                    Class Scout
+                    Skill Easy
+                }
+                TFBot
+                {
+                    Class Scout
+                    Skill Hard
+                    WeaponRestrictions MeleeOnly
+                }
+            }
+		}
+
+        WaveSpawn
+		{
+			TotalCurrency 400
+			
+			Name "4a"
+			
+			Where spawnbot_left
+            Where spawnbot_right_front
+            RandomSpawn 1
+			TotalCount 4
+			SpawnCount 2
+			MaxActive 4
+			WaitBetweenSpawns 25
+			WaitBeforeStarting 15
+            TFBot
+            {
+                Template T_TFBot_Giant_Heavyweapons
+				ExtAttr IgnoreBuildings [$SIGSEGV]
+                Skill Hard
+            }
+		}
+
+        WaveSpawn
+		{
+			TotalCurrency 60
+			
+			Name "4b"
+            WaitForAllDead "4a"
+			
+			Where spawnbot
+			TotalCount 24
+			SpawnCount 1
+			MaxActive 12
+			WaitBetweenSpawns 0.5
+			WaitBeforeStarting 0
+			TFBot
+			{
+				Class Soldier
+				Skill Normal
+				Name "Crit Soldier"
+				ClassIcon soldier_spammer
+				ExtAttr IgnoreBuildings [$SIGSEGV]
+				Attributes AlwaysCrit
+				ItemAttributes 
+				{
+					ItemName "TF_WEAPON_ROCKETLAUNCHER"
+					"faster reload rate" -0.8
+					"fire rate bonus" 0.6	
+					"damage penalty" 0.25 //Shhhhh
+				}
+			}
+		}
+
+        WaveSpawn
+		{
+			TotalCurrency 100
+			
+			Name "4b"
+            WaitForAllDead "4a"
+			
+			Where spawnbot_left
+			TotalCount 12
+			SpawnCount 1
+			MaxActive 12
+			WaitBetweenSpawns 1
+			WaitBeforeStarting 10
+            TFBot
+            {
+                Template T_TFBot_Demo_Burst
+                Attributes AlwaysCrit
+				Name "Crit Burst Fire Demo"
+				ExtAttr IgnoreBuildings [$SIGSEGV]
+				CharacterAttributes 
+				{
+					"damage penalty" 0.25 //Shhhhh
+				}
+            }
+		}
+
+        WaveSpawn
+		{
+			TotalCurrency 100
+			
+			Name "4b"
+            WaitForAllDead "4a"
+			
+			Where spawnbot_right
+			TotalCount 8
+			SpawnCount 1
+			MaxActive 8
+			WaitBetweenSpawns 1
+			WaitBeforeStarting 10
+            TFBot
+            {
+                Class Pyro
+				Skill Expert
+				Name "Crit Bigfire Pyro"
+				ClassIcon pyro_bigfire
+				Attributes AlwaysCrit
+				Attributes AlwaysFireWeapon
+				ExtAttr IgnoreBuildings [$SIGSEGV]
+				ItemAttributes //Shhhh, they don't need to know
+				{
+					ItemName "TF_WEAPON_FLAMETHROWER"
+					"flame_drag" 4
+					"damage bonus"	0.5
+				}
+				CharacterAttributes
+				{
+					"move speed bonus"	1.5
+				}
+            }
+		}
+
+        WaveSpawn
+		{
+			TotalCurrency 100
+			
+			Name "4c"
+            WaitForAllSpawned "4b"
+			
+			Where spawnbot
+			where spawnbot_left
+			Where spawnbot_right_back
+			TotalCount 3
+			SpawnCount 1
+			MaxActive 3
+			WaitBetweenSpawns 0
+			WaitBeforeStarting 0
+            TFBot
+            {
+                Template T_TFBot_Soldier_BurstFire
+				ClassIcon soldier_burstfire_hyper_lite
+				Tag forcefollowbombpath
+				ExtAttr IgnoreBuildings [$SIGSEGV]
+            }
+		}
+
+		WaveSpawn
+		{
+			TotalCurrency 0
+
+			Where spawnbot
+			TotalCount 1
+			SpawnCount 1
+			MaxActive 6
+			Support 1
+			WaitBetweenSpawns 5
+			WaitBeforeStarting 8
+			TFBot
+			{
+				Template T_TFBot_HealBuster
+			}
+		}
+	}
+    Wave
+	{
+		Checkpoint Yes
+		
+		InitWaveOutput
+		{
+			Target	bombpath_choose_random_relay
+			Action	Trigger
+		}
+		StartWaveOutput
+		{
+			Target wave_start_relay
+			Action Trigger
+		}
+		DoneOutput					
+		{
+			Target wave_finished_relay
+			Action trigger
+		}
+		
+        WaveSpawn
+		{
+			TotalCurrency 0
+
+			Where spawnbot
+			TotalCount 1
+			SpawnCount 1
+			MaxActive 1
+			WaitBetweenSpawns 5
+			WaitBeforeStarting 5
+			TFBot
+			{
+				Template T_TFBot_ReusableBuster
+			}
+		}
+
+		WaveSpawn
+		{
+			TotalCurrency 3900
+			
+			Where spawnbot
+            Where spawnbot_left
+            Where spawnbot_right
+			TotalCount 3900
+			SpawnCount 1
+			MaxActive 10
+			WaitBetweenSpawns 1.2
+			WaitBeforeStarting 0
+            Support 1
+			RandomChoice
+            {
+                TFBot
+                {
+                    Class Scout
+                    Skill Easy
+					Tag w5fodderbots
+                }
+                TFBot
+                {
+                    Class Soldier
+                    Skill Easy
+                    Item "The Cow Mangler 5000"
+					Tag w5fodderbots
+                }
+                TFBot
+                {
+                    Template T_TFBot_Demoman_Knight
+                    Skill Easy
+					Tag w5fodderbots
+                }
+                TFBot
+                {
+                    Template T_TFBot_Heavyweapons_Shotgun
+                    Skill Easy
+					Tag w5fodderbots
+                }
+            }
+		}
+
+        WaveSpawn
+		{
+			TotalCurrency 100
+			
+			Where spawnbot
+            RandomSpawn 1
+			TotalCount 3
+			SpawnCount 1
+			MaxActive 10
+            Support Limited
+			WaitBetweenSpawns 30
+			WaitBeforeStarting 15
+            TFBot
+            {
+                Template T_TFBot_Giant_Pyro_Flare_Spammer
+				Tag w5fodderbots
+                CharacterAttributes
+                {
+                    "move speed bonus"	0.35
+                    "damage force reduction" 0.6
+                    "airblast vulnerability multiplier" 0.6
+                    "override footstep sound set" 6
+                }
+            }
+		}
+	}
+    Wave
+	{
+		Checkpoint Yes
+		
+		InitWaveOutput
+		{
+			Target	bombpath_choose_middle_relay
+			Action	Trigger
+		}
+		StartWaveOutput
+		{
+			Target wave_start_relay
+			Action Trigger
+		}
+		DoneOutput					
+		{
+			Target wave_finished_w6_relay
+			Action trigger
+		}
+
+        WaveSpawn
+		{
+			TotalCurrency 100
+			
+			//Name "6a"
+			
+			Where spawnbot
+			TotalCount 30
+			SpawnCount 3
+			MaxActive 12
+			WaitBetweenSpawns 3
+			WaitBeforeStarting 0
+            TFBot
+            {
+                Class Heavy
+                Skill Easy
+				CharacterAttributes
+				{
+					"player gravity ballon head" -3
+					"dmg taken increased" 10
+					"dmg taken from fire reduced" 0.1
+					"dmg taken from bullets reduced" 0.1
+					"dmg taken from blast reduced" 0.1
+					"dmg taken from crit reduced" 0.1
+					"dmg from melee increased" 0.1
+                    "damage bonus" 0.3
+				}     
+            }
+		}
+
+        WaveSpawn 
+		{	
+			Name "6a"
+			
+			Where spawnbot
+			TotalCount 8
+			MaxActive 8
+			SpawnCount 2
+			WaitBeforeStarting 1
+			WaitBetweenSpawns 15
+			TotalCurrency 400
+			
+			Squad 
+			{
+				TFBot
+				{
+					Template T_TFBot_Giant_Demoman
+					CharacterAttributes
+					{
+						"player gravity ballon head" -3
+						"dmg taken increased" 10
+						"dmg taken from fire reduced" 0.1
+						"dmg taken from bullets reduced" 0.1
+						"dmg taken from blast reduced" 0.1
+						"dmg taken from crit reduced" 0.1
+						"dmg from melee increased" 0.1
+						"move speed bonus"	0.5
+						"damage force reduction" 0.5
+						"airblast vulnerability multiplier" 0.5
+						"override footstep sound set" 4
+					}     
+				}
+				TFBot
+				{
+					Template T_TFBot_Medic_Placebo    
+					CharacterAttributes
+					{
+						"player gravity ballon head" -3
+						"dmg taken increased" 10
+						"dmg taken from fire reduced" 0.1
+						"dmg taken from bullets reduced" 0.1
+						"dmg taken from blast reduced" 0.1
+						"dmg taken from crit reduced" 0.1
+						"dmg from melee increased" 0.1
+						
+					}                                       
+				}
+			}
+		}
+
+        WaveSpawn
+		{
+			TotalCurrency 300
+			
+			Name "6b"
+            WaitForAllDead "6a"
+			
+			Where spawnbot_left
+            Where spawnbot
+            Where spawnbot_right_back
+            RandomSpawn 1
+			TotalCount 15
+			SpawnCount 15
+			MaxActive 15
+			WaitBetweenSpawns 5
+			WaitBeforeStarting 0
+
+            Squad 
+			{
+				TFBot
+				{
+					Template T_TFBot_Giant_Heavyweapons_Deflector
+                    Skill Easy
+                    Tag forcefollowbombpath
+					CharacterAttributes
+					{
+						"player gravity ballon head" -3
+						"dmg taken increased" 10
+						"dmg taken from fire reduced" 0.1
+						"dmg taken from bullets reduced" 0.1
+						"dmg taken from blast reduced" 0.1
+						"dmg taken from crit reduced" 0.1
+						"dmg from melee increased" 0.1
+						"move speed bonus"	0.5
+						"damage force reduction" 0.3
+						"airblast vulnerability multiplier" 0.3
+						"override footstep sound set" 2
+                        "damage penalty" 0.5
+					}
+				}
+				TFBot
+				{
+					Template T_TFBot_Medic_Placebo
+					CharacterAttributes
+					{
+						"player gravity ballon head" -3
+						"dmg taken increased" 10
+						"dmg taken from fire reduced" 0.1
+						"dmg taken from bullets reduced" 0.1
+						"dmg taken from blast reduced" 0.1
+						"dmg taken from crit reduced" 0.1
+						"dmg from melee increased" 0.1
+						
+					}                                      
+				}
+                TFBot
+				{
+					Template T_TFBot_Medic_Placebo     
+					CharacterAttributes
+					{
+						"player gravity ballon head" -3
+						"dmg taken increased" 10
+						"dmg taken from fire reduced" 0.1
+						"dmg taken from bullets reduced" 0.1
+						"dmg taken from blast reduced" 0.1
+						"dmg taken from crit reduced" 0.1
+						"dmg from melee increased" 0.1
+						
+					}                                 
+				}
+                TFBot
+				{
+					Template T_TFBot_Medic_Placebo              
+					CharacterAttributes
+					{
+						"player gravity ballon head" -3
+						"dmg taken increased" 10
+						"dmg taken from fire reduced" 0.1
+						"dmg taken from bullets reduced" 0.1
+						"dmg taken from blast reduced" 0.1
+						"dmg taken from crit reduced" 0.1
+						"dmg from melee increased" 0.1
+						
+					}                        
+				}
+                TFBot
+				{
+					Template T_TFBot_Medic_Placebo       
+					CharacterAttributes
+					{
+						"player gravity ballon head" -3
+						"dmg taken increased" 10
+						"dmg taken from fire reduced" 0.1
+						"dmg taken from bullets reduced" 0.1
+						"dmg taken from blast reduced" 0.1
+						"dmg taken from crit reduced" 0.1
+						"dmg from melee increased" 0.1
+						
+					}                               
+				}
+			}
+		}
+
+        WaveSpawn
+		{
+			TotalCurrency 400
+			TotalCount 1
+			
+			Name "6c"
+            WaitForAllDead "6b"
+			
+			Tank
+			{
+				Health 8000
+				Speed 75
+				Name "tankboss"
+				StartingPathTrackNode "boss_path_middle_1"
+				
+				OnBombDroppedOutput
+				{
+					Target boss_deploy_relay
+					Action Trigger
+				}
+				OnKilledOutput
+				{
+					Target	boss_dead_middle_relay
+					Action	Trigger
+				}
+			}
+		}
+
+        WaveSpawn
+		{
+			TotalCurrency 400
+			
+			Name "6c"
+            WaitForAllDead "6b"
+			
+			Where spawnbot
+			TotalCount 8
+			SpawnCount 2
+			MaxActive 8
+			WaitBetweenSpawns 10
+			WaitBeforeStarting 0
+
+            TFBot
+            {
+                Template T_TFBot_Giant_Soldier_Crit
+				CharacterAttributes
+				{
+					"player gravity ballon head" -3
+					"dmg taken increased" 10
+					"dmg taken from fire reduced" 0.1
+					"dmg taken from bullets reduced" 0.1
+					"dmg taken from blast reduced" 0.1
+					"dmg taken from crit reduced" 0.1
+					"dmg from melee increased" 0.1
+					"move speed bonus"	0.5
+					"damage force reduction" 0.4
+					"airblast vulnerability multiplier" 0.4
+					"override footstep sound set" 3
+				}
+            }
+		}
+
+        WaveSpawn
+		{
+			TotalCurrency 100
+			
+			Name "6c"
+            WaitForAllDead "6b"
+			
+			Where spawnbot
+			TotalCount 32
+			SpawnCount 1
+			MaxActive 8
+			WaitBetweenSpawns 0.6
+			WaitBeforeStarting 0
+
+            TFBot
+            {
+                Template T_TFBot_Heavyweapons_Heavyweight_Champ_Fast
+				Tag forcefollowbombpath
+				Tag noflank
+				CharacterAttributes
+				{
+					"player gravity ballon head" -3
+					"dmg taken increased" 10
+					"dmg taken from fire reduced" 0.1
+					"dmg taken from bullets reduced" 0.1
+					"dmg taken from blast reduced" 0.1
+					"dmg taken from crit reduced" 0.1
+					"dmg from melee increased" 0.1
+				}
+            }
+		}
+
+        WaveSpawn 
+		{	
+			WaitForAllDead "6c"
+			
+			Where spawnbot
+            Where spawnbot_right_back
+            Where spawnbot_left
+			TotalCount 6
+			MaxActive 6
+			SpawnCount 2
+			WaitBeforeStarting 5
+			WaitBetweenSpawns 0
+			TotalCurrency 300
+			
+			Squad 
+			{
+				TFBot
+				{
+					Template T_TFBot_Giant_Heavyweapons_BrassBeast_Hatted
+                    Tag forcefollowbombpath
+				}
+				TFBot
+				{
+					Template T_TFBot_Giant_Medic_Scary   
+                    Tag forcefollowbombpath                            
+				}
+			}
+		}
+		WaveSpawn 
+		{	
+			WaitForAllDead "6c"
+			
+			Where spawnbot_topflank
+			TotalCount 2
+			MaxActive 2
+			SpawnCount 2
+			WaitBeforeStarting 12
+			WaitBetweenSpawns 0
+			TotalCurrency 100
+			
+			Squad 
+			{
+				TFBot
+				{
+					Template T_TFBot_Giant_Heavyweapons_BrassBeast_Hatted
+                    Tag doesnottaketopfalldamage
+                    Tag forcefollowbombpath
+                    Tag gentlynudgetop
+				}
+				TFBot
+				{
+					Template T_TFBot_Giant_Medic_Scary   
+                    Tag doesnottaketopfalldamage
+                    Tag forcefollowbombpath
+                    Tag gentlynudgetop                                  
+				}
+			}
+		}
+
+        WaveSpawn
+		{
+			Where spawnbot
+			TotalCount 1
+			MaxActive 1
+			SpawnCount 1
+			Support 1
+            WaitForAllDead "6c"
+			WaitBeforeStarting 0
+			WaitBetweenSpawns 60000
+			TotalCurrency 0		
+			
+			FirstSpawnOutput
+			{
+				Target disposable_spawnbot_relay_disable
+				Action trigger
+			}
+		}
+
+        WaveSpawn
+		{
+			Where spawnbot
+			TotalCount 1
+			MaxActive 1
+			SpawnCount 1
+			Support 1
+            WaitForAllDead "6c"
+			WaitBeforeStarting 0
+			WaitBetweenSpawns 60000
+			TotalCurrency 0		
+			
+			FirstSpawnOutput
+			{
+				Target disposable_spawnbot_left_relay_disable
+				Action trigger
+			}
+		}
+
+        WaveSpawn
+		{
+			Where spawnbot
+			TotalCount 1
+			MaxActive 1
+			SpawnCount 1
+			Support 1
+            WaitForAllDead "6c"
+			WaitBeforeStarting 0
+			WaitBetweenSpawns 60000
+			TotalCurrency 0		
+			
+			FirstSpawnOutput
+			{
+				Target disposable_spawnbot_right_relay_disable
+				Action trigger
+			}
+		}
+
+        WaveSpawn
+		{
+			TotalCurrency 0
+
+			Where spawnbot_disposable
+            Where spawnbot_left_disposable
+            Where spawnbot_right_disposable
+			TotalCount 1000
+			SpawnCount 1
+			MaxActive 7
+			Support 1
+			WaitBetweenSpawns 4.75
+			WaitBeforeStarting 3
+            RandomChoice
+            {
+                TFBot
+                {
+                    Template T_TFBot_DefaultBuster
+                }
+                TFBot
+                {
+                    Template T_TFBot_AntiGravityBuster
+                }
+                TFBot
+                {
+                    Template T_TFBot_InfernoBuster
+                }
+                TFBot
+                {
+                    Template T_TFBot_HealBuster
+                }
+                TFBot
+                {
+                    Template T_TFBot_FlashBuster
+                }
+                TFBot
+                {
+                    Template T_TFBot_SkunkfaceBuster
+                }
+            }
+		}
+
+        WaveSpawn
+		{
+			TotalCurrency 0
+
+			Where spawnbot
+			TotalCount 1
+			SpawnCount 1
+			MaxActive 1
+			Support Limited
+			WaitBetweenSpawns 5.5
+			WaitBeforeStarting 65
+            TFBot
+            {
+                Template T_TFBot_ReusableBuster_WaveSix
+            }
+		}
+
+        WaveSpawn
+		{
+			TotalCurrency 0
+
+			Where spawnbot
+			TotalCount 1
+			SpawnCount 1
+			MaxActive 1
+			Support Limited
+            WaitForAllDead "6c"
+			WaitBetweenSpawns 5.5
+			WaitBeforeStarting 15
+            TFBot
+            {
+                Template T_TFBot_BlackHoleBuster
+            }
+		}
+	}
+    Wave
+	{
+		Checkpoint Yes
+		
+		InitWaveOutput
+		{
+			Target	bombpath_choose_random_relay
+			Action	Trigger
+		}
+		StartWaveOutput
+		{
+			Target wave_start_relay
+			Action Trigger
+		}
+		DoneOutput					
+		{
+			Target wave_finished_relay
+			Action trigger
+		}
+
+        WaveSpawn
+		{
+			TotalCurrency 100
+			
+			Where spawnbot
+			TotalCount 62
+			SpawnCount 1
+			MaxActive 6
+			WaitBetweenSpawns 1
+			WaitBeforeStarting 5
+			Support Limited
+			FirstSpawnOutput
+			{
+				Target bombresetter_w7
+				Action Enable
+			}
+			RandomChoice
+			{
+				RandomChoice
+				{
+					TFBot
+					{
+						Template T_TFBot_Scout_Shortstop
+						Skill Easy
+						Attributes AlwaysCrit
+						CharacterAttributes
+						{
+							"head scale" 0.7
+							"damage penalty" 0.25
+							"move speed bonus" 0.65
+						}
+					}
+				}
+			}
+            
+		}
+        WaveSpawn
+		{
+			TotalCurrency 100
+			
+			Where spawnbot
+            Where spawnbot_mission_spy
+            Where spawnbot_left
+            Where spawnbot_right
+            Where spawnbot_topflank
+			TotalCount 48
+			SpawnCount 1
+			MaxActive 5
+			WaitBetweenSpawns 1
+			WaitBeforeStarting 10
+			Support Limited
+			RandomChoice
+			{
+				RandomChoice
+				{
+					TFBot
+					{
+						Class Soldier
+						Skill Easy
+						Name "Crit Soldier"
+						Attributes AlwaysCrit
+						Tag doesnottaketopfalldamage
+						ItemAttributes 
+						{
+							ItemName "TF_WEAPON_ROCKETLAUNCHER"
+							"damage bonus"	2.0
+							"faster reload rate" -0.8
+							"fire rate bonus" 0.6
+						}
+					}
+				}
+			}
+		}
+        WaveSpawn
+		{
+			TotalCurrency 100
+			
+			Where spawnbot
+            Where spawnbot_mission_spy
+            Where spawnbot_left
+            Where spawnbot_right
+            Where spawnbot_topflank
+			TotalCount 48
+			SpawnCount 4
+			MaxActive 4
+			WaitBetweenSpawns 1
+			WaitBeforeStarting 10
+			Support Limited
+			RandomChoice
+			{
+				RandomChoice
+				{
+					TFBot
+					{
+						Class Heavyweapons
+						Skill Expert
+						Name "Crit Heavy"
+						Attributes AlwaysCrit
+						Tag doesnottaketopfalldamage
+					}
+				}
+			}
+		}
+        WaveSpawn
+		{
+			TotalCurrency 100
+			
+			Where spawnbot
+            Where spawnbot_mission_spy
+            Where spawnbot_left
+            Where spawnbot_right
+            Where spawnbot_topflank
+			TotalCount 8
+			SpawnCount 2
+			MaxActive 8
+			WaitBetweenSpawns 15
+			WaitBeforeStarting 6
+			Support Limited
+			RandomChoice
+			{
+				Squad
+				{
+					TFBot
+					{
+						Template T_TFBot_Soldier_BurstFire
+						Tag doesnottaketopfalldamage
+					}
+					TFBot
+					{
+						Template T_TFBot_Giant_Medic
+						Tag doesnottaketopfalldamage
+					}
+				}
+			}
+		}
+        WaveSpawn
+		{
+			TotalCurrency 100
+			
+			Where spawnbot
+            Where spawnbot_mission_spy
+            Where spawnbot_left
+            Where spawnbot_right
+            Where spawnbot_topflank
+			TotalCount 24
+			SpawnCount 4
+			MaxActive 26
+			WaitBetweenSpawns 22
+			WaitBeforeStarting 6
+			Support Limited
+			RandomChoice
+			{
+				Squad
+				{
+					TFBot
+					{
+						Template T_TFBot_Giant_Heavyweapons
+						Tag doesnottaketopfalldamage
+					}
+					TFBot
+					{
+						Template T_TFBot_Medic
+						Tag doesnottaketopfalldamage
+					}
+					TFBot
+					{
+						Template T_TFBot_Medic
+						Tag doesnottaketopfalldamage
+					}
+					TFBot
+					{
+						Template T_TFBot_Medic
+						Tag doesnottaketopfalldamage
+					}
+				}
+			}
+		}
+        WaveSpawn
+		{
+			TotalCurrency 100
+			
+			Where spawnbot
+            Where spawnbot_mission_spy
+            Where spawnbot_left
+            Where spawnbot_right
+            Where spawnbot_topflank
+			TotalCount 12
+			SpawnCount 1
+			MaxActive 12
+			WaitBetweenSpawns 10
+			WaitBeforeStarting 6
+			Support Limited
+			RandomChoice
+			{
+				RandomChoice
+				{
+					TFBot
+					{
+						Template T_TFBot_Giant_Pyro
+						Attributes AlwaysCrit
+					}
+				}
+			}
+           
+		}
+        WaveSpawn
+		{
+			TotalCurrency 400
+			TotalCount 8
+            SpawnCount 1
+			WaitBeforeStarting 10
+            WaitBetweenSpawns 25
+			Support Limited
+			RandomChoice
+			{
+				RandomChoice
+				{
+					Tank
+					{
+						Health 30000
+						Speed 75
+						Name "tankboss"
+						StartingPathTrackNode "boss_path_middle_1"
+						
+						OnBombDroppedOutput
+						{
+							Target boss_deploy_relay
+							Action Trigger
+						}
+						OnKilledOutput
+						{
+							Target	boss_dead_middle_relay
+							Action	Trigger
+						}
+					}
+				}
+			}
+		}
+		WaveSpawn
+		{
+			Name	FakeSpawn
+			TotalCount	62
+			SpawnCount	2
+            TotalCurrency 0
+			WaitBeforeStarting	1
+            WaitForAllDead "buster"
+			Where	spawnbot
+            PointTemplate [$SIGSEGV] // PointTemplate spawner. Counts as alive until all entites in the template are removed
+			{
+				SpawnAtEntity Where // Entity to spawn the template at, "Where" spawns at the bot spawn as indicated by where. If omitted, spawns at world origin
+				IsCrit 1 // Shows icon as critical (Default: 0)
+				IsMiniBoss 0 // Shows icon as mini boss (Default: 0)
+				ClassIcon scout_shortstop // ClassIcon to use
+				Name "FakeIcon" // Template name to use
+				Origin "0 0 0" // Position where to spawn the template. If SpawnAtEntity is specified, relative to entity
+				Angles "0 0 0" // Rotation of the template
+				SpawnCurrencyPack "yes"
+			}
+		}
+		WaveSpawn
+		{
+			Name	FakeSpawn
+			TotalCount	48
+			SpawnCount	1
+            TotalCurrency 0
+			WaitBeforeStarting	1
+            WaitForAllDead "buster"
+			Where	spawnbot
+            PointTemplate [$SIGSEGV] // PointTemplate spawner. Counts as alive until all entites in the template are removed
+			{
+				SpawnAtEntity Where // Entity to spawn the template at, "Where" spawns at the bot spawn as indicated by where. If omitted, spawns at world origin
+				IsCrit 1 // Shows icon as critical (Default: 0)
+				IsMiniBoss 0 // Shows icon as mini boss (Default: 0)
+				ClassIcon soldier // ClassIcon to use
+				Name "FakeIcon" // Template name to use
+				Origin "0 0 0" // Position where to spawn the template. If SpawnAtEntity is specified, relative to entity
+				Angles "0 0 0" // Rotation of the template
+				SpawnCurrencyPack "yes"
+			}
+		}
+		WaveSpawn
+		{
+			Name	FakeSpawn
+			TotalCount	48
+			SpawnCount	1
+            TotalCurrency 0
+			WaitBeforeStarting	1
+            WaitForAllDead "buster"
+			Where	spawnbot
+            PointTemplate [$SIGSEGV] // PointTemplate spawner. Counts as alive until all entites in the template are removed
+			{
+				SpawnAtEntity Where // Entity to spawn the template at, "Where" spawns at the bot spawn as indicated by where. If omitted, spawns at world origin
+				IsCrit 1 // Shows icon as critical (Default: 0)
+				IsMiniBoss 0 // Shows icon as mini boss (Default: 0)
+				ClassIcon heavy // ClassIcon to use
+				Name "FakeIcon" // Template name to use
+				Origin "0 0 0" // Position where to spawn the template. If SpawnAtEntity is specified, relative to entity
+				Angles "0 0 0" // Rotation of the template
+				SpawnCurrencyPack "yes"
+			}
+		}
+		WaveSpawn
+		{
+			Name	FakeSpawn
+			TotalCount	18
+			SpawnCount	1
+            TotalCurrency 0
+			
+			WaitBeforeStarting	1
+            WaitForAllDead "buster"
+			Where	spawnbot
+            PointTemplate [$SIGSEGV] // PointTemplate spawner. Counts as alive until all entites in the template are removed
+			{
+				SpawnAtEntity Where // Entity to spawn the template at, "Where" spawns at the bot spawn as indicated by where. If omitted, spawns at world origin
+				IsCrit 0 // Shows icon as critical (Default: 0)
+				IsMiniBoss 0 // Shows icon as mini boss (Default: 0)
+				ClassIcon medic_uber // ClassIcon to use
+				Name "FakeIcon" // Template name to use
+				Origin "0 0 0" // Position where to spawn the template. If SpawnAtEntity is specified, relative to entity
+				Angles "0 0 0" // Rotation of the template
+				SpawnCurrencyPack "yes"
+			}
+		}
+		WaveSpawn
+		{
+			Name	FakeSpawn
+			TotalCount	4
+			SpawnCount	1
+            TotalCurrency 0
+			WaitBetweenSpawns 0.6
+			WaitBeforeStarting	3
+            WaitForAllDead "buster"
+			Where	spawnbot
+            PointTemplate [$SIGSEGV] // PointTemplate spawner. Counts as alive until all entites in the template are removed
+			{
+				SpawnAtEntity Where // Entity to spawn the template at, "Where" spawns at the bot spawn as indicated by where. If omitted, spawns at world origin
+				IsCrit 1 // Shows icon as critical (Default: 0)
+				IsMiniBoss 1 // Shows icon as mini boss (Default: 0)
+				ClassIcon soldier_burstfire // ClassIcon to use
+				Name "FakeIcon" // Template name to use
+				Origin "0 0 0" // Position where to spawn the template. If SpawnAtEntity is specified, relative to entity
+				Angles "0 0 0" // Rotation of the template
+				SpawnCurrencyPack "yes"
+			}
+		}
+		WaveSpawn
+		{
+			Name	FakeSpawn
+			TotalCount	4
+			SpawnCount	1
+            TotalCurrency 0
+			WaitBetweenSpawns 0.6
+			WaitBeforeStarting	3
+            WaitForAllDead "buster"
+			Where	spawnbot
+            PointTemplate [$SIGSEGV] // PointTemplate spawner. Counts as alive until all entites in the template are removed
+			{
+				SpawnAtEntity Where // Entity to spawn the template at, "Where" spawns at the bot spawn as indicated by where. If omitted, spawns at world origin
+				IsCrit 0 // Shows icon as critical (Default: 0)
+				IsMiniBoss 1 // Shows icon as mini boss (Default: 0)
+				ClassIcon medic_giant // ClassIcon to use
+				Name "FakeIcon" // Template name to use
+				Origin "0 0 0" // Position where to spawn the template. If SpawnAtEntity is specified, relative to entity
+				Angles "0 0 0" // Rotation of the template
+				SpawnCurrencyPack "yes"
+			}
+		}
+		WaveSpawn
+		{
+			Name	FakeSpawn
+			TotalCount	6
+			SpawnCount	1
+            TotalCurrency 0
+			WaitBetweenSpawns 0.9
+			WaitBeforeStarting	2
+            WaitForAllDead "buster"
+			Where	spawnbot
+            PointTemplate [$SIGSEGV] // PointTemplate spawner. Counts as alive until all entites in the template are removed
+			{
+				SpawnAtEntity Where // Entity to spawn the template at, "Where" spawns at the bot spawn as indicated by where. If omitted, spawns at world origin
+				IsCrit 0 // Shows icon as critical (Default: 0)
+				IsMiniBoss 1 // Shows icon as mini boss (Default: 0)
+				ClassIcon heavy_giant // ClassIcon to use
+				Name "FakeIcon" // Template name to use
+				Origin "0 0 0" // Position where to spawn the template. If SpawnAtEntity is specified, relative to entity
+				Angles "0 0 0" // Rotation of the template
+				SpawnCurrencyPack "yes"
+			}
+		}
+		WaveSpawn
+		{
+			Name	FakeSpawn
+			TotalCount	12
+			SpawnCount	2
+            TotalCurrency 0
+			WaitBetweenSpawns 0.45
+			WaitBeforeStarting	1
+            WaitForAllDead "buster"
+			Where	spawnbot
+            PointTemplate [$SIGSEGV] // PointTemplate spawner. Counts as alive until all entites in the template are removed
+			{
+				SpawnAtEntity Where // Entity to spawn the template at, "Where" spawns at the bot spawn as indicated by where. If omitted, spawns at world origin
+				IsCrit 1 // Shows icon as critical (Default: 0)
+				IsMiniBoss 1 // Shows icon as mini boss (Default: 0)
+				ClassIcon pyro_giant // ClassIcon to use
+				Name "FakeIcon" // Template name to use
+				Origin "0 0 0" // Position where to spawn the template. If SpawnAtEntity is specified, relative to entity
+				Angles "0 0 0" // Rotation of the template
+				SpawnCurrencyPack "yes"
+			}
+		}
+		WaveSpawn
+		{
+			Name	FakeSpawn
+			TotalCount	8
+			SpawnCount	1
+            TotalCurrency 0
+			WaitBetweenSpawns 0.75
+			WaitBeforeStarting	1
+            WaitForAllDead "buster"
+			Where	spawnbot
+            PointTemplate [$SIGSEGV] // PointTemplate spawner. Counts as alive until all entites in the template are removed
+			{
+				SpawnAtEntity Where // Entity to spawn the template at, "Where" spawns at the bot spawn as indicated by where. If omitted, spawns at world origin
+				IsCrit 0 // Shows icon as critical (Default: 0)
+				IsMiniBoss 1 // Shows icon as mini boss (Default: 0)
+				ClassIcon tank // ClassIcon to use
+				Name "FakeIcon" // Template name to use
+				Origin "0 0 0" // Position where to spawn the template. If SpawnAtEntity is specified, relative to entity
+				Angles "0 0 0" // Rotation of the template
+				SpawnCurrencyPack "yes"
+			}
+		}
+		WaveSpawn
+		{
+			TotalCurrency 0
+			
+			Name "buster"
+
+			Where spawnbot
+			TotalCount 1
+			SpawnCount 1
+			MaxActive 1
+			Support Limited
+			WaitBetweenSpawns 10
+			WaitBeforeStarting 1
+            TFBot
+            {
+                Template T_TFBot_DoomsdayBuster
+            }
+		}
+    }
+}

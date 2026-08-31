@@ -1,0 +1,709 @@
+// Created by Mentrillum.
+
+#base robot_giant.pop
+#base robot_standard.pop
+
+WaveSchedule
+{
+	StartingCurrency 400
+	RespawnWaveTime 3
+	FixedRespawnWaveTime Yes
+	CanBotsAttackWhileInSpawnRoom No
+
+	Mission
+	{
+		Objective DestroySentries
+
+		InitialCooldown 5
+		Where spawnbot_right
+		Where spawnbot_left
+		BeginAtWave 1
+		RunForThisManyWaves 6
+		CooldownTime 35
+
+		TFBot
+		{
+			Template T_TFBot_SentryBuster
+		}
+	}
+
+	Mission
+	{
+		Objective Sniper
+
+		InitialCooldown 15
+		Where spawnbot_left
+		BeginAtWave 3
+		RunForThisManyWaves 2
+		CooldownTime 35
+		DesiredCount 2
+
+		TFBot
+		{
+			Class Sniper
+			Skill Expert
+		}
+	}
+
+	Mission
+	{
+		Objective Spy
+
+		InitialCooldown 20
+		Where spawnbot_left
+		BeginAtWave 3
+		RunForThisManyWaves 1
+		CooldownTime 15
+		DesiredCount 1
+
+		TFBot
+		{
+			Class Spy
+			Skill Expert
+		}
+	}
+
+	Wave
+	{
+		StartWaveOutput
+		{
+			Target wave_start_relay
+			Action Trigger
+		}
+		DoneOutput
+		{
+			Target wave_finished_relay
+			Action Trigger
+		}
+		InitWaveOutput
+		{
+			Target relay_E
+			Action Trigger
+		}
+		WaitWhenDone 65
+		Checkpoint Yes
+
+		WaveSpawn
+		{
+			Where spawnbot_right
+			Name "01"
+			TotalCount 30
+			MaxActive 10
+			SpawnCount 2
+			WaitBeforeStarting 0
+			WaitBetweenSpawns 4
+			TotalCurrency 200
+
+			RandomChoice
+			{
+				TFBot
+				{
+					Template T_TFBot_Demoman_Knight
+				}
+
+				TFBot
+				{
+					Template T_TFBot_Demoman_Knight
+				}
+
+				TFBot
+				{
+					Template T_TFBot_Demoman_Knight
+				}
+
+				TFBot
+				{
+					Template T_TFBot_Demoman_Knight
+				}
+
+				TFBot
+				{
+					Template T_TFBot_Demoman_Knight
+				}
+
+				TFBot
+				{
+					Class Demoman
+					Skill Normal
+				}
+			}
+		}
+
+		WaveSpawn
+		{
+			Where spawnbot_right
+			Name "02"
+			WaitForAllSpawned "01"
+			TotalCount 30
+			MaxActive 10
+			SpawnCount 5
+			WaitBeforeStarting 2
+			WaitBetweenSpawns 8
+			TotalCurrency 200
+
+			TFBot
+			{
+				Template T_TFBot_Heavyweapons_Heavyweight_Champ
+			}
+		}
+
+		WaveSpawn
+		{
+			Where spawnbot_right
+			Name "02"
+			WaitForAllSpawned "01"
+			TotalCount 18
+			MaxActive 6
+			SpawnCount 3
+			WaitBeforeStarting 2
+			WaitBetweenSpawns 8
+			TotalCurrency 200
+
+			TFBot
+			{
+				Class Pyro
+				Skill Easy
+			}
+		}
+	}
+
+	Wave
+	{
+		StartWaveOutput
+		{
+			Target wave_start_relay
+			Action Trigger
+		}
+		DoneOutput
+		{
+			Target wave_finished_relay
+			Action Trigger
+		}
+		InitWaveOutput
+		{
+			Target relay_A
+			Action Trigger
+		}
+		WaitWhenDone 65
+		Checkpoint Yes
+
+		WaveSpawn
+		{
+			Where spawnbot_right
+			Name "01"
+			TotalCount 4
+			MaxActive 4
+			SpawnCount 1
+			WaitBeforeStarting 10
+			WaitBetweenSpawns 20
+			TotalCurrency 400
+
+			TFBot
+			{
+				Template T_TFBot_Giant_DemoMan_PrinceTavish
+			}
+		}
+
+		WaveSpawn
+		{
+			Where spawnbot_right
+			Name "01"
+			TotalCount 18
+			MaxActive 3
+			SpawnCount 1
+			WaitBeforeStarting 0
+			WaitBetweenSpawns 3
+			TotalCurrency 50
+			Support 1
+
+			TFBot
+			{
+				Class Pyro
+				Skill Easy
+			}
+		}
+
+		WaveSpawn
+		{
+			Where spawnbot_right
+			Name "01"
+			TotalCount 18
+			MaxActive 3
+			SpawnCount 1
+			WaitBeforeStarting 0
+			WaitBetweenSpawns 3
+			TotalCurrency 100
+			Support 1
+
+			TFBot
+			{
+				Class Soldier
+				Skill Easy
+			}
+		}
+
+		WaveSpawn
+		{
+			Where spawnbot_right
+			Name "01"
+			TotalCount 18
+			MaxActive 3
+			SpawnCount 1
+			WaitBeforeStarting 0
+			WaitBetweenSpawns 3
+			TotalCurrency 50
+			Support 1
+
+			TFBot
+			{
+				Template T_TFBot_Heavyweapons_Heavyweight_Champ
+			}
+		}
+	}
+
+	Wave
+	{
+		StartWaveOutput
+		{
+			Target wave_start_relay
+			Action Trigger
+		}
+		DoneOutput
+		{
+			Target wave_finished_relay
+			Action Trigger
+		}
+		InitWaveOutput
+		{
+			Target relay_B
+			Action Trigger
+		}
+		WaitWhenDone 65
+		Checkpoint Yes
+
+		WaveSpawn
+		{
+			TotalCount 1
+			WaitBeforeStarting 0
+			TotalCurrency 400
+
+			FirstSpawnOutput
+			{
+				Target relay_monorail_hologram_B
+				Action Trigger
+			}
+			DoneOutput
+			{
+				Target	monorail_holograms_clear_relay
+				Action	Trigger
+			}
+
+			Tank
+			{
+				Health 15000
+				Speed 75
+				//ClassIcon tank_monorail
+				StartingPathTrackNode "monorail_path_b"
+
+				OnKilledOutput
+				{
+					Target boss_dead_relay
+					Action Trigger
+				}
+
+				OnBombDroppedOutput
+				{
+					Target boss_deploy_relay
+					Action Trigger
+				}
+			}
+		}
+	}
+
+	Wave
+	{
+		StartWaveOutput
+		{
+			Target wave_start_relay
+			Action Trigger
+		}
+		DoneOutput
+		{
+			Target wave_finished_relay
+			Action Trigger
+		}
+		InitWaveOutput
+		{
+			Target relay_C
+			Action Trigger
+		}
+		WaitWhenDone 65
+		Checkpoint Yes
+
+		WaveSpawn
+		{
+			Where spawnbot_right
+			Name "01"
+			TotalCount 25
+			MaxActive 10
+			SpawnCount 5
+			WaitBeforeStarting 0
+			WaitBetweenSpawns 8
+			TotalCurrency 100
+
+			TFBot
+			{
+				Template T_TFBot_Heavyweapons_Shotgun
+			}
+		}
+
+		WaveSpawn
+		{
+			Where spawnbot_right
+			Name "01"
+			TotalCount 25
+			MaxActive 10
+			SpawnCount 5
+			WaitBeforeStarting 0
+			WaitBetweenSpawns 8
+			TotalCurrency 100
+
+			TFBot
+			{
+				Template T_TFBot_Demoman_Knight
+			}
+		}
+
+		WaveSpawn
+		{
+			Where spawnbot_right
+			Name "02"
+			WaitForAllSpawned "01"
+			TotalCount 2
+			MaxActive 2
+			SpawnCount 1
+			WaitBeforeStarting 15
+			WaitBetweenSpawns 20
+			TotalCurrency 200
+
+			TFBot
+			{
+				Template T_TFBot_Giant_Soldier
+			}
+		}
+
+		WaveSpawn
+		{
+			Where spawnbot_right
+			Name "02"
+			WaitForAllSpawned "01"
+			TotalCount 2
+			MaxActive 2
+			SpawnCount 1
+			WaitBeforeStarting 15
+			WaitBetweenSpawns 20
+			TotalCurrency 200
+
+			TFBot
+			{
+				Template T_TFBot_Giant_Soldier
+			}
+		}
+	}
+
+	Wave
+	{
+		StartWaveOutput
+		{
+			Target wave_start_relay
+			Action Trigger
+		}
+		DoneOutput
+		{
+			Target wave_finished_relay
+			Action Trigger
+		}
+		InitWaveOutput
+		{
+			Target relay_B
+			Action Trigger
+		}
+		WaitWhenDone 65
+		Checkpoint Yes
+
+		WaveSpawn
+		{
+			Where spawnbot_right
+			Name "01"
+			TotalCount 6
+			MaxActive 6
+			SpawnCount 2
+			WaitBeforeStarting 0
+			WaitBetweenSpawns 18
+			TotalCurrency 300
+
+			Squad
+			{
+				TFBot
+				{
+					Template T_TFBot_Giant_DemoMan_PrinceTavish
+				}
+
+				TFBot
+				{
+					Template T_TFBot_Giant_Soldier
+				}
+			}
+		}
+
+		WaveSpawn
+		{
+			Name "02"
+			WaitForAllSpawned "01"
+			TotalCount 1
+			WaitBeforeStarting 10
+			TotalCurrency 500
+
+			FirstSpawnOutput
+			{
+				Target relay_monorail_hologram_B
+				Action Trigger
+			}
+			DoneOutput
+			{
+				Target	monorail_holograms_clear_relay
+				Action	Trigger
+			}
+
+			Tank
+			{
+				Health 15000
+				Speed 75
+				//ClassIcon tank_monorail
+				StartingPathTrackNode "monorail_path_b"
+
+				OnKilledOutput
+				{
+					Target boss_dead_relay
+					Action Trigger
+				}
+
+				OnBombDroppedOutput
+				{
+					Target boss_deploy_relay
+					Action Trigger
+				}
+			}
+		}
+
+		WaveSpawn
+		{
+			Where spawnbot_right
+			TotalCount 18
+			MaxActive 3
+			SpawnCount 1
+			WaitBeforeStarting 0
+			WaitBetweenSpawns 3
+			TotalCurrency 50
+			Support 1
+
+			TFBot
+			{
+				Class Pyro
+				Skill Easy
+			}
+		}
+
+		WaveSpawn
+		{
+			Where spawnbot_right
+			TotalCount 18
+			MaxActive 3
+			SpawnCount 1
+			WaitBeforeStarting 0
+			WaitBetweenSpawns 3
+			TotalCurrency 100
+			Support 1
+
+			TFBot
+			{
+				Template T_TFBot_Heavyweapons_Shotgun
+			}
+		}
+
+		WaveSpawn
+		{
+			Where spawnbot_right
+			TotalCount 24
+			MaxActive 6
+			SpawnCount 1
+			WaitBeforeStarting 0
+			WaitBetweenSpawns 3
+			TotalCurrency 50
+			Support 1
+
+			TFBot
+			{
+				Template T_TFBot_Heavyweapons_Heavyweight_Champ
+			}
+		}
+	}
+
+	Wave
+	{
+		StartWaveOutput
+		{
+			Target wave_start_relay
+			Action Trigger
+		}
+		DoneOutput
+		{
+			Target wave_finished_relay
+			Action Trigger
+		}
+		InitWaveOutput
+		{
+			Target relay_D
+			Action Trigger
+		}
+		WaitWhenDone 65
+		Checkpoint Yes
+
+		WaveSpawn
+		{
+			Where spawnbot_right
+			Name "01"
+			TotalCount 8
+			MaxActive 8
+			SpawnCount 2
+			WaitBeforeStarting 0
+			WaitBetweenSpawns 15
+			TotalCurrency 250
+
+			Squad
+			{
+				TFBot
+				{
+					Template T_TFBot_Giant_Soldier
+				}
+
+				TFBot
+				{
+					Template T_TFBot_Medic_QuickFix
+				}
+			}
+		}
+
+		WaveSpawn
+		{
+			Where spawnbot_right
+			Name "01"
+			TotalCount 25
+			MaxActive 10
+			SpawnCount 5
+			WaitBeforeStarting 2
+			WaitBetweenSpawns 8
+			TotalCurrency 100
+
+			TFBot
+			{
+				Class Pyro
+				Skill Easy
+			}
+		}
+
+		WaveSpawn
+		{
+			Where spawnbot_right
+			Name "01"
+			TotalCount 15
+			MaxActive 6
+			SpawnCount 3
+			WaitBeforeStarting 2
+			WaitBetweenSpawns 8
+			TotalCurrency 100
+
+			TFBot
+			{
+				Template T_TFBot_Demoman_Knight
+			}
+		}
+
+		WaveSpawn
+		{
+			Name "02"
+			WaitForAllSpawned "01"
+			TotalCount 1
+			WaitBeforeStarting 7
+			TotalCurrency 150
+
+			FirstSpawnOutput
+			{
+				Target relay_monorail_hologram_D
+				Action Trigger
+			}
+			DoneOutput
+			{
+				Target	monorail_holograms_clear_relay
+				Action	Trigger
+			}
+
+			Tank
+			{
+				Health 15000
+				Speed 75
+				//ClassIcon tank_monorail
+				StartingPathTrackNode "monorail_path_d"
+
+				OnKilledOutput
+				{
+					Target boss_dead_relay
+					Action Trigger
+				}
+
+				OnBombDroppedOutput
+				{
+					Target boss_deploy_relay
+					Action Trigger
+				}
+			}
+		}
+
+		WaveSpawn
+		{
+			Where spawnbot_right
+			Name "02"
+			WaitForAllSpawned "01"
+			TotalCount 3
+			MaxActive 3
+			SpawnCount 1
+			WaitBeforeStarting 7
+			WaitBetweenSpawns 18
+			TotalCurrency 150
+
+			TFBot
+			{
+				Template T_TFBot_Giant_Soldier_Spammer
+			}
+		}
+
+		WaveSpawn
+		{
+			Where spawnbot_right
+			Name "02"
+			WaitForAllSpawned "01"
+			TotalCount 18
+			MaxActive 6
+			SpawnCount 2
+			WaitBeforeStarting 2
+			WaitBetweenSpawns 8
+			TotalCurrency 50
+			Support 1
+
+			TFBot
+			{
+				Template T_TFBot_Demoman_Knight
+			}
+		}
+	}
+}

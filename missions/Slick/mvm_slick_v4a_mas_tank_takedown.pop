@@ -1,0 +1,1707 @@
+#base robot_giant.pop
+#base robot_standard.pop
+#base robot_pixelbitie.pop
+
+WaveSchedule
+{
+
+	StartingCurrency	1500
+	RespawnWaveTime 5
+	CanBotsAttackWhileInSpawnRoom no
+	
+	Templates
+	{
+		T_TFBot_Medic_Vaccinator_Bullet_Click
+		{
+			ClassIcon	medic_bullet
+			Name	"Vaccinator Medic"
+			Class	Medic
+			Skill	Expert
+			Attributes	"SpawnWithFullCharge"
+			Attributes	"VaccinatorBullets"
+			ItemAttributes
+			{
+				ItemName	tf_weapon_syringegun_medic
+				"damage penalty"	0.1
+			}
+			ItemAttributes
+            {
+                ItemName "The Vaccinator"
+                "ubercharge rate bonus"	200
+				"heal rate bonus"	1
+				"medigun bullet resist passive"	1
+				"medigun bullet resist deployed" 1
+            }
+			Item "the vaccinator"
+		}
+		T_TFBot_Medic_Vaccinator_Blast_Click
+		{
+			ClassIcon	medic_blast
+			Name	"Vaccinator Medic"
+			Class	Medic
+			Skill	Expert
+			Attributes	"SpawnWithFullCharge"
+			Attributes	"VaccinatorBlast"
+			ItemAttributes
+			{
+				ItemName	tf_weapon_syringegun_medic
+				"damage penalty"	0.1
+			}
+			ItemAttributes
+            {
+                ItemName "The Vaccinator"
+                "ubercharge rate bonus"	200
+				"heal rate bonus"	1
+				"medigun blast resist passive"	1
+				"medigun blast resist deployed"	1
+            }
+			Item "the vaccinator"
+		}
+		T_TFBot_Medic_Vaccinator_Fire_Click
+		{
+			ClassIcon	medic_fire
+			Name	"Vaccinator Medic"
+			Class	Medic
+			Skill	Expert
+			Attributes	"SpawnWithFullCharge"
+			Attributes	"VaccinatorFire"
+			ItemAttributes
+			{
+				ItemName	tf_weapon_syringegun_medic
+				"damage penalty"	0.1
+			}
+			ItemAttributes
+            {
+                ItemName "The Vaccinator"
+                "ubercharge rate bonus"	200
+				"heal rate bonus"	1
+				"medigun fire resist passive"	1
+				"medigun fire resist deployed"	1
+            }
+			Item "the vaccinator"
+		}
+	}
+	
+	Mission
+	{
+		Objective	DestroySentries
+		Where	spawnbot
+		BeginAtWave	1
+		RunForThisManyWaves	6
+		InitialCooldown	30
+		CooldownTime	30
+		TFBot
+		{
+			Template	T_TFBot_SentryBuster
+		}
+	}
+	
+	Mission
+	{
+		Objective	Sniper
+		Where	spawnbot
+		BeginAtWave	1
+		RunForThisManyWaves	6
+		InitialCooldown	40
+		CooldownTime	20
+		DesiredCount	2
+		TFBot
+		{
+			Class Sniper
+		}
+	}
+	Mission
+	{
+		Objective	Spy
+		Where	spawnbot
+		BeginAtWave	1
+		RunForThisManyWaves	6
+		InitialCooldown	40
+		CooldownTime	20
+		DesiredCount	2
+		TFBot
+		{
+			Class Spy
+		}
+	}
+	
+	//WAVE 1 - Paratank : $900
+	Wave
+	{
+		StartWaveOutput
+		{
+			Target wave_start_relay
+			Action Trigger
+		}
+		DoneOutput					
+		{
+			Target wave_finished_relay
+			Action Trigger
+		}
+		InitWaveOutput
+		{
+			Target bignet // gamerules or tf_gamerules, depending on the map
+            Action RunScriptCode
+            Param "
+			IncludeScript(`popextensions_main`, getroottable())
+			IncludeScript(`tankextensions_main`, getroottable())
+			IncludeScript(`tankextensions/paratank`, getroottable())
+			
+			TankExt.CreatePaths({
+			para_path = [
+				Vector(1768, 0, 488)
+				Vector(-816, 0, 152)
+				Vector(-936, 0, -72)
+				Vector(-1144, 0, -80)
+			]})
+			"
+		}
+		WaitWhenDone 65
+		Checkpoint Yes
+		
+		WaveSpawn
+		{
+			Name	"tank"
+			TotalCurrency	400
+			TotalCount	2
+			MaxActive	2
+			SpawnCount	1
+			WaitBeforeStarting	0
+			WaitBetweenSpawns	40
+			Where	spawnbot
+			Tank
+			{
+				Health	16000
+				Name	tank
+				Speed	65
+				StartingPathTrackNode tank_middle_1
+				OnKilledOutput
+				{
+					Target	boss_dead_relay
+					Action	Trigger
+				}
+				OnBombDroppedOutput
+				{
+					Target	boss_deploy_relay
+					Action	Trigger
+				}
+			}
+		}
+		WaveSpawn
+		{
+			Name	"tank"
+			TotalCurrency	200
+			TotalCount	1
+			MaxActive	1
+			SpawnCount	1
+			WaitBeforeStarting	80
+			WaitBetweenSpawns	20
+			Where	spawnbot
+			Tank
+			{
+				Health	16000
+				Name	paratank
+				Speed	75
+				StartingPathTrackNode para_path_1
+				OnKilledOutput
+				{
+					Target	boss_dead_relay
+					Action	Trigger
+				}
+				OnBombDroppedOutput
+				{
+					Target	boss_deploy_relay
+					Action	Trigger
+				}
+			}
+		}
+		
+		WaveSpawn
+		{
+			Name "pyros"
+			
+			Where spawnbot
+			TotalCount 40
+			MaxActive 6
+			SpawnCount 3
+			WaitBeforeStarting 2
+			WaitBetweenSpawns 4
+			TotalCurrency 100
+			Support 1
+			TFBot
+			{
+				Template T_TFBot_Pyro_Flaregun
+			}
+		}
+		WaveSpawn
+		{
+			Name "demos"
+			
+			Where spawnbot
+			TotalCount 40
+			MaxActive 8
+			SpawnCount 4
+			WaitBeforeStarting 0
+			WaitBetweenSpawns 4
+			TotalCurrency 100
+			Support 1
+			TFBot
+			{
+				Class Demoman
+				Skill Normal
+				WeaponRestrictions MeleeOnly
+				Name "Demobottle"
+			}
+		}
+		
+		
+		WaveSpawn
+		{
+			Name "primarywave"
+			
+			Where spawnbot
+			TotalCount 20
+			MaxActive 4
+			SpawnCount 2
+			WaitBeforeStarting 0
+			WaitBetweenSpawns 5
+			TotalCurrency 100
+			Support 1
+			TFBot
+			{
+				Class Scout
+				Skill Normal
+			}
+			
+		}
+	}	
+	//WAVE 2 - Targe tanks: $1000
+	Wave
+	{
+		StartWaveOutput
+		{
+			Target wave_start_relay
+			Action Trigger
+		}
+		DoneOutput					
+		{
+			Target wave_finished_relay
+			Action trigger
+		}
+		InitWaveOutput
+		{
+			Target bignet // gamerules or tf_gamerules, depending on the map
+            Action RunScriptCode
+            Param "
+			IncludeScript(`popextensions_main`, getroottable())
+			IncludeScript(`tankextensions_main`, getroottable())
+			IncludeScript(`tankextensions/targetank`, getroottable())
+			
+			for (local flag; flag = Entities.FindByClassname(flag, `item_teamflag`);)
+			{
+				flag.Teleport(true, Vector(1000, 0, -120), true, flag.EyeAngles(), true, flag.GetAbsVelocity())
+			}
+			"
+		}
+		WaitWhenDone 65
+		Checkpoint Yes
+		
+		WaveSpawn
+		{
+			Name	"tank"
+			TotalCurrency	150
+			TotalCount	1
+			MaxActive	1
+			SpawnCount	1
+			WaitBeforeStarting	0
+			WaitBetweenSpawns	20
+			Where	spawnbot
+			Tank
+			{
+				Health	7500
+				Name	targetank_color
+				Speed	70
+				StartingPathTrackNode tank_middle_1
+				OnKilledOutput
+				{
+					Target	boss_dead_relay
+					Action	Trigger
+				}
+				OnBombDroppedOutput
+				{
+					Target	boss_deploy_relay
+					Action	Trigger
+				}
+			}
+		}
+		WaveSpawn
+		{
+			Name	"tank"
+			TotalCurrency	150
+			TotalCount	1
+			MaxActive	1
+			SpawnCount	1
+			WaitBeforeStarting	20
+			WaitBetweenSpawns	20
+			Where	spawnbot
+			Tank
+			{
+				Health	7500
+				Name	targetank_color
+				Speed	70
+				StartingPathTrackNode tank_left_1
+				OnKilledOutput
+				{
+					Target	boss_dead_relay
+					Action	Trigger
+				}
+				OnBombDroppedOutput
+				{
+					Target	boss_deploy_relay
+					Action	Trigger
+				}
+			}
+		}
+		WaveSpawn
+		{
+			Name	"tank"
+			TotalCurrency	150
+			TotalCount	1
+			MaxActive	1
+			SpawnCount	1
+			WaitBeforeStarting	40
+			WaitBetweenSpawns	20
+			Where	spawnbot
+			Tank
+			{
+				Health	7500
+				Name	targetank_color
+				Speed	70
+				StartingPathTrackNode tank_right_1
+				OnKilledOutput
+				{
+					Target	boss_dead_relay
+					Action	Trigger
+				}
+				OnBombDroppedOutput
+				{
+					Target	boss_deploy_relay
+					Action	Trigger
+				}
+			}
+		}
+		WaveSpawn
+		{
+			Name	"tank"
+			TotalCurrency	150
+			TotalCount	1
+			MaxActive	1
+			SpawnCount	1
+			WaitBeforeStarting	80
+			WaitBetweenSpawns	20
+			Where	spawnbot
+			Tank
+			{
+				Health	9000
+				Name	targetank_color
+				Speed	70
+				StartingPathTrackNode tank_middle_1
+				OnKilledOutput
+				{
+					Target	boss_dead_relay
+					Action	Trigger
+				}
+				OnBombDroppedOutput
+				{
+					Target	boss_deploy_relay
+					Action	Trigger
+				}
+			}
+		}
+		
+		WaveSpawn
+		{
+			Name "demoknights"
+			
+			Where spawnbot
+			TotalCount 40
+			MaxActive 10
+			SpawnCount 5
+			WaitBeforeStarting 2
+			WaitBetweenSpawns 4
+			TotalCurrency 150
+			Support 1
+			TFBot
+			{
+				Template T_TFBot_Demoman_Knight
+			}
+		}
+		WaveSpawn
+		{
+			Name "giant demoknights"
+			
+			Where spawnbot
+			TotalCount 3
+			MaxActive 3
+			SpawnCount 3
+			WaitBeforeStarting 60
+			WaitBetweenSpawns 4
+			TotalCurrency 100
+			TFBot
+			{
+				Template T_TFBot_Giant_DemoMan_PrinceTavish
+			}
+		}
+		WaveSpawn
+		{
+			Name "samurais"
+			
+			Where spawnbot
+			TotalCount 8
+			MaxActive 4
+			SpawnCount 1
+			WaitBeforeStarting 0
+			WaitBetweenSpawns 6
+			TotalCurrency 100
+			TFBot
+			{
+				Template T_TFBot_Demoman_Samurai
+			}
+		}
+		
+		
+		WaveSpawn
+		{
+			Name "primarywave"
+			
+			Where spawnbot
+			TotalCount 20
+			MaxActive 4
+			SpawnCount 2
+			WaitBeforeStarting 0
+			WaitBetweenSpawns 5
+			TotalCurrency 50
+			Support 1
+			TFBot
+			{
+				Class Soldier
+				Skill Normal
+			}
+			
+		}
+	}
+	//WAVE 3 - Vaccinator tanks: $900
+	Wave
+	{
+		StartWaveOutput
+		{
+			Target wave_start_relay
+			Action Trigger
+		}
+		DoneOutput					
+		{
+			Target wave_finished_relay
+			Action trigger
+		}
+		InitWaveOutput
+		{
+			Target bignet // gamerules or tf_gamerules, depending on the map
+            Action RunScriptCode
+            Param "
+			IncludeScript(`popextensions_main`, getroottable())
+			IncludeScript(`tankextensions_main`, getroottable())
+			IncludeScript(`tankextensions/vactank`, getroottable())
+			ClientPrint(null,3,`\x08FFFF00FFTip: You should have classes across all damage types...`)
+			
+			for (local flag; flag = Entities.FindByClassname(flag, `item_teamflag`);)
+			{
+				flag.Teleport(true, Vector(1000, 0, -120), true, flag.EyeAngles(), true, flag.GetAbsVelocity())
+			}
+			"
+		}
+		WaitWhenDone 65
+		Checkpoint Yes
+		
+		WaveSpawn
+		{
+			Name	"tank"
+			TotalCurrency	100
+			TotalCount	1
+			MaxActive	1
+			SpawnCount	1
+			WaitBeforeStarting	0
+			WaitBetweenSpawns	20
+			Where	spawnbot
+			Tank
+			{
+				Health	8500
+				Name	"vactank_bullet"
+				Speed	60
+				StartingPathTrackNode tank_middle_1
+				OnKilledOutput
+				{
+					Target	boss_dead_relay
+					Action	Trigger
+				}
+				OnBombDroppedOutput
+				{
+					Target	boss_deploy_relay
+					Action	Trigger
+				}
+			}
+		}
+		WaveSpawn
+		{
+			Name	"tank"
+			TotalCurrency	100
+			TotalCount	1
+			MaxActive	1
+			SpawnCount	1
+			WaitBeforeStarting	10
+			WaitBetweenSpawns	20
+			Where	spawnbot
+			Tank
+			{
+				Health	8500
+				Name	"vactank_blast"
+				Speed	60
+				StartingPathTrackNode tank_left_1
+				OnKilledOutput
+				{
+					Target	boss_dead_relay
+					Action	Trigger
+				}
+				OnBombDroppedOutput
+				{
+					Target	boss_deploy_relay
+					Action	Trigger
+				}
+			}
+		}
+		WaveSpawn
+		{
+			Name	"tank"
+			TotalCurrency	100
+			TotalCount	1
+			MaxActive	1
+			SpawnCount	1
+			WaitBeforeStarting	20
+			WaitBetweenSpawns	20
+			Where	spawnbot
+			Tank
+			{
+				Health	7000
+				Name	"vactank_fire"
+				Speed	60
+				StartingPathTrackNode tank_right_1
+				OnKilledOutput
+				{
+					Target	boss_dead_relay
+					Action	Trigger
+				}
+				OnBombDroppedOutput
+				{
+					Target	boss_deploy_relay
+					Action	Trigger
+				}
+			}
+		}
+		WaveSpawn
+		{
+			Name	"tank"
+			TotalCurrency	100
+			TotalCount	1
+			MaxActive	1
+			SpawnCount	1
+			WaitBeforeStarting	60
+			WaitBetweenSpawns	20
+			Where	spawnbot
+			FirstSpawnOutput
+			{
+				Target bignet // gamerules or tf_gamerules, depending on the map
+				Action RunScriptCode
+				Param "
+				ClientPrint(null,3,`\x08FFFF00FFTip: Look for the symbols above the tanks!`)
+				"
+			}
+			Tank
+			{
+				Health	7000
+				Name	"vactank_blast_bullet"
+				Speed	60
+				StartingPathTrackNode tank_middle_1
+				OnKilledOutput
+				{
+					Target	boss_dead_relay
+					Action	Trigger
+				}
+				OnBombDroppedOutput
+				{
+					Target	boss_deploy_relay
+					Action	Trigger
+				}
+			}
+		}
+		WaveSpawn
+		{
+			Name	"tank"
+			TotalCurrency	100
+			TotalCount	1
+			MaxActive	1
+			SpawnCount	1
+			WaitBeforeStarting	70
+			WaitBetweenSpawns	20
+			Where	spawnbot
+			Tank
+			{
+				Health	7000
+				Name	"vactank_blast_fire"
+				Speed	60
+				StartingPathTrackNode tank_left_1
+				OnKilledOutput
+				{
+					Target	boss_dead_relay
+					Action	Trigger
+				}
+				OnBombDroppedOutput
+				{
+					Target	boss_deploy_relay
+					Action	Trigger
+				}
+			}
+		}
+		WaveSpawn
+		{
+			Name	"tank"
+			TotalCurrency	100
+			TotalCount	1
+			MaxActive	1
+			SpawnCount	1
+			WaitBeforeStarting	80
+			WaitBetweenSpawns	20
+			Where	spawnbot
+			Tank
+			{
+				Health	7000
+				Name	"vactank_bullet_fire"
+				Speed	60
+				StartingPathTrackNode tank_right_1
+				OnKilledOutput
+				{
+					Target	boss_dead_relay
+					Action	Trigger
+				}
+				OnBombDroppedOutput
+				{
+					Target	boss_deploy_relay
+					Action	Trigger
+				}
+			}
+		}
+		WaveSpawn
+		{
+			Name	"tank"
+			TotalCurrency	100
+			TotalCount	1
+			MaxActive	1
+			SpawnCount	1
+			WaitBeforeStarting	110
+			WaitBetweenSpawns	20
+			Where	spawnbot
+			Tank
+			{
+				Health	8000
+				Name	"vactank_bullet_fire_blast"
+				Speed	60
+				StartingPathTrackNode tank_middle_1
+				OnKilledOutput
+				{
+					Target	boss_dead_relay
+					Action	Trigger
+				}
+				OnBombDroppedOutput
+				{
+					Target	boss_deploy_relay
+					Action	Trigger
+				}
+			}
+		}
+		
+		WaveSpawn
+		{
+			Name "soldiers"
+			
+			Where spawnbot
+			TotalCount 40
+			MaxActive 4
+			SpawnCount 2
+			WaitBeforeStarting 2
+			WaitBetweenSpawns 4
+			TotalCurrency 70
+			Support 1
+			TFBot
+			{
+				Class Soldier
+				Skill Normal
+			}
+		}
+		WaveSpawn
+		{
+			Name "heavies"
+			
+			Where spawnbot
+			TotalCount 40
+			MaxActive 4
+			SpawnCount 2
+			WaitBeforeStarting 2
+			WaitBetweenSpawns 4
+			TotalCurrency 70
+			Support 1
+			TFBot
+			{
+				Class HeavyWeapons
+				Skill Easy
+			}
+		}
+		WaveSpawn
+		{
+			Name "pyros"
+			
+			Where spawnbot
+			TotalCount 40
+			MaxActive 4
+			SpawnCount 2
+			WaitBeforeStarting 2
+			WaitBetweenSpawns 4
+			TotalCurrency 70
+			Support 1
+			TFBot
+			{
+				Class Pyro
+				Skill Easy
+			}
+		}
+		WaveSpawn
+		{
+			Name "medics"
+			
+			Where spawnbot
+			TotalCount 7
+			MaxActive 2
+			SpawnCount 1
+			WaitBeforeStarting 5
+			WaitBetweenSpawns 20
+			TotalCurrency 30
+			TFBot
+			{
+				Template T_TFBot_Medic_Vaccinator_Bullet_Click
+			}
+		}
+		WaveSpawn
+		{
+			Name "medics"
+			
+			Where spawnbot
+			TotalCount 7
+			MaxActive 2
+			SpawnCount 1
+			WaitBeforeStarting 11.5
+			WaitBetweenSpawns 20
+			TotalCurrency 30
+			TFBot
+			{
+				Template T_TFBot_Medic_Vaccinator_Blast_Click
+			}
+		}
+		WaveSpawn
+		{
+			Name "medics"
+			
+			Where spawnbot
+			TotalCount 7
+			MaxActive 2
+			SpawnCount 1
+			WaitBeforeStarting 18
+			WaitBetweenSpawns 20
+			TotalCurrency 30
+			TFBot
+			{
+				Template T_TFBot_Medic_Vaccinator_Fire_Click
+			}
+		}
+	}	
+	//WAVE 4 - Sentry / Teleporter tanks: $1000
+	Wave
+	{
+		StartWaveOutput
+		{
+			Target wave_start_relay
+			Action Trigger
+		}
+		DoneOutput					
+		{
+			Target wave_finished_relay
+			Action trigger
+		}
+		InitWaveOutput
+		{
+			Target bignet // gamerules or tf_gamerules, depending on the map
+            Action RunScriptCode
+            Param "
+			IncludeScript(`popextensions_main`, getroottable())
+			IncludeScript(`tankextensions_main`, getroottable())
+			IncludeScript(`tankextensions/teletank`, getroottable())
+			IncludeScript(`tankextensions/sentrytank`, getroottable())
+			
+			for (local flag; flag = Entities.FindByClassname(flag, `item_teamflag`);)
+			{
+				flag.Teleport(true, Vector(1000, 0, -120), true, flag.EyeAngles(), true, flag.GetAbsVelocity())
+			}
+			"
+		}
+		WaitWhenDone 65
+		Checkpoint Yes
+		
+		WaveSpawn
+		{
+			Name	"tank"
+			TotalCurrency	400
+			TotalCount	2
+			MaxActive	2
+			SpawnCount	1
+			WaitBeforeStarting	0
+			WaitBetweenSpawns	40
+			Where	spawnbot
+			Tank
+			{
+				Health	24000
+				Name	"teletank"
+				Speed	50
+				StartingPathTrackNode tank_middle_1
+				OnKilledOutput
+				{
+					Target	boss_dead_relay
+					Action	Trigger
+				}
+				OnBombDroppedOutput
+				{
+					Target	boss_deploy_relay
+					Action	Trigger
+				}
+			}
+		}
+		WaveSpawn
+		{
+			Name	"tank"
+			TotalCurrency	200
+			TotalCount	1
+			MaxActive	1
+			SpawnCount	1
+			WaitBeforeStarting	80
+			WaitBetweenSpawns	80
+			Where	spawnbot
+			Tank
+			{
+				Health	24000
+				Name	"sentrytank"
+				Speed	50
+				StartingPathTrackNode tank_middle_1
+				OnKilledOutput
+				{
+					Target	boss_dead_relay
+					Action	Trigger
+				}
+				OnBombDroppedOutput
+				{
+					Target	boss_deploy_relay
+					Action	Trigger
+				}
+			}
+		}
+		
+		WaveSpawn
+		{
+			Name "scouts"
+			
+			Where spawnbot
+			TotalCount 40
+			MaxActive 6
+			SpawnCount 2
+			WaitBeforeStarting 15
+			WaitBetweenSpawns 4
+			TotalCurrency 100
+			Support 1
+			RandomChoice
+			{
+				TFBot
+				{
+					Template T_TFBot_Scout_Jumping_Sandman
+					Tag "bot_teletank"
+				}
+				TFBot
+				{
+					Template T_TFBot_Heavyweapons_Heavyweight_Champ
+					Tag "bot_teletank"
+				}
+			}
+			
+		}
+		WaveSpawn
+		{
+			Name "bowmen"
+			
+			Where spawnbot
+			TotalCount 40
+			MaxActive 6
+			SpawnCount 2
+			WaitBeforeStarting 15
+			WaitBetweenSpawns 4
+			TotalCurrency 100
+			Support 1
+			TFBot
+			{
+				Template T_TFBot_Sniper_Huntsman
+				Tag "bot_teletank"
+			}
+		}
+		WaveSpawn
+		{
+			Name "support engis"
+			
+			Where spawnbot
+			TotalCount 1
+			MaxActive 1
+			SpawnCount 1
+			WaitBeforeStarting 40
+			WaitBetweenSpawns 30
+			TotalCurrency 0
+			Support 1
+			TFBot
+			{
+				Template T_TFBot_Engineer_Sentry_Battle
+			}
+		}
+		WaveSpawn
+		{
+			Name "engibosses"
+			
+			Where spawnbot
+			TotalCount 3
+			MaxActive 1
+			SpawnCount 1
+			WaitBeforeStarting 10
+			WaitBetweenSpawns 40
+			TotalCurrency 100
+			TFBot
+			{
+				Class Scout
+				Skill Hard
+				Name "Rescue Ranger Engineer"
+				ClassIcon engineer
+				Attributes AlwaysCrit
+				Attributes MiniBoss
+				Health 3000
+				//BehaviorModifiers push
+				WeaponRestrictions	PrimaryOnly
+				Tag "popext_usecustommodel{model = `models/bots/engineer/bot_engineer.mdl`}"
+				Tag "popext_giveweapon{ weapon = `tf_weapon_shotgun_building_rescue` id = 997 }"
+				ItemAttributes
+				{
+					ItemName "The Rescue Ranger"
+					"faster reload rate"	-0.8
+				}
+				CharacterAttributes
+				{
+					"move speed bonus" 0.5
+				}
+			}
+		}
+		WaveSpawn
+		{
+			Name "startingscouts"
+			
+			Where spawnbot
+			TotalCount 20
+			MaxActive 20
+			SpawnCount 5
+			WaitBeforeStarting 0
+			WaitBetweenSpawns 3
+			TotalCurrency 100
+			TFBot
+			{
+				Class Scout
+				Skill Hard
+			}
+		}
+	}	
+	//WAVE 5 - Mini tanks: $1200
+	Wave
+	{
+		StartWaveOutput
+		{
+			Target wave_start_relay
+			Action Trigger
+		}
+		DoneOutput					
+		{
+			Target wave_finished_relay
+			Action trigger
+		}
+		InitWaveOutput
+		{
+			Target bignet // gamerules or tf_gamerules, depending on the map
+            Action RunScriptCode
+            Param "
+			IncludeScript(`popextensions_main`, getroottable())
+			IncludeScript(`tankextensions_main`, getroottable())
+			IncludeScript(`tankextensions/frontlinecart`, getroottable())
+			
+			for (local flag; flag = Entities.FindByClassname(flag, `item_teamflag`);)
+			{
+				flag.Teleport(true, Vector(1000, 0, -120), true, flag.EyeAngles(), true, flag.GetAbsVelocity())
+			}
+			"
+		}
+		WaitWhenDone 65
+		Checkpoint Yes
+		
+		WaveSpawn
+		{
+			Name	"tank"
+			TotalCurrency	300
+			TotalCount	5
+			MaxActive	2
+			SpawnCount	1
+			WaitBeforeStarting	0
+			WaitBetweenSpawns	15
+			Where	spawnbot
+			Tank
+			{
+				Health	5000
+				Name	"frontlinecart"
+				Speed	80
+				StartingPathTrackNode tank_middle_1
+				OnKilledOutput
+				{
+					Target	boss_dead_relay
+					Action	Trigger
+				}
+				OnBombDroppedOutput
+				{
+					Target	boss_deploy_relay
+					Action	Trigger
+				}
+			}
+		}
+		WaveSpawn
+		{
+			Name	"tank"
+			TotalCurrency	300
+			TotalCount	5
+			MaxActive	2
+			SpawnCount	1
+			WaitBeforeStarting	5
+			WaitBetweenSpawns	15
+			Where	spawnbot
+			Tank
+			{
+				Health	5000
+				Name	"frontlinecart"
+				Speed	80
+				StartingPathTrackNode tank_right_1
+				OnKilledOutput
+				{
+					Target	boss_dead_relay
+					Action	Trigger
+				}
+				OnBombDroppedOutput
+				{
+					Target	boss_deploy_relay
+					Action	Trigger
+				}
+			}
+		}
+		WaveSpawn
+		{
+			Name	"tank"
+			TotalCurrency	300
+			TotalCount	5
+			MaxActive	2
+			SpawnCount	1
+			WaitBeforeStarting	10
+			WaitBetweenSpawns	15
+			Where	spawnbot
+			Tank
+			{
+				Health	5000
+				Name	"frontlinecart"
+				Speed	80
+				StartingPathTrackNode tank_left_1
+				OnKilledOutput
+				{
+					Target	boss_dead_relay
+					Action	Trigger
+				}
+				OnBombDroppedOutput
+				{
+					Target	boss_deploy_relay
+					Action	Trigger
+				}
+			}
+		}
+		
+		WaveSpawn
+		{
+			Name "scouts"
+			
+			Where spawnbot
+			TotalCount 30
+			MaxActive 20
+			SpawnCount 5
+			WaitBeforeStarting 0
+			WaitBetweenSpawns 3
+			TotalCurrency 300
+			Support 1
+			RandomChoice
+			{
+				TFBot
+				{
+					Class Scout
+					Skill Hard
+					BehaviorModifiers push
+				}
+				TFBot
+				{
+					Class Scout
+					Skill Hard
+					BehaviorModifiers push
+				}
+				TFBot
+				{
+					Class Scout
+					Skill Hard
+				}
+				TFBot
+				{
+					Template T_TFBot_Scout_Bonk
+				}
+			}
+		}
+		WaveSpawn
+		{
+			Name "scouts_icon"
+			
+			Where spawnbot
+			TotalCount 20
+			MaxActive 20
+			SpawnCount 5
+			WaitBeforeStarting 9999
+			WaitBetweenSpawns 3
+			TotalCurrency 0
+			Support Limited
+			Squad
+			{
+				TFBot
+				{
+					Class Scout
+					Skill Hard
+				}
+				TFBot
+				{
+					Template T_TFBot_Scout_Bonk
+				}
+			}
+		}
+	}	
+	//WAVE 6 - Tank blitz: $1000
+	Wave
+	{
+		StartWaveOutput
+		{
+			Target wave_start_relay
+			Action Trigger
+		}
+		DoneOutput					
+		{
+			Target wave_finished_relay
+			Action trigger
+		}
+		InitWaveOutput
+		{
+			Target bignet // gamerules or tf_gamerules, depending on the map
+            Action RunScriptCode
+            Param "
+			IncludeScript(`popextensions_main`, getroottable())
+			IncludeScript(`tankextensions_main`, getroottable())
+			IncludeScript(`tankextensions/stickytank`, getroottable())
+			IncludeScript(`tankextensions/targetank`, getroottable())
+			IncludeScript(`tankextensions/hammertank`, getroottable())
+			IncludeScript(`tankextensions/vactank`, getroottable())
+			IncludeScript(`tankextensions/fireringtank`, getroottable())
+			IncludeScript(`tankextensions/teletank`, getroottable())
+			IncludeScript(`tankextensions/chewchewtank`, getroottable())
+			IncludeScript(`tankextensions/frontlinecart`, getroottable())
+			IncludeScript(`tankextensions/sentrytank`, getroottable())
+			IncludeScript(`tankextensions/paratank`, getroottable())
+			
+			for (local flag; flag = Entities.FindByClassname(flag, `item_teamflag`);)
+			{
+				flag.Teleport(true, Vector(1000, 0, -120), true, flag.EyeAngles(), true, flag.GetAbsVelocity())
+			}
+			
+			TankExt.CreatePaths({
+			para_path = [
+				Vector(1768, 0, 488)
+				Vector(-816, 0, 152)
+				Vector(-936, 0, -72)
+				Vector(-1144, 0, -80)
+			]})
+			"
+		}
+		WaitWhenDone 65
+		Checkpoint Yes
+		
+		WaveSpawn
+		{
+			Name	"tank"
+			TotalCurrency	150
+			TotalCount	1
+			MaxActive	1
+			SpawnCount	1
+			WaitBeforeStarting	0
+			WaitBetweenSpawns	1
+			Where	spawnbot
+			Tank
+			{
+				Health	18000
+				Name	"stickytank"
+				Speed	60
+				StartingPathTrackNode tank_middle_1
+				OnKilledOutput
+				{
+					Target	boss_dead_relay
+					Action	Trigger
+				}
+				OnBombDroppedOutput
+				{
+					Target	boss_deploy_relay
+					Action	Trigger
+				}
+			}
+		}
+		WaveSpawn
+		{
+			Name	"tank"
+			TotalCurrency	50
+			TotalCount	1
+			MaxActive	1
+			SpawnCount	1
+			WaitBeforeStarting	15
+			WaitBetweenSpawns	1
+			Where	spawnbot
+			Tank
+			{
+				Health	12000
+				Name	"targetank_color"
+				Speed	60
+				StartingPathTrackNode tank_left_1
+				OnKilledOutput
+				{
+					Target	boss_dead_relay
+					Action	Trigger
+				}
+				OnBombDroppedOutput
+				{
+					Target	boss_deploy_relay
+					Action	Trigger
+				}
+			}
+		}
+		WaveSpawn
+		{
+			Name	"tank"
+			TotalCurrency	50
+			TotalCount	1
+			MaxActive	1
+			SpawnCount	1
+			WaitBeforeStarting	30
+			WaitBetweenSpawns	1
+			Where	spawnbot
+			Tank
+			{
+				Health	13000
+				Name	"hammertank"
+				Speed	60
+				StartingPathTrackNode tank_middle_1
+				OnKilledOutput
+				{
+					Target	boss_dead_relay
+					Action	Trigger
+				}
+				OnBombDroppedOutput
+				{
+					Target	boss_deploy_relay
+					Action	Trigger
+				}
+			}
+		}
+		WaveSpawn
+		{
+			Name	"tank"
+			TotalCurrency	50
+			TotalCount	1
+			MaxActive	1
+			SpawnCount	1
+			WaitBeforeStarting	45
+			WaitBetweenSpawns	1
+			Where	spawnbot
+			Tank
+			{
+				Health	2700
+				Name	"vactank_blast_bullet_fire"
+				Speed	60
+				StartingPathTrackNode tank_right_1
+				OnKilledOutput
+				{
+					Target	boss_dead_relay
+					Action	Trigger
+				}
+				OnBombDroppedOutput
+				{
+					Target	boss_deploy_relay
+					Action	Trigger
+				}
+			}
+		}
+		WaveSpawn
+		{
+			Name	"tank"
+			TotalCurrency	50
+			TotalCount	1
+			MaxActive	1
+			SpawnCount	1
+			WaitBeforeStarting	60
+			WaitBetweenSpawns	1
+			Where	spawnbot
+			Tank
+			{
+				Health	13000
+				Name	"fireringtank"
+				Speed	60
+				StartingPathTrackNode tank_left_1
+				OnKilledOutput
+				{
+					Target	boss_dead_relay
+					Action	Trigger
+				}
+				OnBombDroppedOutput
+				{
+					Target	boss_deploy_relay
+					Action	Trigger
+				}
+			}
+		}
+		WaveSpawn
+		{
+			Name	"tank"
+			TotalCurrency	50
+			TotalCount	1
+			MaxActive	1
+			SpawnCount	1
+			WaitBeforeStarting	75
+			WaitBetweenSpawns	1
+			Where	spawnbot
+			Tank
+			{
+				Health	14000
+				Name	"teletank"
+				Speed	60
+				StartingPathTrackNode tank_middle_1
+				OnKilledOutput
+				{
+					Target	boss_dead_relay
+					Action	Trigger
+				}
+				OnBombDroppedOutput
+				{
+					Target	boss_deploy_relay
+					Action	Trigger
+				}
+			}
+		}
+		WaveSpawn
+		{
+			Name	"tank"
+			TotalCurrency	50
+			TotalCount	1
+			MaxActive	1
+			SpawnCount	1
+			WaitBeforeStarting	90
+			WaitBetweenSpawns	1
+			Where	spawnbot
+			Tank
+			{
+				Health	13000
+				Name	"chewchewtank"
+				Speed	60
+				StartingPathTrackNode tank_right_1
+				OnKilledOutput
+				{
+					Target	boss_dead_relay
+					Action	Trigger
+				}
+				OnBombDroppedOutput
+				{
+					Target	boss_deploy_relay
+					Action	Trigger
+				}
+			}
+		}
+		WaveSpawn
+		{
+			Name	"tank"
+			TotalCurrency	15
+			TotalCount	1
+			MaxActive	1
+			SpawnCount	1
+			WaitBeforeStarting	105
+			WaitBetweenSpawns	1
+			Where	spawnbot
+			Tank
+			{
+				Health	7000
+				Name	"frontlinecart"
+				Speed	80
+				StartingPathTrackNode tank_left_1
+				OnKilledOutput
+				{
+					Target	boss_dead_relay
+					Action	Trigger
+				}
+				OnBombDroppedOutput
+				{
+					Target	boss_deploy_relay
+					Action	Trigger
+				}
+			}
+		}
+		WaveSpawn
+		{
+			Name	"tank"
+			TotalCurrency	15
+			TotalCount	1
+			MaxActive	1
+			SpawnCount	1
+			WaitBeforeStarting	110
+			WaitBetweenSpawns	1
+			Where	spawnbot
+			Tank
+			{
+				Health	7000
+				Name	"frontlinecart"
+				Speed	80
+				StartingPathTrackNode tank_right_1
+				OnKilledOutput
+				{
+					Target	boss_dead_relay
+					Action	Trigger
+				}
+				OnBombDroppedOutput
+				{
+					Target	boss_deploy_relay
+					Action	Trigger
+				}
+			}
+		}
+		WaveSpawn
+		{
+			Name	"tank"
+			TotalCurrency	20
+			TotalCount	1
+			MaxActive	1
+			SpawnCount	1
+			WaitBeforeStarting	115
+			WaitBetweenSpawns	1
+			Where	spawnbot
+			Tank
+			{
+				Health	7000
+				Name	"frontlinecart_crit"
+				Speed	80
+				StartingPathTrackNode tank_middle_1
+				OnKilledOutput
+				{
+					Target	boss_dead_relay
+					Action	Trigger
+				}
+				OnBombDroppedOutput
+				{
+					Target	boss_deploy_relay
+					Action	Trigger
+				}
+			}
+		}
+		WaveSpawn
+		{
+			Name	"tank"
+			TotalCurrency	100
+			TotalCount	1
+			MaxActive	1
+			SpawnCount	1
+			WaitBeforeStarting	135
+			WaitBetweenSpawns	1
+			Where	spawnbot
+			Tank
+			{
+				Health	18000
+				Name	"sentrytank"
+				Speed	40
+				StartingPathTrackNode tank_middle_1
+				OnKilledOutput
+				{
+					Target	boss_dead_relay
+					Action	Trigger
+				}
+				OnBombDroppedOutput
+				{
+					Target	boss_deploy_relay
+					Action	Trigger
+				}
+			}
+		}
+		WaveSpawn
+		{
+			Name	"tank"
+			TotalCurrency	100
+			TotalCount	1
+			MaxActive	1
+			SpawnCount	1
+			WaitBeforeStarting	130
+			WaitBetweenSpawns	1
+			Where	spawnbot
+			Tank
+			{
+				Health	15000
+				Name	"paratank"
+				Speed	50
+				StartingPathTrackNode para_path_1
+				OnKilledOutput
+				{
+					Target	boss_dead_relay
+					Action	Trigger
+				}
+				OnBombDroppedOutput
+				{
+					Target	boss_deploy_relay
+					Action	Trigger
+				}
+			}
+		}
+		WaveSpawn
+		{
+			Name	"tank_fast"
+			TotalCurrency	100
+			TotalCount	1
+			MaxActive	1
+			SpawnCount	1
+			WaitForAllDead "tank"
+			WaitBeforeStarting	10
+			WaitBetweenSpawns	1
+			Where	spawnbot
+			Tank
+			{
+				Health	3500
+				Name	"tank"
+				Speed	600
+				Skin 1
+				StartingPathTrackNode tank_middle_1
+				OnKilledOutput
+				{
+					Target	boss_dead_relay
+					Action	Trigger
+				}
+				OnBombDroppedOutput
+				{
+					Target	boss_deploy_relay
+					Action	Trigger
+				}
+			}
+		}
+		WaveSpawn
+		{
+			Name "support"
+			
+			Where spawnbot
+			TotalCount 40
+			MaxActive 20
+			SpawnCount 5
+			WaitBeforeStarting 5
+			WaitBetweenSpawns 5
+			TotalCurrency 200
+			Support 1
+			RandomChoice
+			{
+				TFBot
+				{
+					Class Scout
+					Skill Normal
+					ClassIcon random_lite
+					Tag "bot_teletank"
+				}
+				TFBot
+				{
+					Class Pyro
+					Skill Easy
+					ClassIcon random_lite
+					Tag "bot_teletank"
+				}
+				TFBot
+				{
+					Class Heavyweapons
+					Skill Easy
+					ClassIcon random_lite
+					Tag "bot_teletank"
+				}
+				TFBot
+				{
+					Class Demoman
+					Skill Normal
+					ClassIcon random_lite
+					Tag "bot_teletank"
+				}
+				TFBot
+				{
+					Class Soldier
+					Skill Normal
+					ClassIcon random_lite
+					Tag "bot_teletank"
+				}
+				TFBot
+				{
+					Template T_TFBot_Medic_BigHeal
+					ClassIcon random_lite
+					Tag "bot_teletank"
+				}
+			}
+		}
+		WaveSpawn
+		{
+			Name "conch_tele"
+			
+			Where spawnbot
+			TotalCount 10
+			MaxActive 5
+			SpawnCount 5
+			WaitBeforeStarting 82
+			WaitBetweenSpawns 5
+			TotalCurrency 0
+			Support Limited
+			TFBot
+			{
+				Template T_TFBot_Soldier_Extended_Concheror
+				ClassIcon random_lite
+				Tag "bot_teletank"
+			}
+		}
+	}	
+}

@@ -1,0 +1,1816 @@
+//MISSION NAME: Textile Termination
+//DIFFICULTY: EXPERT
+
+#base robot_izotope.pop
+
+WaveSchedule
+{
+	Advanced 1
+	StartingCurrency				400
+	RespawnWaveTime					7
+	CanBotsAttackWhileInSpawnRoom	No
+	
+	Mission // Sentry Buster
+	{
+		Objective DestroySentries
+		InitialCooldown 96
+		CooldownTime 64
+		BeginAtWave 1
+		RunForThisManyWaves 7
+		Where spawnbot_sentrybuster
+		
+		TFBot
+		{
+			Template IT_Sentry_Buster
+		}
+	}
+	Mission // Spy A
+	{
+		Objective Spy
+		InitialCooldown 60
+		CooldownTime 60
+		BeginAtWave 2
+		RunForThisManyWaves 1
+		DesiredCount 4
+		Where spawnbot_mission_spy
+		
+		TFBot
+		{
+			Template IT_Expert_Spy
+		}
+	}
+	Mission // Spy B
+	{
+		Objective Spy
+		InitialCooldown 2
+		CooldownTime 60
+		BeginAtWave 3
+		RunForThisManyWaves 2
+		DesiredCount 4
+		Where spawnbot_mission_spy
+		
+		TFBot
+		{
+			Template IT_Expert_Spy_Enforcer
+			ClassIcon spy_enforcer_nys
+		}
+	}
+	Mission // Spy C
+	{
+		Objective Spy
+		InitialCooldown 20
+		CooldownTime 80
+		BeginAtWave 5
+		RunForThisManyWaves 2
+		DesiredCount 4
+		Where spawnbot_mission_spy
+		
+		RandomChoice
+		{
+			TFBot
+			{
+				Template IT_Expert_Spy_Enforcer
+				ClassIcon spy_enforcer_nys
+			}
+			TFBot
+			{
+				Template IT_Expert_Spy_Enforcer
+				ClassIcon spy_enforcer_nys
+				ItemAttributes
+				{
+					ItemName "TF_WEAPON_INVIS"
+					"set cloak is feign death" 1
+				}
+			}
+		}
+	}
+	Mission // Engineer A
+	{
+		Objective Engineer
+		InitialCooldown 10
+		CooldownTime 30
+		BeginAtWave 4
+		RunForThisManyWaves 1
+		DesiredCount 1
+		Where spawnbot
+		
+		TFBot
+		{
+			Template IT_Expert_Engineer
+			TeleportWhere spawnbot
+			TeleportWhere spawnbot_upper
+			TeleportWhere spawnbot_boss
+		}
+	}
+	Mission // Engineer B
+	{
+		Objective Engineer
+		InitialCooldown 20
+		CooldownTime 32
+		BeginAtWave 7
+		RunForThisManyWaves 1
+		DesiredCount 1
+		Where spawnbot
+		
+		TFBot
+		{
+			Template IT_Expert_Engineer
+			TeleportWhere spawnbot
+			TeleportWhere spawnbot_upper
+			TeleportWhere spawnbot_boss
+			Attributes TeleportToHint
+		}
+	}
+	Mission // Sniper A
+	{
+		Objective Sniper
+		InitialCooldown 180
+		CooldownTime 36
+		BeginAtWave 4
+		RunForThisManyWaves 1
+		Where spawnbot_mission_sniper
+		DesiredCount 3
+		
+		TFBot
+		{
+			Template IT_Expert_Sniper_Razorback
+		}
+	}
+	Mission // Sniper B
+	{
+		Objective Sniper
+		InitialCooldown 120
+		CooldownTime 24
+		BeginAtWave 7
+		RunForThisManyWaves 1
+		Where spawnbot_mission_sniper
+		DesiredCount 3
+		
+		TFBot
+		{
+			Template IT_Expert_Sniper_Razorback
+		}
+	}
+//WAVE 1//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//20x Basher Scouts
+//15x Heavies
+//12x Limited Support: Streamed Escape Soldiers
+//10x Squads: Shotgun Heavy and Bullet Vacc Medic
+//Support: Streamed Escape Soldiers
+//1x Boss: FaN Super Scout
+//Currency: 600
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	Wave
+	{
+		StartWaveOutput
+		{
+			Target wave_start_relay
+			Action Trigger
+		}
+		DoneOutput
+		{
+			Target wave_finished_relay
+			Action Trigger
+		}
+		WaitWhenDone 65
+		Checkpoint Yes
+		
+		WaveSpawn
+		{
+			Name "wave01a"
+			Where spawnbot
+			TotalCount 20
+			MaxActive 10
+			SpawnCount 5
+			WaitBeforeStarting 0
+			WaitBetweenSpawns 4
+			TotalCurrency 100
+			TFBot
+			{
+				Template IT_Expert_Scout_Basher
+			}
+		}
+		WaveSpawn
+		{
+			Name "wave01b"
+			Where spawnbot
+			TotalCount 15
+			MaxActive 10
+			SpawnCount 5
+			WaitBeforeStarting 12
+			WaitBetweenSpawns 7
+			TotalCurrency 100
+			TFBot
+			{
+				Template IT_Expert_Heavy
+				Skill Hard
+			}
+		}
+		WaveSpawn
+		{
+			WaitForAllDead "wave01a"
+			Name "wave01c"
+			Where spawnbot_upper
+			Where spawnbot
+			TotalCount 12
+			MaxActive 8
+			SpawnCount 2
+			WaitBeforeStarting 2
+			WaitBetweenSpawns 3
+			TotalCurrency 0
+			Support Limited
+			TFBot
+			{
+				Template IT_Expert_Soldier_Escape
+			}
+		}
+		WaveSpawn
+		{
+			WaitForAllDead "wave01b"
+			Name "wave01d"
+			Where spawnbot
+			TotalCount 20
+			MaxActive 8
+			SpawnCount 4
+			WaitBeforeStarting 12
+			WaitBetweenSpawns 8
+			TotalCurrency 200
+			Squad
+			{
+				TFBot
+				{
+					Class Heavyweapons
+					ClassIcon heavy_shotgun
+					Name "Shotgun Heavy"
+					Skill Expert
+					WeaponRestrictions SecondaryOnly
+					ItemAttributes
+					{
+						ItemName "TF_WEAPON_SHOTGUN_HWG"
+						"faster reload rate" 0.1
+						"fire rate bonus" 2.0
+						"bullets per shot bonus" 3
+						"damage bonus" 0.33
+					}
+				}
+				TFBot
+				{
+					Template IT_Expert_Medic_Vaccinator1
+					ClassIcon medic_bullet
+				}
+			}
+		}
+		WaveSpawn
+		{
+			WaitForAllSpawned "wave01d"
+			Name "wave01e"
+			Where spawnbot_upper
+			MaxActive 6
+			SpawnCount 3
+			WaitBeforeStarting 10
+			WaitBetweenSpawns 6
+			TotalCurrency 0
+			Support 1
+			TFBot
+			{
+				Template IT_Expert_Soldier_Escape
+			}
+		}
+		WaveSpawn
+		{
+			WaitForAllSpawned "wave01d"
+			Name "wave01f"
+			Where spawnbot_boss
+			TotalCount 1
+			WaitBeforeStarting 1
+			TotalCurrency 200
+			TFBot
+			{
+				Template IT_Expert_Scout_Boss
+			}
+		}
+	}
+//WAVE 2//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//14x Giant Basher Scouts
+//4x Squads: Giant Soldier Spammer and Kritzkrieg Medic
+//1x Bullet Vacc Tank
+//18x Basher Scouts
+//4x Squads: Giant Deflector Heavy and Kritzkrieg Medic
+//Support: Spy
+//Currency: 700
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	Wave
+	{
+		StartWaveOutput
+		{
+			Target wave_start_relay
+			Action Trigger
+		}
+		DoneOutput
+		{
+			Target wave_finished_relay
+			Action Trigger
+		}
+		WaitWhenDone 65
+		Checkpoint Yes
+		
+		WaveSpawn
+		{
+			Name "wave02a"
+			Where spawnbot
+			Where spawnbot_upper
+			TotalCount 14
+			MaxActive 6
+			SpawnCount 2
+			WaitBetweenSpawns 7
+			WaitBeforeStarting 0
+			TotalCurrency 100
+			TFBot
+			{
+				Template IT_Expert_Giant_Basher
+			}
+		}
+		WaveSpawn
+		{
+			Name "wave02b"
+			Where spawnbot
+			TotalCount 8
+			MaxActive 6
+			SpawnCount 2
+			WaitBeforeStarting 16
+			WaitBetweenSpawns 9
+			TotalCurrency 150
+			Squad
+			{
+				TFBot
+				{
+					Template IT_Expert_Giant_Soldier_Spammer
+				}
+				TFBot
+				{
+					Template IT_Expert_Medic_Kritzkrieg
+				}
+			}
+		}
+		WaveSpawn
+		{
+			Name "wave02c"
+			TotalCount 1
+			WaitBeforeStarting 16
+			TotalCurrency 200
+			FirstSpawnOutput
+			{
+				Target relay_tank_bullet_start
+				Action Trigger
+			}
+			Tank
+			{
+				Name "tankboss_bullet"
+				ClassIcon tank_vac_bullet_lite [$SIGSEGV]
+				Speed 75
+				Health 16000
+				StartingPathTrackNode "tank_path_b_0"
+				OnBombDroppedOutput                             
+				{
+					Target boss_deploy_relay 
+					Action Trigger                         
+				}
+			}
+		}
+		WaveSpawn
+		{
+			WaitForAllDead "wave02a"
+			WaitForAllSpawned "wave02b"
+			WaitForAllSpawned "wave02c"
+			
+			Name "wave02d"
+			Where spawnbot_upper
+			TotalCount 18
+			MaxActive 9
+			SpawnCount 3
+			WaitBetweenSpawns 4
+			WaitBeforeStarting 12
+			TotalCurrency 100
+			TFBot
+			{
+				Template IT_Expert_Scout_Basher
+				Attributes AlwaysCrit
+			}
+		}
+		WaveSpawn
+		{
+			WaitForAllDead "wave02b"
+			
+			Name "wave02e"
+			Where spawnbot
+			TotalCount 8
+			MaxActive 6
+			SpawnCount 2
+			WaitBeforeStarting 12
+			WaitBetweenSpawns 11
+			TotalCurrency 150
+			Squad
+			{
+				TFBot
+				{
+					Template IT_Expert_Giant_Heavy_Deflector
+				}
+				TFBot
+				{
+					Template IT_Expert_Medic_Kritzkrieg
+				}
+			}
+		}
+	}
+//WAVE 3//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//16x Claidheamh Mor Knights
+//10x Limited Support: Streamed Scorch Pyros
+//20x Limited Support: Streamed Sunstick Scouts
+//1x Limited Support: Engineer
+//6x Squads: Giant Rapidfire Demo with QuickFix Medic
+//1x Limited Support: Engineer
+//6x Squads: Giant Deflector Heavy with Kritzkrieg Medic
+//1x Boss: Pyro with Blast Vacc Medics
+//Support: Enforcer Spy
+//Currency: 800
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	Wave
+	{
+		StartWaveOutput
+		{
+			Target wave_start_relay
+			Action Trigger
+		}
+		DoneOutput
+		{
+			Target wave_finished_relay
+			Action Trigger
+		}
+		WaitWhenDone 65
+		Checkpoint Yes
+		
+		WaveSpawn
+		{
+			Name "wave03aspecial"
+			Where spawnbot_upper
+			Where spawnbot
+			TotalCount 3
+			MaxActive 3
+			SpawnCount 1
+			WaitBeforeStarting 0
+			WaitBetweenSpawns 1
+			TotalCurrency 9
+			TFBot
+			{
+				Template IT_Expert_Demoknight_ClaidheamhMor
+				Name "Claidheamh Mòr Crusader"
+				Item "TTG Glasses"
+				Attributes IgnoreEnemies
+				BehaviorModifiers Push
+			}
+		}
+		WaveSpawn
+		{
+			Name "wave03a"
+			Where spawnbot_upper
+			Where spawnbot
+			TotalCount 13
+			MaxActive 8
+			SpawnCount 1
+			WaitBeforeStarting 3
+			WaitBetweenSpawns 1
+			TotalCurrency 91
+			TFBot
+			{
+				Template IT_Expert_Demoknight_ClaidheamhMor
+			}
+		}
+		WaveSpawn
+		{
+			Name "wave03b"
+			Where spawnbot
+			Where spawnbot_upper
+			TotalCount 20
+			MaxActive 6
+			SpawnCount 2
+			WaitBeforeStarting 10
+			WaitBetweenSpawns 2
+			Support Limited
+			TFBot
+			{
+				Template IT_Expert_Scout_Sunstick
+				Tag nav_prefer_left_flank
+			}
+		}
+		WaveSpawn
+		{
+			Name "wave03c"
+			Where spawnbot
+			Where spawnbot_upper
+			TotalCount 10
+			MaxActive 4
+			SpawnCount 2
+			WaitBeforeStarting 10
+			WaitBetweenSpawns 3
+			Support Limited
+			TFBot
+			{
+				Template IT_Expert_Pyro_Scorch
+				Tag nav_prefer_right_flank
+			}
+		}
+		WaveSpawn
+		{
+			WaitForAllSpawned "wave03c"
+			Name "wave03d"
+			Where spawnbot_upper
+			TotalCount 1
+			WaitBeforeStarting 0
+			WaitBetweenSpawns 0
+			Support Limited
+			TFBot
+			{
+				Template IT_Expert_Engineer
+				TeleportWhere spawnbot
+				TeleportWhere spawnbot_boss
+			}
+		}
+		WaveSpawn
+		{
+			WaitForAllSpawned "wave03c"
+			Name "wave03g"
+			Where spawnbot
+			TotalCount 12
+			MaxActive 8
+			SpawnCount 2
+			WaitBeforeStarting 6
+			WaitBetweenSpawns 8
+			TotalCurrency 200
+			Squad
+			{
+				FormationSize 96
+				TFBot
+				{
+					Template IT_Expert_Giant_Demo_RapidFire
+				}
+				TFBot
+				{
+					Template IT_Expert_Medic_QuickFix
+				}
+			}
+		}
+		WaveSpawn
+		{
+			WaitForAllSpawned "wave03g"
+			Name "wave03h"
+			Where spawnbot_upper
+			TotalCount 1
+			WaitBeforeStarting 0
+			WaitBetweenSpawns 0
+			Support Limited
+			TFBot
+			{
+				Template IT_Expert_Engineer
+				TeleportWhere spawnbot
+				TeleportWhere spawnbot_boss
+			}
+		}
+		WaveSpawn
+		{
+			WaitForAllSpawned "wave03g"
+			Name "wave03i"
+			Where spawnbot
+			TotalCount 12
+			MaxActive 8
+			SpawnCount 2
+			WaitBeforeStarting 15
+			WaitBetweenSpawns 10
+			TotalCurrency 200
+			Squad
+			{
+				FormationSize 96
+				TFBot
+				{
+					Template IT_Expert_Giant_Heavy_Deflector
+				}
+				TFBot
+				{
+					Template IT_Expert_Medic_Kritzkrieg
+					ClassIcon medic_kritz_lite
+				}
+			}
+		}
+		WaveSpawn
+		{
+			WaitForAllDead "wave03g"
+			WaitForAllSpawned "wave03i"
+			Name "wave03j"
+			Where spawnbot_boss
+			TotalCount 4
+			WaitBeforeStarting 0
+			TotalCurrency 200
+			Squad
+			{
+				ShouldPreserveSquad 1
+				FormationSize 192
+				TFBot
+				{
+					Template IT_Expert_Pyro_Boss
+				}
+				TFBot
+				{
+					Template IT_Expert_Medic_Vaccinator2
+					ClassIcon medic_blast
+				}
+				TFBot
+				{
+					Template IT_Expert_Medic_Vaccinator2
+					ClassIcon medic_blast
+				}
+				TFBot
+				{
+					Template IT_Expert_Medic_Vaccinator2
+					ClassIcon medic_blast
+				}
+			}
+		}
+	}
+//WAVE 4//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//1x Blast Vacc Tank
+//6x Giant FaN Scouts
+//10x Squads: Rapidfire Huntsman with Pyros and Widowmaker
+//6x Squads: Giant Pyro and Giant Widowmaker
+//10x Squads: Phlogistinator Pyro with Concheror Soldier
+//6x Squads: Giant Deflector Heavy with Battalion Soldier
+//1x Bullet Vacc Tank
+//6x Giant FaN Scouts
+//Support: Sniper, Enforcer Spy, Engineer
+//Currency: 900
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	Wave
+	{
+		StartWaveOutput
+		{
+			Target wave_start_relay
+			Action Trigger
+		}
+		DoneOutput
+		{
+			Target wave_finished_relay
+			Action Trigger
+		}
+		WaitWhenDone 65
+		Checkpoint Yes
+		
+		WaveSpawn
+		{
+			Name "wave04a0"
+			TotalCount 1
+			WaitBeforeStarting 0
+			TotalCurrency 200
+			FirstSpawnOutput
+			{
+				Target relay_tank_blast_start
+				Action Trigger
+			}
+			Tank
+			{
+				Name "tankboss_blast"
+				ClassIcon tank_vac_blast_lite [$SIGSEGV]
+				Speed 75
+				Health 20000
+				StartingPathTrackNode "tank_path_b_0"
+				OnBombDroppedOutput                             
+				{
+					Target boss_deploy_relay 
+					Action Trigger                         
+				}
+			}
+		}
+		WaveSpawn
+		{
+			Name "wave04a1"
+			Where spawnbot
+			TotalCount 6
+			MaxActive 4
+			SpawnCount 1
+			WaitBeforeStarting 0
+			WaitBetweenSpawns 3
+			TotalCurrency 50
+			TFBot
+			{
+				Template IT_Expert_Giant_FaN
+			}
+		}
+		WaveSpawn
+		{
+			WaitForAllSpawned "wave04a1"
+			Name "wave04a"
+			Where spawnbot
+			TotalCount 50
+			MaxActive 15
+			SpawnCount 5
+			WaitBeforeStarting 0
+			WaitBetweenSpawns 5
+			TotalCurrency 100
+			Squad
+			{
+				ShouldPreserveSquad 1
+				FormationSize 128
+				TFBot
+				{
+					Template IT_Expert_Huntsman_Rapidfire
+					Health 150
+				}
+				TFBot
+				{
+					Template IT_Expert_Widowmaker
+				}
+				TFBot
+				{
+					Template IT_Expert_Pyro
+				}
+				TFBot
+				{
+					Template IT_Expert_Pyro
+				}
+				TFBot
+				{
+					Template IT_Expert_Pyro
+				}
+			}
+		}
+		WaveSpawn
+		{
+			WaitForAllSpawned "wave04a"
+			Name "wave04b"
+			Where spawnbot
+			TotalCount 12
+			MaxActive 8
+			SpawnCount 2
+			WaitBeforeStarting 6
+			WaitBetweenSpawns 8
+			TotalCurrency 100
+			Squad
+			{
+				FormationSize 160
+				TFBot
+				{
+					Template IT_Expert_Giant_Pyro
+				}
+				TFBot
+				{
+					Template IT_Expert_Giant_Widowmaker
+				}
+			}
+		}
+		WaveSpawn
+		{
+			WaitForAllDead "wave04a"
+			WaitForAllSpawned "wave04b"
+			Name "wave04c"
+			Where spawnbot
+			TotalCount 50
+			MaxActive 15
+			SpawnCount 5
+			WaitBeforeStarting 8
+			WaitBetweenSpawns 10
+			TotalCurrency 100
+			Squad
+			{
+				ShouldPreserveSquad 1
+				FormationSize 192
+				TFBot
+				{
+					Template IT_Expert_Soldier_Concheror
+				}
+				TFBot
+				{
+					Template IT_Expert_Pyro_Phlog
+				}
+				TFBot
+				{
+					Template IT_Expert_Pyro_Phlog
+				}
+				TFBot
+				{
+					Template IT_Expert_Pyro_Phlog
+				}
+				TFBot
+				{
+					Template IT_Expert_Pyro_Phlog
+				}
+			}
+		}
+		WaveSpawn
+		{
+			WaitForAllDead "wave04b"
+			WaitForAllSpawned "wave04c"
+			Name "wave04d"
+			Where spawnbot
+			TotalCount 24
+			MaxActive 12
+			SpawnCount 4
+			WaitBeforeStarting 10
+			WaitBetweenSpawns 13
+			TotalCurrency 100
+			Squad
+			{
+				ShouldPreserveSquad 1
+				FormationSize 192
+				TFBot
+				{
+					Template IT_Expert_Giant_Heavy_Deflector
+				}
+				TFBot
+				{
+					Template IT_Expert_Soldier_Battalion
+				}
+				TFBot
+				{
+					Template IT_Expert_Soldier_Battalion
+				}
+				TFBot
+				{
+					Template IT_Expert_Soldier_Battalion
+				}
+			}
+		}
+		WaveSpawn
+		{
+			WaitForAllDead "wave04b"
+			WaitForAllDead "wave04c"
+			WaitForAllSpawned "wave04d"
+			Name "wave04e"
+			TotalCount 1
+			WaitBeforeStarting 4
+			TotalCurrency 200
+			FirstSpawnOutput
+			{
+				Target relay_tank_bullet_start
+				Action Trigger
+			}
+			Tank
+			{
+				Name "tankboss_bullet"
+				ClassIcon tank_vac_bullet_lite [$SIGSEGV]
+				Speed 75
+				Health 20000
+				StartingPathTrackNode "tank_path_a_0"
+				OnBombDroppedOutput                             
+				{
+					Target boss_deploy_relay 
+					Action Trigger                         
+				}
+			}
+		}
+		WaveSpawn
+		{
+			WaitForAllDead "wave04d"
+			WaitForAllSpawned "wave04e"
+			Name "wave04f"
+			Where spawnbot
+			TotalCount 6
+			MaxActive 4
+			SpawnCount 1
+			WaitBeforeStarting 20
+			WaitBetweenSpawns 5
+			TotalCurrency 50
+			TFBot
+			{
+				Template IT_Expert_Giant_FaN
+			}
+		}
+	}
+//WAVE 5//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//24x Bonk FaN Scouts
+//1x Limited Support: Engineer
+//6x Squads: Claidheamh Mor Demoknight and QuickFix Medic
+//8x Phlog Pyros
+//1x Limited Support: Engineer
+//6x Squads: Giant Burst Demo with Buff Soldiers
+//10x Pyros
+//2x Limited Support: Engineer
+//6x Squads: Giant Buff Soldier with Fire Vacc Medic and Heavies
+//1x Boss: Deflector Beast with Giant Fire Vacc Medic
+//3x Giant Pyros
+//3x Giant Overclocker Scouts
+//Support: Enforcer Spy, Engineer
+//Currency: 1000
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	Wave
+	{	
+		StartWaveOutput
+		{
+			Target wave_start_relay
+			Action Trigger
+		}
+		DoneOutput
+		{
+			Target wave_finished_relay
+			Action Trigger
+		}
+		WaitWhenDone 65
+		Checkpoint Yes
+		
+		WaveSpawn
+		{
+			Name "wave05a"
+			Where spawnbot
+			Where spawnbot_upper
+			TotalCount 24
+			MaxActive 12
+			SpawnCount 4
+			WaitBeforeStarting 0
+			WaitBetweenSpawns 2
+			TFBot
+			{
+				Template IT_Expert_Bonk_FaN
+			}
+		}
+		WaveSpawn
+		{
+			Name "wave05b"
+			Where spawnbot
+			TotalCount 1
+			WaitBeforeStarting 7
+			Support Limited
+			TFBot
+			{
+				Template IT_Expert_Engineer
+				TeleportWhere spawnbot
+				TeleportWhere spawnbot_upper
+				TeleportWhere spawnbot_boss
+				Attributes TeleportToHint
+			}
+		}
+		WaveSpawn
+		{
+			Name "wave05c"
+			Where spawnbot
+			TotalCount 12
+			MaxActive 6
+			SpawnCount 2
+			WaitBeforeStarting 7
+			WaitBetweenSpawns 4
+			TotalCurrency 100
+			Squad
+			{
+				TFBot
+				{
+					Template IT_Expert_Demoknight_ClaidheamhMor
+				}
+				TFBot
+				{
+					Template IT_Expert_Medic_QuickFix
+				}
+			}
+		}
+		WaveSpawn
+		{
+			WaitForAllSpawned "wave05a"
+			WaitForAllSpawned "wave05c"
+			Name "wave05d"
+			Where spawnbot_upper
+			TotalCount 8
+			MaxActive 4
+			SpawnCount 2
+			WaitBeforeStarting 0
+			WaitBetweenSpawns 3
+			TotalCurrency 50
+			TFBot
+			{
+				Template IT_Expert_Pyro_Phlog
+			}
+		}
+		WaveSpawn
+		{
+			WaitForAllSpawned "wave05d"
+			Name "wave05e"
+			Where spawnbot
+			TotalCount 1
+			WaitBeforeStarting 4
+			Support Limited
+			TFBot
+			{
+				Template IT_Expert_Engineer
+				TeleportWhere spawnbot
+				TeleportWhere spawnbot_upper
+				TeleportWhere spawnbot_boss
+				Attributes TeleportToHint
+			}
+		}
+		WaveSpawn
+		{
+			WaitForAllSpawned "wave05d"
+			Name "wave05f"
+			Where spawnbot
+			TotalCount 24
+			MaxActive 16
+			SpawnCount 4
+			WaitBeforeStarting 6
+			WaitBetweenSpawns 8
+			TotalCurrency 100
+			Squad
+			{
+				ShouldPreserveSquad 1
+				FormationSize 128
+				TFBot
+				{
+					Template IT_Expert_Giant_Demo_Burst
+				}
+				TFBot
+				{
+					Template IT_Expert_Soldier_Buff
+				}
+				TFBot
+				{
+					Template IT_Expert_Soldier_Buff
+				}
+				TFBot
+				{
+					Template IT_Expert_Soldier_Buff
+				}
+			}
+		}
+		WaveSpawn
+		{
+			WaitForAllSpawned "wave05d"
+			Name "wave05f2"
+			Where spawnbot
+			Where spawnbot_upper
+			TotalCount 10
+			MaxActive 4
+			SpawnCount 2
+			WaitBeforeStarting 4
+			WaitBetweenSpawns 6
+			TotalCurrency 50
+			TFBot
+			{
+				Class Pyro
+				Skill Expert
+				WeaponRestrictions PrimaryOnly
+				Attributes Aggressive
+			}
+		}
+		WaveSpawn
+		{
+			WaitForAllSpawned "wave05f"
+			Name "wave05g"
+			Where spawnbot
+			TotalCount 2
+			MaxActive 2
+			SpawnCount 1
+			WaitBeforeStarting 0
+			WaitBetweenSpawns 6
+			Support Limited
+			TFBot
+			{
+				Template IT_Expert_Engineer
+				TeleportWhere spawnbot
+				TeleportWhere spawnbot_upper
+				TeleportWhere spawnbot_boss
+				Attributes TeleportToHint
+			}
+		}
+		WaveSpawn
+		{
+			WaitForAllSpawned "wave05f"
+			Name "wave05h"
+			Where spawnbot
+			TotalCount 30
+			MaxActive 20
+			SpawnCount 5
+			WaitBeforeStarting 16
+			WaitBetweenSpawns 12
+			TotalCurrency 100
+			Squad
+			{
+				ShouldPreserveSquad 1
+				FormationSize 192
+				TFBot
+				{
+					Template IT_Expert_Giant_Soldier_Buff
+				}
+				TFBot
+				{
+					Template IT_Expert_Medic_Vaccinator3
+					ClassIcon medic_fire
+				}
+				TFBot
+				{
+					Template IT_Expert_Heavy
+				}
+				TFBot
+				{
+					Template IT_Expert_Heavy
+				}
+				TFBot
+				{
+					Template IT_Expert_Heavy
+				}
+			}
+		}
+		WaveSpawn
+		{
+			WaitForAllDead "wave05g"
+			WaitForAllSpawned "wave05h"
+			Name "wave05i"
+			Where spawnbot_boss
+			TotalCount 2
+			MaxActive 2
+			SpawnCount 2
+			WaitBeforeStarting 8
+			TotalCurrency 300
+			Squad
+			{
+				TFBot
+				{
+					Template IT_Expert_Giant_Deflector_Beast
+					Name "The Brass Boss"
+					Health 20000
+					Scale 1.9
+					Attributes UseBossHealthBar
+				}
+				TFBot
+				{
+					Template IT_Expert_Medic_Vaccinator3
+					ClassIcon medic_fire
+					Name "Giant Vaccinator Medic"
+					Health 4500
+					Attributes MiniBoss
+				}
+			}
+		}
+		WaveSpawn
+		{
+			WaitForAllDead "wave05h"
+			WaitForAllSpawned "wave05i"
+			Name "wave05j"
+			Where spawnbot_upper
+			TotalCount 3
+			MaxActive 2
+			SpawnCount 1
+			WaitBeforeStarting 12
+			WaitBetweenSpawns 14
+			TotalCurrency 100
+			TFBot
+			{
+				Template IT_Expert_Giant_Pyro
+			}
+		}
+		WaveSpawn
+		{
+			WaitForAllDead "wave05h"
+			WaitForAllSpawned "wave05i"
+			Name "wave05k"
+			Where spawnbot_upper
+			TotalCount 3
+			MaxActive 2
+			SpawnCount 1
+			WaitBeforeStarting 48
+			WaitBetweenSpawns 8
+			TotalCurrency 100
+			TFBot
+			{
+				Template IT_Expert_Scout_Final
+			}
+		}
+	}
+//WAVE 6//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//8x Squads: Battalion Burstfire Demos and Kritzkrieg Medic
+//10x Giant Basher Scouts
+//8x Squads: Buff Soldiers and QuickFix Medic
+//6x Giant Buff Soldiers
+//1x Fire Vacc Tank
+//6x Squads: Shotgun Heavy and Kritzkrieg Medic
+//6x Limited Support: Engineer
+//6x Squads: Shotgun Heavy and Kritzkrieg Medic
+//6x Giant Buff Soldiers
+//6x Squads: Giant Deflector and Kritzkrieg Medic
+//8x Squads: Pyros
+//Support: Enforcer Spy, Engineer
+//Currency: 1000
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	Wave
+	{
+		StartWaveOutput
+		{
+			Target wave_start_relay
+			Action Trigger
+		}
+		DoneOutput
+		{
+			Target wave_finished_relay
+			Action Trigger
+		}
+		WaitWhenDone 65
+		Checkpoint Yes
+		
+		WaveSpawn
+		{
+			Name "wave06a"
+			Where spawnbot
+			TotalCount 32
+			MaxActive 16
+			SpawnCount 4
+			WaitBeforeStarting 0
+			WaitBetweenSpawns 4
+			TotalCurrency 100
+			Squad
+			{
+				ShouldPreserveSquad 1
+				FormationSize 128
+				TFBot
+				{
+					Template IT_Expert_Demo_Burst
+					Name "Backup Burstfire Demo"
+					Attributes SpawnWithFullCharge
+					Item "The Battalion's Backup"
+					Tag nav_prefer_right_flank
+					CharacterAttributes
+					{
+						"increase buff duration" 16
+					}
+				}
+				TFBot
+				{
+					Template IT_Expert_Demo_Burst
+					Name "Backup Burstfire Demo"
+					Attributes SpawnWithFullCharge
+					Item "The Battalion's Backup"
+					Tag nav_prefer_right_flank
+					CharacterAttributes
+					{
+						"increase buff duration" 16
+					}
+				}
+				TFBot
+				{
+					Template IT_Expert_Demo_Burst
+					Name "Backup Burstfire Demo"
+					Attributes SpawnWithFullCharge
+					Item "The Battalion's Backup"
+					Tag nav_prefer_right_flank
+					CharacterAttributes
+					{
+						"increase buff duration" 16
+					}
+				}
+				TFBot
+				{
+					Template IT_Expert_Medic_Kritzkrieg
+					ClassIcon medic_kritz_lite
+					Tag nav_prefer_right_flank
+				}
+			}
+		}
+		WaveSpawn
+		{
+			Name "wave06b"
+			Where spawnbot_upper
+			TotalCount 5
+			MaxActive 5
+			SpawnCount 1
+			WaitBeforeStarting 20
+			WaitBetweenSpawns 6
+			TotalCurrency 50
+			TFBot
+			{
+				Template IT_Expert_Giant_Basher
+				Attributes AlwaysCrit
+			}
+		}
+		WaveSpawn
+		{
+			Name "wave06c"
+			Where spawnbot
+			TotalCount 5
+			MaxActive 5
+			SpawnCount 1
+			WaitBeforeStarting 20
+			WaitBetweenSpawns 6
+			TotalCurrency 50
+			TFBot
+			{
+				Template IT_Expert_Giant_Basher
+				Attributes AlwaysCrit
+			}
+		}
+		WaveSpawn
+		{
+			WaitForAllDead "wave06a"
+			WaitForAllSpawned "wave06b"
+			Name "wave06d"
+			Where spawnbot
+			TotalCount 32
+			MaxActive 16
+			SpawnCount 4
+			WaitBeforeStarting 0
+			WaitBetweenSpawns 4
+			TotalCurrency 100
+			Squad
+			{
+				ShouldPreserveSquad 1
+				FormationSize 128
+				TFBot
+				{
+					Template IT_Expert_Soldier_Buff
+					Tag nav_prefer_right_flank
+				}
+				TFBot
+				{
+					Template IT_Expert_Soldier_Buff
+					Tag nav_prefer_right_flank
+				}
+				TFBot
+				{
+					Template IT_Expert_Soldier_Buff
+					Tag nav_prefer_right_flank
+				}
+				TFBot
+				{
+					Template IT_Expert_Medic_QuickFix
+					Tag nav_prefer_right_flank
+				}
+			}
+		}
+		WaveSpawn
+		{
+			WaitForAllDead "wave06b"
+			WaitForAllDead "wave06c"
+			WaitForAllSpawned "wave06d"
+			Name "wave06e"
+			Where spawnbot
+			TotalCount 6
+			MaxActive 6
+			SpawnCount 1
+			WaitBeforeStarting 0
+			WaitBetweenSpawns 12
+			TotalCurrency 100
+			TFBot
+			{
+				Template IT_Expert_Giant_Soldier_Buff
+			}
+		}
+		WaveSpawn
+		{
+			WaitForAllDead "wave06b"
+			WaitForAllDead "wave06c"
+			WaitForAllSpawned "wave06d"
+			Name "wave06f"
+			TotalCount 1
+			WaitBeforeStarting 0
+			TotalCurrency 200
+			FirstSpawnOutput
+			{
+				Target relay_tank_fire_start
+				Action Trigger
+			}
+			Tank
+			{
+				Name "tankboss_fire"
+				ClassIcon tank_vac_fire_lite [$SIGSEGV]
+				Speed 75
+				Health 20000
+				StartingPathTrackNode "tank_path_b_0"
+				OnBombDroppedOutput                             
+				{
+					Target boss_deploy_relay 
+					Action Trigger                         
+				}
+			}
+		}
+		WaveSpawn
+		{
+			WaitForAllSpawned "wave06f"
+			Name "wave06g"
+			Where spawnbot_upper
+			TotalCount 12
+			MaxActive 8
+			SpawnCount 4
+			WaitBeforeStarting 10
+			WaitBetweenSpawns 12
+			TotalCurrency 75
+			Squad
+			{
+				TFBot
+				{
+					Class Heavyweapons
+					ClassIcon heavy_shotgun
+					Health 1000
+					Name "Big Shotgun Heavy"
+					Skill Expert
+					Scale 1.5
+					WeaponRestrictions SecondaryOnly
+					ItemAttributes
+					{
+						ItemName "TF_WEAPON_SHOTGUN_HWG"
+						"faster reload rate" 0.1
+						"fire rate bonus" 2.0
+						"bullets per shot bonus" 3
+						"damage bonus" 0.33
+					}
+				}
+				TFBot
+				{
+					Template IT_Expert_Medic_Kritzkrieg
+					ClassIcon medic_kritz_lite
+				}
+			}
+		}
+		WaveSpawn
+		{
+			WaitForAllSpawned "wave06f"
+			Name "wave06h"
+			Where spawnbot
+			TotalCount 6
+			MaxActive 2
+			SpawnCount 1
+			WaitBeforeStarting 10
+			WaitBetweenSpawns 32
+			Support Limited
+			TFBot
+			{
+				Template IT_Expert_Engineer
+				TeleportWhere spawnbot
+				TeleportWhere spawnbot_upper
+				TeleportWhere spawnbot_boss
+				Attributes TeleportToHint
+			}
+		}
+		WaveSpawn
+		{
+			WaitForAllDead "wave06e"
+			Name "wave06i"
+			Where spawnbot_upper
+			TotalCount 12
+			MaxActive 8
+			SpawnCount 4
+			WaitBeforeStarting 0
+			WaitBetweenSpawns 8
+			TotalCurrency 75
+			Squad
+			{
+				TFBot
+				{
+					Class Heavyweapons
+					ClassIcon heavy_shotgun
+					Health 1000
+					Name "Big Shotgun Heavy"
+					Skill Expert
+					Scale 1.5
+					WeaponRestrictions SecondaryOnly
+					ItemAttributes
+					{
+						ItemName "TF_WEAPON_SHOTGUN_HWG"
+						"faster reload rate" 0.1
+						"fire rate bonus" 2.0
+						"bullets per shot bonus" 3
+						"damage bonus" 0.33
+					}
+				}
+				TFBot
+				{
+					Template IT_Expert_Medic_Kritzkrieg
+					ClassIcon medic_kritz_lite
+				}
+			}
+		}
+		WaveSpawn
+		{
+			WaitForAllDead "wave06e"
+			Name "wave06j"
+			Where spawnbot
+			TotalCount 6
+			MaxActive 6
+			SpawnCount 1
+			WaitBeforeStarting 0
+			WaitBetweenSpawns 8
+			TotalCurrency 100
+			TFBot
+			{
+				Template IT_Expert_Giant_Soldier_Buff
+			}
+		}
+		WaveSpawn
+		{
+			WaitForAllSpawned "wave06j"
+			Name "wave06k"
+			Where spawnbot
+			TotalCount 12
+			MaxActive 8
+			SpawnCount 4
+			WaitBeforeStarting 10
+			WaitBetweenSpawns 16
+			TotalCurrency 100
+			Squad
+			{
+				FormationSize 96
+				TFBot
+				{
+					Template IT_Expert_Giant_Heavy_Deflector
+				}
+				TFBot
+				{
+					Template IT_Expert_Medic_Kritzkrieg
+					ClassIcon medic_kritz_lite
+				}
+			}
+		}
+		WaveSpawn
+		{
+			WaitForAllDead "wave06i"
+			Name "wave06l"
+			Where spawnbot_upper
+			TotalCount 32
+			MaxActive 16
+			SpawnCount 4
+			WaitBeforeStarting 0
+			WaitBetweenSpawns 8
+			TotalCurrency 50
+			Squad
+			{
+				ShouldPreserveSquad 1
+				FormationSize 128
+				TFBot
+				{
+					Class Pyro
+					Skill Expert
+					WeaponRestrictions PrimaryOnly
+				}
+				TFBot
+				{
+					Class Pyro
+					Skill Expert
+					WeaponRestrictions PrimaryOnly
+				}
+				TFBot
+				{
+					Class Pyro
+					Skill Expert
+					WeaponRestrictions PrimaryOnly
+				}
+				TFBot
+				{
+					Class Pyro
+					Skill Expert
+					WeaponRestrictions PrimaryOnly
+					Attributes Aggressive
+				}
+			}
+		}
+	}
+//WAVE 7//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//1x Boss: FaN Super Scout
+//1x Fire Vacc Tank
+//20x Limited Support: Bonk FaN Scouts
+//1x Boss: Pyro with Blast Chief Vacc Medic
+//20x Limited Support: Claidheamh Mor Knights
+//1x Boss: Deflector Beast with Fire Chief Vacc Medic
+//20x Limited Support: Phlog Pyros
+//1x Blast Vacc Tank
+//1x Bullet Vacc Tank
+//1x Giant Overclocker Scout with Bullet Chief Vacc Medic
+//Support: Scout, Claidheamh Mor Knight, Phlog Pyro, Sniper, Engineer
+//Currency: 2000
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	Wave
+	{	
+		StartWaveOutput
+		{
+			Target wave_start_relay
+			Action Trigger
+		}
+		DoneOutput
+		{
+			Target wave_finished_relay
+			Action Trigger
+		}
+		WaitWhenDone 65
+		Checkpoint Yes	
+		
+		WaveSpawn
+		{
+			Name "wave07a"
+			Where spawnbot_boss
+			TotalCount 1
+			WaitBeforeStarting 0
+			TotalCurrency 200
+			TFBot
+			{
+				Template IT_Expert_Scout_Boss
+				Health 20000
+				Name "The Boss-A-Nature"
+			}
+		}
+		WaveSpawn
+		{
+			Name "wave07b"
+			TotalCount 1
+			WaitBeforeStarting 1
+			TotalCurrency 400
+			FirstSpawnOutput
+			{
+				Target relay_tank_fire_start
+				Action Trigger
+			}
+			Tank
+			{
+				Name "tankboss_fire"
+				ClassIcon tank_vac_fire_lite [$SIGSEGV]
+				Speed 75
+				Health 25000
+				StartingPathTrackNode "tank_path_b_0"
+				OnBombDroppedOutput                             
+				{
+					Target boss_deploy_relay 
+					Action Trigger                         
+				}
+			}
+		}
+		WaveSpawn
+		{
+			WaitForAllSpawned "wave07b"
+			Name "wave07c"
+			Where spawnbot_upper
+			TotalCount 20
+			MaxActive 10
+			SpawnCount 5
+			WaitBeforeStarting 0
+			WaitBetweenSpawns 6
+			Support Limited
+			TFBot
+			{
+				Template IT_Expert_Bonk_FaN
+			}
+		}
+		WaveSpawn
+		{
+			WaitForAllSpawned "wave07a"	
+			Name "wave07d"
+			Where spawnbot_boss
+			TotalCount 2
+			WaitBeforeStarting 24
+			TotalCurrency 200
+			Squad
+			{
+				FormationSize 128
+				TFBot
+				{
+					Template IT_Expert_Pyro_Boss
+					Name "Dragon's Fury Boss"
+					Health 25000
+				}
+				TFBot
+				{
+					Template IT_Expert_Chief_Vaccinator2
+					ClassIcon medic_blast
+				}
+			}
+		}
+		WaveSpawn
+		{
+			WaitForAllDead "wave07d"
+			Name "wave07e2"
+			Where spawnbot_upper
+			TotalCount 20
+			MaxActive 10
+			SpawnCount 5
+			WaitBeforeStarting 4
+			WaitBetweenSpawns 8
+			Support Limited
+			TFBot
+			{
+				Template IT_Expert_Demoknight_ClaidheamhMor
+			}
+		}
+		WaveSpawn
+		{
+			WaitForAllDead "wave07a"
+			WaitForAllSpawned "wave07d"
+			Name "wave07e"
+			Where spawnbot_boss
+			TotalCount 2
+			WaitBeforeStarting 32
+			TotalCurrency 200
+			Squad
+			{
+				FormationSize 128
+				TFBot
+				{
+					Template IT_Expert_Giant_Deflector_Beast
+					Name "The Brass Boss"
+					Health 30000
+					Scale 1.9
+					Attributes UseBossHealthBar
+				}
+				TFBot
+				{
+					Template IT_Expert_Chief_Vaccinator3
+					ClassIcon medic_fire
+				}
+			}
+		}
+		WaveSpawn
+		{
+			WaitForAllDead "wave07e"
+			Name "wave07f2"
+			Where spawnbot_upper
+			TotalCount 20
+			MaxActive 10
+			SpawnCount 5
+			WaitBeforeStarting 0
+			WaitBetweenSpawns 8
+			Support Limited
+			TFBot
+			{
+				Template IT_Expert_Pyro_Phlog
+			}
+		}
+		WaveSpawn
+		{
+			WaitForAllDead "wave07d"
+			WaitForAllSpawned "wave07e"
+			Name "wave07f"
+			TotalCount 1
+			WaitBeforeStarting 10
+			TotalCurrency 400
+			FirstSpawnOutput
+			{
+				Target relay_tank_blast_start
+				Action Trigger
+			}
+			Tank
+			{
+				Name "tankboss_blast"
+				ClassIcon tank_vac_blast_lite [$SIGSEGV]
+				Speed 75
+				Health 24576
+				StartingPathTrackNode "tank_path_b_0"
+				OnBombDroppedOutput                             
+				{
+					Target boss_deploy_relay 
+					Action Trigger                         
+				}
+			}
+		}
+		WaveSpawn
+		{
+			WaitForAllSpawned "wave07f"
+			
+			Name "wave07g"
+			TotalCount 1
+			WaitBeforeStarting 5
+			TotalCurrency 400
+			FirstSpawnOutput
+			{
+				Target relay_tank_bullet_start
+				Action Trigger
+			}
+			Tank
+			{
+				Name "tankboss_bullet"
+				ClassIcon tank_vac_bullet_lite [$SIGSEGV]
+				Skin 1
+				Speed 75
+				Health 32768
+				StartingPathTrackNode "tank_path_a_0"
+				OnBombDroppedOutput                             
+				{
+					Target boss_deploy_relay 
+					Action Trigger                         
+				}
+			}
+		}
+		WaveSpawn
+		{
+			WaitForAllDead "wave07e"
+			Name "wave07h"
+			Where spawnbot_boss
+			TotalCount 2
+			WaitBeforeStarting 0
+			TotalCurrency 200
+			Squad
+			{
+				FormationSize 128
+				TFBot
+				{
+					Template IT_Expert_Scout_Final
+				}
+				TFBot
+				{
+					Template IT_Expert_Chief_Vaccinator1
+					ClassIcon medic_bullet
+				}
+			}
+		}
+	}	
+}
