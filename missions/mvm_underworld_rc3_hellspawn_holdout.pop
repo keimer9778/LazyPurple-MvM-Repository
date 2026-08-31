@@ -1,0 +1,2114 @@
+#base robot_standard.pop
+#base robot_giant.pop
+#base robot_click.pop
+#base robot_click_giant.pop
+#base robot_hole.pop
+#base robot_lazypurple.pop
+
+WaveSchedule
+{
+    StartingCurrency 1000
+    RespawnWaveTime 3
+    CanBotsAttackWhileInSpawnRoom No
+
+    Mission
+    {
+        Where spawnbot
+        Objective DestroySentries // Engineer,Sniper,Spy,DestroySentries
+        BeginAtWave 1
+        RunForThisManyWaves 3
+        DesiredCount 1
+    
+        InitialCooldown 20
+        CooldownTime 30
+    
+        TFBot
+        {
+            Template T_TFBot_SentryBuster
+            Name "Titanium Buster"
+            Health	10000
+        }
+    }
+    Mission
+    {
+        Where spawnbot
+        Objective DestroySentries // Engineer,Sniper,Spy,DestroySentries
+        BeginAtWave 4
+        RunForThisManyWaves 3
+        DesiredCount 1
+    
+        InitialCooldown 10
+        CooldownTime 20
+    
+        TFBot
+        {
+            Template T_TFBot_SentryBuster
+            Name "Sturdy Titanium Buster"
+            Health	10000
+            CharacterAttributes
+            {
+                "airblast vertical vulnerability multiplier" 0
+                "airblast vulnerability multiplier" 0
+                "damage force reduction" 0
+            }
+        }
+    }
+
+    Templates
+    {
+        T_TFBot_Giant_Soldier_Spreader
+		{
+			ClassIcon soldier_rocketrain_giant
+			Class Soldier
+			Skill Expert
+			WeaponRestrictions PrimaryOnly
+			Name "Giant Spreader Soldier"
+			Health 4000
+			Item "Worms Gear"
+			Attributes MiniBoss
+			Attributes HoldFireUntilFullReload
+			
+			ItemAttributes
+			{
+				ItemName	tf_weapon_rocketlauncher
+				"faster reload rate"	0.2
+				"fire rate bonus"	0.001
+				"clip size upgrade atomic"	48.0
+				"projectile spread angle penalty"	10
+				"Projectile speed increased"	0.4
+				"damage bonus" 2.0
+			}
+			CharacterAttributes
+			{
+				"move speed bonus"	0.5
+				"damage force reduction" 0.4
+				"airblast vulnerability multiplier" 0.4
+				"override footstep sound set" 3
+			}
+		}
+    }
+
+    Wave
+    {
+        Initwaveoutput
+        {
+            Target bignet
+            Action RunScriptCode
+            Param "
+                EntFire(`wave_init_relay`, `Trigger`)
+                IncludeScript(`popextensions_main`, getroottable())
+                MissionAttrs({
+                NoCrumpkins = 1
+                BotHeadshots = 1
+                })
+                Info(`Welcome to hell! Quite literally.|PAUSE 1|This mission is going to be HARD.|PAUSE 1|Intended players = 20|PAUSE 1|If you make it out alive, you will have joined a small group of the brave few.|PAUSE 1|Good luck LazyPurple. You're gonna need it.|PAUSE 10|P.S. Don't complain about the difficulty. I won't listen lmao`, `00FFFF`, `Waffle`, true)
+                "
+        }
+        StartWaveOutput
+        {
+	        Target wave_start_relay_boss
+	        Action Trigger
+        }
+        DoneOutput					
+        {
+	        Target wave_finished_relay
+	        Action trigger
+        }
+        Wavespawn
+        {
+            Name "Wave1_a1"
+            Where Spawnbot
+            TotalCount 60
+            SpawnCount 2
+            MaxActive 6
+            Waitbetweenspawns 5
+            WaitBeforeStarting 5
+            TotalCurrency 75
+            TFBot
+            {
+                Template T_TFBot_Soldier_Extended_Concheror
+                Skill Expert
+            }
+        }
+        Wavespawn
+        {
+            Support 1
+            Name "Wave1_a1_support"
+            Where Spawnbot_invasion
+            TotalCount 60
+            SpawnCount 2
+            MaxActive 4
+            Waitbetweenspawns 8
+            WaitBeforeStarting 0
+            Waitforalldead "Wave1_a1"
+            TotalCurrency 25
+            TFBot
+            {
+                Template T_TFBot_Soldier_Extended_Concheror
+                Skill Expert
+                Attributes AlwaysCrit
+                Name "Tough Concheror Soldier"
+                Health 500
+                BehaviorModifiers Push
+            }
+        }
+        Wavespawn
+        {
+            Name "Wave1_a2"
+            Where Spawnbot_Giant
+            TotalCount 4
+            SpawnCount 2
+            MaxActive 2
+            Waitbetweenspawns 40
+            WaitBeforeStarting 0
+            TotalCurrency 125
+            Squad
+            {
+                TFBot
+                {
+                    Template T_TFBot_Giant_Heavy_Deflector_Brassbeast
+                }
+                TFBot
+                {
+                    Template T_TFBot_Giant_Medic_Shield_Kritzkrieg_Extended
+                    Name "Tough Giant Kritz Shield"
+                    Health 6750
+                }
+            }
+        }
+        Wavespawn
+        {
+            Name "Wave1_a3" 
+            Where Spawnbot_Giant_Side
+            TotalCount 10
+            SpawnCount 1
+            MaxActive 3
+            Waitbetweenspawns 18
+            WaitBeforeStarting 3
+            TotalCurrency 100
+            TFBot
+            {
+                Template T_TFBot_Giant_Demo_Spammer
+                Name "Tough Giant Spammer Demo"
+                Health 5700
+                Tag nav_prefer_flank_front
+                Tag nav_prefer_flank_back
+                Skill Expert
+            }
+        }
+        Wavespawn
+        {
+            Name "Wave1_a4"
+            Where Spawnbot
+            TotalCount 1
+            SpawnCount 1
+            MaxActive 1
+            Waitbetweenspawns 0 
+            WaitBeforeStarting 20
+            TotalCurrency 350
+            FirstSpawnOutput 			
+            {
+	            Target boss_spawn_relay                       
+	            Action Trigger                         
+            }
+            Tank
+            {
+                Health 60000
+                Name "tankboss_1"
+                Speed 40
+                StartingPathTrackNode boss_path_1
+                OnKilledOutput
+                {
+                    Target	boss_dead_relay
+                    Action	Trigger
+                }
+                OnBombDroppedOutput
+                {
+                    Target	boss_deploy_relay
+                    Action	Trigger
+                }
+            }
+        }
+        Wavespawn
+        {
+            Name "Wave1_b2"
+            Where Spawnbot_Invasion
+            TotalCount 35
+            SpawnCount 1
+            MaxActive 6
+            Waitbetweenspawns 6
+            WaitBeforeStarting 30
+            Waitforallspawned "Wave1_a2"
+            TotalCurrency 50
+            RandomChoice
+            {
+                TFBot
+                {
+                    Template T_TFBot_Heavy_IronFist_Airblast
+                    Classicon heavy_steelfist_nys
+                    Tag nav_prefer_flank_front
+                    Tag nav_prefer_back_main
+                    Name "Tough Guantlet Pusher"
+                    Health 1800
+                }
+                TFBot
+                {
+                    Template T_TFBot_Heavy_IronFist_Airblast
+                    Classicon heavy_steelfist_nys
+                    Tag nav_prefer_flank_front
+                    Tag nav_prefer_flank_back
+                    Name "Tough Guantlet Pusher"
+                    Health 1800
+                }
+                TFBot
+                {
+                    Template T_TFBot_Heavy_IronFist_Airblast
+                    Classicon heavy_steelfist_nys
+                    Tag nav_prefer_front_main
+                    Tag nav_prefer_flank_back
+                    Name "Tough Guantlet Pusher"
+                    Health 1800
+                }
+                TFBot
+                {
+                    Template T_TFBot_Heavy_IronFist_Airblast
+                    Classicon heavy_steelfist_nys
+                    Name "Tough Guantlet Pusher"
+                    Health 1800
+                }
+            }
+        }
+        Wavespawn
+        {
+            Name "Wave1_b3"
+            Where Spawnbot_Giant
+            TotalCount 4
+            SpawnCount 1
+            MaxActive 2
+            Waitbetweenspawns 15
+            WaitBeforeStarting 0
+            Waitforalldead "Wave1_a2" 
+            TotalCurrency 125
+            TFBot
+            {
+                Template T_TFBot_Giant_Soldier_Spreader
+            }
+        }
+        Wavespawn
+        {
+            Support 1
+            Name "Wave1_b4"
+            Where Spawnbot_Side
+            TotalCount 69
+            SpawnCount 2
+            MaxActive 6
+            Waitbetweenspawns 4
+            WaitBeforeStarting 0
+            Waitforalldead "Wave1_a4"
+            TotalCurrency 50
+            TFBot
+            {
+                Template T_TFBot_Heavy_Flame
+                Health 750
+                Name "Tough Flame Heavy"
+                Tag nav_prefer_flank_front
+                Tag nav_prefer_back_main
+                BehaviorModifiers Push
+            }
+        }
+        Wavespawn
+        {
+            Name "Wave1_c1"
+            Where Spawnbot_Giant
+            TotalCount 4
+            SpawnCount 2
+            MaxActive 2
+            Waitbetweenspawns 30
+            WaitBeforeStarting 0
+            Waitforalldead "Wave1_b3"
+            TotalCurrency 100
+            Squad
+            {
+                TFBot
+                {
+                    Template T_TFBot_Giant_Heavy_Deflector_Brassbeast
+
+                }
+                TFBot
+                {
+                    Template T_TFBot_Giant_Medic_Shield_Kritzkrieg_Extended
+                    Name "Tough Giant Kritz Shield"
+                    Health 6750
+                }
+            }
+        }
+    }
+    Mission
+    {
+        Where spawnbot
+        Objective Engineer 
+        BeginAtWave 2
+        RunForThisManyWaves 1
+        DesiredCount 3
+        InitialCooldown 45
+        CooldownTime 30
+        TFBot
+        {
+            Template T_TFBot_Engineer_Sentry_Teleporter_Armored
+            Attributes TeleportToHint
+            TeleportWhere spawnbot
+            TeleportWhere spawnbot_giant
+            TeleportWhere Spawnbot_Side
+            TeleportWhere spawnbot_giant_side
+            TeleportWhere spawnbot_invasion
+        }
+    }
+    Mission
+    {
+        Where spawnbot_mission_sniper
+        Objective Sniper 
+        BeginAtWave 2
+        RunForThisManyWaves 1
+        DesiredCount 2
+        InitialCooldown 30
+        CooldownTime 20
+        TFBot
+        {
+            Template T_TFBot_Sniper_Magnetic_Hyper
+            Skill Expert
+        }
+    }
+    Wave
+    {
+        StartWaveOutput
+        {
+	        Target wave_start_relay_ironman
+	        Action Trigger
+        }
+        DoneOutput					
+        {
+	        Target wave_finished_relay
+	        Action trigger
+        }
+        Wavespawn
+        {
+            Name "Wave2_a_rush"
+            Where Spawnbot_Invasion
+            TotalCount 22
+            SpawnCount 1
+            MaxActive 22
+            Waitbetweenspawns 2
+            WaitBeforeStarting 0
+            TotalCurrency 150
+            RandomChoice
+            {
+                TFBot
+                {
+                    Template T_TFBot_Giant_Scout_Hyper
+                    Tag nav_prefer_back_main
+                    Tag nav_prefer_flank_front
+                }
+                TFBot
+                {
+                    Template T_TFBot_Giant_Scout_Hyper
+                    Tag nav_prefer_flank_front
+                    Tag nav_prefer_flank_back
+                }
+                TFBot
+                {
+                    Template T_TFBot_Giant_Scout_Hyper
+                    Tag nav_prefer_front_main
+                    Tag nav_prefer_flank_back
+                }
+                TFBot
+                {
+                    Template T_TFBot_Giant_Scout_Hyper
+                    Name "Tough Giant Hyper Scout"
+                    Health 1800
+                }
+            }
+        }
+        Wavespawn
+        {
+            Support 1
+            Name "Wave2_a_support"
+            Where Spawnbot_Invasion
+            TotalCount 69
+            SpawnCount 1
+            MaxActive 2
+            Waitbetweenspawns 12
+            WaitBeforeStarting 0
+            WaitForAllDead "Wave2_a_rush"
+            TotalCurrency 75
+            RandomChoice
+            {
+                TFBot
+                {
+                    Template T_TFBot_Giant_Scout_Hyper
+                    Classicon scout_fast_hyper
+                    Tag nav_prefer_back_main
+                    Tag nav_prefer_flank_front
+                    Name "Tough Giant Hyper Scout"
+                    Health 1800
+                }
+                TFBot
+                {
+                    Template T_TFBot_Giant_Scout_Hyper
+                    Tag nav_prefer_flank_front
+                    Tag nav_prefer_flank_back
+                    Classicon scout_fast_hyper
+                    Name "Tough Giant Hyper Scout"
+                    Health 1800
+                }
+                TFBot
+                {
+                    Template T_TFBot_Giant_Scout_Hyper
+                    Tag nav_prefer_front_main
+                    Tag nav_prefer_flank_back
+                    Classicon scout_fast_hyper
+                    Name "Tough Giant Hyper Scout"
+                    Health 1800
+                }
+                TFBot
+                {
+                    Template T_TFBot_Giant_Scout_Hyper
+                    Classicon scout_fast_hyper
+                    Name "Tough Giant Hyper Scout"
+                    Health 1800
+                }
+            }
+        }
+        Wavespawn
+        {
+            Name "Wave2_b1"
+            Where Spawnbot
+            TotalCount 40
+            SpawnCount 8
+            MaxActive 12
+            Waitbetweenspawns 8 
+            WaitBeforeStarting 0
+            Waitforalldead "Wave2_a_rush"
+            TotalCurrency 75
+            TFBot
+            {
+                Template T_TFBot_Heavy_Deflector_Penetration
+                Name "Tough Deflector Penetrator"
+                Health 750
+            }
+        }
+        Wavespawn
+        {
+            Name "Wave2_b2" 
+            Where Spawnbot_Side
+            TotalCount 10
+            SpawnCount 2
+            MaxActive 3
+            Waitbetweenspawns 12
+            WaitBeforeStarting 10
+            WaitForAllDead "Wave2_a_rush"
+            TotalCurrency 75
+            TFBot
+            {
+                Template T_TFBot_Demo_Samurai_Hyper
+                Name "Tough Hyper Samurai Demo"
+                Health 1300
+                Attributes AlwaysCrit
+                Tag nav_prefer_flank_back
+                Tag nav_prefer_flank_front
+            }
+        }
+        WaveSpawn
+        {
+            Name "Wave2_b3" 
+            Where spawnbot
+            TotalCount 3
+            SpawnCount 1
+            MaxActive 3
+            Waitbetweenspawns 15
+            WaitBeforeStarting 20
+            Waitforalldead "Wave2_a_rush"
+            TotalCurrency 200
+            FirstSpawnOutput 			
+            {
+                Target boss_spawn_relay                       
+                Action Trigger                         
+            }
+            Tank
+            {
+                Health 22500
+                Name "Tankboss"
+                Speed 90
+                StartingPathTrackNode boss_path_1
+                OnKilledOutput
+                {
+                    Target	boss_dead_relay
+                    Action	Trigger
+                }
+                OnBombDroppedOutput
+                {
+                    Target	boss_deploy_relay
+                    Action	Trigger
+                }
+            }
+        }
+        Wavespawn
+        {
+            Name "Wave2_c1"
+            Where Spawnbot
+            TotalCount 40
+            SpawnCount 8
+            MaxActive 12
+            Waitbetweenspawns 8
+            WaitBeforeStarting 0
+            Waitforalldead "Wave2_b1"
+            TotalCurrency 75
+            TFBot
+            {
+                Template T_TFBot_Heavy_Deflector_Penetration
+                Name "Tough Deflector Penetrator"
+                Health 750
+            }
+        }
+        Wavespawn
+        {
+            Name "Wave2_c2"
+            Where Spawnbot_Giant
+            TotalCount 2
+            SpawnCount 2
+            MaxActive 2
+            Waitbetweenspawns 0
+            WaitBeforeStarting 0
+            Waitforalldead "Wave2_b1"
+            TotalCurrency 150
+            Squad
+            {
+                TFBot
+                {
+                    Template T_TFBot_Giant_Heavy_Steelfist
+                    Classicon heavy_steelfist_armored
+                    Health 18000
+                    Item "Immobile Suit"
+                    Name "Giant Armored Sturdy Guantlet"
+                    CharacterAttributes
+                    {
+                        "airblast vertical vulnerability multiplier" 0
+                        "airblast vulnerability multiplier" 0
+                        "damage force reduction" 0
+                    }
+                }
+                TFBot
+                {
+                    Template T_Tfbot_Giant_Soldier_Tanker
+                }
+            }
+        }
+        Wavespawn
+        {
+            Support 1
+            Name "Wave2_d1"
+            Where Spawnbot_Invasion
+            TotalCount 69
+            SpawnCount 2
+            MaxActive 6
+            Waitbetweenspawns 4
+            WaitBeforeStarting 0
+            Waitforallspawned "Wave2_b2"
+            TotalCurrency 50
+            TFBot
+            {
+                Template T_TFBot_Scout_Blaster_Hyper
+                Name "Tough Public Enemy Scout"
+                Health 300
+                Tag nav_prefer_flank_back
+                Tag nav_prefer_flank_front
+                BehaviorModifiers Push
+            }
+        }
+        Wavespawn
+        {
+            Name "Wave2_d2"
+            Where Spawnbot_Giant
+            TotalCount 2
+            SpawnCount 2
+            MaxActive 2
+            Waitbetweenspawns 0
+            WaitBeforeStarting 0
+            Waitforallspawned "Wave2_c1"
+            TotalCurrency 150
+            Squad
+            {
+                TFBot
+                {
+                    Template T_TFBot_Giant_Heavy_Steelfist
+                    Attributes AlwaysCrit
+                    Classicon heavy_steelfist_armored
+                    Health 18000
+                    Item "Immobile Suit"
+                    Name "Giant Armored Sturdy Gauntlet"
+                    CharacterAttributes
+                    {
+                        "airblast vertical vulnerability multiplier" 0
+                        "airblast vulnerability multiplier" 0
+                        "damage force reduction" 0
+                    }
+                }
+                TFBot
+                {
+                    Template T_Tfbot_Giant_Soldier_Tanker
+                    Name "Giant Tough Tanker Soldier"
+                    Health 5700
+                }
+            }
+        }
+    }
+    Mission
+    {
+        Where spawnbot
+        Objective Engineer 
+        BeginAtWave 3
+        RunForThisManyWaves 1
+        DesiredCount 4
+        InitialCooldown 30
+        CooldownTime 30
+        TFBot
+        {
+            Template T_TFBot_Engineer_Sentry_Teleporter_FastBuild
+            Attributes TeleportToHint
+            TeleportWhere spawnbot
+            TeleportWhere spawnbot_giant
+            TeleportWhere Spawnbot_Side
+            TeleportWhere spawnbot_giant_side
+            TeleportWhere spawnbot_invasion
+        }
+    }
+    Mission
+    {
+        Where spawnbot_mission_sniper
+        Objective Sniper 
+        BeginAtWave 3
+        RunForThisManyWaves 2
+        DesiredCount 2
+        InitialCooldown 30
+        CooldownTime 25
+        TFBot
+        {
+            Template T_TFBot_Sniper_Charged_Hyper
+            Skill Expert
+        }
+    }
+    Mission
+    {
+        Where spawnbot
+        Objective Spy
+        BeginAtWave 3
+        RunForThisManyWaves 1
+        DesiredCount 2
+        InitialCooldown 20
+        CooldownTime 30
+        TFBot
+        {
+            Template T_TFBot_Spy_Ninja
+        }
+    }
+    Wave
+    {
+        StartWaveOutput
+        {
+	        Target wave_start_relay_boss
+	        Action Trigger
+        }
+        DoneOutput					
+        {
+	        Target wave_finished_relay
+	        Action trigger
+        }
+        Wavespawn
+        {
+            Name "w3_demo_scatterhyper"
+            Where spawnbot_giant
+            TotalCount 30
+            SpawnCount 1
+            MaxActive 4
+            Waitbetweenspawns 8 
+            WaitBeforeStarting 0
+            TotalCurrency 300
+            TFBot
+            {
+                Template T_TFBot_Giant_Demo_Scatter_Hyper
+                Attributes AlwaysCrit
+            }
+        }
+        Wavespawn
+        {
+            Support 1
+            Name "w3_giant_pyropusher"
+            Where spawnbot_giant_side
+            TotalCount 69
+            SpawnCount 1
+            MaxActive 1
+            Waitbetweenspawns 20
+            WaitBeforeStarting 8
+            TotalCurrency 150
+            TFBot
+            {
+                Template T_TFBot_Giant_Pyro_ScorchShot_Pusher
+                Tag nav_prefer_flank_back
+                Tag nav_prefer_flank_front
+                Skill Expert
+                Name "Titanium Super Pyro Pusher"
+                Health 12000
+                ClassIcon pyro_scorch_blast_titan_giant
+            }
+        }
+        Wavespawn
+        {
+            Support Limited
+            Randomspawn 1
+            Name "w3_hyperknight1" 
+            Where spawnbot_invasion
+            TotalCount 20
+            SpawnCount 2
+            MaxActive 12
+            Waitbetweenspawns 2
+            WaitBeforeStarting 5
+            TotalCurrency 100
+            RandomChoice
+            {
+                TFBot
+                {
+                    Template T_TFBot_Demoknight_Hyper
+                    Tag nav_prefer_back_main
+                    Tag nav_prefer_flank_back
+                }
+                TFBot
+                {
+                    Template T_TFBot_Demoknight_Hyper
+                    Tag nav_prefer_flank_back
+                    Tag nav_prefer_flank_front
+                }
+                TFBot
+                {
+                    Template T_TFBot_Demoknight_Hyper
+                    Tag nav_prefer_front_main
+                    Tag nav_prefer_flank_back
+                }
+                TFBot
+                {
+                    Template T_TFBot_Demoknight_Hyper
+                }
+            }
+        }
+        Wavespawn
+        {
+            Support Limited
+            Randomspawn 1
+            Name "w3_hyperknight2" 
+            Where spawnbot_invasion
+            TotalCount 20
+            SpawnCount 2
+            MaxActive 8
+            Waitbetweenspawns 3
+            WaitBeforeStarting 5
+            WaitForAllDead "w3_hyperknight1"
+            TotalCurrency 100
+            RandomChoice
+            {
+                TFBot
+                {
+                    Template T_TFBot_Demoknight_Hyper
+                    Tag nav_prefer_back_main
+                    Tag nav_prefer_flank_back
+                }
+                TFBot
+                {
+                    Template T_TFBot_Demoknight_Hyper
+                    Tag nav_prefer_flank_back
+                    Tag nav_prefer_flank_front
+                }
+                TFBot
+                {
+                    Template T_TFBot_Demoknight_Hyper
+                    Tag nav_prefer_front_main
+                    Tag nav_prefer_flank_back
+                }
+                TFBot
+                {
+                    Template T_TFBot_Demoknight_Hyper
+                }
+            }
+        }
+        Wavespawn
+        {
+            Support Limited
+            Randomspawn 1
+            Name "w3_hyperknight3" 
+            Where spawnbot_invasion
+            TotalCount 20
+            SpawnCount 2
+            MaxActive 6
+            Waitbetweenspawns 4
+            WaitBeforeStarting 10
+            Waitforalldead "w3_hyperknight2"
+            TotalCurrency 50
+            RandomChoice
+            {
+                TFBot
+                {
+                    Template T_TFBot_Demoknight_Hyper
+                    Tag nav_prefer_back_main
+                    Tag nav_prefer_flank_back
+                }
+                TFBot
+                {
+                    Template T_TFBot_Demoknight_Hyper
+                    Tag nav_prefer_flank_back
+                    Tag nav_prefer_flank_front
+                }
+                TFBot
+                {
+                    Template T_TFBot_Demoknight_Hyper
+                    Tag nav_prefer_front_main
+                    Tag nav_prefer_flank_back
+                }
+                TFBot
+                {
+                    Template T_TFBot_Demoknight_Hyper
+                }
+            }
+        }
+        Wavespawn
+        {
+            Support 1
+            Name "w3_publicenemy" 
+            Where Spawnbot_invasion
+            TotalCount 69
+            SpawnCount 1 
+            MaxActive 4
+            Waitbetweenspawns 2 
+            WaitBeforeStarting 0
+            Waitforallspawned "w3_hyperknight2"
+            TotalCurrency 50
+            TFBot
+            {
+                Template T_TFBot_Scout_Blaster_Hyper
+                Attributes AlwaysCrit
+            }
+        }
+        Wavespawn
+        {
+            Support 1
+            Name "w3_tankbuster"
+            Where spawnbot_invasion
+            TotalCount 69
+            SpawnCount 2
+            MaxActive 4
+            Waitbetweenspawns 5
+            WaitBeforeStarting 0
+            TotalCurrency 100
+            Squad
+            {
+                TFBot
+                {
+                    Template T_TFBot_Soldier_TankBuster
+                    Name "Swift Tankbuster Soldier"
+                    Tag nav_prefer_flank_back
+                    Tag nav_prefer_flank_front
+                    CharacterAttributes
+                    {
+                        "move speed bonus" 2.0
+                    }
+                }
+                Tfbot
+                {
+                    Template T_TFBot_Demo_Loch_Tankbuster_Shield_Waffle
+                    Name "Swift Tankbuster Demo"
+                    Tag nav_prefer_flank_front
+                    Tag nav_prefer_flank_back
+                    CharacterAttributes
+                    {
+                        "move speed bonus" 2.0
+                    }
+                }
+            }
+        }
+       
+        Wavespawn
+        {
+            RandomSpawn 1
+            Support 1
+            Name "w3_minigun_juggernaut"
+            Where spawnbot_invasion
+            TotalCount 69
+            SpawnCount 6
+            MaxActive 6
+            Waitbetweenspawns 20 
+            WaitBeforeStarting 0
+            TotalCurrency 150
+            RandomChoice
+            {
+                TFBot
+                {
+                    Template T_TFBot_Heavy_Juggernaut_Minigun
+                    Tag nav_prefer_back_main
+                    Tag nav_prefer_flank_front
+                    Name "Strong Minigun Juggernaut"
+                    ItemAttributes
+                    {
+                        Itemname "Iron Curtain"
+                        "damage bonus" 6.0
+                    }
+                }
+                TFBot
+                {
+                    Template T_TFBot_Heavy_Juggernaut_Minigun
+                    Tag nav_prefer_flank_back
+                    Tag nav_prefer_flank_front
+                    Name "Swift Minigun Juggernaut"
+                    CharacterAttributes
+                    {
+                        "move speed bonus" 2.0
+                    }
+                }
+                TFBot
+                {   
+                    Template T_TFBot_Heavy_Juggernaut_Minigun
+                    Tag nav_prefer_front_main
+                    Tag nav_prefer_flank_back
+                    Name "Sturdy Minigun Juggernaut"
+                    CharacterAttributes
+                    {
+                        "airblast vertical vulnerability multiplier" 0
+                        "airblast vulnerability multiplier" 0
+                        "damage force reduction" 0
+                    }
+                }
+                TFBot
+                {
+                    Template T_TFBot_Heavy_Juggernaut_Minigun
+                    Name "Tough Minigun Juggernaut"
+                    Health 2000
+                }
+            }
+        }
+    }
+    Wave
+    {
+        Initwaveoutput
+        {
+            Target bignet
+            Action RunScriptCode
+            Param "
+            Info(`Ok. Playtime's over c:`, `FFFFFF`, `Waffle`, true, 10)"
+        }
+        StartWaveOutput
+        {
+	        Target wave_start_relay_boss
+	        Action Trigger
+        }
+        DoneOutput					
+        {
+	        Target wave_finished_relay
+	        Action trigger
+        }
+        Wavespawn
+        {
+            Name "w4_disruption_blast"
+            Where Spawnbot_Giant
+            TotalCount 16
+            SpawnCount 1
+            MaxActive 4
+            Waitbetweenspawns 8
+            WaitBeforeStarting 8
+            TotalCurrency 250
+            TFBot
+            {
+                Template T_TFBot_Giant_Soldier_Blast_Spammer_Hyper
+                Health 5700
+            }
+        }        
+        Wavespawn
+        {
+            Name "w4_disruption_rusher"
+            Where Spawnbot_invasion
+            Totalcount 12
+            Spawncount 1
+            MaxActive 2
+            Waitbetweenspawns 10
+            WaitBeforeStarting 24
+            TotalCurrency 250
+            TFBot
+            {
+                Template T_TFBot_Giant_Scout_Fast
+                Name "Titanium Giant Super Scout"
+                Classicon scout_fast_titan
+                Skill Expert
+                Attributes AlwaysCrit
+                Health 4800
+            }
+        }
+        Wavespawn
+        {
+            Name "w4_disruption_smoke"
+            Where Spawnbot_Giant_Side
+            TotalCount 8
+            SpawnCount 1
+            MaxActive 2
+            Waitbetweenspawns 12
+            WaitBeforeStarting 0
+            TotalCurrency 250
+            TFBot
+            {
+                Template T_TFBot_Giant_Soldier_Smoker
+                Attributes AlwaysCrit
+                Tag nav_prefer_flank_back
+                Tag nav_prefer_flank_front
+            }
+        }
+        Wavespawn
+        {
+            Name "w4_tank1"
+            Where spawnbot
+            TotalCount 1
+            SpawnCount 1
+            MaxActive 1
+            Waitbetweenspawns 30
+            WaitBeforeStarting 0
+            Waitforallspawned "w4_disruption_rusher"
+            TotalCurrency 200
+            FirstSpawnOutput 			
+            {
+                Target boss_spawn_relay                       
+                Action Trigger                         
+            }
+            Tank
+            {
+                Health 22500
+                Name "fast boi"
+                Speed 180
+                StartingPathTrackNode boss_path_1
+                OnKilledOutput
+                {
+                    Target	boss_dead_relay
+                    Action	Trigger
+                }
+                OnBombDroppedOutput
+                {
+                    Target	boss_deploy_relay
+                    Action	Trigger
+                }
+            }
+        }        
+        Wavespawn
+        {
+            Support 1
+            Name "w4_HeavyCombo_support"
+            Where spawnbot_giant
+            TotalCount 69
+            SpawnCount 2
+            MaxActive 2
+            Waitbetweenspawns 50
+            WaitBeforeStarting 60
+            Waitforalldead "w4_disruption_smoke"
+            TotalCurrency 100
+            Squad
+            {
+                TFBot
+                {
+                    template T_TFBot_Giant_Heavy_Tomislav_Hyper
+                    Attributes AlwaysCrit
+                }
+                TFBot
+                {
+                    Template T_TFBot_Giant_Medic
+                }
+            }
+        }
+        Wavespawn
+        {
+            Support 1
+            Name "w4_Batsaber_Support"
+            Where Spawnbot_Invasion
+            TotalCount 69
+            SpawnCount 1 
+            MaxActive 4
+            Waitbetweenspawns 4
+            WaitBeforeStarting 30
+            TotalCurrency 100
+            RandomChoice
+            {
+                TFBot
+                {
+                    Template T_TFBot_Scout_Batsaber_Armored
+                    Attributes Alwayscrit
+                    Tag nav_prefer_back_main
+                    Tag nav_prefer_flank_front
+                }
+                TFBot
+                {
+                    Template T_TFBot_Scout_Batsaber_Armored
+                    Attributes Alwayscrit
+                    Tag nav_prefer_flank_front
+                    Tag nav_prefer_flank_back
+                }
+                TFBot
+                {
+                    Template T_TFBot_Scout_Batsaber_Armored
+                    Attributes Alwayscrit
+                    Tag nav_prefer_front_main
+                    Tag nav_prefer_flank_back
+                }
+                TFBot
+                {
+                    Template T_TFBot_Scout_Batsaber_Armored
+                    Attributes Alwayscrit
+                }
+            }
+        }
+        Wavespawn
+        {
+            Support 1
+            Name "w4_HyperPyro"
+            Where spawnbot_giant_side
+            TotalCount 69
+            SpawnCount 1
+            MaxActive 5
+            Waitbetweenspawns 2
+            WaitBeforeStarting 0
+            Waitforallspawned "w4_disruption_smoke"
+            TotalCurrency 100
+            RandomChoice
+            {
+                TFBot
+                {
+                    Template T_TFBot_Pyro_Hyper
+                    Tag nav_prefer_back_main
+                    Tag nav_prefer_flank_front
+                    BehaviorModifiers Push
+                    Classicon pyro_hyper_v2
+                    CharacterAttributes
+                    {
+                        "airblast vertical vulnerability multiplier" 0
+                        "airblast vulnerability multiplier" 0
+                        "damage force reduction" 0
+                    }
+                    Name "Sturdy Hyper Pyro"
+                }
+                TFBot
+                {
+                    Template T_TFBot_Pyro_Hyper
+                    Tag nav_prefer_flank_front
+                    Tag nav_prefer_flank_back
+                    BehaviorModifiers Push
+                    Classicon pyro_hyper_v2
+                    CharacterAttributes
+                    {
+                        "airblast vertical vulnerability multiplier" 0
+                        "airblast vulnerability multiplier" 0
+                        "damage force reduction" 0
+                    }
+                    Name "Sturdy Hyper Pyro"
+                }
+                TFBot
+                {
+                    Template T_TFBot_Pyro_Hyper
+                    Tag nav_prefer_front_main
+                    Tag nav_prefer_flank_back
+                    BehaviorModifiers Push
+                    Classicon pyro_hyper_v2
+                    CharacterAttributes
+                    {
+                        "airblast vertical vulnerability multiplier" 0
+                        "airblast vulnerability multiplier" 0
+                        "damage force reduction" 0
+                    }
+                    Name "Sturdy Hyper Pyro"
+                }
+                TFBot
+                {
+                    Template T_TFBot_Pyro_Hyper
+                    Classicon pyro_hyper_v2
+                    BehaviorModifiers Push
+                    CharacterAttributes
+                    {
+                        "airblast vertical vulnerability multiplier" 0
+                        "airblast vulnerability multiplier" 0
+                        "damage force reduction" 0
+                    }
+                    Name "Sturdy Hyper Pyro"
+                }
+            }
+        }
+        Wavespawn
+        {
+            Name "w4_DemoSpammer"
+            Where spawnbot_giant_side
+            TotalCount 12
+            SpawnCount 2
+            MaxActive 2
+            Waitbetweenspawns 15 
+            WaitBeforeStarting 15
+            Waitforalldead "w4_disruption_blast"
+            TotalCurrency 250
+            TFBot
+            {
+                Template T_TFBot_Giant_Demo_Burst
+                Attributes AlwaysCrit
+                Tag nav_prefer_flank_back
+                Tag nav_prefer_flank_front
+            }
+        }
+        Wavespawn
+        {
+            Name "w4_HeavyCombo"
+            Where spawnbot_invasion
+            TotalCount 60
+            SpawnCount 2
+            MaxActive 6
+            Waitbetweenspawns 3
+            WaitBeforeStarting 0
+            Waitforalldead "w4_disruption_smoke"
+            TotalCurrency 100
+            Squad
+            {
+                TFBot
+                {
+                    template T_TFBot_Heavy_Tomislav_Hyper
+                    Attributes AlwaysCrit
+                    Name "Swift Hyper Mafia Heavy"
+                    CharacterAttributes
+                    {
+                        "move speed bonus" 3.0
+                    }
+                    Tag nav_prefer_flank_back
+                    Tag nav_prefer_flank_front
+                }
+                TFBot
+                {
+                    Template T_TFBot_Medic_Overheal_Quickheal
+                    Name "Tough Swift Overheal Medic"
+                    Health 375
+                    CharacterAttributes
+                    {
+                        "move speed bonus" 2.0
+                    }
+                    Tag nav_prefer_flank_back
+                    Tag nav_prefer_flank_front
+                }
+            }
+        }
+        Wavespawn
+        {
+            Name "w4_Public" 
+            Where spawnbot_giant
+            TotalCount 25
+            SpawnCount 1
+            MaxActive 2
+            Waitbetweenspawns 10
+            WaitBeforeStarting 10
+            Waitforalldead "w4_disruption_rusher"
+            TotalCurrency 200
+            TFBot
+            {
+                Template T_TFBot_Giant_Scout_Blaster_Hyper_Armored
+            }
+        }
+        Wavespawn
+        {
+            Name "w4_tank2"
+            Where spawnbot
+            TotalCount 1
+            SpawnCount 1
+            MaxActive 1
+            Waitbetweenspawns 0 
+            WaitBeforeStarting 60
+            Waitforalldead "w4_disruption_blast"
+            TotalCurrency 300
+            FirstSpawnOutput 			
+            {
+                Target boss_spawn_relay                       
+                Action Trigger                         
+            }
+            Tank
+            {
+                Health 60000
+                Name "lmao"
+                Speed 40
+                StartingPathTrackNode boss_path_1
+                OnKilledOutput
+                {
+                    Target	boss_dead_relay
+                    Action	Trigger
+                }
+                OnBombDroppedOutput
+                {
+                    Target	boss_deploy_relay
+                    Action	Trigger
+                }
+            }
+        }
+        WaveSpawn
+        {
+            Support 1
+            Name "w4_engie"
+            Where spawnbot_invasion
+            Totalcount 69
+            Spawncount 4
+            MaxActive 6
+            WaitBetweenSpawns 40
+            WaitBeforeStarting 15
+            TotalCurrency 100    
+            Squad
+            {
+                TFBot
+                {
+                    template T_TFBot_Engineer_Sentry_Tele_Battle_Hyper
+                    TeleportWhere spawnbot
+                    TeleportWhere spawnbot_giant
+                    TeleportWhere Spawnbot_Side
+                    TeleportWhere spawnbot_giant_side
+                    TeleportWhere spawnbot_invasion
+                }
+                TFBot
+                {
+                    Template T_TFBot_Medic_Shield_Hyper
+                    Name "Swift Hyper Shield Medic"
+                    CharacterAttributes
+                    {
+                        "move speed bonus" 2.0
+                    }
+                }
+            }
+        }
+    }
+    Mission
+    {
+        Where spawnbot
+        Objective Engineer 
+        BeginAtWave 5
+        RunForThisManyWaves 1
+        DesiredCount 1
+        InitialCooldown 0
+        CooldownTime 20
+        TFBot
+        {
+            Template T_TFBot_Engineer_Sentry_Teleporter_Hyper
+            Attributes TeleportToHint
+            TeleportWhere spawnbot
+            TeleportWhere spawnbot_giant
+            TeleportWhere Spawnbot_Side
+            TeleportWhere spawnbot_giant_side
+            TeleportWhere spawnbot_invasion
+        }
+    }
+    Mission
+    {
+        Where spawnbot_mission_sniper
+        Objective Sniper 
+        BeginAtWave 5
+        RunForThisManyWaves 1
+        DesiredCount 2
+        InitialCooldown 30
+        CooldownTime 20
+        TFBot
+        {
+            Template T_TFBot_Sniper_Fullauto
+            Skill Expert
+            Name "Swift Full-Auto Sniper"
+            CharacterAttributes
+            {
+                "move speed bonus" 2
+            }
+        }
+    }
+    Mission 
+    {
+        Where spawnbot
+        Objective Spy
+        BeginAtWave 5
+        RunForThisManyWaves 1
+        DesiredCount 2
+        InitialCooldown 20
+        CooldownTime 30
+        TFBot
+        {
+            Template T_TFBot_Spy_Saharan
+            CharacterAttributes
+            {
+                "move speed bonus" 2
+            }
+            Name "Swift Saharan Spy"
+        }
+    }
+    Wave
+    {
+        StartWaveOutput
+        {
+	        Target wave_start_relay_boss
+	        Action Trigger
+        }
+        DoneOutput					
+        {
+	        Target wave_finished_relay
+	        Action trigger
+        }
+        Wavespawn
+        {
+            Name "w5_bulletvac_combo"
+            Where spawnbot_giant
+            TotalCount 10
+            SpawnCount 2
+            MaxActive 2
+            Waitbetweenspawns 35
+            WaitBeforeStarting 5
+            TotalCurrency 150
+            Squad
+            {
+                TFBot
+                {
+                    Template T_TFBot_Giant_Soldier_Future
+                    Name "Strong Giant Future Soldier"
+                    ItemAttributes
+                    {
+                        Itemname "The Cow Mangler 5000"
+                        "damage bonus" 2
+                        "weapon burn dmg increased" 2
+                        "weapon burn time increased" 2
+                    }
+                    Tag nav_prefer_flank_front
+                    Tag nav_prefer_flank_back
+                }
+                TFBot
+                {
+                    Template T_TFBot_Giant_Medic_Vaccinator_Bullet_Armored
+                    Health 9000
+                }
+            }
+        }
+        Wavespawn
+        {
+            Name "w5_Firevac_combo"
+            Where spawnbot_giant
+            TotalCount 10
+            SpawnCount 2
+            MaxActive 2
+            Waitbetweenspawns 35
+            WaitBeforeStarting 0
+            TotalCurrency 150
+            Squad
+            {
+                TFBot
+                {
+                    Template T_TFBot_Giant_Heavy_Penetration_Hyper
+                    Name "Sturdy Giant Hyper Penetrator Heavy"
+                    CharacterAttributes
+                    {
+                        "airblast vertical vulnerability multiplier" 0
+                        "airblast vulnerability multiplier" 0
+                        "damage force reduction" 0
+                    }
+                }
+                TFBot
+                {
+                    Template T_TFBot_Giant_Medic_Vaccinator_Fire_Armored
+                    Health 9000
+                }
+            }
+        }
+        Wavespawn
+        {
+            Name "w5_blastvac_combo"
+            Where spawnbot_giant_side
+            TotalCount 10
+            SpawnCount 2
+            MaxActive 2
+            Waitbetweenspawns 35
+            WaitBeforeStarting 7
+            TotalCurrency 150
+            Squad
+            {
+                TFBot
+                {
+                    Template T_TFBot_Giant_Pyro_Dragon_Hyper
+                    Name "Swift Giant Ancient Dragon Pyro"
+                    CharacterAttributes
+                    {
+                        "Move speed bonus" 0.8
+                    }
+                }
+                TFBot
+                {
+                    Template T_TFBot_Giant_Medic_Vaccinator_Blast_Armored
+                    Health 9000
+                    Name "Swift Armored Vaccinator Medic"
+                    CharacterAttributes
+                    {
+                        "move speed bonus" 0.85
+                    }
+                }
+            }
+        }
+        Wavespawn
+        {
+            Name "w5_hyperdemo"
+            Where spawnbot_invasion
+            TotalCount 40
+            SpawnCount 1
+            MaxActive 8
+            Waitbetweenspawns 2 
+            WaitBeforeStarting 0
+            TotalCurrency 150
+            RandomChoice
+            {
+                TFBot
+                {
+                    Template T_TFBot_Demo_Burst_Hyper_Hellspawn
+                    Tag nav_prefer_back_main
+                    Tag nav_prefer_flank_front
+                    ItemAttributes
+                    {
+                        ItemName	"gentlemanne_grenadelauncher_topshelf"
+                        "fire rate bonus"	0.7
+                    }
+                }
+                TFBot
+                {
+                    Template T_TFBot_Demo_Burst_Hyper_Hellspawn
+                    Tag nav_prefer_flank_back
+                    Tag nav_prefer_flank_front
+                }
+                TFBot
+                {
+                    Template T_TFBot_Demo_Burst_Hyper_Hellspawn
+                    Tag nav_prefer_front_main
+                    Tag nav_prefer_flank_back
+                }
+                TFBot
+                {
+                    Template T_TFBot_Demo_Burst_Hyper_Hellspawn
+                }
+            }
+        }
+        Wavespawn
+        {
+            Name "w5_soldier_hyper"
+            Where spawnbot_invasion
+            TotalCount 40
+            SpawnCount 1
+            MaxActive 8
+            Waitbetweenspawns 2 
+            WaitBeforeStarting 5
+            WaitForAllSpawned "w5_hyperdemo" 
+            TotalCurrency 150
+            RandomChoice
+            {
+                TFBot
+                {
+                    Template T_TFBot_Soldier_Barrage_Hyper
+                    Tag nav_prefer_back_main
+                    Tag nav_prefer_flank_front
+                }
+                TFBot
+                {
+                    Template T_TFBot_Soldier_Barrage_Hyper
+                    Tag nav_prefer_flank_back
+                    Tag nav_prefer_flank_front
+                }
+                TFBot
+                {
+                    Template T_TFBot_Soldier_Barrage_Hyper
+                    Tag nav_prefer_flank_back
+                    Tag nav_prefer_front_main
+                }
+                TFBot
+                {
+                    Template T_TFBot_Soldier_Barrage_Hyper
+                }
+            }
+        }
+        Wavespawn
+        {
+            Name "w5_scout_hyper"
+            Where spawnbot_invasion
+            TotalCount 40
+            SpawnCount 1
+            MaxActive 8
+            Waitbetweenspawns 1 
+            WaitBeforeStarting 5
+            WaitForAllSpawned "w5_soldier_hyper" 
+            TotalCurrency 150
+            RandomChoice
+            {
+                TFBot
+                {  
+                    Template T_TFBot_Scout_Shortstop_Hyper
+                    Attributes AlwaysCrit
+                    Tag nav_prefer_back_main
+                    Tag nav_prefer_flank_front
+                }
+                TFBot
+                {  
+                    Template T_TFBot_Scout_Shortstop_Hyper
+                    Attributes AlwaysCrit
+                    Tag nav_prefer_front_main
+                    Tag nav_prefer_flank_back
+                }
+                TFBot
+                {  
+                    Template T_TFBot_Scout_Shortstop_Hyper
+                    Attributes AlwaysCrit
+                    Tag nav_prefer_flank_back
+                    Tag nav_prefer_flank_front
+                }
+                TFBot
+                {  
+                    Template T_TFBot_Scout_Shortstop_Hyper
+                    Attributes AlwaysCrit
+                }
+            }
+        }
+        Wavespawn
+        {
+            Support 1
+            Name "w5_moonman_support"
+            Where spawnbot
+            TotalCount 69
+            SpawnCount 1
+            MaxActive 10
+            Waitbetweenspawns 2 
+            WaitBeforeStarting 0
+            TotalCurrency 100
+            RandomChoice
+            {
+                TFBot
+                {
+                    Template T_TFBot_Pyro_Future_Taunt
+                    Attributes AlwaysCrit
+                    Name "Tough Moonman Pyro"
+                    Health 435
+                    Tag nav_prefer_back_main
+                    Tag nav_prefer_flank_front
+                }
+                TFBot
+                {
+                    Template T_TFBot_Pyro_Future_Taunt
+                    Attributes AlwaysCrit
+                    Name "Tough Moonman Pyro"
+                    Health 435
+                    Tag nav_prefer_flank_back
+                    Tag nav_prefer_flank_front
+                }
+                TFBot
+                {
+                    Template T_TFBot_Pyro_Future_Taunt
+                    Attributes AlwaysCrit
+                    Name "Tough Moonman Pyro"
+                    Health 435 
+                    Tag nav_prefer_front_main
+                    Tag nav_prefer_flank_back
+                }
+                TFBot
+                {
+                    Template T_TFBot_Pyro_Future_Taunt
+                    Attributes AlwaysCrit
+                    Name "Tough Moonman Pyro"
+                    Health 435 
+                }
+            }
+        }
+    }
+    Mission
+    {
+        Where spawnbot
+        Objective Engineer 
+        BeginAtWave 6
+        RunForThisManyWaves 1
+        DesiredCount 2
+        InitialCooldown 30
+        CooldownTime 30
+        TFBot
+        {
+            Template T_TFBot_Engineer_Sentry_Teleporter_Hyper
+            Name "Tough Hyper Engineer"
+            Health 1250
+            Attributes TeleportToHint
+            TeleportWhere spawnbot
+            TeleportWhere spawnbot_giant
+            TeleportWhere Spawnbot_Side
+            TeleportWhere spawnbot_giant_side
+            TeleportWhere spawnbot_invasion
+        }
+    }
+    Mission
+    {
+        Where spawnbot_mission_sniper
+        Objective Sniper 
+        BeginAtWave 6
+        RunForThisManyWaves 1
+        DesiredCount 2
+        InitialCooldown 30
+        CooldownTime 20
+        TFBot
+        {
+            Template T_TFBot_Sniper_Deathray
+            Name "Tough Swift Deathray Sniper"
+            Health 313
+            Skill Expert
+            Attributes AlwaysCrit
+            CharacterAttributes
+            {
+                "move speed bonus" 2
+            }
+        }
+    }
+    Mission 
+    {
+        Where spawnbot
+        Objective Spy
+        BeginAtWave 6
+        RunForThisManyWaves 1
+        DesiredCount 2
+        InitialCooldown 20
+        CooldownTime 30
+        TFBot
+        {
+            Template T_TFBot_Spy_Hyper
+            Health 313
+            Name "Tough Hyper Spy"
+        }
+    }
+    Wave
+    {
+        StartWaveOutput
+        {
+	        Target wave_start_relay_boss
+	        Action Trigger
+        }
+        DoneOutput					
+        {
+	        Target wave_finished_relay
+	        Action trigger
+        }
+        Wavespawn
+        {
+            Name "w6_SoldierBoss"
+            Where spawnbot_giant_side
+            TotalCount 1
+            SpawnCount 1
+            MaxActive 1
+            Waitbetweenspawns 0  
+            WaitBeforeStarting 60
+            TotalCurrency 500
+            FirstSpawnWarningSound "vo/mvm/mght/soldier_mvm_m_laughevil02.mp3"
+            DoneWarningSound "vo/announcer_dec_kill07.mp3"
+            TFBot
+            {
+                Template T_TFBot_Giant_Soldier_Boss_Major_Barrage
+            }
+        }
+        WaveSpawn
+        {
+            FirstSpawnWarningSound "vo/mvm/mght/soldier_mvm_m_laughevil02.mp3"
+            WaitBeforeStarting 60
+        }
+        WaveSpawn
+        {
+            FirstSpawnWarningSound "vo/announcer_dec_kill07.mp3"
+            Waitforalldead "w6_SoldierBoss"
+            WaitBeforeStarting 0
+        }
+        Wavespawn
+        {
+            Name "w6_HeavyBoss"
+            Where spawnbot_giant
+            TotalCount 1
+            SpawnCount 1
+            MaxActive 1
+            Waitbetweenspawns 0  
+            WaitBeforeStarting 62.4
+            TotalCurrency 500
+            FirstSpawnWarningSound "vo/mvm/mght/heavy_mvm_m_laughlong01.mp3"
+            DoneWarningSound "vo/announcer_dec_kill08.mp3"
+            TFBot
+            {
+                Template T_TFBot_Giant_Heavy_Boss_Powered_Natascha
+            }
+        }
+        WaveSpawn
+        {
+            FirstSpawnWarningSound "vo/mvm/mght/heavy_mvm_m_laughlong01.mp3"
+            WaitBeforeStarting 62.4
+        }
+        WaveSpawn
+        {
+            FirstSpawnWarningSound "vo/announcer_dec_kill08.mp3"
+            Waitforalldead "w6_HeavyBoss"
+            WaitBeforeStarting 0
+        }
+        Wavespawn
+        {
+            Support Limited
+            Name "w6_EoI"
+            Where spawnbot_giant
+            TotalCount 3
+            SpawnCount 1
+            MaxActive 1
+            Waitbetweenspawns 40
+            WaitBeforeStarting 30
+            TotalCurrency 100
+            TFBot
+            {
+                Template T_TFBot_Giant_Pyro_Gaspasser_Explove_Hyper
+                Name "Tough Hyper Giant EoI Pyro"
+                Health 6300
+            }
+        }
+        Wavespawn
+        {
+            Support 1
+            Name "w6_brass_combo"
+            Where spawnbot_invasion
+            TotalCount 69
+            SpawnCount 2
+            MaxActive 2
+            Waitbetweenspawns 30
+            WaitBeforeStarting 17
+            TotalCurrency 100
+            FirstSpawnWarningSound "Hellspawn_Boss.mp3"
+            FirstSpawnOutput
+            {
+                Target bignet
+                Action RunScriptCode
+                Param 
+                "
+                ClientPrint(null,3,`\x08AA00FFFFSong Name: Mittsies - Titanium`)
+                "
+            }
+            Squad
+            {
+                TFBot
+                {
+                    Template T_TFBot_Giant_Heavy_Brassbeast_Hyper
+                    Name "Strong Giant Hyper Goldgun Heavy"
+                    ItemAttributes
+                    {
+                        Itemname "The Brass Beast"
+                        "damage bonus" 6
+                    }
+                }
+                TFBot
+                {
+                    Template T_TFBot_Giant_Medic_Uber_Extended_Hyper
+                    Name "Sturdy Giant Hyper Extended Uber"
+                    CharacterAttributes
+                    {
+                        "airblast vertical vulnerability multiplier" 0
+                        "airblast vulnerability multiplier" 0
+                        "damage force reduction" 0
+                    }
+                }
+            }
+        }
+        Wavespawn
+        {
+            Support 1
+            Name "w6_support_engineer"
+            Where spawnbot_invasion
+            TotalCount 69
+            SpawnCount 1
+            MaxActive 1
+            Waitbetweenspawns 5
+            WaitBeforeStarting 0
+            TotalCurrency 0
+            TFBot
+            {
+                Template T_TFBot_Engineer_Sentry_Tele_Battle_Hyper
+                Name "Tough Hyper Engineer"
+                Health 1250
+                TeleportWhere spawnbot
+                TeleportWhere spawnbot_giant
+                TeleportWhere Spawnbot_Side
+                TeleportWhere spawnbot_giant_side
+                TeleportWhere spawnbot_invasion
+            }
+        }
+        Wavespawn
+        {
+            Support 1
+            Name "w6_juggernaut"
+            Where Spawnbot_Invasion
+            TotalCount 69
+            SpawnCount 1
+            MaxActive 5
+            Waitbetweenspawns 4
+            WaitBeforeStarting 0
+            TotalCurrency 200
+            RandomChoice
+            {
+                TFBot
+                {
+                    Template T_TFBot_Heavy_Juggernaut_Regen
+                    Tag nav_prefer_flank_front
+                    Tag nav_prefer_back_main
+                    Name "Tough Sturdy Juggernaut"
+                    Health 2000
+                    Attributes AlwaysCrit
+                    CharacterAttributes
+                    {
+                        "airblast vertical vulnerability multiplier" 0
+                        "airblast vulnerability multiplier" 0
+                        "damage force reduction" 0
+                    }
+                }
+                TFBot
+                {
+                    Template T_TFBot_Heavy_Juggernaut_Regen
+                    Tag nav_prefer_flank_front
+                    Tag nav_prefer_flank_back
+                    Name "Tough Sturdy Swift Juggernaut"
+                    Health 2000
+                    Attributes AlwaysCrit
+                    CharacterAttributes
+                    {
+                        "airblast vertical vulnerability multiplier" 0
+                        "airblast vulnerability multiplier" 0
+                        "damage force reduction" 0
+                        "move speed bonus" 2
+                    }
+                }
+                TFBot
+                {
+                    Template T_TFBot_Heavy_Juggernaut_Regen
+                    Tag nav_prefer_front_main
+                    Tag nav_prefer_flank_back
+                    Name "Tough Sturdy Juggernaut"
+                    Health 2000
+                    Attributes AlwaysCrit
+                    CharacterAttributes
+                    {
+                        "airblast vertical vulnerability multiplier" 0
+                        "airblast vulnerability multiplier" 0
+                        "damage force reduction" 0
+                    }
+                }
+                TFBot
+                {
+                    Template T_TFBot_Heavy_Juggernaut_Regen
+                    Name "Tough Sturdy Juggernaut"
+                    Health 2000
+                    Attributes AlwaysCrit
+                    CharacterAttributes
+                    {
+                        "airblast vertical vulnerability multiplier" 0
+                        "airblast vulnerability multiplier" 0
+                        "damage force reduction" 0
+                    }
+                }
+            }
+        }
+        Wavespawn
+        {
+            Support 1
+            Name "w6_hyperpyro"
+            Where Spawnbot_Invasion
+            TotalCount 69
+            SpawnCount 1
+            MaxActive 4
+            Waitbetweenspawns 4
+            WaitBeforeStarting 0
+            TotalCurrency 100
+            RandomChoice
+            {
+                TFBot
+                {
+                    Template T_TFBot_Pyro_Hyper
+                    Tag nav_prefer_back_main
+                    Tag nav_prefer_flank_front
+                    Classicon pyro_hyper_v2
+                    Attributes AlwaysFireWeapon
+                    CharacterAttributes
+                    {
+                        "airblast vertical vulnerability multiplier" 0
+                        "airblast vulnerability multiplier" 0
+                        "damage force reduction" 0
+                    }
+                    ItemAttributes
+                    {
+                        ItemName	"blood botkiller flame thrower mk.i"
+                        "damage bonus" 6
+                    }
+                    Name "Strong Sturdy Hyper Pyro"
+                }
+                TFBot
+                {
+                    Template T_TFBot_Pyro_Hyper
+                    Tag nav_prefer_flank_front
+                    Tag nav_prefer_flank_back
+                    BehaviorModifiers Push
+                    Classicon pyro_hyper_v2
+                    Attributes AlwaysFireWeapon
+                    CharacterAttributes
+                    {
+                        "airblast vertical vulnerability multiplier" 0
+                        "airblast vulnerability multiplier" 0
+                        "damage force reduction" 0
+                    }
+                    ItemAttributes
+                    {
+                        ItemName	"blood botkiller flame thrower mk.i"
+                        "damage bonus" 6
+                    }
+                    Name "Strong Sturdy Hyper Pyro"
+                }
+                TFBot
+                {
+                    Template T_TFBot_Pyro_Hyper
+                    Tag nav_prefer_front_main
+                    Tag nav_prefer_flank_back
+                    Classicon pyro_hyper_v2
+                    Attributes AlwaysFireWeapon
+                    CharacterAttributes
+                    {
+                        "airblast vertical vulnerability multiplier" 0
+                        "airblast vulnerability multiplier" 0
+                        "damage force reduction" 0
+                    }
+                    ItemAttributes
+                    {
+                        ItemName	"blood botkiller flame thrower mk.i"
+                        "damage bonus" 6
+                    }
+                    Name "Strong Sturdy Hyper Pyro"
+                }
+                TFBot
+                {
+                    Template T_TFBot_Pyro_Hyper
+                    Classicon pyro_hyper_v2
+                    Attributes AlwaysFireWeapon
+                    CharacterAttributes
+                    {
+                        "airblast vertical vulnerability multiplier" 0
+                        "airblast vulnerability multiplier" 0
+                        "damage force reduction" 0
+                    }
+                    ItemAttributes
+                    {
+                        ItemName	"blood botkiller flame thrower mk.i"
+                        "damage bonus" 6
+                    }
+                    Name "Strong Sturdy Hyper Pyro"
+                }
+            }
+        }
+
+    }
+}
+// Spawnbot
+// Spawnbot_Side
+// Spawnbot_Invasion
+// Spawnbot_Giant
+// Spawnbot_Giant_Side
+
+// nav_prefer_front_main
+// nav_prefer_back_main
+// nav_prefer_flank_front
+// nav_prefer_flank_back

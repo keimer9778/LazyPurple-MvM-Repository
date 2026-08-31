@@ -1,0 +1,747 @@
+#base robot_giant.pop
+#base robot_standard.pop
+#base robot_pixelbitie.pop
+
+WaveSchedule
+{
+
+	StartingCurrency	30000
+	RespawnWaveTime 5
+	CanBotsAttackWhileInSpawnRoom no
+
+	Wave
+	{
+		StartWaveOutput
+		{
+			Target wave_start_relay
+			Action Trigger
+		}
+		DoneOutput					
+		{
+			Target wave_finished_relay
+			Action trigger
+		}
+		InitWaveOutput
+		{
+			Target bignet // gamerules or tf_gamerules, depending on the map
+            Action RunScriptCode
+            Param "
+			IncludeScript(`tankextensions_main`, getroottable())
+			IncludeScript(`tankextensions/blimp`, getroottable())
+			IncludeScript(`tankextensions/combattank`, getroottable())
+			IncludeScript(`tankextensions/combattank_weapons/minigun`, getroottable())
+			IncludeScript(`tankextensions/combattank_weapons/rocketpod`, getroottable())
+			IncludeScript(`tankextensions/combattank_weapons/fireball`, getroottable())
+			IncludeScript(`tankextensions/combattank_weapons/railgun`, getroottable())
+			IncludeScript(`tankextensions/combattank_weapons/cannon`, getroottable())
+			IncludeScript(`tankextensions/drilltank_watermine`, getroottable())
+			IncludeScript(`tankextensions/frontlinecart`, getroottable())
+			IncludeScript(`tankextensions/helicopter`, getroottable())
+			IncludeScript(`tankextensions/paratank`, getroottable())
+			IncludeScript(`tankextensions/targetank`, getroottable())
+			IncludeScript(`tankextensions/stickytank`, getroottable())
+			IncludeScript(`tankextensions/tankdozer`, getroottable())
+			IncludeScript(`tankextensions/ubertank`, getroottable())
+			IncludeScript(`tankextensions/vactank`, getroottable())
+			IncludeScript(`tankextensions/sentrytank`, getroottable())
+			IncludeScript(`tankextensions/teletank`, getroottable())
+			IncludeScript(`tankextensions/speedtank`, getroottable())
+			IncludeScript(`tankextensions/jumptank`, getroottable())
+			
+			
+			TankExt.CreatePaths({
+			para_path = [
+				Vector(1768, 0, 488)
+				Vector(-816, 0, 152)
+				Vector(-936, 0, -72)
+				Vector(-1144, 0, -80)
+			]})
+			TankExt.CreatePaths({
+			blimp_path = [
+				Vector(1768, 0, 488)
+				Vector(-1144, 0, 488)
+			]})
+			"
+		}
+		WaitWhenDone 65
+		Checkpoint Yes
+		
+		WaveSpawn
+		{
+			Name	"t1"
+			TotalCurrency	100
+			TotalCount	1
+			MaxActive	1
+			SpawnCount	1
+			WaitBeforeStarting	0
+			WaitBetweenSpawns	1
+			Where	spawnbot
+			Tank
+			{
+				Health	5000
+				Name	"blimp^vacblimp_fire"
+				ClassIcon blimp2_lite [$SIGSEGV]
+				Speed	50
+				StartingPathTrackNode blimp_path_1
+				OnKilledOutput
+				{
+					Target	boss_dead_relay
+					Action	Trigger
+				}
+				OnBombDroppedOutput
+				{
+					Target	boss_deploy_relay
+					Action	Trigger
+				}
+			}
+		}
+		WaveSpawn
+		{
+			Name	"t2"
+			TotalCurrency	150
+			TotalCount	1
+			MaxActive	1
+			SpawnCount	1
+			WaitBeforeStarting	0
+			WaitBetweenSpawns	1
+			Where	spawnbot
+			WaitForAllDead "t1"
+			Tank
+			{
+				Health	5000
+				Name	"combattank_bomb|rocketpod|minigun"
+				ClassIcon tank_combat_minigun_rocket [$SIGSEGV]
+				Speed	60
+				StartingPathTrackNode tank_middle_1
+				OnKilledOutput
+				{
+					Target	boss_dead_relay
+					Action	Trigger
+				}
+				OnBombDroppedOutput
+				{
+					Target	boss_deploy_relay
+					Action	Trigger
+				}
+			}
+		}
+		WaveSpawn
+		{
+			Name	"t3"
+			TotalCurrency	150
+			TotalCount	1
+			MaxActive	1
+			SpawnCount	1
+			WaitBeforeStarting	0
+			WaitBetweenSpawns	1
+			Where	spawnbot
+			WaitForAllDead "t2"
+			Tank
+			{
+				Health	5000
+				Name	"combattank_bomb|fireball|railgun"
+				ClassIcon tank_combat_dragon_fury_railgun [$SIGSEGV]
+				Speed	60
+				StartingPathTrackNode tank_middle_1
+				OnKilledOutput
+				{
+					Target	boss_dead_relay
+					Action	Trigger
+				}
+				OnBombDroppedOutput
+				{
+					Target	boss_deploy_relay
+					Action	Trigger
+				}
+			}
+		}
+		WaveSpawn
+		{
+			Name	"t4"
+			TotalCurrency	150
+			TotalCount	1
+			MaxActive	1
+			SpawnCount	1
+			WaitBeforeStarting	0
+			WaitBetweenSpawns	1
+			Where	spawnbot
+			WaitForAllDead "t3"
+			Tank
+			{
+				Health	5000
+				Name	"combattank_bomb|railgun|rocketpod_homing"
+				ClassIcon tank_combat_railgun_homingburst [$SIGSEGV]
+				Speed	60
+				StartingPathTrackNode tank_middle_1
+				OnKilledOutput
+				{
+					Target	boss_dead_relay
+					Action	Trigger
+				}
+				OnBombDroppedOutput
+				{
+					Target	boss_deploy_relay
+					Action	Trigger
+				}
+			}
+		}
+		WaveSpawn
+		{
+			Name	"t4a"
+			TotalCurrency	150
+			TotalCount	1
+			MaxActive	1
+			SpawnCount	1
+			WaitBeforeStarting	0
+			WaitBetweenSpawns	1
+			Where	spawnbot
+			WaitForAllDead "t4"
+			Tank
+			{
+				Health	5000
+				Name	"combattank_bomb|cannon"
+				ClassIcon tank_combat_railgun_homingburst [$SIGSEGV]
+				Speed	60
+				StartingPathTrackNode tank_middle_1
+				OnKilledOutput
+				{
+					Target	boss_dead_relay
+					Action	Trigger
+				}
+				OnBombDroppedOutput
+				{
+					Target	boss_deploy_relay
+					Action	Trigger
+				}
+			}
+		}
+		WaveSpawn
+		{
+			Name	"t5"
+			TotalCurrency	150
+			TotalCount	1
+			MaxActive	1
+			SpawnCount	1
+			WaitBeforeStarting	0
+			WaitBetweenSpawns	1
+			Where	spawnbot
+			WaitForAllDead "t4a"
+			Tank
+			{
+				Health	5000
+				Name	"drilltank_watermine"
+				ClassIcon tank_drill_lite [$SIGSEGV]
+				Speed	60
+				StartingPathTrackNode tank_middle_1
+				OnKilledOutput
+				{
+					Target	boss_dead_relay
+					Action	Trigger
+				}
+				OnBombDroppedOutput
+				{
+					Target	boss_deploy_relay
+					Action	Trigger
+				}
+			}
+		}
+		WaveSpawn
+		{
+			Name	"t6"
+			TotalCurrency	150
+			TotalCount	1
+			MaxActive	1
+			SpawnCount	1
+			WaitBeforeStarting	0
+			WaitBetweenSpawns	1
+			Where	spawnbot
+			WaitForAllDead "t5"
+			Tank
+			{
+				Health	2000
+				Name	"frontlinecart|rocket"
+				ClassIcon tank_small_turret [$SIGSEGV]
+				Speed	60
+				StartingPathTrackNode tank_middle_1
+				OnKilledOutput
+				{
+					Target	boss_dead_relay
+					Action	Trigger
+				}
+				OnBombDroppedOutput
+				{
+					Target	boss_deploy_relay
+					Action	Trigger
+				}
+			}
+		}
+		WaveSpawn
+		{
+			Name	"t7"
+			TotalCurrency	150
+			TotalCount	1
+			MaxActive	1
+			SpawnCount	1
+			WaitBeforeStarting	0
+			WaitBetweenSpawns	1
+			Where	spawnbot
+			WaitForAllDead "t6"
+			Tank
+			{
+				Health	2000
+				Name	"frontlinecart|grenade"
+				ClassIcon tank_small_turret [$SIGSEGV]
+				Speed	60
+				StartingPathTrackNode tank_middle_1
+				OnKilledOutput
+				{
+					Target	boss_dead_relay
+					Action	Trigger
+				}
+				OnBombDroppedOutput
+				{
+					Target	boss_deploy_relay
+					Action	Trigger
+				}
+			}
+		}
+		WaveSpawn
+		{
+			Name	"t8"
+			TotalCurrency	150
+			TotalCount	1
+			MaxActive	1
+			SpawnCount	1
+			WaitBeforeStarting	0
+			WaitBetweenSpawns	1
+			Where	spawnbot
+			WaitForAllDead "t7"
+			Tank
+			{
+				Health	2000
+				Name	"frontlinecart|jarate"
+				ClassIcon tank_small_turret [$SIGSEGV]
+				Speed	60
+				StartingPathTrackNode tank_middle_1
+				OnKilledOutput
+				{
+					Target	boss_dead_relay
+					Action	Trigger
+				}
+				OnBombDroppedOutput
+				{
+					Target	boss_deploy_relay
+					Action	Trigger
+				}
+			}
+		}
+		WaveSpawn
+		{
+			Name	"t9"
+			TotalCurrency	150
+			TotalCount	1
+			MaxActive	1
+			SpawnCount	1
+			WaitBeforeStarting	0
+			WaitBetweenSpawns	1
+			Where	spawnbot
+			WaitForAllDead "t8"
+			Tank
+			{
+				Health	2000
+				Name	"frontlinecart|milk"
+				ClassIcon tank_small_turret_jarate [$SIGSEGV]
+				Speed	60
+				StartingPathTrackNode tank_middle_1
+				OnKilledOutput
+				{
+					Target	boss_dead_relay
+					Action	Trigger
+				}
+				OnBombDroppedOutput
+				{
+					Target	boss_deploy_relay
+					Action	Trigger
+				}
+			}
+		}
+		WaveSpawn
+		{
+			Name	"t10"
+			TotalCurrency	150
+			TotalCount	1
+			MaxActive	1
+			SpawnCount	1
+			WaitBeforeStarting	0
+			WaitBetweenSpawns	1
+			Where	spawnbot
+			WaitForAllDead "t9"
+			Tank
+			{
+				Health	2000
+				Name	"frontlinecart|gas"
+				ClassIcon tank_small_turret [$SIGSEGV]
+				Speed	60
+				StartingPathTrackNode tank_middle_1
+				OnKilledOutput
+				{
+					Target	boss_dead_relay
+					Action	Trigger
+				}
+				OnBombDroppedOutput
+				{
+					Target	boss_deploy_relay
+					Action	Trigger
+				}
+			}
+		}
+		WaveSpawn
+		{
+			Name	"t11"
+			TotalCurrency	100
+			TotalCount	1
+			MaxActive	1
+			SpawnCount	1
+			WaitBeforeStarting	0
+			WaitBetweenSpawns	1
+			Where	spawnbot
+			WaitForAllDead "t10"
+			Tank
+			{
+				Health	5000
+				Name	"helicopter"
+				ClassIcon helicopter_blue_nys_nomiplod [$SIGSEGV]
+				Speed	50
+				StartingPathTrackNode blimp_path_1
+				OnKilledOutput
+				{
+					Target	boss_dead_relay
+					Action	Trigger
+				}
+				OnBombDroppedOutput
+				{
+					Target	boss_deploy_relay
+					Action	Trigger
+				}
+			}
+		}
+		WaveSpawn
+		{
+			Name	"t12"
+			TotalCurrency	100
+			TotalCount	1
+			MaxActive	1
+			SpawnCount	1
+			WaitBeforeStarting	0
+			WaitBetweenSpawns	1
+			Where	spawnbot
+			WaitForAllDead "t11"
+			Tank
+			{
+				Health	5000
+				Name	"paratank"
+				ClassIcon tank2_para [$SIGSEGV]
+				Speed	50
+				StartingPathTrackNode para_path_1
+				OnKilledOutput
+				{
+					Target	boss_dead_relay
+					Action	Trigger
+				}
+				OnBombDroppedOutput
+				{
+					Target	boss_deploy_relay
+					Action	Trigger
+				}
+			}
+		}
+		WaveSpawn
+		{
+			Name	"t13"
+			TotalCurrency	150
+			TotalCount	1
+			MaxActive	1
+			SpawnCount	1
+			WaitBeforeStarting	0
+			WaitBetweenSpawns	1
+			Where	spawnbot
+			WaitForAllDead "t12"
+			Tank
+			{
+				Health	5000
+				Name	"stickytank"
+				ClassIcon tank_sticky_hellmet [$SIGSEGV]
+				Speed	60
+				StartingPathTrackNode tank_middle_1
+				OnKilledOutput
+				{
+					Target	boss_dead_relay
+					Action	Trigger
+				}
+				OnBombDroppedOutput
+				{
+					Target	boss_deploy_relay
+					Action	Trigger
+				}
+			}
+		}
+		WaveSpawn
+		{
+			Name	"t14"
+			TotalCurrency	150
+			TotalCount	1
+			MaxActive	1
+			SpawnCount	1
+			WaitBeforeStarting	0
+			WaitBetweenSpawns	1
+			Where	spawnbot
+			WaitForAllDead "t13"
+			Tank
+			{
+				Health	5000
+				Name	"targetank_color"
+				ClassIcon tank_targe [$SIGSEGV]
+				Speed	60
+				StartingPathTrackNode tank_middle_1
+				OnKilledOutput
+				{
+					Target	boss_dead_relay
+					Action	Trigger
+				}
+				OnBombDroppedOutput
+				{
+					Target	boss_deploy_relay
+					Action	Trigger
+				}
+			}
+		}
+		WaveSpawn
+		{
+			Name	"t15"
+			TotalCurrency	150
+			TotalCount	1
+			MaxActive	1
+			SpawnCount	1
+			WaitBeforeStarting	0
+			WaitBetweenSpawns	1
+			Where	spawnbot
+			WaitForAllDead "t14"
+			Tank
+			{
+				Health	5000
+				Name	"tankdozer"
+				ClassIcon tankdozer_lite_sentry [$SIGSEGV]
+				Speed	60
+				StartingPathTrackNode tank_middle_1
+				OnKilledOutput
+				{
+					Target	boss_dead_relay
+					Action	Trigger
+				}
+				OnBombDroppedOutput
+				{
+					Target	boss_deploy_relay
+					Action	Trigger
+				}
+			}
+		}
+		WaveSpawn
+		{
+			Name	"t16"
+			TotalCurrency	150
+			TotalCount	1
+			MaxActive	1
+			SpawnCount	1
+			WaitBeforeStarting	0
+			WaitBetweenSpawns	1
+			Where	spawnbot
+			WaitForAllDead "t15"
+			Tank
+			{
+				Health	2500
+				Name	"ubertank|3|5"
+				ClassIcon tank_uber_lite [$SIGSEGV]
+				Speed	60
+				StartingPathTrackNode tank_middle_1
+				OnKilledOutput
+				{
+					Target	boss_dead_relay
+					Action	Trigger
+				}
+				OnBombDroppedOutput
+				{
+					Target	boss_deploy_relay
+					Action	Trigger
+				}
+			}
+		}
+		WaveSpawn
+		{
+			Name	"t17"
+			TotalCurrency	150
+			TotalCount	1
+			MaxActive	1
+			SpawnCount	1
+			WaitBeforeStarting	0
+			WaitBetweenSpawns	1
+			Where	spawnbot
+			WaitForAllDead "t16"
+			Tank
+			{
+				Health	200
+				Name	"vactank_blast_bullet_fire"
+				ClassIcon tank_vac_trio_lite [$SIGSEGV]
+				Speed	60
+				StartingPathTrackNode tank_middle_1
+				OnKilledOutput
+				{
+					Target	boss_dead_relay
+					Action	Trigger
+				}
+				OnBombDroppedOutput
+				{
+					Target	boss_deploy_relay
+					Action	Trigger
+				}
+			}
+		}
+		WaveSpawn
+		{
+			Name	"t18"
+			TotalCurrency	150
+			TotalCount	1
+			MaxActive	1
+			SpawnCount	1
+			WaitBeforeStarting	0
+			WaitBetweenSpawns	1
+			Where	spawnbot
+			WaitForAllDead "t17"
+			Tank
+			{
+				Health	2000
+				Name	"sentrytank"
+				ClassIcon tank_vac_trio_lite [$SIGSEGV]
+				Speed	60
+				StartingPathTrackNode tank_middle_1
+				OnKilledOutput
+				{
+					Target	boss_dead_relay
+					Action	Trigger
+				}
+				OnBombDroppedOutput
+				{
+					Target	boss_deploy_relay
+					Action	Trigger
+				}
+			}
+		}
+		WaveSpawn
+		{
+			Name	"t19"
+			TotalCurrency	150
+			TotalCount	1
+			MaxActive	1
+			SpawnCount	1
+			WaitBeforeStarting	0
+			WaitBetweenSpawns	1
+			Where	spawnbot
+			WaitForAllDead "t18"
+			Tank
+			{
+				Health	2000
+				Name	"teletank"
+				ClassIcon tank_vac_trio_lite [$SIGSEGV]
+				Speed	60
+				StartingPathTrackNode tank_middle_1
+				OnKilledOutput
+				{
+					Target	boss_dead_relay
+					Action	Trigger
+				}
+				OnBombDroppedOutput
+				{
+					Target	boss_deploy_relay
+					Action	Trigger
+				}
+			}
+		}
+		WaveSpawn
+		{
+			Name	"t19_scouts"
+			TotalCurrency	150
+			TotalCount	10
+			MaxActive	10
+			SpawnCount	10
+			WaitBeforeStarting	9
+			WaitBetweenSpawns	1
+			Where	spawnbot
+			WaitForAllDead "t18"
+			Support Limited
+			TFBot
+			{
+				Class Scout
+				Tag "bot_teletank"
+			}
+		}
+		WaveSpawn
+		{
+			Name	"t20"
+			TotalCurrency	150
+			TotalCount	1
+			MaxActive	1
+			SpawnCount	1
+			WaitBeforeStarting	0
+			WaitBetweenSpawns	1
+			Where	spawnbot
+			WaitForAllDead "t19"
+			Tank
+			{
+				Health	2000
+				Name	"speedtank|120"
+				ClassIcon tank_vac_trio_lite [$SIGSEGV]
+				Speed	60
+				StartingPathTrackNode tank_middle_1
+				OnKilledOutput
+				{
+					Target	boss_dead_relay
+					Action	Trigger
+				}
+				OnBombDroppedOutput
+				{
+					Target	boss_deploy_relay
+					Action	Trigger
+				}
+			}
+		}
+		WaveSpawn
+		{
+			Name	"t21"
+			TotalCurrency	150
+			TotalCount	1
+			MaxActive	1
+			SpawnCount	1
+			WaitBeforeStarting	0
+			WaitBetweenSpawns	1
+			Where	spawnbot
+			WaitForAllDead "t20"
+			Tank
+			{
+				Health	99999
+				Name	"jumptank"
+				ClassIcon tank_jump [$SIGSEGV]
+				Speed	60
+				StartingPathTrackNode tank_middle_1
+				OnKilledOutput
+				{
+					Target	boss_dead_relay
+					Action	Trigger
+				}
+				OnBombDroppedOutput
+				{
+					Target	boss_deploy_relay
+					Action	Trigger
+				}
+			}
+		}
+	}	
+}

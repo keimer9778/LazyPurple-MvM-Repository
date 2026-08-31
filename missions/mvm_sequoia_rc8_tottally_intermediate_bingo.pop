@@ -1,0 +1,755 @@
+//filling out all parts of potato bingo sheet EXCEPT less than $5000 https://media.discordapp.net/attachments/655472399713828865/716973238043017287/unknown-27.png?width=613&height=613
+//mission by randomguy
+#base robot_randomguy.pop
+#base robot_gatebot_randomguy.pop
+
+WaveSchedule
+{
+	CanBotsAttackWhileInSpawnRoom no
+	RespawnWaveTime	2
+	StartingCurrency 800
+	Advanced 1
+	AddSentryBusterWhenDamageDealtExceeds 4000
+	AddSentryBusterWhenKillCountExceeds	20
+	// EventPopFile Halloween
+	Templates
+	{
+		T_TFBot_Medic_Vaccinator_Bullet_Click //clickin's meds are used because they have the vacc
+		{
+			ClassIcon	medic_bullet
+			Name	"Bullet Vaccinator Medic"
+			Class	Medic
+			Skill	Expert
+			Attributes	"SpawnWithFullCharge"
+			Attributes	"VaccinatorBullets"
+			ItemAttributes
+			{
+				ItemName	tf_weapon_syringegun_medic
+				"damage penalty"	0.1
+			}
+			CharacterAttributes
+			{
+				"ubercharge rate bonus"	25
+				"heal rate bonus"	1
+				"uber duration bonus"	100
+				"medigun bullet resist passive"	1
+				"medigun bullet resist deployed"	1
+			}
+			Item	"the vaccinator"
+		}
+		T_TFBot_Medic_Vaccinator_Blast_Click //clickin's meds are used because they have the vacc
+		{
+			ClassIcon	medic_blast
+			Name	"Blast Vaccinator Medic"
+			Class	Medic
+			Skill	Expert
+			Attributes	"SpawnWithFullCharge"
+			Attributes	"VaccinatorBlast"
+			ItemAttributes
+			{
+				ItemName	tf_weapon_syringegun_medic
+				"damage penalty"	0.1
+			}
+			CharacterAttributes
+			{
+				"ubercharge rate bonus"	25
+				"heal rate bonus"	1
+				"uber duration bonus"	100
+				"medigun blast resist passive"	1
+				"medigun blast resist deployed"	1
+			}
+			Item	"the vaccinator"
+		}
+		T_TFBot_Medic_Vaccinator_Fire_Click //clickin's meds are used because they have the vacc
+		{
+			ClassIcon	medic_fire
+			Name	"Fire Vaccinator Medic"
+			Class	Medic
+			Skill	Expert
+			Attributes	"SpawnWithFullCharge"
+			Attributes	"VaccinatorFire"
+			ItemAttributes
+			{
+				ItemName	tf_weapon_syringegun_medic
+				"damage penalty"	0.1
+			}
+			CharacterAttributes
+			{
+				"ubercharge rate bonus"	25
+				"heal rate bonus"	1
+				"uber duration bonus"	100
+				"medigun fire resist passive"	1
+				"medigun fire resist deployed"	1
+			}
+			Item	"the vaccinator"
+		}
+	}
+	
+	Mission
+	{
+		Objective Spy
+
+		InitialCooldown 15
+		Where spawnbot
+		BeginAtWave 0
+		RunForThisManyWaves 1
+		CooldownTime 40
+		DesiredCount 2
+
+		TFBot
+		{
+			Template T_TFBot_Spy
+		}
+	}
+	
+	Mission
+	{
+		Objective Sniper
+		
+		Where spawnbot_mission_sniper
+		BeginAtWave 0
+		RunForThisManyWaves 1
+		InitialCooldown 25
+		CooldownTime 40
+		DesiredCount 1
+		TFBot
+		{
+			Template T_TFBot_Sniper
+		}
+	}
+	
+	Mission
+	{
+		Objective Engineer
+		
+		Where spawnbot
+		BeginAtWave 0
+		RunForThisManyWaves 1
+		InitialCooldown 60
+		CooldownTime 60
+		DesiredCount 1
+		TFBot
+		{
+			Template T_TFBot_Engineer_Sentry_Teleporter
+		}
+	}
+	
+	Mission //wacky busters
+	{
+		Objective	DestroySentries
+		
+		Where spawnbot
+		InitialCooldown 1
+		CooldownTime 1
+		BeginAtWave 1
+		RunForThisManyWaves 10
+		
+		RandomChoice
+		{
+		TFBot
+		{
+			Template T_TFBot_Buster_MiniGun_Grapple
+		}
+		
+		TFBot
+		{
+			Template T_TFBot_Buster_MiniGun_Grapple_2
+		}
+		}
+	}
+	
+//WAVE 1 //////////CURRENCY 950/////////////////////////////////// 20+ stragglers, triple vacc (and strechy cosmetics), nonthreat tanks, unsorted icons
+	Wave
+	{
+		StartWaveOutput
+		{
+			Target wave_start_relay
+			Action Trigger
+		}
+		DoneOutput
+		{
+			Target wave_finished_relay
+			Action trigger
+		}
+		
+		WaveSpawn
+		{
+			Name stage3
+			WaitForAllDead stage2
+			Where spawnbot_left
+			Where spawnbot_mission_sentrybuster
+			Where spawnbot
+			TotalCount 40
+			MaxActive 6
+			SpawnCount 2
+			WaitBeforeStarting 4
+			WaitBetweenSpawns 5
+			TotalCurrency 150
+			RandomSpawn 1
+			
+			
+				TFBot
+				{
+					Class Soldier
+					Skill Normal
+				}
+		}
+		
+		WaveSpawn
+		{
+			Name stage3
+			WaitForAllDead stage2
+			Where spawnbot_right
+			TotalCount 1
+			MaxActive 1
+			SpawnCount 1
+			WaitBeforeStarting 0
+			WaitBetweenSpawns 0
+			TotalCurrency 150
+			RandomSpawn 1
+			
+			
+				TFBot
+				{
+					Template T_TFBot_Giant_HeavyWeapons
+				}
+		}
+		
+		WaveSpawn
+		{
+			Name stage1
+			Where spawnbot_right
+			TotalCount 12
+			MaxActive 8
+			SpawnCount 4
+			WaitBeforeStarting 0
+			WaitBetweenSpawns 25
+			TotalCurrency 200
+			RandomSpawn 1
+			
+			
+			Squad
+			{
+				TFBot
+				{
+					Template T_TFGateBot_Giant_Soldier
+				}
+				
+				TFBot
+				{
+					Template T_TFBot_Medic_Vaccinator_Blast_Click
+				}
+				
+				TFBot
+				{
+					Template T_TFBot_Medic_Vaccinator_Bullet_Click
+				}
+				
+				TFBot
+				{
+					Template T_TFBot_Medic_Vaccinator_Fire_Click
+				}
+			}
+		}
+		
+		WaveSpawn
+		{
+			Name stage1
+			Where spawnbot_left
+			Where spawnbot_mission_sentrybuster
+			Where spawnbot_right
+			TotalCount 36
+			MaxActive 16
+			SpawnCount 4
+			WaitBeforeStarting 4
+			WaitBetweenSpawns 5
+			TotalCurrency 150
+			RandomSpawn 1
+			
+			
+				TFBot
+				{
+					Template T_TFGateBot_Scout_Normal
+				}
+		}
+		
+		WaveSpawn
+		{
+			Name stage2
+			WaitForAllDead stage1
+			Where spawnbot
+			TotalCount 32
+			MaxActive 12
+			SpawnCount 3
+			WaitBeforeStarting 4
+			WaitBetweenSpawns 4
+			TotalCurrency 150
+			RandomSpawn 1
+			
+			
+				TFBot
+				{
+					Template T_TFBot_Sniper_Huntsman
+				}
+		}
+		
+		WaveSpawn
+		{
+			Name stage2
+			WaitForAllDead stage1
+			Where spawnbot_right
+			TotalCount 2
+			MaxActive 2
+			SpawnCount 1
+			WaitBeforeStarting 4
+			WaitBetweenSpawns 25
+			TotalCurrency 100
+			RandomSpawn 1
+			
+			
+				TFBot
+				{
+					Template T_TFGateBot_Giant_Soldier_Spammer_Crit
+				}
+		}
+		
+		WaveSpawn
+		{
+			Name stage3
+			WaitForAllDead stage2
+			Where spawnbot
+			TotalCount 1
+			MaxActive 1
+			SpawnCount 1
+			WaitBeforeStarting 0
+			WaitBetweenSpawns 0
+			TotalCurrency 50
+			RandomSpawn 1
+			FirstSpawnWarningSound "mvm/mvm_tank_start.wav" //sound
+			
+			
+			Tank
+			{
+				Health 10000
+				Speed 50
+				Name "tankboss"
+				Skin 0									// 0 - normal skin, 1 - final wave skin
+				StartingPathTrackNode "boss_path_a1"		// if this is not here have fun with the hatch tank
+				
+				OnKilledOutput							// output sent when the Tank is killed (almost never used)
+				{
+					Target tank_died_relay
+					Action Trigger                         
+				}
+
+				OnBombDroppedOutput						// output sent when the Tank drops its bomb once it reaches the end of its path 
+				{
+					Target boss_deploy_relay
+					Action Trigger                         
+				}
+			}
+		}
+	}
+	
+	//WAVE 2 //////////CURRENCY 1000/////////////////////////////////// tank train, knockback spam, icon stacc
+	Wave
+	{
+		StartWaveOutput
+		{
+			Target wave_start_relay
+			Action Trigger
+		}
+		DoneOutput
+		{
+			Target wave_finished_relay
+			Action trigger
+		}
+		
+		WaveSpawn
+		{
+			Name stage1
+			Where spawnbot_right
+			TotalCount 48
+			MaxActive 16
+			SpawnCount 4
+			WaitBeforeStarting 0
+			WaitBetweenSpawns 7
+			TotalCurrency 150
+			RandomSpawn 1
+			
+			
+				TFBot
+				{
+					Template T_TFBot_Scout_FAN
+					Name "Force-a-Pusher"
+					ClassIcon scout_fan_push
+					ItemAttributes
+					{
+						ItemName "The Force-a-Nature"
+						"damage causes airblast" 1
+					}
+				}
+		}
+		
+		WaveSpawn
+		{
+			Name stage1
+			Where spawnbot_left
+			TotalCount 3
+			MaxActive 3
+			SpawnCount 1
+			WaitBeforeStarting 0
+			WaitBetweenSpawns 25
+			TotalCurrency 100
+			RandomSpawn 1
+			
+			
+				TFBot
+				{
+					Template T_TFGateBot_Giant_Soldier_RocketPush
+				}
+		}
+		
+		WaveSpawn
+		{
+			Name stage2
+			WaitForAllDead stage1
+			Where spawnbot
+			TotalCount 70
+			MaxActive 15
+			SpawnCount 5
+			WaitBeforeStarting 10
+			WaitBetweenSpawns 7
+			TotalCurrency 200
+			RandomSpawn 0
+			
+			
+				TFBot
+				{
+					Template T_TFBot_Scout_FAN
+					Name "Force-a-Pusher"
+					ClassIcon scout_fan_push
+					ItemAttributes
+					{
+						ItemName "The Force-a-Nature"
+						"damage causes airblast" 1
+					}
+				}
+		}
+		
+		WaveSpawn
+		{
+			Name stage2
+			WaitForAllDead stage1
+			Where spawnbot
+			TotalCount 10
+			MaxActive 10
+			SpawnCount 1
+			WaitBeforeStarting 10
+			WaitBetweenSpawns 1
+			TotalCurrency 100
+			RandomSpawn 0
+			FirstSpawnWarningSound "mvm/mvm_tank_start.wav" //sound
+			
+			
+			Tank
+			{
+				Health 2500
+				Speed 75
+				Name "tankboss"
+				Skin 0									// 0 - normal skin, 1 - final wave skin
+				StartingPathTrackNode "boss_path_a1"		// if this is not here have fun with the hatch tank
+				
+				OnKilledOutput							// output sent when the Tank is killed (almost never used)
+				{
+					Target tank_died_relay
+					Action Trigger                         
+				}
+
+				OnBombDroppedOutput						// output sent when the Tank drops its bomb once it reaches the end of its path 
+				{
+					Target boss_deploy_relay
+					Action Trigger                         
+				}
+			}
+		}
+		
+		WaveSpawn
+		{
+			Name stage3
+			WaitForAllDead stage2
+			Where spawnbot
+			TotalCount 36
+			MaxActive 18
+			SpawnCount 3
+			WaitBeforeStarting 10
+			WaitBetweenSpawns 5
+			TotalCurrency 150
+			RandomSpawn 0
+			
+			
+				TFBot
+				{
+					Template T_TFBot_Soldier_RocketPush
+					ClassIcon soldier_libertylauncher_giant
+				}
+		}
+		
+		WaveSpawn
+		{
+			Name stage3
+			WaitForAllDead stage2
+			Where spawnbot_left
+			TotalCount 6
+			MaxActive 4
+			SpawnCount 2
+			WaitBeforeStarting 0
+			WaitBetweenSpawns 20
+			TotalCurrency 100
+			RandomSpawn 0
+			
+			
+				TFBot
+				{
+					Template T_TFBot_Giant_Scout_FAN
+					Name "Giant Force-a-Pusher"
+					ClassIcon scout_fan_push
+					ItemAttributes
+					{
+						ItemName "The Force-a-Nature"
+						"damage causes airblast" 1
+					}
+				}
+		}
+		
+		WaveSpawn
+		{
+			Name stage4
+			WaitForAllDead stage3
+			Where spawnbot_left
+			TotalCount 5
+			MaxActive 5
+			SpawnCount 1
+			WaitBeforeStarting 0
+			WaitBetweenSpawns 20
+			TotalCurrency 200
+			RandomSpawn 1
+			
+			
+				TFBot
+				{
+					Template T_TFBot_Giant_Heavyweapons_Deflector_Push
+				}
+		}
+		
+		WaveSpawn
+		{
+			Name support
+			WaitForAllDead stage3
+			Where spawnbot
+			TotalCount 100
+			MaxActive 16
+			SpawnCount 4
+			WaitBeforeStarting 0
+			WaitBetweenSpawns 6
+			RandomSpawn 0
+			Support 1
+			
+			
+			RandomChoice
+			{
+				TFBot
+				{
+					Template T_TFBot_Heavy_Deflector_Pusher_Minigiant
+				}
+				
+				TFBot
+				{
+					Template T_TFBot_Scout_FAN
+					Name "Force-a-Pusher"
+					ClassIcon scout_fan_push
+					ItemAttributes
+					{
+						ItemName "The Force-a-Nature"
+						"damage causes airblast" 1
+					}
+				}
+				
+				TFBot
+				{
+					Template T_TFBot_Scout_FAN
+					Name "Force-a-Pusher"
+					ClassIcon scout_fan_push
+					ItemAttributes
+					{
+						ItemName "The Force-a-Nature"
+						"damage causes airblast" 1
+					}
+				}
+				
+				TFBot
+				{
+					Template T_TFBot_Scout_FAN
+					Name "Force-a-Pusher"
+					ClassIcon scout_fan_push
+					ItemAttributes
+					{
+						ItemName "The Force-a-Nature"
+						"damage causes airblast" 1
+					}
+				}
+				
+				TFBot
+				{
+					Template T_TFBot_Scout_FAN
+					Name "Force-a-Pusher"
+					ClassIcon scout_fan_push
+					ItemAttributes
+					{
+						ItemName "The Force-a-Nature"
+						"damage causes airblast" 1
+					}
+				}
+				
+				TFBot
+				{
+					Template T_TFBot_Scout_FAN
+					Name "Force-a-Pusher"
+					ClassIcon scout_fan_push
+					ItemAttributes
+					{
+						ItemName "The Force-a-Nature"
+						"damage causes airblast" 1
+					}
+				}
+				
+				TFBot
+				{
+					Template T_TFBot_Scout_FAN
+					Name "Force-a-Pusher"
+					ClassIcon scout_fan_push
+					ItemAttributes
+					{
+						ItemName "The Force-a-Nature"
+						"damage causes airblast" 1
+					}
+				}
+				
+				TFBot
+				{
+					Template T_TFBot_Scout_FAN
+					Name "Force-a-Pusher"
+					ClassIcon scout_fan_push
+					ItemAttributes
+					{
+						ItemName "The Force-a-Nature"
+						"damage causes airblast" 1
+					}
+				}
+				
+				TFBot
+				{
+					Template T_TFBot_Scout_FAN
+					Name "Force-a-Pusher"
+					ClassIcon scout_fan_push
+					ItemAttributes
+					{
+						ItemName "The Force-a-Nature"
+						"damage causes airblast" 1
+					}
+				}
+				
+				TFBot
+				{
+					Template T_TFBot_Soldier_RocketPush
+					ClassIcon soldier_libertylauncher_giant
+				}
+				
+				TFBot
+				{
+					Template T_TFBot_Soldier_RocketPush
+					ClassIcon soldier_libertylauncher_giant
+				}
+				
+				TFBot
+				{
+					Template T_TFBot_Soldier_RocketPush
+					ClassIcon soldier_libertylauncher_giant
+				}
+				
+				TFBot
+				{
+					Template T_TFBot_Soldier_RocketPush
+					ClassIcon soldier_libertylauncher_giant
+				}
+				
+				TFBot
+				{
+					Template T_TFBot_Soldier_RocketPush
+					ClassIcon soldier_libertylauncher_giant
+				}
+				
+				TFBot
+				{
+					Template T_TFBot_Soldier_RocketPush
+					ClassIcon soldier_libertylauncher_giant
+				}
+				
+				TFBot
+				{
+					Template T_TFBot_Soldier_RocketPush
+					ClassIcon soldier_libertylauncher_giant
+				}
+				
+				TFBot
+				{
+					Template T_TFBot_Soldier_RocketPush
+					ClassIcon soldier_libertylauncher_giant
+				}
+				
+				TFBot
+				{
+					Template T_TFBot_ScorchShot
+				}
+				
+				TFBot
+				{
+					Template T_TFBot_ScorchShot
+				}
+				
+				TFBot
+				{
+					Template T_TFBot_ScorchShot
+				}
+				
+				TFBot
+				{
+					Template T_TFBot_ScorchShot
+				}
+				
+				TFBot
+				{
+					Template T_TFBot_ScorchShot
+				}
+				
+				TFBot
+				{
+					Template T_TFBot_ScorchShot
+				}
+				
+				TFBot
+				{
+					Template T_TFBot_ScorchShot
+				}
+				
+				TFBot
+				{
+					Template T_TFBot_ScorchShot
+				}
+			}
+		}
+	}
+	
+	Wave
+	{}
+}

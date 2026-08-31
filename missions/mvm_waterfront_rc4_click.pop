@@ -1,0 +1,3367 @@
+// Waterfront: Click
+
+// spawnbot 
+// spawnbot_flank
+// spawnbot_flank2
+// spawnbot_tutorial
+// spawnbot_boss
+// spawnbot_mission_sniper
+// spawnbot_mission_spy
+
+// tankpath_same
+// tankpath_alt
+
+// hardflanker
+
+// wave_start_endurance_relay
+// tutorial_wave_relay
+// upgrade_door_open_midwave_relay
+// boss_door_open_relay
+
+#base robot_standard.pop
+#base robot_giant.pop
+#base robot_click.pop
+#base robot_click_giant.pop
+#base robot_click_sig.pop
+#base ex_upgrade_click.pop
+
+WaveSchedule
+{
+    StartingCurrency		400
+	RespawnWaveTime 		4
+    Advanced                1
+    CanBotsAttackWhileInSpawnRoom no
+
+    PrecacheModel "models/props_frontline/tank_turret.mdl" [$SIGSEGV]
+    PrecacheModel "models/props_frontline/tank_cart.mdl"   [$SIGSEGV]
+
+    Templates
+    {
+		T_TFBot_Giant_Soldier_Burst_Hyper_Conch
+		{
+			Class Soldier
+			Name "Giant Burst Fire Soldier"
+			ClassIcon soldier_burstfire_conch_hyper_giant
+			Health 4200
+			Skill Expert
+			WeaponRestrictions PrimaryOnly
+			Attributes MiniBoss
+			Attributes HoldFireUntilFullReload
+			Attributes AlwaysCrit
+			Attributes SpawnWithFullCharge
+			Item "blood botkiller rocket launcher mk.i"
+			Item "The Concheror"
+			ItemAttributes
+			{
+				ItemName "blood botkiller rocket launcher mk.i"
+				"damage bonus" 2.0
+				"faster reload rate" 0.4
+				"fire rate bonus" 0.2
+				"clip size upgrade atomic" 5.0
+				"Projectile speed increased" 0.9
+			}
+			CharacterAttributes
+			{
+				"move speed bonus"	0.5
+				"damage force reduction" 0.4
+				"airblast vulnerability multiplier" 0.4
+				"override footstep sound set" 3
+				"increase buff duration"	9.0
+				"deploy time increased" 0.5
+			}
+		}
+		T_TFBot_Boss
+		{
+			Class Pyro
+			Name "Living Corrosion"
+			ClassIcon pyro_caustic
+			Skill Expert
+			Health 60000
+			Attributes MiniBoss
+			Attributes UseBossHealthBar
+			ItemAttributes
+			{
+				ItemName "TF_WEAPON_FLAMETHROWER"
+				"airblast pushback scale" 2.0
+				"damage bonus" 5
+				"attach particle effect" 702
+				"slow enemy on hit major" 5
+                "bleeding duration" 15
+				"mark for death"	1
+			}
+			ItemAttributes
+			{
+				ItemName  "The Gas Passer"
+				"mult_item_meter_charge_rate" 0.1
+				"explode_on_ignite" 1
+		    }		    
+			CharacterAttributes
+			{
+				"move speed bonus"	0.4
+				"health regen"	500
+				"damage force reduction" 0.3
+				"airblast vulnerability multiplier" 0.3
+				"override footstep sound set" 2
+				"airblast vertical vulnerability multiplier" 0.1
+				"rage giving scale" 0.1
+			}
+			Item    "The Gas Passer"
+			Item	"neptune's nightmare"
+		}
+
+        TankStickyHellmet
+        {
+            SpawnTemplate "TankStickyHellmet" [$SIGSEGV]
+            ClassIcon tank_sticky_hellmet 
+        }
+        SmallTankTurretCrit
+		{
+            SpawnTemplate "SmallTankTurretCrit" [$SIGSEGV]
+            ClassIcon tank_small_turret_crit
+            DisableSmokestack 1 [$SIGSEGV]
+            DisableBomb 1 [$SIGSEGV]
+            Scale 0.5
+            IsCrit 1 [$SIGSEGV]
+        }
+    }
+
+    PointTemplates [$SIGSEGV]
+	{
+		TankStickyHellmet
+        {
+            logic_relay
+            {
+                "id" "2"
+                "classname" "logic_relay"
+                "spawnflags" "0"
+                "targetname" "ST_kill_relay"
+                "OnTrigger" "ST_mimic,Kill,,0,-1"
+                "OnTrigger" "ST_mimic_crit,Kill,,0,-1"
+                "OnTrigger" "ST_shoot_sound,Kill,,0,-1"
+                "OnTrigger" "ST_shoot_sound_crit,Kill,,0,-1"
+                "OnTrigger" "ST_model,Kill,,0,-1"
+                "OnTrigger" "ST_timer,Disable,,0,-1"
+                "OnTrigger" "ST_shooter_relay,CancelPending,,0,-1"
+                "OnTrigger" "tf_projectile_pipe,Kill,,0,-1"
+                "origin" "-16 480 0"
+            }
+            logic_relay
+            {
+                "id" "4"
+                "classname" "logic_relay"
+                "spawnflags" "0"
+                "targetname" "ST_shooter_relay"
+                "OnTrigger" "ST_mimic_crit,DetonateStickies,,7,-1"
+                "OnTrigger" "ST_mimic,DetonateStickies,,7,-1"
+                "OnTrigger" "ST_shoot_sound,PlaySound,,0.5,-1"
+                "OnTrigger" "ST_mimic,FireMultiple,4,0.5,-1"
+                "OnTrigger" "ST_shoot_sound,PlaySound,,0.3,-1"
+                "OnTrigger" "ST_mimic,FireOnce,,0.3,-1"
+                "OnTrigger" "ST_shoot_sound,PlaySound,,0.2,-1"
+                "OnTrigger" "ST_mimic,FireOnce,,0.2,-1"
+                "OnTrigger" "ST_shoot_sound,PlaySound,,0.1,-1"
+                "OnTrigger" "ST_mimic,FireOnce,,0.1,-1"
+                "OnTrigger" "ST_shoot_sound,PlaySound,,0,-1"
+                "OnTrigger" "ST_mimic,FireOnce,,0,-1"
+                "OnTrigger" "ST_mimic,FireOnce,,0.4,-1"
+                "OnTrigger" "ST_shoot_sound,PlaySound,,0.4,-1"
+                "OnTrigger" "ST_mimic,FireOnce,,0.6,-1"
+                "OnTrigger" "ST_shoot_sound,PlaySound,,0.6,-1"
+                "OnTrigger" "ST_shoot_sound,PlaySound,,0.7,-1"
+                "OnTrigger" "ST_mimic,FireOnce,,0.7,-1"
+                "OnTrigger" "ST_shoot_sound,PlaySound,,0.8,-1"
+                "OnTrigger" "ST_mimic,FireOnce,,0.8,-1"
+                "OnTrigger" "ST_shoot_sound,PlaySound,,0.9,-1"
+                "OnTrigger" "ST_mimic,FireOnce,,0.9,-1"
+                "OnTrigger" "ST_mimic,FireMultiple,4,1,-1"
+                "OnTrigger" "ST_shoot_sound,PlaySound,,1,-1"
+                "OnTrigger" "ST_mimic_crit,FireOnce,,1.5,-1"
+                "OnTrigger" "ST_shoot_sound_crit,PlaySound,,1.5,-1"
+                "OnTrigger" "ST_shoot_sound_crit,PlaySound,,2,-1"
+                "OnTrigger" "ST_mimic_crit,FireMultiple,2,2,-1"
+                "OnTrigger" "ST_shoot_sound_crit,PlaySound,,2.5,-1"
+                "OnTrigger" "ST_mimic_crit,FireMultiple,3,2.5,-1"
+                "OnTrigger" "ST_shoot_sound_crit,PlaySound,,3,-1"
+                "OnTrigger" "ST_mimic_crit,FireMultiple,6,3,-1"
+                "origin" "-16 496 0"
+            }
+            logic_timer
+            {
+                "id" "8"
+                "classname" "logic_timer"
+                "LowerRandomBound" "5"
+                "spawnflags" "0"
+                "StartDisabled" "0"
+                "targetname" "ST_timer"
+                "UpperRandomBound" "5"
+                "UseRandomTime" "0"
+                "OnTimer" "ST_shooter_relay,Trigger,,0,-1"
+                "origin" "0 496 0"
+            }
+            tf_point_weapon_mimic
+            {
+                "id" "18"
+                "classname" "tf_point_weapon_mimic"
+                "angles" "-56.5 0 0"
+                "Crits" "1"
+                "Damage" "138"
+                "FireSound" "weapons/stickybomblauncher_shoot_crit.wav"
+                "ModelScale" "1"
+                "SpeedMax" "525"
+                "SpeedMin" "525"
+                "SplashRadius" "189"
+                "SpreadAngle" "25"
+                "targetname" "ST_mimic_crit"
+                "WeaponType" "3"
+                "origin" "33.948 59 167.289"
+            }
+            tf_point_weapon_mimic
+            {
+                "id" "20"
+                "classname" "tf_point_weapon_mimic"
+                "angles" "-58.5 0 180"
+                "Crits" "1"
+                "Damage" "138"
+                "FireSound" "weapons/stickybomblauncher_shoot_crit.wav"
+                "ModelScale" "1"
+                "SpeedMax" "525"
+                "SpeedMin" "525"
+                "SplashRadius" "189"
+                "SpreadAngle" "25"
+                "targetname" "ST_mimic_crit"
+                "WeaponType" "3"
+                "origin" "34.16 -59 167.121"
+            }
+            tf_point_weapon_mimic
+            {
+                "id" "22"
+                "classname" "tf_point_weapon_mimic"
+                "angles" "-58.5 0 180"
+                "Crits" "0"
+                "Damage" "138"
+                "FireSound" "weapons/stickybomblauncher_shoot.wav"
+                "ModelScale" "1"
+                "SpeedMax" "525"
+                "SpeedMin" "525"
+                "SplashRadius" "189"
+                "SpreadAngle" "25"
+                "targetname" "ST_mimic"
+                "WeaponType" "3"
+                "origin" "34.16 -59 167.121"
+            }
+            tf_point_weapon_mimic
+            {
+                "id" "24"
+                "classname" "tf_point_weapon_mimic"
+                "angles" "-56.5 0 0"
+                "Crits" "0"
+                "Damage" "138"
+                "FireSound" "weapons/stickybomblauncher_shoot.wav"
+                "ModelScale" "1"
+                "SpeedMax" "525"
+                "SpeedMin" "525"
+                "SplashRadius" "189"
+                "SpreadAngle" "25"
+                "targetname" "ST_mimic"
+                "WeaponType" "3"
+                "origin" "33.948 59 167.289"
+            }
+            prop_dynamic
+            {
+                "id" "30"
+                "classname" "prop_dynamic"
+                "angles" "-58.5 0 90"
+                "DisableBoneFollowers" "0"
+                "disablereceiveshadows" "1"
+                "disableshadows" "1"
+                "ExplodeDamage" "0"
+                "ExplodeRadius" "0"
+                "fademaxdist" "0"
+                "fademindist" "-1"
+                "fadescale" "1"
+                "MaxAnimTime" "10"
+                "maxdxlevel" "0"
+                "MinAnimTime" "5"
+                "mindxlevel" "0"
+                "model" "models/props_frontline/tank_turret.mdl"
+                "modelscale" "1"
+                "PerformanceMode" "0"
+                "physdamagescale" "1.0"
+                "pressuredelay" "0"
+                "RandomAnimation" "0"
+                "renderamt" "255"
+                "rendercolor" "255 255 255"
+                "renderfx" "0"
+                "rendermode" "0"
+                "SetBodyGroup" "0"
+                "skin" "2"
+                "solid" "0"
+                "spawnflags" "0"
+                "StartDisabled" "0"
+                "targetname" "ST_model"
+                "origin" "-32.851 64 57.912"
+            }
+            prop_dynamic
+            {
+                "id" "32"
+                "classname" "prop_dynamic"
+                "angles" "-56.5 0 -90"
+                "DisableBoneFollowers" "0"
+                "disablereceiveshadows" "1"
+                "disableshadows" "1"
+                "ExplodeDamage" "0"
+                "ExplodeRadius" "0"
+                "fademaxdist" "0"
+                "fademindist" "-1"
+                "fadescale" "1"
+                "MaxAnimTime" "10"
+                "maxdxlevel" "0"
+                "MinAnimTime" "5"
+                "mindxlevel" "0"
+                "model" "models/props_frontline/tank_turret.mdl"
+                "modelscale" "1"
+                "PerformanceMode" "0"
+                "physdamagescale" "1.0"
+                "pressuredelay" "0"
+                "RandomAnimation" "0"
+                "renderamt" "255"
+                "rendercolor" "255 255 255"
+                "renderfx" "0"
+                "rendermode" "0"
+                "SetBodyGroup" "0"
+                "skin" "2"
+                "solid" "0"
+                "spawnflags" "0"
+                "StartDisabled" "0"
+                "targetname" "ST_model"
+                "origin" "-36.709 -64 60.403"
+            }
+            ambient_generic
+            {
+                "id" "34"
+                "classname" "ambient_generic"
+                "angles" "0 0 0"
+                "cspinup" "0"
+                "fadeinsecs" "0"
+                "fadeoutsecs" "0"
+                "health" "10"
+                "lfomodpitch" "0"
+                "lfomodvol" "0"
+                "lforate" "0"
+                "lfotype" "0"
+                "message" "weapons/stickybomblauncher_shoot_crit.wav"
+                "pitch" "100"
+                "pitchstart" "100"
+                "preset" "0"
+                "radius" "5000"
+                "spawnflags" "48"
+                "spindown" "0"
+                "spinup" "0"
+                "targetname" "ST_shoot_sound_crit"
+                "volstart" "0"
+                "origin" "36 -9.53674e-07 168"
+            }
+            ambient_generic
+            {
+                "id" "37"
+                "classname" "ambient_generic"
+                "angles" "0 0 0"
+                "cspinup" "0"
+                "fadeinsecs" "0"
+                "fadeoutsecs" "0"
+                "health" "10"
+                "lfomodpitch" "0"
+                "lfomodvol" "0"
+                "lforate" "0"
+                "lfotype" "0"
+                "message" "weapons/stickybomblauncher_shoot.wav"
+                "pitch" "100"
+                "pitchstart" "100"
+                "preset" "0"
+                "radius" "5000"
+                "spawnflags" "48"
+                "spindown" "0"
+                "spinup" "0"
+                "targetname" "ST_shoot_sound"
+                "volstart" "0"
+                "origin" "36 -9.53674e-07 168"
+            }
+        }
+        SmallTankTurretCrit
+		{
+            OnSpawnOutput
+			{
+				Target "!activator"
+				Action "addoutput"
+				Param "rendermode 1"
+				Delay 0.0
+			}
+            OnSpawnOutput
+			{
+				Target "!activator"
+				Action "alpha"
+				Param "0"
+				Delay 0.0
+			}
+            OnSpawnOutput
+			{
+				Target "tank_turret_shoot_relay"
+				Action "trigger"
+				Param ""
+				Delay 5
+			}
+            OnSpawnOutput
+			{
+				Target "spawntr"
+				Action "trigger"
+				Param ""
+				Delay 1
+			}
+            OnSpawnOutput
+			{
+				Target "!activator"
+				Action "addoutput"
+				Param "OnHealthBelow60Percent tank_turret_shoot_relay_super:trigger::0:-1"
+				Delay 1
+			}
+            OnSpawnOutput
+			{
+				Target "!activator"
+				Action "addoutput"
+				Param "OnHealthBelow20Percent tank_turret_shoot_relay_super:trigger::0:-1"
+				Delay 1
+			}
+            OnSpawnOutput
+			{
+				Target "tank_turret_particle"
+				Action "SetParentAttachment"
+				Param "light"
+				Delay 1
+			}
+            OnSpawnOutput
+			{
+				Target "!activator"
+				Action "addoutput"
+				Param "OnUser4 tank_turret_prop_bomb:enable::0:-1"
+				Delay 1
+			}
+            OnSpawnOutput
+			{
+				Target "!activator"
+				Action "addoutput"
+				Param "OnUser4 tank_turret_prop_bomb:SetAnimation:deploy:0.01:-1"
+				Delay 1
+			}
+            prop_dynamic
+            {
+                "targetname" "tank_turret_prop"
+                "model" "models/props_frontline/tank_cart.mdl"
+                "solid" "0"
+                "skin" "2"
+                "angles" "0 180 0"
+                "DefaultAnim" "idle"
+            }
+            prop_dynamic
+            {
+                "targetname" "tank_turret_prop_bomb"
+                "model" "models/bots/boss_bot/bomb_mechanism.mdl"
+                "startdisabled" "1"
+                "solid" "0"
+                "DefaultAnim" "idle"
+                "modelscale" "0.5"
+                "angles" "0 0 0"
+                "origin" "-8 0 -16"
+            }
+            info_particle_system
+            {
+                "targetname" "tank_turret_particle"
+                "effect_name" "cart_flashinglight"
+                "parentname" "tank_turret_prop"
+            }
+            tf_point_weapon_mimic
+            {
+                "targetname" "tank_turret_shooter_grenade"
+                "angles" "3 0 0"
+                "origin" "68 0 76"
+                "Damage" "110"
+                "SpeedMax" "170"
+                "SpeedMin" "170"
+                "SplashRadius" "250"
+                "SpreadAngle" "2"
+                "WeaponType" "3"
+                "ModelScale" "1"
+                "ModelOverride" "models/weapons/w_models/w_grenade_grenadelauncher.mdl"
+                "Crits" "1"
+                "onuser1" "tank_turret_prop,setanimation,shoot_N,0,-1"
+                "onuser1" "tank_turret_prop,SetPlaybackRate,0.66,0.01,-1"
+                "onuser1" "!self,fireuser2,,0.8,-1"
+                "onuser2" "tank_turret_shoot_effect_relay,trigger,,0,-1"
+                "onuser2" "tank_turret_particle,$PlaySound,=120|mvm/giant_demoman/giant_demoman_grenade_shoot.wav,0,-1"
+                "onuser2" "!self,fireonce,,0.02,-1" 
+                "onuser2" "!self,DetonateStickies,,3.1,-1" 
+                "onuser3" "tank_turret_prop,setanimation,shoot_N,0,-1"
+                "onuser3" "!self,fireuser2,,0.5,-1" 
+            }
+            tf_point_weapon_mimic
+            {
+                "targetname" "tank_turret_shooter_n"
+                "angles" "3 0 0"
+                "origin" "68 0 76"
+                "Damage" "90"
+                "SpeedMax" "1800"
+                "SpeedMin" "1800"
+                "SplashRadius" "180"
+                "SpreadAngle" "2"
+                "WeaponType" "0"
+                "Crits" "1"
+                "onuser1" "tank_turret_prop,setanimation,shoot_N,0,-1"
+                "onuser1" "tank_turret_prop,SetPlaybackRate,0.66,0.01,-1"
+                "onuser1" "!self,fireuser2,,0.8,-1"
+                "onuser2" "tank_turret_shoot_effect_relay,trigger,,0,-1"
+                "onuser2" "!self,fireonce,,0.02,-1" 
+                "onuser3" "tank_turret_prop,setanimation,shoot_N,0,-1"
+                "onuser3" "!self,fireuser2,,0.5,-1" 
+            }
+            tf_point_weapon_mimic
+            {
+                "targetname" "tank_turret_shooter_w"
+                "angles" "3 90 0"
+                "origin" "-16 62 76"
+                "Damage" "90"
+                "SpeedMax" "1800"
+                "SpeedMin" "1800"
+                "SplashRadius" "180"
+                "SpreadAngle" "2"
+                "WeaponType" "0"
+                "Crits" "1"
+                "onuser1" "tank_turret_prop,setanimation,shoot_W,0,-1"
+                "onuser1" "tank_turret_prop,SetPlaybackRate,0.66,0.01,-1"
+                "onuser1" "!self,fireuser2,,0.8,-1"
+                "onuser2" "tank_turret_shoot_effect_relay,trigger,,0,-1"
+                "onuser2" "!self,fireonce,,0.02,-1" 
+                "onuser3" "tank_turret_prop,setanimation,shoot_W,0,-1"
+                "onuser3" "!self,fireuser2,,0.5,-1" 
+            }
+            tf_point_weapon_mimic
+            {
+                "targetname" "tank_turret_shooter_nw"
+                "angles" "3 45 0"
+                "origin" "40 62 76"
+                "Damage" "90"
+                "SpeedMax" "1800"
+                "SpeedMin" "1800"
+                "SplashRadius" "180"
+                "SpreadAngle" "2"
+                "WeaponType" "0"
+                "Crits" "1"
+                "onuser1" "tank_turret_prop,setanimation,shoot_NW,0,-1"
+                "onuser1" "tank_turret_prop,SetPlaybackRate,0.66,0.01,-1"
+                "onuser1" "!self,fireuser2,,0.8,-1"
+                "onuser2" "tank_turret_shoot_effect_relay,trigger,,0,-1"
+                "onuser2" "!self,fireonce,,0.02,-1" 
+                "onuser3" "tank_turret_prop,setanimation,shoot_NW,0,-1"
+                "onuser3" "!self,fireuser2,,0.5,-1" 
+            }
+            tf_point_weapon_mimic
+            {
+                "targetname" "tank_turret_shooter_e"
+                "angles" "3 -90 0"
+                "origin" "-16 -62 76"
+                "Damage" "90"
+                "SpeedMax" "1800"
+                "SpeedMin" "1800"
+                "SplashRadius" "180"
+                "SpreadAngle" "2"
+                "WeaponType" "0"
+                "Crits" "1"
+                "onuser1" "tank_turret_prop,setanimation,shoot_E,0,-1"
+                "onuser1" "tank_turret_prop,SetPlaybackRate,0.66,0.01,-1"
+                "onuser1" "!self,fireuser2,,0.8,-1"
+                "onuser2" "tank_turret_shoot_effect_relay,trigger,,0,-1"
+                "onuser2" "!self,fireonce,,0.02,-1" 
+                "onuser3" "tank_turret_prop,setanimation,shoot_E,0,-1"
+                "onuser3" "!self,fireuser2,,0.5,-1" 
+            }
+            tf_point_weapon_mimic
+            {
+                "targetname" "tank_turret_shooter_ne"
+                "angles" "3 -45 0"
+                "origin" "40 -62 76"
+                "Damage" "90"
+                "SpeedMax" "1800"
+                "SpeedMin" "1800"
+                "SplashRadius" "180"
+                "SpreadAngle" "2"
+                "WeaponType" "0"
+                "Crits" "1"
+                "onuser1" "tank_turret_prop,setanimation,shoot_NE,0,-1"
+                "onuser1" "tank_turret_prop,SetPlaybackRate,0.66,0.01,-1"
+                "onuser1" "!self,fireuser2,,0.8,-1"
+                "onuser2" "tank_turret_shoot_effect_relay,trigger,,0,-1"
+                "onuser2" "!self,fireonce,,0.02,-1" 
+                "onuser3" "tank_turret_prop,setanimation,shoot_NE,0,-1"
+                "onuser3" "!self,fireuser2,,0.5,-1" 
+            }
+            logic_relay
+            {
+                "targetname" "tank_turret_shoot_effect_relay"
+                "ontrigger" "!parent,addoutput,solid 1,0.0,-1"
+                "ontrigger" "!parent,addoutput,solid 2,0.12,-1"
+                "ontrigger" "!parent,$playsound,MVM.GiantSoldierRocketShootCrit,0,-1"
+                "spawnflags" "2"
+            }
+            logic_relay
+            {
+                "targetname" "tank_turret_shoot_relay"
+                "ontrigger" "tank_turret_shooter_n,fireuser1,,0,-1"
+                "ontrigger" "tank_turret_shooter_e,fireuser1,,2,-1"
+                "ontrigger" "tank_turret_shooter_ne,fireuser1,,4,-1"
+                "ontrigger" "tank_turret_shooter_nw,fireuser1,,6,-1"
+                "ontrigger" "tank_turret_shooter_w,fireuser1,,8,-1"
+
+                "ontrigger" "tank_turret_shooter_grenade,fireuser1,,10,-1"
+                "ontrigger" "!self,trigger,,12,-1"
+                "spawnflags" "2"
+            }
+            logic_relay
+            {
+                "targetname" "tank_turret_shoot_relay_super"
+                "ontrigger" "tank_turret_particle,Start,,0,-1"
+                "ontrigger" "tank_turret_prop,$playsound,MVM.GiantHeavyGunWindUp,0,-1"
+                "ontrigger" "tank_turret_shoot_relay,cancelpending,,1,-1"
+                "ontrigger" "tank_turret_shooter_n,fireuser3,,1,-1"
+                "ontrigger" "tank_turret_shooter_n,fireuser3,,1.5,-1"
+                "ontrigger" "tank_turret_shooter_n,fireuser3,,2,-1"
+                "ontrigger" "tank_turret_shooter_e,fireuser3,,3,-1"
+                "ontrigger" "tank_turret_shooter_e,fireuser3,,3.5,-1"
+                "ontrigger" "tank_turret_shooter_e,fireuser3,,4,-1"
+                "ontrigger" "tank_turret_shooter_ne,fireuser3,,5,-1"
+                "ontrigger" "tank_turret_shooter_ne,fireuser3,,5.5,-1"
+                "ontrigger" "tank_turret_shooter_ne,fireuser3,,6,-1"
+                "ontrigger" "tank_turret_shooter_nw,fireuser3,,7,-1"
+                "ontrigger" "tank_turret_shooter_nw,fireuser3,,7.5,-1"
+                "ontrigger" "tank_turret_shooter_nw,fireuser3,,8,-1"
+                "ontrigger" "tank_turret_shooter_w,fireuser3,,9,-1"
+                "ontrigger" "tank_turret_shooter_w,fireuser3,,9.5,-1"
+                "ontrigger" "tank_turret_shooter_w,fireuser3,,10,-1"
+                "ontrigger" "tank_turret_shooter_grenade,fireuser3,,11,-1"
+                "ontrigger" "tank_turret_shooter_grenade,fireuser3,,11.5,-1"
+                "ontrigger" "tank_turret_shooter_grenade,fireuser3,,12,-1"
+                "ontrigger" "tank_turret_particle,Stop,,12,-1"
+
+                "ontrigger" "tank_turret_shoot_relay,trigger,,13,-1"
+                "spawnflags" "2"
+            }
+		}
+    }
+
+    // Sentry Buster
+	Mission
+	{
+		Objective DestroySentries
+
+		InitialCooldown 30
+		Where spawnbot_flank
+		BeginAtWave 1
+		RunForThisManyWaves 8
+
+		CooldownTime 50         
+
+        TFBot
+		{
+			Template T_TFBot_SentryBuster
+        }
+	}
+
+    // Wave 1/8
+	// Total $ in this wave : 1000$
+	// Total $ when wave starts : 400$ (Starting money)
+	// Total $ when wave ends : 400$ (Starting money) + 1000$ (Collected money) + 100$ (Bonus) = 1500$
+
+    Mission
+	{
+		Objective Sniper
+		Where spawnbot_mission_sniper
+		BeginAtWave 1
+		RunForThisManyWaves 1
+		
+		InitialCooldown	30
+		CooldownTime 30
+		DesiredCount 2
+		
+		TFBot
+		{
+			Template T_TFBot_Sniper_Razorback
+		}
+	}
+
+    Wave
+	{
+        StartWaveOutput
+		{
+			Target wave_start_relay
+			Action Trigger
+		}
+		DoneOutput
+		{
+			Target wave_finished_relay
+			Action trigger
+		}
+
+        WaveSpawn
+		{
+			Where spawnbot_flank2
+			Name "stage01"
+			
+			TotalCount 2
+			MaxActive  2
+			SpawnCount 2			
+			WaitBetweenSpawns   0
+			WaitBeforeStarting  0
+			
+			TotalCurrency   200
+			
+			Squad
+			{
+				TFBot
+				{
+					Template T_TFBot_Giant_Boxing_Heavy
+				}
+				TFBot
+				{
+					Template T_TFBot_Giant_Medic_Kritzkrieg
+				}
+			}
+		}
+        WaveSpawn
+		{
+			Where spawnbot
+			Name "stage01"
+			
+			TotalCount 40
+			MaxActive  20
+			SpawnCount 4			
+			WaitBetweenSpawns   0
+			WaitBeforeStarting  10
+			
+			TotalCurrency   100
+			
+			TFBot
+			{
+				Template T_TFBot_Scout_Melee
+			}
+		}
+
+        WaveSpawn
+		{
+			Where spawnbot_flank2
+			Name "stage02"
+            WaitForAllSpawned "stage01"
+			
+			TotalCount 20
+			MaxActive  20
+			SpawnCount 10		
+			WaitBetweenSpawns   7
+			WaitBeforeStarting  0
+			
+			TotalCurrency   200
+			
+			Squad
+			{
+				TFBot
+				{
+					Template T_TFBot_Giant_Soldier
+				}
+				TFBot
+				{
+					Template T_TFBot_Medic_Kritzkrieg
+				}
+                TFBot
+				{
+					Template T_TFBot_Medic_Kritzkrieg
+				}
+                TFBot
+				{
+					Template T_TFBot_Medic_Kritzkrieg
+				}
+                TFBot
+				{
+					Template T_TFBot_Medic_Kritzkrieg
+				}
+                TFBot
+				{
+					Template T_TFBot_Medic_Kritzkrieg
+				}
+                TFBot
+				{
+					Template T_TFBot_Medic_Kritzkrieg
+				}
+                TFBot
+				{
+					Template T_TFBot_Medic_Kritzkrieg
+				}
+                TFBot
+				{
+					Template T_TFBot_Medic_Kritzkrieg
+				}
+                TFBot
+				{
+					Template T_TFBot_Medic_Kritzkrieg
+				}
+                TFBot
+				{
+					Template T_TFBot_Medic_Kritzkrieg
+				}
+			}
+		}
+
+        WaveSpawn
+		{
+			Where spawnbot
+			Name "stage03"
+            WaitForAllSpawned "stage02"
+			
+			TotalCount 2
+			MaxActive  2
+			SpawnCount 2			
+			WaitBetweenSpawns   0
+			WaitBeforeStarting  30
+			
+			TotalCurrency   200
+			
+			Squad
+			{
+				TFBot
+				{
+					Template T_TFBot_Giant_Boxing_Heavy
+				}
+				TFBot
+				{
+					Template T_TFBot_Giant_Medic_Kritzkrieg
+				}
+			}
+		}
+        WaveSpawn
+		{
+			Where spawnbot
+			Name "stage03"
+            WaitForAllSpawned "stage02"
+			
+			TotalCount 6
+			MaxActive  3
+			SpawnCount 3		
+			WaitBetweenSpawns   0
+			WaitBeforeStarting  30
+			
+			TotalCurrency   100
+			
+			Squad
+			{
+				TFBot
+				{
+					Template T_TFBot_Giant_Soldier
+				}
+				TFBot
+				{
+					Template T_TFBot_Medic_Kritzkrieg
+				}
+                TFBot
+				{
+					Template T_TFBot_Medic_Kritzkrieg
+				}
+			}
+		}
+        WaveSpawn
+		{
+			Where spawnbot
+			Name "stage03"
+            WaitForAllSpawned "stage02"
+			
+			TotalCount 36
+			MaxActive  8
+			SpawnCount 4			
+			WaitBetweenSpawns   4
+			WaitBeforeStarting  15
+			
+			TotalCurrency   100
+			
+			TFBot
+			{
+				Class Soldier
+                Skill Easy
+			}
+		}
+        WaveSpawn
+		{
+			Where spawnbot
+			Name "stage03"
+            WaitForAllSpawned "stage02"
+			
+			TotalCount 24
+			MaxActive  8
+			SpawnCount 4			
+			WaitBetweenSpawns   4
+			WaitBeforeStarting  20
+			
+			TotalCurrency   100
+			
+			TFBot
+			{
+				Class Heavyweapons
+                Skill Easy
+			}
+		}
+    }
+
+    // Wave 2/8
+	// Total $ in this wave : 1200$
+	// Total $ when wave starts : 400$ (Starting money) + 1000$ (Collected money) + 100$ (Bonus) = 1500$
+	// Total $ when wave ends : 400$ (Starting money) + 2200$ (Collected money) + 200$ (Bonus) = 2600$
+
+    Wave
+	{
+        StartWaveOutput
+		{
+			Target wave_start_relay
+			Action Trigger
+		}
+		DoneOutput
+		{
+			Target wave_finished_relay
+			Action trigger
+		}
+
+        WaveSpawn
+		{
+			Where spawnbot_tutorial
+			Name "stage01"
+			
+			TotalCount 17
+			MaxActive  17
+			SpawnCount 17			
+			WaitBetweenSpawns   0
+			WaitBeforeStarting  0
+			
+			TotalCurrency   200
+
+			FirstSpawnOutput
+			{
+				Target tutorial_wave_relay
+				Action Trigger
+			}
+		
+			Squad
+			{
+				TFBot
+				{
+					Template T_TFBot_Giant_Heavyweapons_Deflector
+                    ItemAttributes
+                    {
+                        ItemName "Deflector"
+                        "attach particle effect" 702
+                        "bleeding duration" 15
+                    }
+				}
+				TFBot
+				{
+					Template T_TFBot_Medic
+				}
+                TFBot
+				{
+					Template T_TFBot_Medic
+				}
+                TFBot
+				{
+					Template T_TFBot_Medic
+				}
+                TFBot
+				{
+					Template T_TFBot_Medic
+				}
+                TFBot
+				{
+					Template T_TFBot_Medic
+				}
+                TFBot
+				{
+					Template T_TFBot_Medic
+				}
+                TFBot
+				{
+					Template T_TFBot_Medic
+				}
+                TFBot
+				{
+					Template T_TFBot_Medic
+				}
+                TFBot
+				{
+					Template T_TFBot_Medic
+				}
+                TFBot
+				{
+					Template T_TFBot_Medic
+				}
+                TFBot
+				{
+					Template T_TFBot_Medic
+				}
+                TFBot
+				{
+					Template T_TFBot_Medic
+				}
+                TFBot
+				{
+					Template T_TFBot_Medic
+				}
+                TFBot
+				{
+					Template T_TFBot_Medic
+				}
+                TFBot
+				{
+					Template T_TFBot_Medic
+				}
+                TFBot
+				{
+					Template T_TFBot_Medic
+				}
+			}
+		}
+
+        WaveSpawn
+		{
+			Name "stage02_tank"
+            WaitForAllSpawned "stage01"
+			
+			TotalCount	1
+			MaxActive	1
+			SpawnCount	1
+			WaitBetweenSpawns	0
+			WaitBeforeStarting	10
+
+            TotalCurrency	100
+			
+			Tank
+			{
+				Health	15000
+				Name	TankBoss
+				Speed	75
+				StartingPathTrackNode tankpath_alt
+				OnKilledOutput
+				{
+					Target	boss_dead_relay
+					Action	Trigger
+				}
+				OnBombDroppedOutput
+				{
+					Target	boss_deploy_relay
+					Action	Trigger
+				}
+			}
+		}
+        WaveSpawn
+		{
+			Where spawnbot
+			Name "stage02"
+            WaitForAllDead "stage01"
+			
+			TotalCount 32
+			MaxActive  16
+			SpawnCount 4			
+			WaitBetweenSpawns   7
+			WaitBeforeStarting  0
+			
+			TotalCurrency   200
+		
+			Squad
+			{
+				TFBot
+				{
+					Class Soldier
+                    Skill Normal
+                    ItemAttributes
+                    {
+                        ItemName "TF_WEAPON_ROCKETLAUNCHER"
+                        "attach particle effect" 702
+                        "bleeding duration" 15
+                    }
+				}
+				TFBot
+				{
+					Template T_TFBot_Medic_QuickUber
+				}
+			}
+		}
+        WaveSpawn
+		{
+			Where spawnbot
+			Name "stage02_superscout"
+            WaitForAllDead "stage01"
+			
+			TotalCount 4
+			MaxActive  4
+			SpawnCount 2			
+			WaitBetweenSpawns   20
+			WaitBeforeStarting  15
+			
+			TotalCurrency   100
+		
+			TFBot
+			{
+				Template T_TFBot_Giant_Scout_Fast
+			}
+		}
+
+        WaveSpawn
+		{
+			Where spawnbot
+			Name "stage03"
+            WaitForAllSpawned "stage02"
+			
+			TotalCount 1
+			MaxActive  1
+			SpawnCount 1			
+			WaitBetweenSpawns   0
+			WaitBeforeStarting  30
+			
+			TotalCurrency   100
+		
+			TFBot
+			{
+				Template T_TFBot_Giant_Heavyweapons_Deflector
+                ItemAttributes
+                {
+                    ItemName "Deflector"
+                    "attach particle effect" 702
+                    "bleeding duration" 15
+                }
+			}
+		}
+        WaveSpawn
+		{
+			Where spawnbot
+			Name "stage03"
+            WaitForAllSpawned "stage02"
+			
+			TotalCount 10
+			MaxActive  10
+			SpawnCount 5			
+			WaitBetweenSpawns   20
+			WaitBeforeStarting  20
+			
+			TotalCurrency   200
+		
+			Squad
+			{
+				TFBot
+				{
+					Template T_TFBot_Giant_Pyro
+                    ItemAttributes
+                    {
+                        ItemName tf_weapon_flamethrower
+                        "attach particle effect" 702
+                        "bleeding duration" 15
+                    }
+				}
+				TFBot
+				{
+					Template T_TFBot_Medic
+				}
+                TFBot
+				{
+					Template T_TFBot_Medic
+				}
+                TFBot
+				{
+					Template T_TFBot_Medic
+				}
+                TFBot
+				{
+					Template T_TFBot_Medic
+				}
+			}
+		}
+        WaveSpawn
+		{
+			Where spawnbot
+			Name "stage03"
+            WaitForAllSpawned "stage02"
+			
+			TotalCount 30
+			MaxActive  10
+			SpawnCount 10			
+			WaitBetweenSpawns   10
+			WaitBeforeStarting  10
+			
+			TotalCurrency   150
+		
+			TFBot
+			{
+				Class Demoman
+                Skill Hard
+			}
+		}
+
+        WaveSpawn
+		{
+			Name "stage04_tank"
+            WaitForAllSpawned "stage03"
+			
+			TotalCount	1
+			MaxActive	1
+			SpawnCount	1
+			WaitBetweenSpawns	0
+			WaitBeforeStarting	10
+
+            TotalCurrency	100
+			
+			Tank
+			{
+				Health	15000
+				Name	TankBoss
+				Speed	75
+				StartingPathTrackNode tankpath_same
+				OnKilledOutput
+				{
+					Target	boss_dead_relay
+					Action	Trigger
+				}
+				OnBombDroppedOutput
+				{
+					Target	boss_deploy_relay
+					Action	Trigger
+				}
+			}
+		}
+        WaveSpawn
+		{
+			Where spawnbot_flank
+			Name "stage04"
+            WaitForAllSpawned "stage03"
+			
+			TotalCount 24
+			MaxActive  20
+			SpawnCount 4			
+			WaitBetweenSpawns   2
+			WaitBeforeStarting  20
+			
+			TotalCurrency   150
+		
+			TFBot
+			{
+				Class Pyro
+                Skill Normal
+                ItemAttributes
+                {
+                    ItemName tf_weapon_flamethrower
+                    "attach particle effect" 702
+                    "bleeding duration" 15
+                }
+			}
+		}
+    }
+
+    // Wave 3/8
+	// Total $ in this wave : 800$
+	// Total $ when wave starts : 400$ (Starting money) + 2200$ (Collected money) + 200$ (Bonus) = 2600$
+	// Total $ when wave ends : 400$ (Starting money) + 3000$ (Collected money) + 300$ (Bonus) = 3700$
+
+    Mission
+	{
+		Objective Sniper
+		Where spawnbot_mission_sniper
+		BeginAtWave 3
+		RunForThisManyWaves 1
+		
+		InitialCooldown	10
+		CooldownTime 40
+		DesiredCount 4
+		
+		TFBot
+		{
+			Template T_TFBot_Sniper_Razorback
+            ItemAttributes
+            {
+                ItemName tf_weapon_sniperrifle
+                "attach particle effect" 702
+                "bleeding duration" 15
+            }
+		}
+	}
+
+    Wave
+	{
+        StartWaveOutput
+		{
+			Target wave_start_relay
+			Action Trigger
+		}
+		DoneOutput
+		{
+			Target wave_finished_relay
+			Action trigger
+		}
+
+        WaveSpawn
+		{
+			Where spawnbot
+			Name "stage01_superscout"
+			
+			TotalCount 3
+			MaxActive  3
+			SpawnCount 3			
+			WaitBetweenSpawns   0
+			WaitBeforeStarting  25
+			
+			TotalCurrency   75
+		
+			TFBot
+			{
+				Template T_TFBot_Giant_Scout_Baseball
+			}
+		}
+        WaveSpawn
+		{
+			Where spawnbot
+            Where spawnbot_flank
+			Name "stage01"
+			
+			TotalCount 50
+			MaxActive  14
+			SpawnCount 2			
+			WaitBetweenSpawns   0
+			WaitBeforeStarting  0
+			
+			TotalCurrency   100
+		
+            RandomChoice
+            {
+                TFBot
+			    {
+				    Class Pyro
+					Skill Expert
+					Attributes AlwaysFireWeapon
+                    ItemAttributes
+			        {
+				        ItemName tf_weapon_flamethrower
+                        "attach particle effect" 702
+                        "bleeding duration" 15
+                    }
+			    }
+                TFBot
+			    {
+				    Class Pyro
+					Skill Expert
+					Attributes AlwaysFireWeapon
+                    ItemAttributes
+			        {
+				        ItemName tf_weapon_flamethrower
+                        "attach particle effect" 702
+                        "bleeding duration" 15
+                    }
+			    }
+                TFBot
+			    {
+				    Class Pyro
+					Skill Expert
+					Attributes AlwaysFireWeapon
+                    ItemAttributes
+			        {
+				        ItemName tf_weapon_flamethrower
+                        "attach particle effect" 702
+                        "bleeding duration" 15
+                    }
+			    }
+                TFBot
+			    {
+				    Template T_TFBot_Pyro_Flaregun_FastShot
+                    ItemAttributes
+			        {
+				        ItemName "the flare gun"
+                        "attach particle effect" 702
+                        "bleeding duration" 15
+                    }
+			    }
+                TFBot
+			    {
+				    Template T_TFBot_Pyro_Flaregun_FastShot
+                    ItemAttributes
+			        {
+				        ItemName "the flare gun"
+                        "attach particle effect" 702
+                        "bleeding duration" 15
+                    }
+			    }
+            }
+		}
+
+        WaveSpawn
+		{
+			Where spawnbot
+			Name "stage02"
+            WaitForAllSpawned "stage01"
+			
+			TotalCount 6
+			MaxActive  4
+			SpawnCount 2			
+			WaitBetweenSpawns   25
+			WaitBeforeStarting  15
+			
+			TotalCurrency   300
+    
+            Squad
+            {
+                TFBot
+			    {
+				    Template T_TFBot_Giant_Demo_Spammer
+			    }
+                TFBot
+			    {
+				    Template T_TFBot_Giant_Medic_Uber
+			    }
+            }
+		}
+        WaveSpawn
+		{
+			Where spawnbot
+            Where spawnbot_flank2
+			Name "stage02"
+            WaitForAllSpawned "stage01"
+			
+			TotalCount 60
+			MaxActive  12
+			SpawnCount 2			
+			WaitBetweenSpawns   0
+			WaitBeforeStarting  10
+			
+			TotalCurrency   150
+		
+            RandomChoice
+            {
+                TFBot
+			    {
+				    Template T_TFBot_Scout_Bonk_Blast_Vac
+			    }
+                TFBot
+			    {
+				    Template T_TFBot_Scout_Bonk_Blast_Vac
+			    }
+                TFBot
+			    {
+				    Template T_TFBot_Scout_Bonk_Bullet_Vac
+			    }
+                TFBot
+			    {
+				    Template T_TFBot_Scout_Bonk_Bullet_Vac
+			    }
+                TFBot
+			    {
+				    Class Scout
+                    Skill Expert
+                    tag hardflanker
+                    ItemAttributes
+			        {
+				        ItemName tf_weapon_scattergun
+                        "attach particle effect" 702
+                        "bleeding duration" 15
+                    }
+			    }
+            }
+		}
+
+        WaveSpawn
+		{
+			Where spawnbot
+			Name "stage03"
+            WaitForAllSpawned "stage02"
+			
+			TotalCount 3
+			MaxActive  3
+			SpawnCount 3			
+			WaitBetweenSpawns   0
+			WaitBeforeStarting  25
+			
+			TotalCurrency   75
+		
+			TFBot
+			{
+				Template T_TFBot_Giant_Scout_Baseball
+			}
+		}
+        WaveSpawn
+		{
+			Where spawnbot
+			Name "stage03"
+            WaitForAllSpawned "stage02"
+			
+			TotalCount 12
+			MaxActive  12
+			SpawnCount 12	
+			WaitBetweenSpawns   0
+			WaitBeforeStarting  20
+			
+			TotalCurrency   100
+		
+			TFBot
+			{
+				Template T_TFBot_Engineer_Shotgun
+                Attributes AlwaysCrit
+			}
+		}
+    }
+
+    // Wave 4/8
+	// Total $ in this wave : 1100$
+	// Total $ when wave starts : 400$ (Starting money) + 3000$ (Collected money) + 300$ (Bonus) = 3700$
+	// Total $ when wave ends : 400$ (Starting money) + 4100$ (Collected money) + 400$ (Bonus) = 4900$
+
+    Mission
+	{
+		Objective Spy
+		Where spawnbot_mission_spy
+		BeginAtWave 4
+		RunForThisManyWaves 1
+		
+		InitialCooldown	45
+		CooldownTime 45
+		DesiredCount 3
+		
+		TFBot
+		{
+			Template T_TFBot_Spy
+		}
+	}
+
+    Wave
+	{
+        StartWaveOutput
+		{
+			Target wave_start_relay
+			Action Trigger
+		}
+		DoneOutput
+		{
+			Target wave_finished_relay
+			Action trigger
+		}
+
+        WaveSpawn
+		{
+			Name "stage01_tank"
+			
+			TotalCount	1
+			MaxActive	1
+			SpawnCount	1
+			WaitBetweenSpawns	0
+			WaitBeforeStarting	0
+
+            TotalCurrency	100
+			
+			Tank
+			{
+				Health	25000
+				Name	TankBoss
+				Speed	75
+
+                Template TankStickyHellmet [$SIGSEGV]
+				StartingPathTrackNode tankpath_alt
+				OnKilledOutput
+				{
+					Target	boss_dead_relay
+					Action	Trigger
+				}
+				OnBombDroppedOutput
+				{
+					Target	boss_deploy_relay
+					Action	Trigger
+				}
+			}
+		}
+        WaveSpawn
+		{
+			Where spawnbot
+			Name "stage01"
+			
+			TotalCount 8
+			MaxActive  4
+			SpawnCount 1		
+			WaitBetweenSpawns   3
+			WaitBeforeStarting  0
+			
+			TotalCurrency   40
+		
+			TFBot
+			{
+				Template T_TFBot_Heavyweapons_Fist_Backup
+			}
+		}
+        WaveSpawn
+		{
+			Where spawnbot
+			Name "stage01"
+			
+			TotalCount 32
+			MaxActive  16
+			SpawnCount 4		
+			WaitBetweenSpawns   0
+			WaitBeforeStarting  0
+			
+			TotalCurrency   160
+		
+			TFBot
+			{
+				Class Heavyweapons
+                Skill Normal
+                ItemAttributes
+                {
+                    ItemName tf_weapon_minigun
+                    "attach particle effect" 702
+                    "bleeding duration" 15
+                }
+			}
+		}
+
+        WaveSpawn
+		{
+			Name "support_tank"
+            WaitForAllDead "stage01"
+            Support 1
+			
+			TotalCount	5
+			MaxActive	2
+			SpawnCount	1
+			WaitBetweenSpawns	25
+			WaitBeforeStarting	10
+
+            TotalCurrency	100
+			
+			Tank
+			{
+				Health	5000
+				Name	TankBoss
+				Speed	100
+
+                Template SmallTankTurretCrit [$SIGSEGV]
+				StartingPathTrackNode tankpath_same
+				OnKilledOutput
+				{
+					Target	boss_dead_relay
+					Action	Trigger
+				}
+				OnBombDroppedOutput
+				{
+					Target	boss_deploy_relay
+					Action	Trigger
+				}
+			}
+		}
+
+        WaveSpawn
+		{
+			Where spawnbot
+			Name "stage02_giant"
+            WaitForAllDead "stage01"
+			
+			TotalCount 6
+			MaxActive  3
+			SpawnCount 3		
+			WaitBetweenSpawns   20
+			WaitBeforeStarting  10
+			
+			TotalCurrency   60
+		
+            Squad
+            {
+                TFBot
+			    {
+				    Template T_TFBot_Giant_Heavyweapons_Shotgun
+                    SpawnTemplate "powerup_logic_critbuff_recipient" [$SIGSEGV]
+			    }
+                TFBot
+			    {
+				    Template T_TFBot_Medic
+                    SpawnTemplate "powerup_logic_critbuff_recipient" [$SIGSEGV]
+			    }
+                TFBot
+			    {
+				    Template T_TFBot_Medic
+                    SpawnTemplate "powerup_logic_critbuff_recipient" [$SIGSEGV]
+			    }
+            }
+		}
+        WaveSpawn
+		{
+			Where spawnbot
+			Name "stage02"
+            WaitForAllDead "stage01"
+			
+			TotalCount 16
+			MaxActive  8
+			SpawnCount 4		
+			WaitBetweenSpawns   3
+			WaitBeforeStarting  0
+			
+			TotalCurrency   80
+		
+            Squad
+            {
+                TFBot
+			    {
+				    Template T_TFBot_Soldier_TankBuster
+                    SpawnTemplate "powerup_logic_critbuff_recipient" [$SIGSEGV]
+			    }
+                TFBot
+			    {
+				    Template T_TFBot_Soldier_Stun
+                    SpawnTemplate "powerup_logic_critbuff_recipient" [$SIGSEGV]
+			    }
+                TFBot
+			    {
+				    Template T_TFBot_Soldier_Stun
+                    SpawnTemplate "powerup_logic_critbuff_recipient" [$SIGSEGV]
+			    }
+                TFBot
+			    {
+				    Template T_TFBot_Soldier_Stun
+                    SpawnTemplate "powerup_logic_critbuff_recipient" [$SIGSEGV]
+			    }
+            }
+		}
+        WaveSpawn
+		{
+			Where spawnbot_flank
+			Name "stage02"
+            WaitForAllDead "stage01"
+			
+			TotalCount 16
+			MaxActive  8
+			SpawnCount 4		
+			WaitBetweenSpawns   3
+			WaitBeforeStarting  5
+			
+			TotalCurrency   80
+		
+            Squad
+            {
+                TFBot
+			    {
+				    Class Heavyweapons
+                    Skill Normal
+                    SpawnTemplate "powerup_logic_critbuff_recipient" [$SIGSEGV]
+                    ItemAttributes
+                    {
+                        ItemName tf_weapon_minigun
+                        "attach particle effect" 702
+                        "bleeding duration" 15
+                    }
+			    }
+                TFBot
+			    {
+				    Template T_TFBot_Medic_Shield_Quickfix
+                    SpawnTemplate "powerup_logic_critbuff_recipient" [$SIGSEGV]
+			    }
+                TFBot
+			    {
+				    Template T_TFBot_Heavyweapons_Shotgun
+                    SpawnTemplate "powerup_logic_critbuff_recipient" [$SIGSEGV]
+                    ItemAttributes
+                    {
+                        ItemName TF_WEAPON_SHOTGUN_HWG
+                        "attach particle effect" 702
+                        "bleeding duration" 15
+                    }
+			    }
+                TFBot
+			    {
+				    Template T_TFBot_Heavyweapons_Shotgun
+                    SpawnTemplate "powerup_logic_critbuff_recipient" [$SIGSEGV]
+                    ItemAttributes
+                    {
+                        ItemName TF_WEAPON_SHOTGUN_HWG
+                        "attach particle effect" 702
+                        "bleeding duration" 15
+                    }
+			    }
+            }
+		}
+
+        WaveSpawn
+		{
+			Where spawnbot_flank
+			Name "stage03_giant"
+            WaitForAllSpawned "stage02"
+			
+			TotalCount 4
+			MaxActive  4
+			SpawnCount 1		
+			WaitBetweenSpawns   10
+			WaitBeforeStarting  15
+			
+			TotalCurrency   100
+		
+            TFBot
+			{
+				Template T_TFBot_Giant_Soldier_Homing
+                SpawnTemplate "powerup_logic_critbuff_recipient" [$SIGSEGV]
+			}
+		}
+        WaveSpawn
+		{
+			Where spawnbot
+			Name "stage03"
+            WaitForAllSpawned "stage02"
+			
+			TotalCount 16
+			MaxActive  8
+			SpawnCount 4		
+			WaitBetweenSpawns   3
+			WaitBeforeStarting  10
+			
+			TotalCurrency   80
+		
+            Squad
+            {
+                TFBot
+			    {
+				    Template T_TFBot_Soldier_TankBuster
+                    SpawnTemplate "powerup_logic_critbuff_recipient" [$SIGSEGV]
+			    }
+                TFBot
+			    {
+				    Template T_TFBot_Soldier_Stun
+                    SpawnTemplate "powerup_logic_critbuff_recipient" [$SIGSEGV]
+			    }
+                TFBot
+			    {
+				    Template T_TFBot_Soldier_Stun
+                    SpawnTemplate "powerup_logic_critbuff_recipient" [$SIGSEGV]
+			    }
+                TFBot
+			    {
+				    Template T_TFBot_Soldier_Stun
+                    SpawnTemplate "powerup_logic_critbuff_recipient" [$SIGSEGV]
+			    }
+            }
+		}
+        WaveSpawn
+		{
+			Where spawnbot
+			Name "stage03"
+            WaitForAllSpawned "stage02"
+			
+			TotalCount 16
+			MaxActive  8
+			SpawnCount 4		
+			WaitBetweenSpawns   3
+			WaitBeforeStarting  10
+			
+			TotalCurrency   80
+		
+            Squad
+            {
+                TFBot
+			    {
+				    Template T_TFBot_Soldier_Critbuff
+			    }
+                TFBot
+			    {
+				    Template T_TFBot_Soldier_DirectHit
+                    SpawnTemplate "powerup_logic_critbuff_recipient" [$SIGSEGV]
+			    }
+                TFBot
+			    {
+				    Template T_TFBot_Soldier_DirectHit
+                    SpawnTemplate "powerup_logic_critbuff_recipient" [$SIGSEGV]
+			    }
+                TFBot
+			    {
+				    Template T_TFBot_Soldier_DirectHit
+                    SpawnTemplate "powerup_logic_critbuff_recipient" [$SIGSEGV]
+			    }
+            }
+		}
+
+        WaveSpawn
+		{
+			Where spawnbot
+			Name "stage04_giant"
+            WaitForAllSpawned "stage03"
+			
+			TotalCount 6
+			MaxActive  3
+			SpawnCount 3		
+			WaitBetweenSpawns   20
+			WaitBeforeStarting  20
+			
+			TotalCurrency   60
+		
+            Squad
+            {
+                TFBot
+			    {
+				    Template T_TFBot_Giant_Heavyweapons_Shotgun
+                    SpawnTemplate "powerup_logic_critbuff_recipient" [$SIGSEGV]
+			    }
+                TFBot
+			    {
+				    Template T_TFBot_Medic
+                    SpawnTemplate "powerup_logic_critbuff_recipient" [$SIGSEGV]
+			    }
+                TFBot
+			    {
+				    Template T_TFBot_Medic
+                    SpawnTemplate "powerup_logic_critbuff_recipient" [$SIGSEGV]
+			    }
+            }
+		}
+        WaveSpawn
+		{
+			Where spawnbot
+			Name "stage04"
+            WaitForAllSpawned "stage03"
+			
+			TotalCount 16
+			MaxActive  8
+			SpawnCount 4		
+			WaitBetweenSpawns   3
+			WaitBeforeStarting  10
+			
+			TotalCurrency   80
+		
+            Squad
+            {
+                TFBot
+			    {
+				    Template T_TFBot_Soldier_Critbuff
+			    }
+                TFBot
+			    {
+				    Template T_TFBot_Soldier_DirectHit
+                    SpawnTemplate "powerup_logic_critbuff_recipient" [$SIGSEGV]
+			    }
+                TFBot
+			    {
+				    Template T_TFBot_Soldier_DirectHit
+                    SpawnTemplate "powerup_logic_critbuff_recipient" [$SIGSEGV]
+			    }
+                TFBot
+			    {
+				    Template T_TFBot_Soldier_DirectHit
+                    SpawnTemplate "powerup_logic_critbuff_recipient" [$SIGSEGV]
+			    }
+            }
+		}
+        WaveSpawn
+		{
+			Where spawnbot_flank
+			Name "stage02"
+            WaitForAllDead "stage01"
+			
+			TotalCount 16
+			MaxActive  8
+			SpawnCount 4		
+			WaitBetweenSpawns   3
+			WaitBeforeStarting  5
+			
+			TotalCurrency   80
+		
+            Squad
+            {
+                TFBot
+			    {
+				    Class Heavyweapons
+                    Skill Normal
+                    SpawnTemplate "powerup_logic_critbuff_recipient" [$SIGSEGV]
+                    ItemAttributes
+                    {
+                        ItemName tf_weapon_minigun
+                        "attach particle effect" 702
+                        "bleeding duration" 15
+                    }
+			    }
+                TFBot
+			    {
+				    Template T_TFBot_Medic_Shield_Quickfix
+                    SpawnTemplate "powerup_logic_critbuff_recipient" [$SIGSEGV]
+			    }
+                TFBot
+			    {
+				    Template T_TFBot_Pyro_Dragon
+                    Skill Hard
+                    SpawnTemplate "powerup_logic_critbuff_recipient" [$SIGSEGV]
+                    ItemAttributes
+                    {
+                        ItemName "The Dragon's Fury"
+                        "attach particle effect" 702
+                        "bleeding duration" 15
+                    }
+			    }
+                TFBot
+			    {
+				    Template T_TFBot_Pyro_Dragon
+                    Skill Hard
+                    SpawnTemplate "powerup_logic_critbuff_recipient" [$SIGSEGV]
+                    ItemAttributes
+                    {
+                        ItemName "The Dragon's Fury"
+                        "attach particle effect" 702
+                        "bleeding duration" 15
+                    }
+			    }
+            }
+		}
+    }
+
+	// Wave 5/8
+	// Total $ in this wave : 900$
+	// Total $ when wave starts : 400$ (Starting money) + 4100$ (Collected money) + 400$ (Bonus) = 4900$
+	// Total $ when wave ends : 400$ (Starting money) + 5000$ (Collected money) + 500$ (Bonus) = 5900$
+
+	Mission
+	{
+		Objective Sniper
+		Where spawnbot_mission_sniper
+		BeginAtWave 5
+		RunForThisManyWaves 1
+		
+		InitialCooldown	60
+		CooldownTime 60
+		DesiredCount 2
+		
+		TFBot
+		{
+			Template T_TFBot_Sniper_Fullauto
+		}
+	}
+
+	Wave
+	{
+        StartWaveOutput
+		{
+			Target wave_start_relay
+			Action Trigger
+		}
+		DoneOutput
+		{
+			Target wave_finished_relay
+			Action trigger
+		}
+
+		WaveSpawn
+		{
+			Where spawnbot_flank2
+			Name "stage01"
+			
+			TotalCount 16
+			MaxActive  12
+			SpawnCount 1		
+			WaitBetweenSpawns   3
+			WaitBeforeStarting  0
+			
+			TotalCurrency   100
+		
+			TFBot
+			{
+				Template T_TFBot_Giant_Demo_Sticky_Burst
+				Attributes AlwaysCrit
+			}
+		}
+		WaveSpawn
+		{
+			Where spawnbot
+			Name "stage01a"
+			
+			TotalCount 16
+			MaxActive  8
+			SpawnCount 4		
+			WaitBetweenSpawns   4
+			WaitBeforeStarting  0
+			
+			TotalCurrency   120
+		
+			Squad
+			{
+				TFBot
+				{
+					Template T_TFBot_Heavy_Flame
+				}
+				TFBot
+				{
+					Template T_TFBot_Medic_QuickUber
+				}
+			}
+		}
+		WaveSpawn
+		{
+			Where spawnbot
+			Name "stage01b"
+			WaitForAllSpawned "stage01a"
+			
+			TotalCount 32
+			MaxActive  8
+			SpawnCount 4		
+			WaitBetweenSpawns   0
+			WaitBeforeStarting  0
+			
+			TotalCurrency   80
+		
+			TFBot
+			{
+				Template T_TFBot_Sniper_Huntsman_Spammer_Normal
+				Attributes AlwaysCrit
+			}
+		}
+
+		WaveSpawn
+		{
+			Name "stage02_tank"
+			WaitForAllSpawned "stage01b"
+			
+			TotalCount	1
+			MaxActive	1
+			SpawnCount	1
+			WaitBetweenSpawns	0
+			WaitBeforeStarting	10
+
+            TotalCurrency	100
+			
+			Tank
+			{
+				Health	25000
+				Name	TankBoss
+				Speed	75
+				StartingPathTrackNode tankpath_same
+				OnKilledOutput
+				{
+					Target	boss_dead_relay
+					Action	Trigger
+				}
+				OnBombDroppedOutput
+				{
+					Target	boss_deploy_relay
+					Action	Trigger
+				}
+			}
+		}
+		WaveSpawn
+		{
+			Where spawnbot
+			Name "stage02"
+			WaitForAllSpawned "stage01b"
+			
+			TotalCount 9
+			MaxActive  3
+			SpawnCount 3		
+			WaitBetweenSpawns   0
+			WaitBeforeStarting  10
+			
+			TotalCurrency   100
+		
+			Squad
+			{
+				TFBot
+				{
+					Template T_TFBot_Giant_Sniper_Carbine_Pusher
+				}
+				TFBot
+				{
+					Template T_TFBot_Medic_Vaccinator_Bullet_Armored
+				}
+				TFBot
+				{
+					Template T_TFBot_Medic_Vaccinator_Bullet_Armored
+				}
+			}
+		}
+		WaveSpawn
+		{
+			Where spawnbot
+			Name "stage02"
+			WaitForAllSpawned "stage01b"
+			
+			TotalCount 9
+			MaxActive  3
+			SpawnCount 3		
+			WaitBetweenSpawns   0
+			WaitBeforeStarting  20
+			
+			TotalCurrency   100
+		
+			Squad
+			{
+				TFBot
+				{
+					Template T_TFBot_Giant_Soldier_Blast_Spammer
+				}
+				TFBot
+				{
+					Template T_TFBot_Medic_Vaccinator_Blast_Armored
+				}
+				TFBot
+				{
+					Template T_TFBot_Medic_Vaccinator_Blast_Armored
+				}
+			}
+		}
+		WaveSpawn
+		{
+			Where spawnbot
+			Name "stage02"
+			WaitForAllSpawned "stage01b"
+			
+			TotalCount 9
+			MaxActive  3
+			SpawnCount 3		
+			WaitBetweenSpawns   0
+			WaitBeforeStarting  30
+			
+			TotalCurrency   100
+		
+			Squad
+			{
+				TFBot
+				{
+					Template T_TFBot_Giant_Pyro_Repulsive
+				}
+				TFBot
+				{
+					Template T_TFBot_Medic_Vaccinator_Fire_Armored
+				}
+				TFBot
+				{
+					Template T_TFBot_Medic_Vaccinator_Fire_Armored
+				}
+			}
+		}
+
+		WaveSpawn
+		{
+			Where spawnbot_flank
+			Name "support"
+			WaitForAllDead "stage01b"
+			Support 1
+			
+			TotalCount 25
+			MaxActive  5
+			SpawnCount 5		
+			WaitBetweenSpawns   0
+			WaitBeforeStarting  0
+			
+			TotalCurrency   100
+
+			RandomChoice
+			{
+				TFBot
+				{
+					Template T_TFBot_Scout_Fast
+					Attributes AlwaysCrit
+				}
+				TFBot
+				{
+					Template T_TFBot_Scout_Fast
+					Attributes AlwaysCrit
+				}
+				TFBot
+				{
+					Template T_TFBot_Scout_Fast
+					Attributes AlwaysCrit
+					Tag hardflanker
+				}
+			}
+		}
+		WaveSpawn
+		{
+			Where spawnbot_flank
+			Name "support"
+			WaitForAllDead "stage01b"
+			Support 1
+			
+			TotalCount 25
+			MaxActive  5
+			SpawnCount 5		
+			WaitBetweenSpawns   0
+			WaitBeforeStarting  0
+			
+			TotalCurrency   100
+
+			RandomChoice
+			{
+				TFBot
+				{
+					Template T_TFBot_Pyro_Dragon
+					Skill Expert
+					Attributes AlwaysCrit
+				}
+				TFBot
+				{
+					Template T_TFBot_Pyro_Dragon
+					Skill Expert
+					Attributes AlwaysCrit
+				}
+				TFBot
+				{
+					Template T_TFBot_Pyro_Dragon
+					Skill Expert
+					Attributes AlwaysCrit
+					Tag hardflanker
+				}
+			}
+		}
+	}
+
+	// Wave 6/8
+	// Total $ in this wave : 1300$
+	// Total $ when wave starts : 400$ (Starting money) + 5000$ (Collected money) + 500$ (Bonus) = 5900$
+	// Total $ when wave ends : 400$ (Starting money) + 6300$ (Collected money) + 600$ (Bonus) = 7300$
+
+	Mission
+	{
+		Objective Spy
+		Where spawnbot_mission_spy
+		BeginAtWave 6
+		RunForThisManyWaves 1
+		
+		InitialCooldown	30
+		CooldownTime 30
+		DesiredCount 3
+		
+		TFBot
+		{
+			Template T_TFBot_Spy_Ninja
+		}
+	}
+
+	Wave
+	{
+        StartWaveOutput
+		{
+			Target wave_start_relay
+			Action Trigger
+		}
+		DoneOutput
+		{
+			Target wave_finished_relay
+			Action trigger
+		}
+
+		WaveSpawn
+		{
+			Where spawnbot
+			Name "stage01"
+			
+			TotalCount 8
+			MaxActive  8
+			SpawnCount 4		
+			WaitBetweenSpawns   20
+			WaitBeforeStarting  0
+			
+			TotalCurrency   100
+		
+			Squad
+			{
+				TFBot
+				{
+					Template T_TFBot_Giant_Soldier_Burst_Hyper_Conch
+				}
+				TFBot
+				{
+					Template T_TFBot_Medic_Quickheal_Armored
+				}
+				TFBot
+				{
+					Template T_TFBot_Medic_Quickheal_Armored
+				}
+				TFBot
+				{
+					Template T_TFBot_Medic_Quickheal_Armored
+				}
+			}
+		}
+		WaveSpawn
+		{
+			Where spawnbot
+			Name "stage01"
+			
+			TotalCount 16
+			MaxActive  12
+			SpawnCount 4		
+			WaitBetweenSpawns   7
+			WaitBeforeStarting  0
+			
+			TotalCurrency   100
+		
+			Squad
+			{
+				TFBot
+				{
+					Template T_TFBot_Pyro_Conch
+					Skill Expert
+					Attributes AlwaysCrit
+					ItemAttributes
+                	{
+                   	 	ItemName tf_weapon_flamethrower
+                    	"attach particle effect" 702
+                    	"bleeding duration" 15
+                	}
+				}
+				TFBot
+				{
+					Template T_TFBot_Medic_Quickheal
+				}
+				TFBot
+				{
+					Template T_TFBot_Medic_Quickheal
+				}
+				TFBot
+				{
+					Template T_TFBot_Medic_Quickheal
+				}
+			}
+		}
+
+		WaveSpawn
+		{
+			Where spawnbot_flank2
+			Name "stage02_superscout"
+			WaitForAllSpawned "stage01"
+			
+			TotalCount 12
+			MaxActive  2
+			SpawnCount 1		
+			WaitBetweenSpawns   20
+			WaitBeforeStarting  40
+			
+			TotalCurrency   120
+		
+			TFBot
+			{
+				Template T_TFBot_Giant_Scout_Fast_Bonk_Expert
+			}
+		}
+		WaveSpawn
+		{
+			Where spawnbot
+			Name "stage02_giant"
+			WaitForAllSpawned "stage01"
+			
+			TotalCount 16
+			MaxActive  4
+			SpawnCount 4		
+			WaitBetweenSpawns   0
+			WaitBeforeStarting  30
+			
+			TotalCurrency   160
+
+			Squad
+			{
+				TFBot
+				{
+					Template T_TFBot_Giant_Soldier_Spammer_Conch
+					Attributes AlwaysCrit
+				}
+				TFBot
+				{
+					Template T_TFBot_Medic_Quickheal
+				}
+				TFBot
+				{
+					Template T_TFBot_Medic_Quickheal
+				}
+				TFBot
+				{
+					Template T_TFBot_Medic_Quickheal
+				}
+			}
+		}
+		WaveSpawn
+		{
+			Where spawnbot
+			Name "stage02"
+			WaitForAllSpawned "stage01"
+			
+			TotalCount 16
+			MaxActive  4
+			SpawnCount 2		
+			WaitBetweenSpawns   0
+			WaitBeforeStarting  20
+			
+			TotalCurrency   120
+		
+			Squad
+			{
+				TFBot
+				{
+					Template T_TFBot_Pyro_Conch
+					Skill Expert
+					Attributes AlwaysCrit
+					ItemAttributes
+                	{
+                   	 	ItemName tf_weapon_flamethrower
+                    	"attach particle effect" 702
+                    	"bleeding duration" 15
+                	}
+				}
+				TFBot
+				{
+					Template T_TFBot_Medic_Quickheal
+				}
+			}
+		}
+		WaveSpawn
+		{
+			Where spawnbot
+			Name "stage02"
+			WaitForAllSpawned "stage01"
+			
+			TotalCount 50
+			MaxActive  10
+			SpawnCount 5		
+			WaitBetweenSpawns   0
+			WaitBeforeStarting  20
+			
+			TotalCurrency   100
+		
+			TFBot
+			{
+				Template T_TFBot_Demo_Conch
+				Skill Expert
+				Attributes AlwaysCrit
+			}
+		}
+
+		WaveSpawn
+		{
+			Where spawnbot
+			Name "stage03"
+			WaitForAllSpawned "stage02"
+			
+			TotalCount 16
+			MaxActive  8
+			SpawnCount 4		
+			WaitBetweenSpawns   10
+			WaitBeforeStarting  10
+			
+			TotalCurrency   160
+		
+			Squad
+			{
+				TFBot
+				{
+					Template T_TFBot_Giant_Heavy_Conch
+					Attributes AlwaysCrit
+					ItemAttributes
+                	{
+                   	 	ItemName "TF_WEAPON_MINIGUN"
+                    	"attach particle effect" 702
+                    	"bleeding duration" 15
+                	}
+				}
+				TFBot
+				{
+					Template T_TFBot_Medic_Quickheal
+				}
+				TFBot
+				{
+					Template T_TFBot_Medic_Quickheal
+				}
+				TFBot
+				{
+					Template T_TFBot_Medic_Quickheal
+				}
+			}
+		}
+		WaveSpawn
+		{
+			Where spawnbot
+			Name "stage03"
+			WaitForAllSpawned "stage02"
+			
+			TotalCount 8
+			MaxActive  4
+			SpawnCount 2		
+			WaitBetweenSpawns   10
+			WaitBeforeStarting  15
+			
+			TotalCurrency   80
+		
+			Squad
+			{
+				TFBot
+				{
+					Template T_TFBot_Giant_Pyro_Conch
+					Attributes AlwaysCrit
+					ItemAttributes
+                	{
+                   	 	ItemName tf_weapon_flamethrower
+                    	"attach particle effect" 702
+                    	"bleeding duration" 15
+                	}
+				}
+				TFBot
+				{
+					Template T_TFBot_Medic_Quickheal
+				}
+			}
+		}
+		WaveSpawn
+		{
+			Where spawnbot
+			Name "stage03_support"
+			WaitForAllSpawned "stage02"
+			
+			TotalCount 24
+			MaxActive  8
+			SpawnCount 4		
+			WaitBetweenSpawns   2
+			WaitBeforeStarting  25
+			
+			TotalCurrency   160
+		
+			TFBot
+			{
+				Template T_TFBot_Heavy_Conch
+				Skill Expert
+				Attributes AlwaysCrit
+				ItemAttributes
+                {
+                   	ItemName "TF_WEAPON_MINIGUN"
+                    "attach particle effect" 702
+                    "bleeding duration" 15
+                }
+			}
+		}
+
+		WaveSpawn
+		{
+			Where spawnbot
+			Name "stage04"
+			WaitForAllSpawned "stage03"
+			
+			TotalCount 8
+			MaxActive  8
+			SpawnCount 4		
+			WaitBetweenSpawns   20
+			WaitBeforeStarting  20
+			
+			TotalCurrency   100
+		
+			Squad
+			{
+				TFBot
+				{
+					Template T_TFBot_Giant_Soldier_Burst_Hyper_Conch
+				}
+				TFBot
+				{
+					Template T_TFBot_Medic_Quickheal_Armored
+				}
+				TFBot
+				{
+					Template T_TFBot_Medic_Quickheal_Armored
+				}
+				TFBot
+				{
+					Template T_TFBot_Medic_Quickheal_Armored
+				}
+			}
+		}
+		WaveSpawn
+		{
+			Where spawnbot
+			Name "stage04"
+			WaitForAllSpawned "stage03"
+			
+			TotalCount 16
+			MaxActive  8
+			SpawnCount 8		
+			WaitBetweenSpawns   0
+			WaitBeforeStarting  20
+			
+			TotalCurrency   100
+		
+			TFBot
+			{
+				Template T_TFBot_Heavy_Conch
+				Skill Expert
+				Attributes AlwaysCrit
+				ItemAttributes
+                {
+                   	ItemName "TF_WEAPON_MINIGUN"
+                    "attach particle effect" 702
+                    "bleeding duration" 15
+                }
+			}
+		}
+	}
+
+	// Wave 7/8
+	// Total $ in this wave : 1400$
+	// Total $ when wave starts : 400$ (Starting money) + 6300$ (Collected money) + 600$ (Bonus) = 7300$
+	// Total $ when wave ends : 400$ (Starting money) + 7700$ (Collected money) + 700$ (Bonus) = 8800$
+
+	Mission
+	{
+		Objective Sniper
+		Where spawnbot_mission_sniper
+		BeginAtWave 7
+		RunForThisManyWaves 1
+		
+		InitialCooldown	30
+		CooldownTime 30
+		DesiredCount 4
+		
+		TFBot
+		{
+			Template T_TFBot_Sniper_Armored
+			Attributes AlwaysCrit
+		}
+	}
+	Mission
+	{
+		Objective Spy
+		Where spawnbot_mission_spy
+		BeginAtWave 7
+		RunForThisManyWaves 1
+		
+		InitialCooldown	30
+		CooldownTime 30
+		DesiredCount 4
+		
+		TFBot
+		{
+			Template T_TFBot_Spy_Business_Support
+			Attributes AlwaysCrit
+		}
+	}
+
+	Wave
+	{
+        StartWaveOutput
+		{
+			Target wave_start_relay
+			Action Trigger
+		}
+		DoneOutput
+		{
+			Target wave_finished_relay
+			Action trigger
+		}
+
+		WaveSpawn
+		{
+			Name "stage01_tank"
+			
+			TotalCount	1
+			MaxActive	1
+			SpawnCount	1
+			WaitBetweenSpawns	0
+			WaitBeforeStarting	0
+
+            TotalCurrency	100
+			
+			Tank
+			{
+				Health	25000
+				Name	TankBoss
+				Speed	75
+				StartingPathTrackNode tankpath_alt
+				OnKilledOutput
+				{
+					Target	boss_dead_relay
+					Action	Trigger
+				}
+				OnBombDroppedOutput
+				{
+					Target	boss_deploy_relay
+					Action	Trigger
+				}
+			}
+		}
+		WaveSpawn
+		{
+			Where spawnbot
+			Name "stage01"
+			
+			TotalCount 6
+			MaxActive  4
+			SpawnCount 2		
+			WaitBetweenSpawns   30
+			WaitBeforeStarting  0
+			
+			TotalCurrency   150
+
+			Squad
+			{
+				TFBot
+				{
+					Template T_TFBot_Giant_Demo_Sticky_Spammer
+					Attributes AlwaysCrit
+					ItemAttributes
+					{
+						ItemName "TF_WEAPON_PIPEBOMBLAUNCHER"
+						"attach particle effect" 702
+                    	"bleeding duration" 15
+					}
+				}
+				TFBot
+				{
+					Template T_TFBot_Giant_Medic
+				}
+			}
+		}
+		WaveSpawn
+		{
+			Where spawnbot_flank2
+			Name "stage01"
+			
+			TotalCount 6
+			MaxActive  4
+			SpawnCount 2		
+			WaitBetweenSpawns   30
+			WaitBeforeStarting  15
+			
+			TotalCurrency   150
+
+			Squad
+			{
+				TFBot
+				{
+					Template T_TFBot_Giant_Heavy_Deflector_Tomislav
+					Attributes AlwaysCrit
+					ItemAttributes
+					{
+						ItemName "tomislav"
+						"attach particle effect" 702
+                    	"bleeding duration" 15
+					}
+				}
+				TFBot
+				{
+					Template T_TFBot_Giant_Medic_Uber_Extended
+				}
+			}
+		}
+
+		WaveSpawn
+		{
+			Name "stage02_tank"
+			WaitForAllSpawned "stage01"
+			
+			TotalCount	1
+			MaxActive	1
+			SpawnCount	1
+			WaitBetweenSpawns	0
+			WaitBeforeStarting	20
+
+            TotalCurrency	100
+			
+			Tank
+			{
+				Health	20000
+				Name	TankBoss
+				Speed	75
+				Skin    1
+				StartingPathTrackNode tankpath_same
+				OnKilledOutput
+				{
+					Target	boss_dead_relay
+					Action	Trigger
+				}
+				OnBombDroppedOutput
+				{
+					Target	boss_deploy_relay
+					Action	Trigger
+				}
+			}
+		}
+		WaveSpawn
+		{
+			Name "stage02_tank"
+			WaitForAllSpawned "stage01"
+			
+			TotalCount	1
+			MaxActive	1
+			SpawnCount	1
+			WaitBetweenSpawns	0
+			WaitBeforeStarting	30
+
+            TotalCurrency	100
+			
+			Tank
+			{
+				Health	20000
+				Name	TankBoss
+				Speed	75
+				Skin    1
+				StartingPathTrackNode tankpath_alt
+				OnKilledOutput
+				{
+					Target	boss_dead_relay
+					Action	Trigger
+				}
+				OnBombDroppedOutput
+				{
+					Target	boss_deploy_relay
+					Action	Trigger
+				}
+			}
+		}
+		WaveSpawn
+		{
+			Where spawnbot
+			Name "stage02"
+			WaitForAllSpawned "stage01"
+			
+			TotalCount 2
+			MaxActive  2
+			SpawnCount 2		
+			WaitBetweenSpawns   30
+			WaitBeforeStarting  30
+			
+			TotalCurrency   100
+
+			Squad
+			{
+				TFBot
+				{
+					Template T_TFBot_Giant_Soldier_Spammer_Crit
+					ItemAttributes
+					{
+						ItemName	"diamond botkiller rocket launcher mk.i"
+						"attach particle effect" 702
+                    	"bleeding duration" 15
+					}
+				}
+				TFBot
+				{
+					Template T_TFBot_Giant_Medic_Shield_Extended
+				}
+			}
+		}
+		WaveSpawn
+		{
+			Where spawnbot
+			Name "stage02"
+			WaitForAllSpawned "stage01"
+			
+			TotalCount 2
+			MaxActive  2
+			SpawnCount 2		
+			WaitBetweenSpawns   0
+			WaitBeforeStarting  60
+			
+			TotalCurrency   100
+
+			Squad
+			{
+				TFBot
+				{
+					Template T_TFBot_Giant_Soldier_Spammer_Crit
+					Tag hardflanker
+					ItemAttributes
+					{
+						ItemName	"diamond botkiller rocket launcher mk.i"
+						"attach particle effect" 702
+                    	"bleeding duration" 15
+					}
+				}
+				TFBot
+				{
+					Template T_TFBot_Giant_Medic_Shield_Extended
+				}
+			}
+		}
+		WaveSpawn
+		{
+			Where spawnbot
+			Name "stage02"
+			WaitForAllSpawned "stage01"
+			
+			TotalCount 2
+			MaxActive  2
+			SpawnCount 2		
+			WaitBetweenSpawns   0
+			WaitBeforeStarting  90
+			
+			TotalCurrency   100
+
+			Squad
+			{
+				TFBot
+				{
+					Template T_TFBot_Giant_Soldier_Spammer_Crit
+					ItemAttributes
+					{
+						ItemName	"diamond botkiller rocket launcher mk.i"
+						"attach particle effect" 702
+                    	"bleeding duration" 15
+					}
+				}
+				TFBot
+				{
+					Template T_TFBot_Giant_Medic_Shield_Extended
+				}
+			}
+		}
+
+		WaveSpawn
+		{
+			Where spawnbot_flank2
+			Name "stage03"
+			WaitForAllDead "stage02"
+			
+			TotalCount 6
+			MaxActive  6
+			SpawnCount 6		
+			WaitBetweenSpawns   0
+			WaitBeforeStarting  15
+			
+			TotalCurrency   300
+
+			Squad
+			{
+				TFBot
+				{
+					Template T_TFBot_Giant_Heavy_Shotgun_FastFire
+					Attributes AlwaysCrit
+					SpawnTemplate "powerup_strength_logic" [$SIGSEGV]
+					ItemAttributes
+					{
+						ItemName tf_weapon_shotgun_hwg
+						"attach particle effect" 702
+                    	"bleeding duration" 15
+					}
+				}
+				TFBot
+				{
+					Template T_TFBot_Giant_Medic_Strength
+				}
+			}
+		}
+
+		WaveSpawn
+		{
+			Where spawnbot
+			Where spawnbot_flank
+			Name "support01"
+			Support 1
+			
+			TotalCount 30
+			MaxActive  6
+			SpawnCount 3		
+			WaitBetweenSpawns   3
+			WaitBeforeStarting  0
+			
+			TotalCurrency   150
+
+			Squad
+			{
+				TFBot
+				{
+					Template T_TFBot_Soldier_Burst
+					Attributes AlwaysCrit
+				}
+				TFBot
+				{
+					Template T_TFBot_Medic
+				}
+				TFBot
+				{
+					Template T_TFBot_Heavy_Tomislav_Penetration
+				}
+			}
+		}
+		WaveSpawn
+		{
+			Where spawnbot
+			Name "support02"
+			WaitForAllDead "stage01"
+			Support 1
+			
+			TotalCount 10
+			MaxActive  2
+			SpawnCount 2		
+			WaitBetweenSpawns   0
+			WaitBeforeStarting  0
+			
+			TotalCurrency   50
+
+			Squad
+			{
+				TFBot
+				{
+					Template T_TFBot_Scout_Blaster_Pusher
+					Attributes AlwaysCrit
+				}
+				TFBot
+				{
+					Template T_TFBot_Medic
+				}
+			}
+		}
+	}
+
+	// Wave 8/8
+	// Total $ in this wave : 800$
+	// Total $ when wave starts : 400$ (Starting money) + 7700$ (Collected money) + 700$ (Bonus) = 8800$
+	// Total $ when wave ends : 400$ (Starting money) + 8500$ (Collected money) + 700$ (Bonus) = 9600$
+
+	Mission
+	{
+		Objective Sniper
+		Where spawnbot_mission_sniper
+		BeginAtWave 8
+		RunForThisManyWaves 1
+		
+		InitialCooldown	10
+		CooldownTime 10
+		DesiredCount 2
+		
+		TFBot
+		{
+			Template T_TFBot_Sniper_Deathray
+		}
+	}
+
+	Wave
+	{
+        StartWaveOutput
+		{
+			Target wave_start_relay
+			Action Trigger
+		}
+		DoneOutput
+		{
+			Target wave_finished_relay
+			Action trigger
+		}
+
+		WaveSpawn
+		{
+			Where spawnbot
+			Name "stage01"
+			
+			TotalCount 16
+			MaxActive  8
+			SpawnCount 4		
+			WaitBetweenSpawns   10
+			WaitBeforeStarting  0
+			
+			TotalCurrency   160
+		
+			Squad
+			{
+				TFBot
+				{
+					Template T_TFBot_Giant_Pyro_Gaspasser_Explove
+					Attributes AlwaysCrit
+					ItemAttributes
+                	{
+                   	 	ItemName tf_weapon_flamethrower
+                    	"attach particle effect" 702
+                    	"bleeding duration" 15
+                	}
+				}
+				TFBot
+				{
+					Template T_TFBot_Medic_Quickheal_Extended
+				}
+				TFBot
+				{
+					Template T_TFBot_Medic_Quickheal_Extended
+				}
+				TFBot
+				{
+					Template T_TFBot_Medic_Quickheal_Extended
+				}
+			}
+		}
+		WaveSpawn
+		{
+			Where spawnbot
+			Name "stage01"
+			
+			TotalCount 30
+			MaxActive  6
+			SpawnCount 6		
+			WaitBetweenSpawns   0
+			WaitBeforeStarting  0
+			
+			TotalCurrency   120
+		
+			TFBot
+			{
+				Template T_TFBot_Heavy_Flame_Crit
+			}
+		}
+		WaveSpawn
+		{
+			Where spawnbot
+			Name "stage01"
+			
+			TotalCount 30
+			MaxActive  6
+			SpawnCount 6		
+			WaitBetweenSpawns   0
+			WaitBeforeStarting  0
+			
+			TotalCurrency   120
+		
+			TFBot
+			{
+				Template T_TFBot_Soldier_Stun_Spammer_Hyper
+				Attributes AlwaysCrit
+			}
+		}
+
+		WaveSpawn
+		{
+			Where spawnbot_flank2
+			Name "stage02"
+			WaitForAllSpawned "stage01"
+			
+			TotalCount 4
+			MaxActive  2
+			SpawnCount 1		
+			WaitBetweenSpawns   20
+			WaitBeforeStarting  20
+			
+			TotalCurrency   100
+		
+			TFBot
+			{
+				Template T_TFBot_Giant_Sniper_Huntsman_Hyper_Penetration
+				ItemAttributes
+                {
+                   	ItemName "the fortified compound"
+                    "attach particle effect" 702
+                    "bleeding duration" 15
+                }
+			}
+		}
+		WaveSpawn
+		{
+			Where spawnbot
+			Name "stage02"
+			WaitForAllSpawned "stage01"
+			
+			TotalCount 8
+			MaxActive  4
+			SpawnCount 2		
+			WaitBetweenSpawns   20
+			WaitBeforeStarting  30
+			
+			TotalCurrency   100
+		
+			TFBot
+			{
+				Template T_TFBot_Giant_Scout_Blaster_Hyper
+			}
+		}
+		WaveSpawn
+		{
+			Where spawnbot
+			Name "stage02"
+			WaitForAllSpawned "stage01"
+			
+			TotalCount 40
+			MaxActive  10
+			SpawnCount 5		
+			WaitBetweenSpawns   3
+			WaitBeforeStarting  15
+			
+			TotalCurrency   100
+		
+			TFBot
+			{
+				Template T_TFBot_Demo_Crit
+			}
+		}
+		WaveSpawn
+		{
+			Where spawnbot
+			Where spawnbot_flank
+			Name "stage02"
+			WaitForAllSpawned "stage01"
+			
+			TotalCount 16
+			MaxActive  4
+			SpawnCount 4		
+			WaitBetweenSpawns   0
+			WaitBeforeStarting  20
+			
+			TotalCurrency   100
+
+			Squad
+			{
+				TFBot
+				{
+					Template T_TFBot_Demo_Crit
+					ItemAttributes
+                	{
+                   	 	ItemName "gentlemanne_grenadelauncher_topshelf"
+                    	"attach particle effect" 702
+                    	"bleeding duration" 15
+                	}
+				}
+				TFBot
+				{
+					Template T_TFBot_Medic_Quickheal_Extended
+				}
+			}
+		}
+
+		WaveSpawn
+		{
+			Where spawnbot_boss
+			Name "stage03"
+			WaitForAllDead "stage02"
+			
+			TotalCount 1
+			MaxActive  1
+			SpawnCount 1		
+			WaitBetweenSpawns   0
+			WaitBeforeStarting  10
+			
+			TotalCurrency   0
+
+			FirstSpawnOutput
+			{
+				Target boss_door_open_relay
+				Action Trigger
+			}
+
+			TFBot
+			{
+				Template T_TFBot_Boss
+			}
+		}
+		WaveSpawn
+		{
+			Where spawnbot
+			Where spawnbot_flank
+			Name "stage03_support"
+			WaitForAllDead "stage02"
+			
+			TotalCount 30
+			MaxActive  18
+			SpawnCount 6		
+			WaitBetweenSpawns   10
+			WaitBeforeStarting  15
+			
+			TotalCurrency   0
+
+			TFBot
+			{
+				Template T_TFBot_Pyro_Longflame
+				ItemAttributes
+                {
+                   	ItemName tf_weapon_flamethrower
+                    "attach particle effect" 702
+                    "bleeding duration" 15
+                }
+			}
+		}
+	}
+}

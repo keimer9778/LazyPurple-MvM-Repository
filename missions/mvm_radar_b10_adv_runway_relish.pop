@@ -1,0 +1,1460 @@
+//mission by randomguy
+#base robot_randomguy.pop
+#base robot_gatebot_randomguy.pop
+
+// ==== ROBOT SPAWN NAMES ====
+// spawnbot_carrier_any			spawn left / right at random
+// spawnbot_carrier_bombside	spawn on the bomb path
+// spawnbot_carrier_altside		spawn on opposite of the bomb path
+// spawnbot_carrier_left	force spawn on left
+// spawnbot_carrier_right	force spawn on right
+// spawnbot_forward_any			spawn left / right at random
+// spawnbot_forward_bombside	spawn on the bomb path
+// spawnbot_forward_altside		spawn on opposite of the bomb path
+// spawnbot_forward_cliffside	force spawn on cliffside
+// spawnbot_forward_warehouse	force spawn on warehouse
+// spawnbot_carrier_bombside_slot1	OBSOLETE
+// spawnbot_carrier_altside_slot1	OBSOLETE
+// spawnbot_lieutenant_left			OBSOLETE
+// spawnbot_lieutenant_right		OBSOLETE
+// spawnbot_air_left
+// spawnbot_air_right
+// spawnbot_air_middle
+// spawnbot_air_middle_dead			does not drop bomb on rooftops
+// spawnbot_air_cliffside
+// spawnbot_air_any					OBSOLETE
+// spawnbot_air_platform			
+// spawnbot_air_giant				only for giants with >=1.75 scale
+
+// ==== TANK SPAWN NAMES ====
+// tank_bombside				tank follows the bomb path (from start to b4 top)
+// tank_altside					tank does not follow the bomb path (from start to b4 top)
+// tank_force_left				force use left/cliffside
+// tank_force_right				force use right/warehouse
+// tank_forward_bombside		tank follows the bomb path (from start to b4 top)
+// tank_forward_altside			tank does not follow the bomb path (from start to b4 top)
+// tank_force_cliffside			force use cliffside
+// tank_force_warehouse			force use warehouse
+
+// ==== TAGS ====
+// giant						used for giants so they won't get stuck in certain areas
+// flank_main					flank through non-bomb path (warehouse / cliffside)
+
+// ==== WAVE SETTINGS ====
+// wavesetting_bxx				1 normal bomb
+// wavesetting_bbx				2 normal bomb
+// wavesetting_bbb				3 normal bomb
+// wavesetting_ixx				1 ironman bomb (reset at 40s)
+// wavesetting_iix				2 ironman bomb (reset at 40s)
+// wavesetting_iii				3 ironman bomb (reset at 40s)
+// wavesetting_exx				1 endurance bomb (reset at 70s)
+// wavesetting_eex				2 endurance bomb (reset at 70s)
+// wavesetting_eee				3 endurance bomb (reset at 70s)
+// wavesetting_bxx_airbomb		1 normal bomb + show "bomb from above" message
+//
+// wavesetting_bxx_lne			1 normal bomb + force route: left > near > easy dropdown
+// wavesetting_bxx_lfe			1 normal bomb + force route: left > far > easy dropdown
+// wavesetting_bxx_lnh			1 normal bomb + force route: left > near > hard dropdown
+// wavesetting_bxx_lfh			1 normal bomb + force route: left > far > hard dropdown
+// wavesetting_bxx_rne			1 normal bomb + force route: right > near > easy dropdown
+// wavesetting_bxx_rfe			1 normal bomb + force route: right > far > easy dropdown
+// wavesetting_bxx_rnh			1 normal bomb + force route: right > near > hard dropdown
+// wavesetting_bxx_rfh			1 normal bomb + force route: right > far > hard dropdown
+
+
+// feedback 18/7/2020:
+// w1: add extra gheavy at end
+// w2: make tank slightly tankier
+// w3: add tank in final stage, unnerf final giants, make stage1 giants not melee
+// w4: change giant demoknights
+
+// feedback whenh
+// w1: 
+// w2: 
+// w3: 
+// w4: 
+// w5: 
+// w6: 
+WaveSchedule
+{
+	CanBotsAttackWhileInSpawnRoom no
+	RespawnWaveTime	2
+	StartingCurrency 1200
+	Advanced 1
+	AddSentryBusterWhenDamageDealtExceeds 3000
+	AddSentryBusterWhenKillCountExceeds	15
+	// EventPopFile Halloween
+	Templates
+	{
+		boss
+		{
+			Class Pyro
+			Skill Expert
+			WeaponRestrictions PrimaryOnly
+			Name "The Firespreader"
+			ClassIcon pyro_giant
+			Health 45000
+			Attributes MiniBoss Tag bot_giant
+			Attributes UseBossHealthBar
+			Attributes AlwaysFireWeapon
+			Item "Upgradeable TF_WEAPON_FLAMETHROWER"
+			Item "The Flare Gun"
+			Item "The Person in the Iron Mask"
+			Item "The Backpack Broiler"
+			ItemAttributes
+			{
+				ItemName "The Flare Gun"
+				"is_passive_weapon" 1
+				"fire rate bonus" 0.3
+				"faster reload rate" 0.5
+				"damage bonus" 2.5
+			}
+			ItemAttributes
+			{
+				ItemName "Upgradeable TF_WEAPON_FLAMETHROWER"
+				"flame_drag" 10.5
+				"flame_spread_degree" 5
+				"flame_speed" 11000
+				"flame_up_speed" 50
+				"item style override" 1
+				"is australium item" 1
+			}
+			CharacterAttributes
+			{
+				"move speed bonus"	0.5
+				"health regen"	30
+				"damage force reduction" 0.0
+				"airblast vulnerability multiplier" 0.0
+				"override footstep sound set" 2
+				"airblast vertical vulnerability multiplier" 0.0
+				"rage giving scale" 0.1
+			}
+		}
+	}
+	
+	Mission
+	{
+		Objective Spy
+
+		InitialCooldown 5
+		Where spawnbot_carrier_any
+		BeginAtWave 5
+		RunForThisManyWaves 2
+		CooldownTime 60
+		DesiredCount 2
+
+		TFBot
+		{
+			Template T_TFBot_Spy
+		}
+	}
+	
+	Mission
+	{
+		Objective Sniper
+		
+		Where spawnbot_carrier_altside
+		BeginAtWave 0
+		RunForThisManyWaves 1
+		InitialCooldown 25
+		CooldownTime 40
+		DesiredCount 1
+		TFBot
+		{
+			Template T_TFBot_Sniper
+		}
+	}
+	
+	Mission
+	{
+		Objective Engineer
+		
+		Where spawnbot_carrier_any
+		BeginAtWave 6
+		RunForThisManyWaves 1
+		InitialCooldown 30
+		CooldownTime 60
+		DesiredCount 2
+		TFBot
+		{
+			Template T_TFBot_Engineer_Sentry_Battle_TeleIn
+		}
+	}
+	
+	Mission
+	{
+		Objective	DestroySentries
+		
+		Where spawnbot_carrier_altside
+		InitialCooldown 30
+		CooldownTime 30
+		BeginAtWave 1
+		RunForThisManyWaves 10
+		TFBot
+		{
+			Template T_TFBot_SentryBuster
+			Tag giant
+		}
+	}
+	
+//WAVE 1 //////////CURRENCY 850///////////////////////////////////
+	Wave
+	{
+		InitWaveOutput
+		{
+			Target wavesetting_bxx
+			Action Trigger
+		}
+		StartWaveOutput
+		{
+			Target wave_start_relay
+			Action Trigger
+		}
+		DoneOutput					
+		{
+			Target wave_finished_relay
+			Action trigger
+		}
+		
+		WaveSpawn
+		{
+			Name stage1
+			Where spawnbot_carrier_bombside
+			TotalCount 24
+			MaxActive 12
+			SpawnCount 3
+			WaitBeforeStarting 0
+			WaitBetweenSpawns 5
+			TotalCurrency 100
+			RandomSpawn 1
+			
+			
+				TFBot
+				{
+					Class Heavy
+					Skill Easy
+					MaxVisionRange 1200
+				}
+		}
+		
+		WaveSpawn
+		{
+			Name stage1
+			Where spawnbot_forward_cliffside
+			TotalCount 1
+			MaxActive 1
+			SpawnCount 1
+			WaitBeforeStarting 10
+			TotalCurrency 100
+			RandomSpawn 1
+			
+			
+				TFBot
+				{
+					Template T_TFBot_Pyro_BackBurner_Giant
+					Tag giant
+				}
+		}
+		
+		WaveSpawn
+		{
+			Name stage1
+			Where spawnbot_carrier_bombside
+			TotalCount 12
+			MaxActive 3
+			SpawnCount 3
+			WaitBeforeStarting 0
+			WaitBetweenSpawns 8
+			TotalCurrency 75
+			RandomSpawn 1
+			
+			
+				TFBot
+				{
+					Template T_TFBot_Demoman_Knight
+				}
+		}
+		
+		WaveSpawn
+		{
+			Name stage2
+			WaitForAllDead stage1
+			Where spawnbot_carrier_bombside
+			TotalCount 36
+			MaxActive 18
+			SpawnCount 6
+			WaitBeforeStarting 0
+			WaitBetweenSpawns 8
+			TotalCurrency 150
+			RandomSpawn 1
+			
+			
+			Squad
+			{
+				TFBot
+				{
+					Template T_TFBot_Heavyweapons_Shotgun
+				}
+				
+				TFBot
+				{
+					Template T_TFBot_Scout_Milk
+				}
+				
+				TFBot
+				{
+					Template T_TFBot_Sniper_Jarate
+				}
+			}
+		}
+		
+		WaveSpawn
+		{
+			Name stage2
+			WaitForAllDead stage1
+			Where spawnbot_carrier_bombside
+			TotalCount 2
+			MaxActive 2
+			SpawnCount 1
+			WaitBeforeStarting 0
+			WaitBetweenSpawns 30
+			TotalCurrency 75
+			RandomSpawn 1
+			
+			
+				TFBot
+				{
+					Template T_TFBot_Giant_Scout_Melee
+					Tag giant
+				}
+		}
+		
+		WaveSpawn
+		{
+			Name stage2_sneak
+			WaitForAllDead stage1
+			Where spawnbot_carrier_altside
+			TotalCount 2
+			MaxActive 2
+			SpawnCount 1
+			WaitBeforeStarting 35
+			WaitBetweenSpawns 30
+			TotalCurrency 50
+			RandomSpawn 1
+			
+			
+				TFBot
+				{
+					Template T_TFBot_HeavyWeapons_Heater
+				}
+		}
+		
+		WaveSpawn
+		{
+			Name stage3
+			WaitForAllDead stage2
+			Where spawnbot_carrier_bombside
+			TotalCount 16
+			MaxActive 8
+			SpawnCount 2
+			WaitBeforeStarting 0
+			WaitBetweenSpawns 5
+			TotalCurrency 200
+			RandomSpawn 1
+			
+			
+			Squad
+			{
+				TFBot
+				{
+					Template T_TFBot_HeavyWeapons_Fist
+					Tag giant
+				}
+				
+				TFBot
+				{
+					Template T_TFBot_Medic_QuickUber
+				}
+			}
+		}
+		
+		WaveSpawn
+		{
+			Name stage3
+			WaitForAllDead stage2
+			Where spawnbot_carrier_bombside
+			TotalCount 30
+			MaxActive 12
+			SpawnCount 3
+			WaitBeforeStarting 10
+			WaitBetweenSpawns 4.5
+			TotalCurrency 100
+			RandomSpawn 1
+			
+			
+				TFBot
+				{
+					Template T_TFBot_Demoman_Knight
+				}
+		}
+	}
+	
+	//WAVE 2 //////////CURRENCY 900///////////////////////////////////
+	Wave
+	{
+		InitWaveOutput
+		{
+			Target wavesetting_bxx
+			Action Trigger
+		}
+		StartWaveOutput
+		{
+			Target wave_start_relay
+			Action Trigger
+		}
+		DoneOutput					
+		{
+			Target wave_finished_relay
+			Action trigger
+		}
+		
+		WaveSpawn
+		{
+			Name stage1
+			Where spawnbot_carrier_bombside
+			TotalCount 36
+			MaxActive 18
+			SpawnCount 4
+			WaitBeforeStarting 0
+			WaitBetweenSpawns 4
+			TotalCurrency 150
+			RandomSpawn 1
+			
+			
+			Squad
+			{
+			FormationSize 400
+				TFBot
+				{
+					Template T_TFBot_Scout_Sandman_FastCharge
+					Skill Expert
+				}
+				
+				TFBot
+				{
+					Template T_TFBot_Medic_BigHeal
+					CharacterAttributes
+					{
+						"move speed bonus" 5
+					}
+				}
+				
+				TFBot
+				{
+					Template T_TFBot_HeavyWeapons_Grapple
+				}
+				
+				TFBot
+				{
+					Template T_TFBot_Heavy_Heater
+					MaxVisionRange 400
+					Skill Easy
+				}
+			}
+		}
+		
+		WaveSpawn
+		{
+			Name stage1
+			Where spawnbot_carrier_altside
+			TotalCount 4
+			MaxActive 4
+			SpawnCount 2
+			WaitBeforeStarting 5
+			WaitBetweenSpawns 25
+			TotalCurrency 100
+			RandomSpawn 1
+			
+			
+			Squad
+			{
+				TFBot
+				{
+					Template T_TFBot_Giant_Scout_ThreeRune
+					Tag giant
+				}
+				
+				TFBot
+				{
+					Template T_TFBot_Medic_QuickUber
+				}
+			}
+		}
+		
+		WaveSpawn
+		{
+			Name stage2
+			WaitForAllDead stage1
+			Where spawnbot_carrier_bombside
+			TotalCount 45
+			MaxActive 18
+			SpawnCount 9
+			WaitBeforeStarting 0
+			WaitBetweenSpawns 12
+			TotalCurrency 200
+			RandomSpawn 1
+			
+			
+				TFBot
+				{
+					Template T_TFBot_Demoman_Knight_Bottle
+				}
+		}
+		
+		WaveSpawn
+		{
+			Name stage2
+			WaitForAllDead stage1
+			TotalCount 1
+			SpawnCount 1
+			TotalCurrency 100
+			FirstSpawnWarningSound "mvm/mvm_tank_start.wav" //sound
+			
+			
+			Tank
+			{
+				Health 35000
+				Speed 75
+				Name "tankboss"
+				Skin 0									// 0 - normal skin, 1 - final wave skin
+				StartingPathTrackNode "tank_altside"		// if this is not here have fun with the hatch tank
+				
+				OnKilledOutput							// output sent when the Tank is killed (almost never used)
+				{
+					Target tank_died_relay
+					Action Trigger                         
+				}
+
+				OnBombDroppedOutput						// output sent when the Tank drops its bomb once it reaches the end of its path 
+				{
+					Target boss_deploy_relay
+					Action Trigger                         
+				}
+			}
+		}
+		
+		WaveSpawn
+		{
+			Name stage3
+			WaitForAllDead stage2
+			Where spawnbot_forward_bombside //was going to be air but shit happens and it doesnt work ):
+			TotalCount 3
+			MaxActive 3
+			SpawnCount 3
+			WaitBeforeStarting 0
+			TotalCurrency 50
+			RandomSpawn 1
+			
+			
+				TFBot
+				{
+					Template T_TFBot_Heavy_IronFist_Airblast
+					Tag giant
+				}
+		}
+		
+		WaveSpawn
+		{
+			Name stage3
+			WaitForAllDead stage2
+			Where spawnbot_carrier_bombside
+			TotalCount 1
+			MaxActive 1
+			SpawnCount 1
+			WaitBeforeStarting 10
+			WaitBetweenSpawns 15
+			TotalCurrency 25
+			RandomSpawn 1
+			
+			
+				TFBot
+				{
+					Template T_TFBot_Giant_Scout_BaseBall
+					Tag giant
+				}
+		}
+		
+		WaveSpawn
+		{
+			Name stage3
+			WaitForAllDead stage2
+			Where spawnbot_carrier_bombside
+			TotalCount 45
+			MaxActive 15
+			SpawnCount 5
+			WaitBeforeStarting 5
+			WaitBetweenSpawns 7
+			TotalCurrency 175
+			RandomSpawn 1
+			
+			
+				TFBot
+				{
+					Class Demoman
+					Skill Normal
+				}
+		}
+		
+		WaveSpawn
+		{
+			Name stage3
+			WaitForAllDead stage2
+			Where spawnbot_carrier_altside
+			TotalCount 4
+			MaxActive 2
+			SpawnCount 2
+			WaitBeforeStarting 20
+			WaitBetweenSpawns 30
+			TotalCurrency 100
+			RandomSpawn 1
+			
+			
+			Squad
+			{
+				TFBot
+				{
+					Template T_TFBot_Giant_HeavyWeapons_BrassBeast
+					Tag giant
+				}
+				
+				TFBot
+				{
+					Template T_TFBot_Medic
+				}
+			}
+		}
+	}
+	
+	//WAVE 3 //////////CURRENCY 800///////////////////////////////////
+	Wave
+	{
+		InitWaveOutput
+		{
+			Target wavesetting_bxx //_airbomb
+			Action Trigger
+		}
+		StartWaveOutput
+		{
+			Target wave_start_relay
+			Action Trigger
+		}
+		DoneOutput					
+		{
+			Target wave_finished_relay
+			Action trigger
+		}
+		
+		WaveSpawn
+		{
+			Name stage1
+			Where spawnbot_air_middle_dead
+			TotalCount 48
+			MaxActive 12
+			SpawnCount 6
+			WaitBeforeStarting 5
+			WaitBetweenSpawns 8
+			TotalCurrency 150
+			RandomSpawn 1
+			
+			
+				TFBot
+				{
+					Template T_TFBot_Pyro_BackBurner
+					Item "the b.a.s.e. jumper"
+					ClassIcon pyro_para
+					CharacterAttributes
+					{
+						"cancel falling damage" 1
+						"damage penalty" 0.75
+					}
+				}
+				
+				FirstSpawnOutput
+				{
+					Target siren_r_tutor
+					Action Trigger
+				}
+		}
+		
+		WaveSpawn
+		{
+			Name stage1
+			Where spawnbot_carrier_bombside
+			TotalCount 9
+			MaxActive 9
+			SpawnCount 3
+			WaitBeforeStarting 0
+			WaitBetweenSpawns 30
+			TotalCurrency 150
+			RandomSpawn 1
+			
+			
+			Squad
+			{
+				TFBot
+				{
+					Template T_TFBot_Giant_HeavyWeapons
+					Tag giant
+				}
+				
+				TFBot
+				{
+					Template T_TFBot_Medic
+				}
+				
+				TFBot
+				{
+					Template T_TFBot_Medic
+				}
+			}
+		}
+		
+		WaveSpawn
+		{
+			Name stage2
+			WaitForAllDead stage1
+			Where spawnbot_carrier_bombside
+			TotalCount 24
+			MaxActive 12
+			SpawnCount 6
+			WaitBeforeStarting 0
+			WaitBetweenSpawns 9
+			TotalCurrency 100
+			RandomSpawn 1
+			
+			
+				TFBot
+				{
+					Template T_TFBot_Scout_Milk
+				}
+		}
+		
+		WaveSpawn
+		{
+			Name stage2
+			WaitForAllDead stage1
+			Where spawnbot_carrier_bombside
+			TotalCount 24
+			MaxActive 12
+			SpawnCount 6
+			WaitBeforeStarting 0
+			WaitBetweenSpawns 9
+			TotalCurrency 100
+			RandomSpawn 1
+			
+			
+				TFBot
+				{
+					Template T_TFBot_Pyro_Annihilator
+				}
+		}
+		
+		WaveSpawn
+		{
+			Name stage2
+			WaitForAllDead stage1
+			TotalCount 1
+			MaxActive 1
+			SpawnCount 1
+			TotalCurrency 90
+			FirstSpawnWarningSound "mvm/mvm_tank_start.wav" //sound
+			
+			
+			Tank
+			{
+				Health 35000
+				Speed 75
+				Name "tankboss"
+				Skin 0									// 0 - normal skin, 1 - final wave skin
+				StartingPathTrackNode "tank_bombside"		// if this is not here have fun with the hatch tank
+				
+				OnKilledOutput							// output sent when the Tank is killed (almost never used)
+				{
+					Target tank_died_relay
+					Action Trigger                         
+				}
+
+				OnBombDroppedOutput						// output sent when the Tank drops its bomb once it reaches the end of its path 
+				{
+					Target boss_deploy_relay
+					Action Trigger                         
+				}
+			}
+		}
+		
+		WaveSpawn
+		{
+			Name stage2
+			WaitForAllDead stage1
+			Where spawnbot_carrier_altside
+			TotalCount 1
+			MaxActive 1
+			SpawnCount 1
+			WaitBeforeStarting 35
+			WaitBetweenSpawns 9
+			TotalCurrency 10
+			RandomSpawn 1
+			
+			
+				TFBot
+				{
+					Template T_TFBot_Giant_Scout_Fast
+					Attributes AlwaysCrit
+					Attributes AlwaysFireWeapon
+					Tag giant
+				}
+		}
+		
+		WaveSpawn
+		{
+			Name stage3
+			WaitForAllDead stage2
+			Where spawnbot_carrier_bombside
+			TotalCount 64
+			MaxActive 16
+			SpawnCount 8
+			WaitBeforeStarting 0
+			WaitBetweenSpawns 9
+			RandomSpawn 1
+			Support 1
+			
+			
+				TFBot
+				{
+					Template T_TFBot_Scout_Sandman_FastCharge
+				}
+		}
+		
+		WaveSpawn
+		{
+			Name stage3
+			WaitForAllDead stage2
+			Where spawnbot_carrier_altside
+			TotalCount 4
+			MaxActive 4
+			SpawnCount 2
+			WaitBeforeStarting 0
+			WaitBetweenSpawns 35
+			TotalCurrency 100
+			RandomSpawn 1
+			
+			
+			Squad
+			{
+				TFBot
+				{
+					Template T_TFBot_Giant_HeavyWeapons_ShotGun
+					Tag giant
+				}
+				
+				TFBot
+				{
+					Template T_TFBot_Giant_Medic_Regen
+				}
+			}
+		}
+		
+		WaveSpawn
+		{
+			Name stage3
+			WaitForAllDead stage2
+			TotalCount 1
+			MaxActive 1
+			SpawnCount 1
+			TotalCurrency 100
+			FirstSpawnWarningSound "mvm/mvm_tank_start.wav" //sound
+			
+			
+			Tank
+			{
+				Health 30000
+				Speed 75
+				Name "tankboss"
+				Skin 0									// 0 - normal skin, 1 - final wave skin
+				StartingPathTrackNode "tank_altside"		// if this is not here have fun with the hatch tank
+				
+				OnKilledOutput							// output sent when the Tank is killed (almost never used)
+				{
+					Target tank_died_relay
+					Action Trigger                         
+				}
+
+				OnBombDroppedOutput						// output sent when the Tank drops its bomb once it reaches the end of its path 
+				{
+					Target boss_deploy_relay
+					Action Trigger                         
+				}
+			}
+		}
+	}
+	
+	//WAVE 4 //////////CURRENCY 800///////////////////////////////////
+	Wave
+	{
+		InitWaveOutput
+		{
+			Target wavesetting_bxx //_airbomb
+			Action Trigger
+		}
+		StartWaveOutput
+		{
+			Target wave_start_relay
+			Action Trigger
+		}
+		DoneOutput					
+		{
+			Target wave_finished_relay
+			Action trigger
+		}
+		
+		WaveSpawn
+		{
+			Name stage1
+			Where spawnbot_carrier_bombside
+			TotalCount 24
+			MaxActive 16
+			SpawnCount 8
+			WaitBeforeStarting 0
+			WaitBetweenSpawns 25
+			TotalCurrency 200
+			RandomSpawn 1
+			
+			
+			Squad
+			{
+				TFBot
+				{
+					Template T_TFBot_Giant_Soldier_Burst_Extended_Battalion
+					Tag giant
+				}
+				
+				TFBot
+				{
+					Template T_TFBot_Medic_Kritz_Randomguy
+				}
+				
+				TFBot
+				{
+					Template T_TFBot_Medic
+				}
+				
+				TFBot
+				{
+					Template T_TFBot_Medic_Vaccinator_Bullet_100
+				}
+				
+				TFBot
+				{
+					Template T_TFBot_Medic_Vaccinator_Blast_100
+				}
+				
+				TFBot
+				{
+					Template T_TFBot_Medic_Vaccinator_Fire_100
+				}
+				
+				TFBot
+				{
+					Template T_TFBot_Pyro_Gas_Passer_Spicy
+				}
+				
+				TFBot
+				{
+					Template T_TFBot_Pyro_Gas_Passer_Spicy
+				}
+			}
+		}
+		
+		WaveSpawn
+		{
+			Name stage2
+			WaitForAllDead stage1
+			Where spawnbot_carrier_bombside
+			TotalCount 6
+			MaxActive 6
+			SpawnCount 1
+			WaitBeforeStarting 0
+			WaitBetweenSpawns 12
+			TotalCurrency 100
+			RandomSpawn 1
+			
+			
+				TFBot
+				{
+					Template T_TFBot_Giant_Demo_Burst
+					Tag giant
+				}
+		}
+		
+		WaveSpawn
+		{
+			Name stage2
+			WaitForAllDead stage1
+			Where spawnbot_carrier_any
+			TotalCount 44
+			MaxActive 16
+			SpawnCount 4
+			WaitBeforeStarting 5
+			WaitBetweenSpawns 6
+			TotalCurrency 100
+			RandomSpawn 1
+			
+			
+				TFBot
+				{
+					Template T_TFBot_Heavy_Tom
+				}
+		}
+		
+		WaveSpawn
+		{
+			Name stage3
+			WaitForAllDead stage2
+			Where spawnbot_carrier_bombside
+			TotalCount 64
+			MaxActive 16
+			SpawnCount 4
+			WaitBeforeStarting 0
+			WaitBetweenSpawns 6
+			TotalCurrency 200
+			RandomSpawn 1
+			
+			
+				TFBot
+				{
+					Template T_TFBot_Pyro_Oil
+				}
+		}
+		
+		WaveSpawn
+		{
+			Name stage3
+			WaitForAllDead stage2
+			Where spawnbot_carrier_altside
+			TotalCount 4
+			MaxActive 2
+			SpawnCount 2
+			WaitBeforeStarting 5
+			WaitBetweenSpawns 30
+			TotalCurrency 100
+			RandomSpawn 1
+			
+			
+				TFBot
+				{
+					Template T_TFBot_Giant_Scout_ThreeRune
+					Attributes AlwaysCrit
+					Attributes AlwaysFireWeapon
+					Tag giant
+				}
+		}
+		
+		WaveSpawn
+		{
+			Name stage3
+			WaitForAllDead stage2
+			Where spawnbot_carrier_bombside
+			TotalCount 4
+			MaxActive 4
+			SpawnCount 1
+			WaitBeforeStarting 10
+			WaitBetweenSpawns 25
+			TotalCurrency 100
+			RandomSpawn 1
+			
+			
+				TFBot
+				{
+					Template T_TFBot_Giant_Pyro_Conch
+					Tag giant
+				}
+		}
+	}
+		
+	//WAVE 5 //////////CURRENCY 600///////////////////////////////////
+	Wave
+	{
+		InitWaveOutput
+		{
+			Target wavesetting_bxx //_airbomb
+			Action Trigger
+		}
+		StartWaveOutput
+		{
+			Target wave_start_relay
+			Action Trigger
+		}
+		DoneOutput					
+		{
+			Target wave_finished_relay
+			Action trigger
+		}
+		
+		WaveSpawn
+		{
+			Name stage1
+			Where spawnbot_carrier_bombside
+			TotalCount 48
+			MaxActive 18
+			SpawnCount 6
+			WaitBeforeStarting 0
+			WaitBetweenSpawns 6
+			TotalCurrency 100
+			RandomSpawn 1
+			
+			
+				TFBot
+				{
+					Template T_TFBot_Demo_Burst
+				}
+		}
+		
+		WaveSpawn
+		{
+			Name stage1
+			Where spawnbot_carrier_altside
+			TotalCount 4
+			MaxActive 4
+			SpawnCount 2
+			WaitBeforeStarting 2
+			WaitBetweenSpawns 25
+			TotalCurrency 100
+			RandomSpawn 1
+			
+			
+				TFBot
+				{
+					Template T_TFBot_Giant_HeavyWeapons_Tom
+					Tag giant
+				}
+		}
+		
+		WaveSpawn
+		{
+			Name stage2
+			WaitForAllDead stage1
+			Where spawnbot_carrier_bombside
+			TotalCount 30
+			MaxActive 16
+			SpawnCount 2
+			WaitBeforeStarting 0
+			WaitBetweenSpawns 3
+			TotalCurrency 100
+			RandomSpawn 1
+			
+			
+			Squad
+			{
+				TFBot
+				{
+					Template T_TFBot_Soldier_Burst
+				}
+				
+				TFBot
+				{
+					Template T_TFBot_Medic
+				}
+			}
+		}
+		
+		WaveSpawn
+		{
+			Name stage2
+			WaitForAllDead stage1
+			Where spawnbot_carrier_bombside
+			TotalCount 2
+			MaxActive 2
+			SpawnCount 1
+			WaitBeforeStarting 0
+			WaitBetweenSpawns 30
+			TotalCurrency 50
+			RandomSpawn 1
+			
+			
+				TFBot
+				{
+					Template T_TFBot_Giant_Pyro_Gas_Passer_Spicy
+					Tag giant
+				}
+		}
+		
+		WaveSpawn
+		{
+			Name stage2
+			WaitForAllDead stage1
+			Where spawnbot_carrier_altside
+			TotalCount 2
+			MaxActive 2
+			SpawnCount 1
+			WaitBeforeStarting 0
+			WaitBetweenSpawns 30
+			TotalCurrency 50
+			RandomSpawn 1
+			
+			
+				TFBot
+				{
+					Template T_TFBot_Giant_Pyro_Gas_Passer_Spicy
+					Tag giant
+				}
+		}
+		
+		
+	}
+	
+	//WAVE 6 //////////CURRENCY 400///////////////////////////////////
+	Wave
+	{
+		InitWaveOutput
+		{
+			Target wavesetting_bxx //_airbomb
+			Action Trigger
+		}
+		StartWaveOutput
+		{
+			Target wave_start_relay
+			Action Trigger
+		}
+		DoneOutput					
+		{
+			Target wave_finished_relay
+			Action trigger
+		}
+		
+		WaveSpawn
+		{
+			Name stage3_1
+			WaitForAllDead stage2
+			Where spawnbot_carrier_altside
+			TotalCount 5
+			MaxActive 5
+			SpawnCount 1
+			WaitBeforeStarting 0
+			WaitBetweenSpawns 15
+			TotalCurrency 100
+			RandomSpawn 1
+			
+			
+				TFBot
+				{
+					Template T_TFBot_Giant_Scout_Bonk_SlowCharge
+					WeaponRestrictions PrimaryOnly
+					Attributes AlwaysCrit
+					Tag giant
+				}
+		}
+		
+		WaveSpawn
+		{
+			Name stage3_s
+			WaitForAllDead stage2
+			Where spawnbot_carrier_bombside
+			TotalCount 50
+			MaxActive 16
+			SpawnCount 2
+			WaitBeforeStarting 0
+			WaitBetweenSpawns 2.5
+			TotalCurrency 100
+			RandomSpawn 1
+			
+			
+				TFBot
+				{
+					Template T_TFBot_Soldier_Extended_Battalion
+				}
+		}
+		
+		WaveSpawn
+		{
+			Name stage3
+			WaitForAllSpawned stage3_1
+			TotalCount 1
+			SpawnCount 1
+			WaitBeforeStarting 10
+			WaitBetweenSpawns 20
+			TotalCurrency 100
+			FirstSpawnWarningSound "mvm/mvm_tank_start.wav" //sound
+			
+			
+			Tank
+			{
+				Health 40000
+				Speed 75
+				Name "tankboss"
+				Skin 1									// 0 - normal skin, 1 - final wave skin
+				StartingPathTrackNode "tank_bombside"		// if this is not here have fun with the hatch tank
+				
+				OnKilledOutput							// output sent when the Tank is killed (almost never used)
+				{
+					Target tank_died_relay
+					Action Trigger                         
+				}
+
+				OnBombDroppedOutput						// output sent when the Tank drops its bomb once it reaches the end of its path 
+				{
+					Target boss_deploy_relay
+					Action Trigger                         
+				}
+			}
+		}
+		
+		WaveSpawn
+		{
+			Name stage3_2
+			WaitForAllSpawned stage3_1
+			Where spawnbot_carrier_altside
+			TotalCount 4
+			MaxActive 4
+			SpawnCount 2
+			WaitBeforeStarting 10
+			WaitBetweenSpawns 20
+			TotalCurrency 100
+			RandomSpawn 1
+			
+			
+			Squad
+			{
+				TFBot
+				{
+					Template T_TFBot_Giant_Demoman
+					Attributes AlwaysCrit
+					Tag giant
+				}
+				
+				TFBot
+				{
+					Template T_TFBot_Giant_Medic_Uber
+					Tag giant
+				}
+			}
+		}
+		
+		WaveSpawn
+		{
+			Name stage3
+			WaitForAllDead stage3_1
+			Where spawnbot_carrier_bombside
+			TotalCount 2
+			MaxActive 2
+			SpawnCount 2
+			WaitBeforeStarting 65
+			WaitBetweenSpawns 20
+			TotalCurrency 100
+			RandomSpawn 1
+			
+			
+			Squad
+			{
+				TFBot
+				{
+					Template T_TFBot_Giant_HeavyWeapons_BrassBeast
+					Tag giant
+				}
+				
+				TFBot
+				{
+					Template T_TFBot_Medic_Kritz_Giant_Randomguy
+					Tag giant
+				}
+			}
+		}
+		
+		WaveSpawn
+		{
+			Name stage4
+			WaitForAllDead stage3
+			Where spawnbot_carrier_bombside
+			TotalCount 1
+			MaxActive 1
+			SpawnCount 1
+			WaitBeforeStarting 5
+			
+			
+				TFBot
+				{
+					Template boss
+					Tag giant
+				}
+		}
+		
+		WaveSpawn
+		{
+			Name stage4
+			WaitForAllDead stage3_s
+			Where spawnbot_carrier_bombside
+			TotalCount 250
+			MaxActive 16
+			SpawnCount 3
+			WaitBeforeStarting 5
+			WaitBetweenSpawns 3
+			RandomSpawn 1
+			Support 1
+			
+			
+			RandomChoice
+			{
+				TFBot
+				{
+					Template T_TFBot_Pyro_Phlog_Extended
+					ClassIcon pyro
+				}
+				
+				TFBot
+				{
+					Template T_TFBot_Pyro_Phlog_Extended
+					ClassIcon pyro
+				}
+				
+				TFBot
+				{
+					Template T_TFBot_Pyro_BackBurner
+				}
+				
+				TFBot
+				{
+					Template T_TFBot_Pyro_BackBurner
+				}
+				
+				TFBot
+				{
+					Template T_TFBot_Pyro_Oil_DF
+					ClassIcon pyro
+				}
+				
+				TFBot
+				{
+					Template T_TFBot_Pyro_Oil_Hyper
+					ClassIcon pyro
+				}
+				
+				TFBot
+				{
+					Template T_TFBot_Pyro_Gas_Passer
+					ClassIcon pyro
+				}
+				
+				TFBot
+				{
+					Template T_TFBot_Pyro_FlareGun
+					ClassIcon pyro
+				}
+				
+				TFBot
+				{
+					Template T_TFBot_ScorchShot_FastShot
+					ClassIcon pyro
+				}
+			}
+		}
+	}
+}
