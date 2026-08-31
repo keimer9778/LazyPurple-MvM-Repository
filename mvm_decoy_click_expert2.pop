@@ -1,0 +1,2140 @@
+#base robot_giant.pop
+#base robot_standard.pop
+#base robot_gatebot.pop
+#base robot_click_pixelstate.pop
+#base robot_click_giant_pixelstate.pop
+#base robot_hole.pop
+WaveSchedule
+{
+	StartingCurrency	700
+	RespawnWaveTime		2
+	CanBotsAttackWhileInSpawnRoom no
+
+	Mission
+	{
+		Objective	DestroySentries
+		Where	spawnbot
+		BeginAtWave	1
+		RunForThisManyWaves	8
+		InitialCooldown	40
+		CooldownTime	40
+		TFBot
+		{
+			Template	T_TFBot_SentryBuster
+		}
+	}
+
+	// Wave 2
+	Mission
+	{
+		Objective	Spy
+		Where	spawnbot_mission_spy
+		BeginAtWave	2
+		RunForThisManyWaves	1
+		InitialCooldown	45
+		CooldownTime	30
+		DesiredCount	2
+		TFBot
+		{
+			Template	T_TFBot_Spy_Revolver
+		}
+	}
+	Mission
+	{
+		Objective	Sniper
+		Where	spawnbot_mission_sniper
+		BeginAtWave	2
+		RunForThisManyWaves	1
+		InitialCooldown	30
+		CooldownTime	30
+		DesiredCount	2
+		TFBot
+		{
+			Template	T_TFBot_Sniper_Machina
+		}
+	}
+
+	// Wave 3
+	Mission
+	{
+		Objective	Engineer
+		Where	spawnbot
+		BeginAtWave	3
+		RunForThisManyWaves	1
+		InitialCooldown	30
+		CooldownTime	40
+		DesiredCount	1
+		TFBot
+		{
+			Template	T_TFBot_Engineer_Sentry_Teleporter
+			TeleportWhere spawnbot
+			TeleportWhere spawnbot_right
+			TeleportWhere spawnbot_left
+			TeleportWhere spawnbot_invasion
+		}
+	}
+
+	// Wave 5
+	Mission
+	{
+		Objective	Spy
+		Where	spawnbot_mission_spy
+		BeginAtWave	5
+		RunForThisManyWaves	1
+		InitialCooldown	30
+		CooldownTime	30
+		DesiredCount	2
+		TFBot
+		{
+			Template	T_TFBot_Spy_Saharan
+		}
+	}
+	Mission
+	{
+		Objective	Sniper
+		Where	spawnbot_mission_sniper
+		BeginAtWave	5
+		RunForThisManyWaves	1
+		InitialCooldown	30
+		CooldownTime	30
+		DesiredCount	2
+		TFBot
+		{
+			Template	T_TFBot_Sniper_Crocostyle
+		}
+	}
+
+	// Wave 6
+	Mission
+	{
+		Objective	Sniper
+		Where	spawnbot_mission_sniper
+		BeginAtWave	6
+		RunForThisManyWaves	1
+		InitialCooldown	30
+		CooldownTime	30
+		DesiredCount	2
+		TFBot
+		{
+			Template	T_TFBot_Sniper_Semiauto
+		}
+	}
+
+	// Wave 7
+	Mission
+	{
+		Objective	Engineer
+		Where	spawnbot
+		BeginAtWave	7
+		RunForThisManyWaves	1
+		InitialCooldown	45
+		CooldownTime	60
+		DesiredCount	1
+		TFBot
+		{
+			Template	T_TFBot_Engineer_Sentry_Teleporter_Hyper
+			TeleportWhere spawnbot
+			TeleportWhere spawnbot_right
+			TeleportWhere spawnbot_left
+			TeleportWhere spawnbot_invasion
+		}
+	}
+
+	// Wave 8
+	Mission
+	{
+		Objective	Spy
+		Where	spawnbot_mission_spy
+		BeginAtWave	8
+		RunForThisManyWaves	1
+		InitialCooldown	30
+		CooldownTime	30
+		DesiredCount	2
+		TFBot
+		{
+			Template	T_TFBot_Spy_Business_DMGup_Support
+			Attributes AlwaysCrit
+		}
+	}
+
+	// Wave 1: 900
+	// 600 -> 600 + 900 + 100
+
+	Wave
+	{
+		WaitWhenDone	65
+		Checkpoint	Yes
+		StartWaveOutput
+		{
+			Target	wave_start_relay
+			Action	Trigger
+		}
+		DoneOutput
+		{
+			Target	wave_finished_relay
+			Action	Trigger
+		}
+		InitWaveOutput
+        {
+          	Target gamerules
+          	Action RunScriptCode
+           	Param "
+               	local ent = Entities.FindByClassname(null, `tf_objective_resource`)
+               	if (ent)
+               	{
+               		NetProps.SetPropString(ent, `m_iszMvMPopfileName`, `Click Expert: Disorder`)
+               	}	
+           	"
+        }
+		WaveSpawn
+		{
+			Name	w1_tank01
+			TotalCurrency	100
+			TotalCount	1
+			MaxActive	1
+			SpawnCount	1
+			WaitBeforeStarting	30
+			WaitBetweenSpawns	0
+			Where	spawnbot
+			FirstSpawnOutput
+			{
+				 Target boss_spawn_relay                                            
+				 Action Trigger                         
+			}
+
+			Tank
+			{
+				Health 12500
+				Speed 75
+				Name "tankboss"
+				StartingPathTrackNode "boss_path_a1"
+
+				OnKilledOutput                                  
+				{
+					Target boss_dead_relay
+					Action Trigger                         
+				}
+				
+				OnBombDroppedOutput                             
+				{
+					Target boss_deploy_relay 
+					Action Trigger                         
+				}
+			}
+		}
+		WaveSpawn
+		{
+			Name	w1_wave01
+			TotalCurrency	100
+			TotalCount	48
+			MaxActive	12
+			SpawnCount	12
+			WaitBeforeStarting	15
+			WaitBetweenSpawns	15
+			Where	spawnbot
+			TFBot
+			{
+				Template	T_TFBot_Scout_Bonk
+				Attributes	AlwaysCrit
+			}
+		}
+		WaveSpawn
+		{
+			Name	w1_giant
+			TotalCurrency	400
+			TotalCount	8
+			MaxActive	4
+			SpawnCount	2
+			WaitBeforeStarting	0
+			WaitBetweenSpawns	30
+			Where	spawnbot
+			Squad
+			{
+				TFBot
+				{
+					Template	T_TFBot_Giant_Pyro_Flare_Spammer
+				}
+				TFBot
+				{
+					Template	T_TFBot_Giant_Medic
+				}
+			}
+		}
+
+		WaveSpawn
+		{
+			Name	w1_tank02
+			WaitForAllSpawned	w1_wave01
+			TotalCurrency	100
+			TotalCount	1
+			MaxActive	1
+			SpawnCount	1
+			WaitBeforeStarting	30
+			WaitBetweenSpawns	0
+			FirstSpawnOutput
+			{
+				 Target boss_spawn_relay                                            
+				 Action Trigger                         
+			}
+
+			Tank
+			{
+				Health 12500
+				Speed 75
+				Name "tankboss"
+				StartingPathTrackNode "boss_path_a1"
+
+				OnKilledOutput                                  
+				{
+					Target boss_dead_relay
+					Action Trigger                         
+				}
+				
+				OnBombDroppedOutput                             
+				{
+					Target boss_deploy_relay 
+					Action Trigger                         
+				}
+
+			}
+		}
+		WaveSpawn
+		{
+			Name	w1_wave02
+			WaitForAllSpawned	w1_wave01
+			TotalCurrency	200
+			TotalCount	48
+			MaxActive	16
+			SpawnCount	4
+			WaitBeforeStarting	0
+			WaitBetweenSpawns	3
+			Where	spawnbot
+			RandomChoice 
+			{
+				TFBot
+				{
+					Class Scout
+					Skill Normal
+				}
+				TFBot
+				{
+					Class Pyro
+					Skill Normal
+				}
+			}
+		}
+	}
+
+	// Wave 2: 1000
+	// 600 + 900 + 100 (1600) -> 600 + 1900 + 200 (2700)
+	
+	Wave
+	{
+		WaitWhenDone	65
+		Checkpoint	Yes
+		StartWaveOutput
+		{
+			Target	wave_start_relay
+			Action	Trigger
+		}
+		DoneOutput
+		{
+			Target	wave_finished_relay
+			Action	Trigger
+		}
+		InitWaveOutput
+        {
+          	Target gamerules
+          	Action RunScriptCode
+           	Param "
+               	local ent = Entities.FindByClassname(null, `tf_objective_resource`)
+               	if (ent)
+               	{
+               		NetProps.SetPropString(ent, `m_iszMvMPopfileName`, `Click Expert: Disorder`)
+               	}	
+           	"
+        }
+		WaveSpawn
+		{
+			Name	w2_wave01
+			TotalCurrency	180
+			TotalCount	18
+			MaxActive	9
+			SpawnCount	9
+			WaitBeforeStarting	0
+			WaitBetweenSpawns	0
+			Where	spawnbot
+			Squad
+			{
+				TFBot
+				{
+					Template	T_TFBot_Giant_Heavy_Penetration
+				}
+				TFBot
+				{
+					Template	T_TFBot_Medic_QuickUber
+				}
+				TFBot
+				{
+					Template	T_TFBot_Medic_QuickUber
+				}
+				TFBot
+				{
+					Template	T_TFBot_Medic_QuickUber
+				}
+				TFBot
+				{
+					Template	T_TFBot_Medic_QuickUber
+				}
+				TFBot
+				{
+					Template	T_TFBot_Medic_Kritzkrieg
+				}
+				TFBot
+				{
+					Template	T_TFBot_Medic_Kritzkrieg
+				}
+				TFBot
+				{
+					Template	T_TFBot_Medic_Kritzkrieg
+				}
+				TFBot
+				{
+					Template	T_TFBot_Medic_Kritzkrieg
+				}
+			}
+		}
+		WaveSpawn
+		{
+			Name	w2_wave01
+			TotalCurrency	120
+			TotalCount	12
+			MaxActive	8
+			SpawnCount	4
+			WaitBeforeStarting	0
+			WaitBetweenSpawns	10
+			Where	spawnbot
+			Squad
+			{
+				TFBot
+				{
+					Class Soldier
+					Skill Expert
+				}
+				TFBot
+				{
+					Template	T_TFBot_Medic
+				}
+			}
+		}
+
+		WaveSpawn
+		{
+			Name w2_wave02
+			WaitForAllSpawned w2_wave01
+			TotalCurrency	200
+			TotalCount	18
+			MaxActive	6
+			SpawnCount	3
+			WaitBeforeStarting	20
+			WaitBetweenSpawns	10
+			Where	spawnbot
+			Squad
+			{
+				TFBot
+				{
+					Template	T_TFBot_Giant_Soldier_Crit
+				}
+				TFBot
+				{
+					Template	T_TFBot_Medic
+				}
+				TFBot
+				{
+					Template	T_TFBot_Medic
+				}
+			}
+		}
+		WaveSpawn
+		{
+			Name w2_wave02
+			WaitForAllSpawned w2_wave01
+			TotalCurrency	200
+			TotalCount	18
+			MaxActive	6
+			SpawnCount	3
+			WaitBeforeStarting	15
+			WaitBetweenSpawns	10
+			Where	spawnbot
+			Squad
+			{
+				TFBot
+				{
+					Template	T_TFBot_Giant_Demoman
+					Attributes AlwaysCrit
+				}
+				TFBot
+				{
+					Template	T_TFBot_Medic
+				}
+				TFBot
+				{
+					Template	T_TFBot_Medic
+				}
+			}
+		}
+
+		WaveSpawn
+		{
+			Name w2_wave03
+			WaitForAllSpawned w2_wave02
+			TotalCurrency	100
+			TotalCount	12
+			MaxActive	12
+			SpawnCount	4
+			WaitBeforeStarting	0
+			WaitBetweenSpawns	0
+			Where	spawnbot_invasion
+			Squad
+			{
+				TFBot
+				{
+					Class Soldier
+					Skill Expert
+				}
+				TFBot
+				{
+					Template	T_TFBot_Medic
+				}
+			}
+		}
+
+		WaveSpawn
+		{
+			Name	w2_support
+			WaitForAllDead	w2_wave01
+			TotalCurrency	100
+			TotalCount	20
+			MaxActive	4
+			SpawnCount	2
+			WaitBeforeStarting	0
+			WaitBetweenSpawns	4
+			Support 1
+			Where	spawnbot
+			Squad
+			{
+				TFBot
+				{
+					ClassIcon	heavy
+					Health	300
+					Name	HeavyWeapons
+					Class	HeavyWeapons
+					Skill   Expert
+				}
+				TFBot
+				{
+					Template	T_TFBot_Medic_QuickUber
+					ClassIcon medic_uber_giant
+				}
+			}
+		}
+		WaveSpawn
+		{
+			Name	w2_support
+			WaitForAllDead	w2_wave01
+			TotalCurrency	100
+			TotalCount	20
+			MaxActive	4
+			SpawnCount	4
+			WaitBeforeStarting	0
+			WaitBetweenSpawns	0
+			Support	1
+			Where	spawnbot_invasion
+			TFBot
+			{
+				Template T_TFBot_Demoman_Knight
+				Attributes AlwaysCrit
+			}
+		}
+	
+	}
+
+	// Wave 3: 1200
+	// 600 + 1900 + 200 (2700) -> 600 + 3100 + 300 (4000)
+
+	Wave
+	{
+		WaitWhenDone	65
+		Checkpoint	Yes
+		StartWaveOutput
+		{
+			Target	wave_start_relay
+			Action	Trigger
+		}
+		DoneOutput
+		{
+			Target	wave_finished_relay
+			Action	Trigger
+		}
+		InitWaveOutput
+        {
+          	Target gamerules
+          	Action RunScriptCode
+           	Param "
+               	local ent = Entities.FindByClassname(null, `tf_objective_resource`)
+               	if (ent)
+               	{
+               		NetProps.SetPropString(ent, `m_iszMvMPopfileName`, `Click Expert: Disorder`)
+               	}	
+           	"
+        }
+		WaveSpawn
+		{
+			TotalCurrency	200
+			TotalCount	2
+			MaxActive	2
+			SpawnCount	1
+			WaitBeforeStarting	0
+			WaitBetweenSpawns	75
+			Where	spawnbot
+			FirstSpawnOutput
+			{
+				 Target boss_spawn_relay                                            
+				 Action Trigger                         
+			}
+
+			Tank
+			{
+				Health 20000
+				Speed 75
+				Name "tankboss"
+				StartingPathTrackNode "boss_path_a1"
+
+				OnKilledOutput                                  
+				{
+					Target boss_dead_relay
+					Action Trigger                         
+				}
+				
+				OnBombDroppedOutput                             
+				{
+					Target boss_deploy_relay 
+					Action Trigger                         
+				}
+
+			}
+		}
+		WaveSpawn
+		{
+			Name	w3_wave01_main
+			TotalCurrency	200
+			TotalCount	10
+			MaxActive	4
+			SpawnCount	2
+			WaitBeforeStarting	10
+			WaitBetweenSpawns	15
+			Where	spawnbot
+			Squad
+			{
+				TFBot
+				{
+					Template	T_TFBot_Giant_Soldier_Spammer
+					Tag	"nav_prefer_flank_left"
+				}
+				TFBot
+				{
+					Template	T_TFBot_Giant_Soldier_Spammer
+					Tag	"nav_prefer_flank_right"
+				}
+			}
+		}
+		WaveSpawn
+		{
+			Name	w3_wave02_main
+			WaitForAllSpawned	w3_wave01_main
+			TotalCurrency	200
+			TotalCount	4
+			MaxActive	4
+			SpawnCount	1
+			WaitBeforeStarting	10
+			WaitBetweenSpawns	25
+			Where	spawnbot
+			TFBot
+			{
+				Template	T_TFBot_Giant_Boxing_Heavy
+			}
+		}
+		WaveSpawn
+		{
+			Name	w3_wave01
+			TotalCurrency	300
+			TotalCount	72
+			MaxActive	16
+			SpawnCount	4
+			WaitBeforeStarting	0
+			WaitBetweenSpawns	0
+			Where	spawnbot_invasion
+			RandomChoice
+			{
+				TFBot
+				{
+					Template	T_TFBot_Demo_Samurai_Normal
+					Attributes AlwaysCrit
+					Tag	"nav_prefer_flank_left"
+				}
+				TFBot
+				{
+					Template	T_TFBot_Demo_Samurai_Normal
+					Attributes AlwaysCrit
+					Tag	"nav_prefer_flank_right"
+				}
+				TFBot
+				{
+					Template	T_TFBot_Demo_Samurai_Normal
+					Attributes AlwaysCrit
+				}
+				TFBot
+				{
+					Template	T_TFBot_Demo_Samurai_Normal
+					Attributes AlwaysCrit
+				}
+				TFBot
+				{
+					Template	T_TFBot_Demo_Samurai_Normal
+					Attributes AlwaysCrit
+				}
+				TFBot
+				{
+					Template	T_TFBot_Demo_Chargeknight
+					Attributes AlwaysCrit
+				}
+				TFBot
+				{
+					Template	T_TFBot_Demo_Chargeknight
+					Attributes AlwaysCrit
+				}
+				TFBot
+				{
+					Template	T_TFBot_Demo_Chargeknight
+					Attributes AlwaysCrit
+				}
+				TFBot
+				{
+					Template	T_TFBot_Demo_Chargeknight
+					Attributes AlwaysCrit
+				}
+			}
+		}
+		WaveSpawn
+		{
+			Name	w3_wave02
+			WaitForAllSpawned	w3_wave01
+			TotalCurrency	200
+			TotalCount	42
+			MaxActive	14
+			SpawnCount	7
+			WaitBeforeStarting	15
+			WaitBetweenSpawns	0
+			Where	spawnbot_invasion
+			RandomChoice
+			{
+				TFBot
+				{
+					Template	T_TFBot_Sniper_Huntsman_Hyper
+				}
+				TFBot
+				{
+					Template	T_TFBot_Sniper_Huntsman_Hyper
+					Tag	"nav_prefer_flank_right"
+				}
+				TFBot
+				{
+					Template	T_TFBot_Sniper_Huntsman_Hyper
+					Tag	"nav_prefer_flank_left"
+				}
+			}
+		}
+		WaveSpawn
+		{
+			Name	w3_support
+			TotalCurrency	100
+			TotalCount	20
+			MaxActive	2
+			SpawnCount	2
+			WaitBeforeStarting	15
+			WaitBetweenSpawns	0
+			Where	spawnbot_invasion
+			TFBot
+			{
+				Template	T_TFBot_Soldier_Extended_Concheror
+			}
+		}
+	}
+
+	// Wave 4: 1500
+	// 600 + 3100 + 300 (4000) -> 600 + 4600 + 400 (5600)
+
+	Wave
+	{
+		WaitWhenDone	65
+		Checkpoint	Yes
+		StartWaveOutput
+		{
+			Target	wave_start_relay
+			Action	Trigger
+		}
+		DoneOutput
+		{
+			Target	wave_finished_relay
+			Action	Trigger
+		}
+		InitWaveOutput
+        {
+          	Target gamerules
+          	Action RunScriptCode
+           	Param "
+               	local ent = Entities.FindByClassname(null, `tf_objective_resource`)
+               	if (ent)
+               	{
+               		NetProps.SetPropString(ent, `m_iszMvMPopfileName`, `Click Expert: Disorder`)
+               	}	
+           	"
+        }
+		WaveSpawn
+		{
+			Name	w4_wave01
+			TotalCurrency	300
+			TotalCount	6
+			MaxActive	6
+			SpawnCount	2
+			WaitBeforeStarting	0
+			WaitBetweenSpawns	20
+			Where	spawnbot
+			Squad
+			{
+				TFBot
+				{
+					Template	T_TFBot_Giant_Scout_FAN_Shotguner
+				}
+				TFBot
+				{
+					Template	T_TFBot_Giant_Medic_Uber_Weak
+				}
+			}
+		}
+		WaveSpawn
+		{
+			Name	w4_wave01
+			TotalCurrency	200
+			TotalCount	8
+			MaxActive	4
+			SpawnCount	2
+			WaitBeforeStarting	15
+			WaitBetweenSpawns	10
+			Where	spawnbot
+			TFBot
+			{
+				Template	T_TFBot_Giant_Scout_FAN
+			}
+		}
+		WaveSpawn
+		{
+			Name	w4_engi
+			TotalCurrency	200
+			TotalCount	20
+			MaxActive	8
+			SpawnCount	2
+			WaitBeforeStarting	10
+			WaitBetweenSpawns	0
+			Support Limited
+			Where	spawnbot_invasion
+			Squad
+			{
+				TFBot
+				{					
+					Template	T_TFBot_Engineer_Sentry_Tele_Battle
+				}
+				TFBot
+				{
+					Template	T_TFBot_Medic
+				}
+			}
+		}
+		
+		WaveSpawn
+		{
+			Name	w4_wave02
+			WaitForAllSpawned	w4_wave01
+			TotalCurrency	200
+			TotalCount	16
+			MaxActive	2
+			SpawnCount	2
+			WaitBeforeStarting	25
+			WaitBetweenSpawns	15
+			Where	spawnbot
+			TFBot
+			{
+				Template	T_TFBot_Giant_Scout_Fast_Expert
+			}
+		}
+		WaveSpawn
+		{
+			Name	w4_wave02
+			WaitForAllSpawned	w4_wave01
+			TotalCurrency	400
+			TotalCount	140
+			MaxActive	14
+			SpawnCount	2
+			WaitBeforeStarting	0
+			WaitBetweenSpawns	0
+			Where	spawnbot
+			RandomChoice
+			{
+				TFBot
+				{
+					Template	T_TFBot_Scout_Backscatter_Hard
+				}
+				TFBot
+				{
+					Template	T_TFBot_Scout_Bonk_Fast
+				}
+				TFBot
+				{
+					Template	T_TFBot_Scout_FAN_Pusher
+				}
+			}
+		}
+		WaveSpawn
+		{
+			Name	w4_wave02
+			WaitForAllSpawned	w4_wave01
+			TotalCurrency	100
+			TotalCount	8
+			MaxActive	4
+			SpawnCount	2
+			WaitBeforeStarting	20
+			WaitBetweenSpawns	5
+			Where	spawnbot
+			Squad
+			{
+				TFBot
+				{
+					Template	T_TFBot_Scout_Raygun_Expert
+					Attributes AlwaysCrit
+				}
+				TFBot
+				{
+					Template	T_TFBot_Medic_Overheal_Quickheal
+				}
+			}
+		}
+
+		WaveSpawn
+		{
+			Name w4_engi_support
+			WaitForAllDead	w4_engi
+			TotalCurrency	100
+			TotalCount	10
+			MaxActive	4
+			SpawnCount	2
+			WaitBeforeStarting	10
+			WaitBetweenSpawns	0
+			Support	1
+			Where	spawnbot_invasion
+			Squad
+			{
+				TFBot
+				{					
+					Template	T_TFBot_Engineer_Sentry_Tele_Battle
+				}
+				TFBot
+				{
+					Template	T_TFBot_Medic
+				}
+			}
+		}
+	}
+
+	// Wave 5: 1400
+	// 600 + 4600 + 400 (5600) -> 600 + 6000 + 500 (7100)
+
+	Wave
+	{
+		WaitWhenDone	65
+		Checkpoint	Yes
+		StartWaveOutput
+		{
+			Target	wave_start_relay
+			Action	Trigger
+		}
+		DoneOutput
+		{
+			Target	wave_finished_relay
+			Action	Trigger
+		}
+		InitWaveOutput
+        {
+          	Target gamerules
+          	Action RunScriptCode
+           	Param "
+               	local ent = Entities.FindByClassname(null, `tf_objective_resource`)
+               	if (ent)
+               	{
+               		NetProps.SetPropString(ent, `m_iszMvMPopfileName`, `Click Expert: Disorder`)
+               	}	
+           	"
+        }
+		WaveSpawn
+		{
+			Name	w5_main
+			TotalCurrency	240
+			TotalCount	24
+			MaxActive	4
+			SpawnCount	1
+			WaitBeforeStarting	10
+			WaitBetweenSpawns	10
+			Where	spawnbot
+			TFBot
+			{
+				Template	T_TFBot_Giant_DemoKnight_Samurai 
+			}
+		}
+
+		WaveSpawn
+		{
+			Name	w5_tank
+			TotalCurrency	160
+			TotalCount	1
+			MaxActive	1
+			SpawnCount	1
+			WaitBeforeStarting	60
+			WaitBetweenSpawns	0
+			Where	spawnbot
+			FirstSpawnOutput
+			{
+				 Target boss_spawn_relay                                            
+				 Action Trigger                         
+			}
+			Tank
+			{
+				Health	25000
+				Name	Tank
+				Speed	75
+				StartingPathTrackNode "boss_path_a1"
+				OnKilledOutput
+				{
+					Target	boss_dead_relay
+					Action	Trigger
+				}
+				OnBombDroppedOutput
+				{
+					Target	boss_deploy_relay
+					Action	Trigger
+				}
+			}
+		}
+		WaveSpawn
+		{
+			Name	w5_wave01
+			TotalCurrency	100
+			TotalCount	3
+			MaxActive	3
+			SpawnCount	3
+			WaitBeforeStarting	0
+			WaitBetweenSpawns	0
+			Where	spawnbot
+			Squad
+			{
+				TFBot
+				{
+					Template	T_TFBot_Giant_Soldier_Spammer_Conch
+				}
+				TFBot
+				{
+					Template	T_TFBot_Giant_Medic_Regen
+				}
+				TFBot
+				{
+					Template	T_TFBot_Giant_Medic_Regen
+				}
+			}
+		}
+		WaveSpawn
+		{
+			Name	w5_wave01
+			TotalCurrency	100
+			TotalCount	3
+			MaxActive	3
+			SpawnCount	3
+			WaitBeforeStarting	0
+			WaitBetweenSpawns	20
+			Where	spawnbot
+			Squad
+			{
+				TFBot
+				{
+					Template	T_TFBot_Giant_Soldier_Spammer_Buff
+				}
+				TFBot
+				{
+					Template	T_TFBot_Giant_Medic_Regen
+				}
+				TFBot
+				{
+					Template	T_TFBot_Giant_Medic_Regen
+				}
+			}
+		}
+		WaveSpawn
+		{
+			Name	w5_wave01
+			TotalCurrency	100
+			TotalCount	32
+			MaxActive	8
+			SpawnCount	4
+			WaitBeforeStarting	0
+			WaitBetweenSpawns	0
+			Where	spawnbot
+			TFBot
+			{
+				Template	T_TFBot_Pyro_Dragon_Hard
+			}
+		}
+
+		WaveSpawn
+		{
+			Name	w5_giant02
+			WaitForAllDead	w5_wave01
+			TotalCurrency	150
+			TotalCount	6
+			MaxActive	4
+			SpawnCount	2
+			WaitBeforeStarting	12
+			WaitBetweenSpawns	25
+			Where	spawnbot
+			Squad
+			{
+				TFBot
+				{
+					Template	T_TFBot_Giant_Soldier_Spammer_Conch
+					Tag	"nav_prefer_flank_left"
+				}
+				TFBot
+				{
+					Template	T_TFBot_Giant_Medic
+					Tag	"nav_prefer_flank_left"
+				}
+			}
+		}
+		WaveSpawn
+		{
+			Name	w5_giant02
+			WaitForAllDead	w5_wave01
+			TotalCurrency	150
+			TotalCount	6
+			MaxActive	4
+			SpawnCount	2
+			WaitBeforeStarting	0
+			WaitBetweenSpawns	25
+			Where	spawnbot
+			Squad
+			{
+				TFBot
+				{
+					Template	T_TFBot_Giant_Soldier_Spammer_Buff
+					Tag	"nav_prefer_flank_right"
+				}
+				TFBot
+				{
+					Template	T_TFBot_Giant_Medic
+					Tag	"nav_prefer_flank_right"
+				}
+			}
+		}
+		WaveSpawn
+		{
+			Name	w5_wave02_sup01
+			WaitForAllDead	w5_wave01
+			TotalCurrency	100
+			TotalCount	18
+			MaxActive	6
+			SpawnCount	6
+			WaitBeforeStarting	0
+			WaitBetweenSpawns	0
+			Where	spawnbot_invasion
+			TFBot
+			{
+				Template	T_TFBot_Heavy_Deflector_Pusher
+			}
+		}
+		WaveSpawn
+		{
+			Name	w5_wave02_sup02
+			WaitForAllSpawned	w5_wave02_sup01
+			TotalCurrency	100
+			TotalCount	18
+			MaxActive	6
+			SpawnCount	6
+			WaitBeforeStarting	0
+			WaitBetweenSpawns	0
+			Where	spawnbot
+			TFBot
+			{
+				Template	T_TFBot_Heavy_Natascha_Hyper
+			}
+		}
+
+		WaveSpawn
+		{
+			Name	w5_giant03
+			WaitForAllSpawned	w5_giant02
+			TotalCurrency	100
+			TotalCount	3
+			MaxActive	3
+			SpawnCount	3
+			WaitBeforeStarting	0
+			WaitBetweenSpawns	0
+			Where	spawnbot
+			Squad
+			{
+				TFBot
+				{
+					Template	T_TFBot_Giant_Heavy_Dragon
+				}
+				TFBot
+				{
+					Template	T_TFBot_Giant_Medic_Regen
+				}
+				TFBot
+				{
+					Template	T_TFBot_Giant_Medic_Regen
+				}
+			}
+		}
+		WaveSpawn
+		{
+			Name	w5_wave03
+			WaitForAllSpawned	w5_giant02
+			TotalCurrency	100
+			TotalCount	18
+			MaxActive	12
+			SpawnCount	2
+			WaitBeforeStarting	0
+			WaitBetweenSpawns	0
+			Where	spawnbot
+			TFBot
+			{
+				Template	T_TFBot_Heavy_Fire_Crit
+			}
+		}
+	}
+
+	// Wave 6: 1200
+	// 600 + 6000 + 500 (7100) -> 600 + 7200 + 600 (8400)
+
+	Wave
+	{
+		WaitWhenDone	65
+		Checkpoint	Yes
+		StartWaveOutput
+		{
+			Target	wave_start_relay
+			Action	Trigger
+		}
+		DoneOutput
+		{
+			Target	wave_finished_relay
+			Action	Trigger
+		}
+		InitWaveOutput
+        {
+          	Target gamerules
+          	Action RunScriptCode
+           	Param "
+               	local ent = Entities.FindByClassname(null, `tf_objective_resource`)
+               	if (ent)
+               	{
+               		NetProps.SetPropString(ent, `m_iszMvMPopfileName`, `Click Expert: Disorder`)
+               	}	
+           	"
+        }
+		WaveSpawn
+		{
+			Name	w6_tank01
+			TotalCurrency	100
+			TotalCount	1
+			MaxActive	1
+			SpawnCount	1
+			WaitBeforeStarting	10
+			WaitBetweenSpawns	0
+			Where	spawnbot
+			FirstSpawnOutput
+			{
+				 Target boss_spawn_relay                                            
+				 Action Trigger                         
+			}
+			Tank
+			{
+				Health	40000
+				Name	Tank
+				Speed	75
+				StartingPathTrackNode "boss_path_a1"
+				OnKilledOutput
+				{
+					Target	boss_dead_relay
+					Action	Trigger
+				}
+				OnBombDroppedOutput
+				{
+					Target	boss_deploy_relay
+					Action	Trigger
+				}
+			}
+		}
+		WaveSpawn
+		{
+			Name	w6_wave01
+			TotalCurrency	100
+			TotalCount	60
+			MaxActive	20
+			SpawnCount	4
+			WaitBeforeStarting	0
+			WaitBetweenSpawns	0
+			Where	spawnbot
+			TFBot
+			{
+				Template	T_TFBot_Scout_Milk_Expert
+				Attributes AlwaysCrit
+			}
+		}
+		WaveSpawn
+		{
+			Name	w6_engi01
+			WaitForAllSpawned	w6_wave01
+			TotalCurrency	100
+			TotalCount	8
+			MaxActive	8
+			SpawnCount	4
+			WaitBeforeStarting	0
+			WaitBetweenSpawns	10
+			Support	Limited
+			Where	spawnbot_right
+			Squad
+			{
+				TFBot
+				{
+					Template	T_TFBot_Engineer_Sentry_Tele_Battle_Armored
+					TeleportWhere spawnbot
+		        	TeleportWhere spawnbot_right
+		        	TeleportWhere spawnbot_left
+		         	TeleportWhere spawnbot_invasion
+				}
+				TFBot
+				{
+					Template	T_TFBot_Medic
+				}
+			}
+		}
+		WaveSpawn
+		{
+			Name	w6_wave02
+			WaitForAllSpawned	w6_engi01
+			TotalCurrency	100
+			TotalCount	16
+			MaxActive	8
+			SpawnCount	2
+			WaitBeforeStarting	10
+			WaitBetweenSpawns	5
+			Where	spawnbot
+			Squad
+			{
+				TFBot
+				{
+					Template	T_TFBot_Soldier_Crit
+				}
+				TFBot
+				{
+					Template	T_TFBot_Medic_Shield_Extended_Quickfix
+				}
+			}
+		}
+		WaveSpawn
+		{
+			Name	w6_wave02
+			WaitForAllSpawned	w6_engi01
+			TotalCurrency	100
+			TotalCount	40
+			MaxActive	12
+			SpawnCount	4
+			WaitBeforeStarting	10
+			WaitBetweenSpawns	0
+			Where	spawnbot_invasion
+			TFBot
+			{
+				Template	T_TFBot_Pyro_Hyper
+			}
+		}
+		WaveSpawn
+		{
+			Name	w6_wave03
+			WaitForAllSpawned	w6_wave02
+			TotalCurrency	200
+			TotalCount	20
+			MaxActive	16
+			SpawnCount	4
+			WaitBeforeStarting	10
+			WaitBetweenSpawns	0
+			Where	spawnbot
+			TFBot
+			{
+				Template	T_TFBot_Heavy_Bearfist
+				Health 1800
+			}
+		}
+		WaveSpawn
+		{
+			Name	w6_wave04
+			WaitForAllSpawned	w6_wave03
+			TotalCurrency	100
+			TotalCount	10
+			MaxActive	8
+			SpawnCount	1
+			WaitBeforeStarting	15
+			WaitBetweenSpawns	7
+			Where	spawnbot
+			TFBot
+			{
+				Template	T_TFBot_Giant_Demo_Spammer_Crit
+			}
+		}
+		WaveSpawn
+		{
+			Name	w6_wave05
+			WaitForAllSpawned	w6_wave04
+			TotalCurrency	100
+			TotalCount	8
+			MaxActive	8
+			SpawnCount	4
+			WaitBeforeStarting	10
+			WaitBetweenSpawns	0
+			Support	Limited
+			Where	spawnbot_invasion
+			Squad
+			{
+				TFBot
+				{
+					Template	T_TFBot_Engineer_Sentry_Tele_Battle_Armored
+					TeleportWhere spawnbot
+		        	TeleportWhere spawnbot_right
+		        	TeleportWhere spawnbot_left
+		         	TeleportWhere spawnbot_invasion
+				}
+				TFBot
+				{
+					Template	T_TFBot_Medic
+				}
+			}
+		}
+		WaveSpawn
+		{
+			Name	w6_wave05
+			WaitForAllSpawned	w6_wave04
+			TotalCurrency	100
+			TotalCount	3
+			MaxActive	3
+			SpawnCount	3
+			WaitBeforeStarting	20
+			WaitBetweenSpawns	0
+			Where	spawnbot
+			TFBot
+			{
+				Template	T_TFBot_Giant_Scout_Blaster_Hyper
+				Attributes AlwaysCrit
+			}
+		}
+		WaveSpawn
+		{
+			Name	w6_lasttank
+			WaitForAllSpawned	w6_wave04
+			TotalCurrency	100
+			TotalCount	1
+			MaxActive	1
+			SpawnCount	1
+			WaitBeforeStarting	10
+			WaitBetweenSpawns	0
+			Where	spawnbot
+			FirstSpawnOutput
+			{
+				Target boss_spawn_relay                                            
+			    Action Trigger                         
+			}
+			Tank
+			{
+				Health	35000
+				Name	Tank
+				Speed	75
+				StartingPathTrackNode "boss_path_a1"
+				OnKilledOutput
+				{
+					Target	boss_dead_relay
+					Action	Trigger
+				}
+				OnBombDroppedOutput
+				{
+					Target	boss_deploy_relay
+					Action	Trigger
+				}
+			}
+		}
+		WaveSpawn
+		{
+			Name	w6_support
+			WaitForAllSpawned	w6_wave04
+			TotalCurrency	50
+			TotalCount	24
+			MaxActive	16
+			SpawnCount	4
+			WaitBeforeStarting	0
+			WaitBetweenSpawns	0
+			Support	1
+			Where	spawnbot_invasion
+			TFBot
+			{
+				Template	T_TFBot_Sniper_Huntsman_Hyper_Penetration
+			}
+		}
+
+		WaveSpawn
+		{
+			WaitForAllSpawned  w6_engi01
+			TotalCurrency	50
+			TotalCount	10
+			MaxActive	4
+			SpawnCount	2
+			WaitBeforeStarting	20
+			WaitBetweenSpawns	10
+			Support 1
+			Where	spawnbot_invasion
+			Squad
+			{
+				TFBot
+				{
+					Template	T_TFBot_Engineer_Sentry_Tele_Battle_Armored
+					TeleportWhere spawnbot
+		        	TeleportWhere spawnbot_invasion
+				}
+				TFBot
+				{
+					Template	T_TFBot_Medic
+				}
+			}
+		}
+	}
+
+	// Wave 7: 1300
+	// 600 + 7200 + 600 (8400) -> 600 + 8500 + 700 (9800)
+
+	Wave
+	{
+		WaitWhenDone	65
+		Checkpoint	Yes
+		StartWaveOutput
+		{
+			Target	wave_start_relay
+			Action	Trigger
+		}
+		DoneOutput
+		{
+			Target	wave_finished_relay
+			Action	Trigger
+		}
+		InitWaveOutput
+        {
+          	Target gamerules
+          	Action RunScriptCode
+           	Param "
+               	local ent = Entities.FindByClassname(null, `tf_objective_resource`)
+               	if (ent)
+               	{
+               		NetProps.SetPropString(ent, `m_iszMvMPopfileName`, `Click Expert: Disorder`)
+               	}	
+           	"
+        }
+		WaveSpawn
+		{
+			Name	w7_wave01_giant01
+			TotalCurrency	100
+			TotalCount	2
+			MaxActive	2
+			SpawnCount	2
+			WaitBeforeStarting	0
+			WaitBetweenSpawns	0
+			Where	spawnbot
+			Squad
+			{
+				TFBot
+				{
+					Template	T_TFBot_Giant_Heavy_Brassbeast_Hyper
+				}
+				TFBot
+				{
+					Template	T_TFBot_Giant_Medic_Kritzkrieg_Armored
+				}
+			}	
+		}
+		WaveSpawn
+		{
+			Name	w7_wave01_giant02
+			WaitForAllSpawned	w7_wave01_giant01
+			TotalCurrency	100
+			TotalCount	8
+			MaxActive	8
+			SpawnCount	4
+			WaitBeforeStarting	45
+			WaitBetweenSpawns	20
+			Where	spawnbot
+			Squad
+			{
+				TFBot
+				{
+					Template	T_TFBot_Giant_Heavy_Brassbeast_Hyper
+				}
+				TFBot
+				{
+					Template	T_TFBot_Medic_Kritzkrieg_Armored
+				}
+				TFBot
+				{
+					Template	T_TFBot_Medic_Kritzkrieg_Armored
+				}
+				TFBot
+				{
+					Template	T_TFBot_Medic_Kritzkrieg_Armored
+				}
+			}	
+		}
+		WaveSpawn
+		{
+			Name	w7_wave01
+			TotalCurrency	180
+			TotalCount	16
+			MaxActive	4
+			SpawnCount	4
+			WaitBeforeStarting	10
+			WaitBetweenSpawns	0
+			Where	spawnbot
+			Squad
+			{
+				TFBot
+				{
+					Template	T_TFBot_Heavy_Penetration
+					Attributes AlwaysCrit
+				}
+				TFBot
+				{
+					Template	T_TFBot_Medic_Long_Quickfix
+				}
+			}
+		}
+		WaveSpawn
+		{
+			Name	w7_wave01
+			TotalCurrency	120
+			TotalCount	54
+			MaxActive	8
+			SpawnCount	4
+			WaitBeforeStarting	10
+			WaitBetweenSpawns	0
+			Where	spawnbot_invasion
+			TFBot
+			{
+				Template	T_TFBot_Scout_Backscatter_Hyper
+			}
+		}
+
+		WaveSpawn
+		{
+			Name	w7_wave02_giant01
+			WaitForAllSpawned	w7_wave01
+			TotalCurrency	100
+			TotalCount	2
+			MaxActive	2
+			SpawnCount	2
+			WaitBeforeStarting	25
+			WaitBetweenSpawns	0
+			Where	spawnbot
+			Squad
+			{
+				TFBot
+				{
+					Template	T_TFBot_Giant_Soldier_Nuker
+				}
+				TFBot
+				{
+					Template	T_TFBot_Giant_Medic_Uber_Armored
+				}
+			}	
+		}
+		WaveSpawn
+		{
+			Name	w7_wave02_giant02
+			WaitForAllSpawned	w7_wave02_giant01
+			TotalCurrency	100
+			TotalCount	8
+			MaxActive	8
+			SpawnCount	4
+			WaitBeforeStarting	45
+			WaitBetweenSpawns	20
+			Where	spawnbot
+			Squad
+			{
+				TFBot
+				{
+					Template	T_TFBot_Giant_Soldier_Nuker
+				}
+				TFBot
+				{
+					Template	T_TFBot_Medic_Quickuber_Armored
+				}
+				TFBot
+				{
+					Template	T_TFBot_Medic_Quickuber_Armored
+				}
+				TFBot
+				{
+					Template	T_TFBot_Medic_Quickuber_Armored
+				}
+			}	
+		}
+		WaveSpawn
+		{
+			Name	w7_wave02
+			WaitForAllSpawned	w7_wave01
+			TotalCurrency	200
+			TotalCount	72
+			MaxActive	12
+			SpawnCount	4
+			WaitBeforeStarting	10
+			WaitBetweenSpawns	0
+			Where	spawnbot
+			Squad
+			{
+				TFBot
+				{
+					Template	T_TFBot_Soldier_Stun_Spammer_Hyper
+					Attributes AlwaysCrit
+				}
+				TFBot
+				{
+					Template	T_TFBot_Medic_Long_Quickfix
+				}
+				TFBot
+				{
+					Template	T_TFBot_Soldier_Stun_Spammer_Hyper
+					Attributes AlwaysCrit
+				}
+				TFBot
+				{
+					Template	T_TFBot_Soldier_Stun_Spammer_Hyper
+					Attributes AlwaysCrit
+				}
+			}
+		}
+
+		WaveSpawn
+		{
+			Name	w7_wave03_giant01
+			WaitForAllSpawned	w7_wave02
+			TotalCurrency	100
+			TotalCount	2
+			MaxActive	2
+			SpawnCount	2
+			WaitBeforeStarting	25
+			WaitBetweenSpawns	0
+			Where	spawnbot
+			Squad
+			{
+				TFBot
+				{
+					Template	T_TFBot_Giant_Pyro_Backburner
+					Attributes AlwaysCrit
+				}
+				TFBot
+				{
+					Template	T_TFBot_Giant_Medic_Armored
+				}
+			}	
+		}
+		WaveSpawn
+		{
+			Name	w7_wave03_giant02
+			WaitForAllSpawned	w7_wave03_giant01
+			TotalCurrency	100
+			TotalCount	8
+			MaxActive	8
+			SpawnCount	4
+			WaitBeforeStarting	45
+			WaitBetweenSpawns	20
+			Where	spawnbot
+			Squad
+			{
+				TFBot
+				{
+					Template	T_TFBot_Giant_Pyro_Backburner
+					Attributes AlwaysCrit
+				}
+				TFBot
+				{
+					Template	T_TFBot_Medic_Quickheal_Armored
+				}
+				TFBot
+				{
+					Template	T_TFBot_Medic_Quickheal_Armored
+				}
+				TFBot
+				{
+					Template	T_TFBot_Medic_Quickheal_Armored
+				}
+			}	
+		}
+		WaveSpawn
+		{
+			Name	w7_wave03
+			WaitForAllSpawned	w7_wave02
+			TotalCurrency	200
+			TotalCount	72
+			MaxActive	10
+			SpawnCount	5
+			WaitBeforeStarting	10
+			WaitBetweenSpawns	0
+			Where	spawnbot
+			RandomChoice
+			{
+				TFBot
+				{
+					Template	T_TFBot_Pyro_Flaregun_FastShot
+				}
+				TFBot
+				{
+					Template	T_TFBot_Pyro_Flaregun_FastShot
+				}
+				TFBot
+				{
+					Template	T_TFBot_Pyro_Flaregun_FastShot
+				}
+				TFBot
+				{
+					Template	T_TFBot_Pyro_Flaregun_FastShot
+				}
+				TFBot
+				{
+					Template	T_TFBot_Pyro_Flaregun_FastShot
+				}
+				TFBot
+				{
+					Template	T_TFBot_Pyro_Gaspasser_Explove
+				}
+				TFBot
+				{
+					Template	T_TFBot_Pyro_Gaspasser_Explove
+				}
+				TFBot
+				{
+					Template	T_TFBot_Pyro_Gaspasser_Explove
+				}
+				TFBot
+				{
+					Template	T_TFBot_Pyro_Gaspasser_Explove
+				}
+			}
+		}
+	}
+
+	// Wave 8: 1000
+	// 600 + 8500 + 700 (9800) -> 600 + 9500 + 700 (10800)
+
+	Wave
+	{
+		WaitWhenDone	65
+		Checkpoint	Yes
+		StartWaveOutput
+		{
+			Target	wave_start_relay
+			Action	Trigger
+		}
+		DoneOutput
+		{
+			Target	wave_finished_relay
+			Action	Trigger
+		}
+		InitWaveOutput
+        {
+          	Target gamerules
+          	Action RunScriptCode
+           	Param "
+               	local ent = Entities.FindByClassname(null, `tf_objective_resource`)
+               	if (ent)
+               	{
+               		NetProps.SetPropString(ent, `m_iszMvMPopfileName`, `Click Expert: Disorder`)
+               	}	
+           	"
+        }
+		WaveSpawn
+		{
+			Name	w8_tank
+			TotalCurrency	400
+			TotalCount	4
+			MaxActive	4
+			SpawnCount	1
+			WaitBeforeStarting	20
+			WaitBetweenSpawns	40
+			Where	spawnbot
+			
+			FirstSpawnOutput
+			{
+				Target boss_spawn_relay                                            
+				Action Trigger                         
+			}
+
+			Tank
+			{
+				Health 30000
+				Speed 75
+				Name "tankboss"
+				StartingPathTrackNode "boss_path_a1"
+
+				OnKilledOutput                                  
+				{
+					Target boss_dead_relay
+					Action Trigger                         
+				}
+				
+				OnBombDroppedOutput                             
+				{
+					Target boss_deploy_relay 
+					Action Trigger                         
+				}
+			}
+		}
+		
+		WaveSpawn
+		{
+			Name	w8_wave01
+			TotalCurrency	120
+			TotalCount	12
+			MaxActive	4
+			SpawnCount	2
+			WaitBeforeStarting	10
+			WaitBetweenSpawns	20
+			Where	spawnbot
+			TFBot
+			{
+				Template	T_TFBot_Giant_Scout_Hyper
+			}
+		}
+		WaveSpawn
+		{
+			Name	w8_wave01
+			TotalCurrency	240
+			TotalCount	120
+			MaxActive	16
+			SpawnCount	4
+			WaitBeforeStarting	10
+			WaitBetweenSpawns	0
+			Where	spawnbot_invasion
+			RandomChoice
+			{
+				TFBot
+				{
+					Template	T_TFBot_Scout_Hyper_Bonk
+				}
+				TFBot
+				{
+					Template	T_TFBot_Scout_Hyper_Bonk
+				}
+				TFBot
+				{
+					Template	T_TFBot_Scout_Hyper_Bonk
+				}
+				TFBot
+				{
+					Template	T_TFBot_Soldier_Burst_Expert
+					tag "nav_prefer_flank_left"
+				}
+				TFBot
+				{
+					Template	T_TFBot_Soldier_Burst_Expert
+				}
+				TFBot
+				{
+					Template	T_TFBot_Soldier_Burst_Expert
+				}
+				TFBot
+				{
+					Template	T_TFBot_Demo_Loch_Hyper
+					tag "nav_prefer_flank_right"
+				}
+				TFBot
+				{
+					Template	T_TFBot_Demo_Loch_Hyper
+				}
+				TFBot
+				{
+					Template	T_TFBot_Demo_Loch_Hyper
+				}
+			}
+		}
+
+		WaveSpawn
+		{
+			Name	w8_wave02
+			WaitForAllDead	w8_wave01
+			TotalCurrency	100
+			TotalCount	8
+			MaxActive	8
+			SpawnCount	2
+			WaitBeforeStarting	0
+			WaitBetweenSpawns	20
+			Where	spawnbot
+			Squad
+			{
+				TFBot
+				{
+					Template	T_TFBot_Giant_Soldier_Rocketshotgun_Hyper
+				}
+				TFBot
+				{
+					Template	T_TFBot_Giant_Medic_Uber
+				}
+			}
+		}
+		WaveSpawn
+		{
+			Name	w8_wave02
+			WaitForAllDead	w8_wave01
+			TotalCurrency	100
+			TotalCount	8
+			MaxActive	4
+			SpawnCount	2
+			WaitBeforeStarting	10
+			WaitBetweenSpawns	20
+			Where	spawnbot
+			TFBot
+			{
+				Name "Bonk League Scout"
+				Class Scout
+				Skill Expert
+				Health 1600
+				ClassIcon scout_bonk_stun
+				WeaponRestrictions MeleeOnly
+				Attributes AlwaysCrit
+				Item "Bonk! Atomic Punch"
+				Item "Bonk Helm"
+				Item "The Sandman"
+				Attributes MiniBoss
+				ItemAttributes
+				{
+					ItemName "The Sandman"
+					"effect bar recharge rate increased" 0.1
+				}
+				CharacterAttributes
+				{
+					"airblast vulnerability multiplier" 0.7
+					"effect bar recharge rate increased" 0.55
+					"damage force reduction" 0.7
+					"override footstep sound set" 5
+					"deploy time increased" 0.5
+				}
+			}
+		}
+		WaveSpawn
+		{
+			Name	w8_lasttank
+			WaitForAllSpawned	w8_wave02
+			TotalCurrency	0
+			TotalCount	1
+			MaxActive	1
+			SpawnCount	1
+			WaitBeforeStarting	0
+			WaitBetweenSpawns	0
+			Where	spawnbot
+			FirstSpawnOutput
+			{
+				 Target boss_spawn_relay                                            
+				 Action Trigger                         
+			}
+
+			Tank
+			{
+				Health 66666
+				Speed 75
+				Skin 1
+				Name "tankboss"
+				StartingPathTrackNode "boss_path_a1"
+
+				OnKilledOutput                                  
+				{
+					Target boss_dead_relay
+					Action Trigger                         
+				}
+				
+				OnBombDroppedOutput                             
+				{
+					Target boss_deploy_relay 
+					Action Trigger                         
+				}
+
+			}
+		}
+
+		WaveSpawn
+		{
+			Name	w8_support
+			WaitForAllSpawned	w8_wave01
+			TotalCurrency	0
+			TotalCount	4
+			MaxActive	4
+			SpawnCount	2
+			WaitBeforeStarting	30
+			Where	spawnbot
+			support	1
+			Squad
+			{
+				TFBot
+				{
+					Template	T_TFBot_Engineer_Sentry_Tele_Battle_Hyper
+					Health 600
+				}
+				TFBot
+				{
+					Template	T_TFBot_Medic_Armored
+				}
+			}
+		}
+		WaveSpawn
+		{
+			Name	w8_support
+			WaitForAllDead	w8_wave01
+			TotalCurrency	40
+			TotalCount	12
+			MaxActive	4
+			SpawnCount	2
+			WaitBeforeStarting	20
+			WaitBetweenSpawns	5
+			Where	spawnbot
+			Support 1
+			Squad
+			{
+				TFBot
+				{
+					Template	T_TFBot_Heavy_Brassbeast_Hyper
+					Attributes AlwaysCrit
+				}
+				TFBot
+				{
+					Template	T_TFBot_Medic
+				}
+			}
+		}
+	}
+}
