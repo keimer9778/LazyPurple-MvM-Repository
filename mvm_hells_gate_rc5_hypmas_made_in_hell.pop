@@ -1,0 +1,3717 @@
+#base robot_giant.pop
+#base robot_standard.pop
+#base robot_click.pop
+#base robot_click_giant.pop
+#base robot_lazypurple.pop
+
+// boss_path_a1 (Tank left)
+// boss_path_b1 (Tank right)
+
+// Right side:
+// spawnbot_right ... spawnbot_flank_right
+
+// Left side:
+// spawnbot_left ... spawnbot_flank_left
+
+// Middle:
+// spawnbot
+
+// Start: 800
+// Wave 1: 800 + [800   + 100] = 1700
+// Wave 2: 1700 + [950  + 100] = 2750
+// Wave 3: 2750 + [900  + 100] = 3750
+// Wave 4: 3750 + [1000 + 100] = 4850
+// Wave 5: 4850 + [850  + 100] = 5530
+// Wave 6: 5530 + [1000]       = 6530
+
+WaveSchedule
+{
+	StartingCurrency				1000
+	RespawnWaveTime 				5
+	CanBotsAttackWhileInSpawnRoom	No
+	DisableSound "Announcer.MVM_Wave_End" [$SIGSEGV]
+	PrecacheModel "models\bots\soldier_boss\bot_soldier_boss_gibby.mdl" [$SIGSEGV]					// Credit to CTriggerHurt for creating the gibby model
+	PrecacheModel "models/props_mvm/indicator/indicator_circle.mdl" [$SIGSEGV]
+	FixedRespawnWaveTime Yes
+	
+
+	PointTemplates [$SIGSEGV]
+	{
+		Interface													// Use this to allow for pausing and resuming subwaves.
+		{															// Note that all subwaves need to be ACTIVE when the wave
+			NoFixUp 1												// ends, including support. Otherwise, the wave will softlock.
+			point_populator_interface{}
+		}
+		relativeRecallVisuals										// Spawn the particle relative to where Wrath does his RECALL.
+		{
+			KeepAlive 1
+			info_particle_system									// I need to not look boring when I recall :c
+			{
+				"TargetName" "relativePositionParticle"
+				"origin" "0 0 10"
+				"effect_name" "mvm_hatch_destroy"
+			}
+		}
+		introExplosion												// Visual transition from Wave 5 to Wave 6
+		{
+			OnSpawnOutput											// When the dummy subwave spawns this PointTemplate, immediately
+			{														// trigger 'bossIntro' as a result.
+				Target "bossIntro"
+				Action Trigger
+			}
+			info_particle_system									// When 'introExplosionColumn' is triggered, play this smoke effect
+			{														// at the middle robot spawn. The 'origin' is the set of coordinates.
+				"TargetName" "introExplosionColumn"					// The 'angle' determines the particle's rotation. The 'effect_name' is
+				"origin" "-10 -4310 -250"							// what particle should be displayed.
+				"angles" "0 0 0"
+				"effect_name" "fireSmoke_Collumn_mvmAcres"			// Particle borrowed from Echoes of a Warzone by Sergeant Table
+			}
+			info_particle_system									// Secondary particle used for added explosive visual intensity
+			{
+				"TargetName" "introExplosionHatch"
+				"origin" "-10 -4310 -250"
+				"angles" "0 0 0"
+				"effect_name" "mvm_hatch_destroy"
+			}
+			logic_timer												// Play this every second using 'RefireTime' when Wave 5 ends
+			{
+				"TargetName" "introExplosionLoop"
+				"StartDisabled" "1"
+				"RefireTime" "1.0"
+				"OnTimer" "introExplosionHatch,Stop,,0,-1"
+				"OnTimer" "introExplosionHatch,Start,,0.05,-1"
+			}
+			logic_relay												// This relay triggers at the end of Wave 5.
+			{
+				"TargetName" "bossIntro"
+				"OnTrigger"	"tf_gamerules,PlayVO,vo/mvm/mght/soldier_mvm_m_directhittaunt02.mp3,0,-1"
+				"OnTrigger"	"tf_gamerules,PlayVO,ambient\explosions\explode_4.wav,0,-1"
+				"OnTrigger"	"introExplosionHatch,Start,,0,-1"
+				"OnTrigger"	"introExplosionColumn,Start,,0,-1"
+				"OnTrigger" "introExplosionLoop,Enable,,0.1,-1"
+				"OnTrigger"  "bossText,Display,,0,1"
+			}
+			game_text												// Title text
+			{
+				"origin" "10000 10000 10000"						// Dummy position, this is where the entity spawns. Just keep it out of the way.
+				"TargetName" "bossText"								// Name of entity
+				"message" "MANN'S LAST STAND"						// Text to display
+				"x" "-1"											// 0 = left, -1 = middle, 1 = right
+				"y" "0.45"											// 0 = top, 1 = bottom, 0.45 = slightly above center
+				"spawnflags" "1"									// Just set to 1
+				"effect" "1"										// 
+				"channel" "1"										// Channels are essentially output layers (think of it in paint.NET)
+				"color" "255 0 0"									// Message color in RGB
+				"fxtime" "0.2"										// Delay between characters appearing (shorter = faster)
+				//"fadein" "0.6"									// Time for text to fade in
+				"fadeout" "1"										// Time for text to fade out
+				"holdtime" "7"										// Time for text to remain on screen
+			}
+		}
+		introExplosionSecond										// This particle plays when Wrath RECALLS.
+		{
+			logic_relay																			// Since this PointTemplate is spawned by Wrath, it follows the boss's
+			{																					// position. Any particles spawned by this template will not use absolute
+				"TargetName" "bossIntroSubordinate"												// coordinates, instead they will use coordinates relative to Wrath.
+				"OnTrigger"	"tf_gamerules,PlayVO,ambient\explosions\explode_4.wav,0,-1"			// You can create a second PointTemplate spawned via FirstSpawnOutput to 
+				"OnTrigger" "point_populator_interface,$ResumeWavespawn,darkFlame,0,-1"			// make this second template's relay use absolute coordinates. An example of
+				"OnTrigger" "point_populator_interface,$PauseWavespawn,firstSupportLeft,0,-1"	// particles via VScript <LINE HERE>, though this is not a recommended way
+				"OnTrigger" "point_populator_interface,$PauseWavespawn,firstSupportRight,0,-1"	// of creating particles.
+				"OnTrigger" "point_populator_interface,$ResumeWavespawn,secondSupportLeft,0,-1"
+				"OnTrigger" "point_populator_interface,$ResumeWavespawn,secondSupportRight,0,-1"
+			}
+		}
+		introPauseSupport											// You can use a PointTemplate to trigger an action on point_populator_interface.
+		{															// When you trigger the logic_relay called 'pauseSupport,' the subwaves will stop
+			OnSpawnOutput											// spawning bots (this will not kill the already-spawned bots).
+			{
+				Target "pauseSupport"								
+				Action "trigger"
+				Delay 0.1											// The 'Delay' argument defines how long the PointTemplate should wait before triggering
+			}														// the 'pauseSupport' relay.
+			logic_relay
+			{
+				"TargetName" "pauseSupport"
+				"OnTrigger" "point_populator_interface,$PauseWavespawn,wave04cSupport,0,-1"		// YOU MUST RESUME THE SUBWAVE TO END IT! Otherwise, the wave will softlock
+				"OnTrigger" "point_populator_interface,$ResumeWavespawn,wave04cSupport,26,-1"	// because all subwaves must be TERMINATED to conclude the wave.
+			}
+		}
+		boss_logic													// This PointTemplate handles picking what moves Wrath will use.
+		{
+			NoFixUp 1 												// If the entity targetname is used somewhere else in the template, any additional spawn
+																	// of this template will have a unique suffix added to the entity name if NoFixUp = 0. Use '1' to avoid this.
+			OnSpawnOutput											// If multiple bots use this template, NoFixUp = 1 will avoid name collisions, which will break the bots.
+			{
+				Target "pauseSecondaryBosses"						// As soon as the boss spawns, pause the Dark Flame Pyro subwaves from spawning.
+				Action "trigger"
+				Delay 0.1
+			}
+			logic_relay
+            {
+                "TargetName" "pauseSecondaryBosses"
+				"OnTrigger" "point_populator_interface,$PauseWavespawn,darkFlame,0,-1"
+				"OnTrigger" "point_populator_interface,$PauseWavespawn,secondSupportLeft,0,-1"	// This boss fight uses two sets of support bots. Using $PauseWavespawn will
+				"OnTrigger" "point_populator_interface,$PauseWavespawn,secondSupportRight,0,-1"	// prevent the second set from spawning until we demand it to.
+            }
+			logic_case														// This relay is used in the first half of the boss fight.
+			{																// It determines what type of attack Wrath will use for his rocket launcher.
+				"TargetName" "rocketCases"									// When it picks a Case, it will look up what command to fire via OnCase.
+				"Case01" "laserWall"
+				"Case02" "mortar"
+				"Case04" "blast"
+				"OnCase01" "!activator,$ChangeAttributes,laserWall,0,-1"	// '!activator' refers to whoever called the relay (in this case, Wrath). 
+				"OnCase02" "!activator,$ChangeAttributes,mortar,0,-1"		// '$ChangeAttributes' means to use EventChangeAttributes and apply the event name (e.g. mortar).
+				"OnCase04" "!activator,$ChangeAttributes,blast,0,-1"		// '0' defines the Delay before triggering the event.
+			}																// '-1' defines how many times the event should fire. -1 means to repeat only once.
+			logic_case
+			{
+				"TargetName" "rocketCasesSecondMoveset"						// This relay is used in the second half of the boss fight.
+				"Case01" "laserWallSecondMoveset"							// These are just buffed versions of the first moveset.
+				"Case02" "mortarSecondMoveset"
+				"Case04" "blastSecondMoveset"
+				"OnCase01" "!activator,$ChangeAttributes,laserWallSecondMoveset,0,-1"
+				"OnCase02" "!activator,$ChangeAttributes,mortarSecondMoveset,0,-1"
+				"OnCase04" "!activator,$ChangeAttributes,blastSecondMoveset,0,-1"
+			}
+			logic_case														// This relay is used to determine what banner Wrath uses.
+			{
+				"TargetName" "bannerCases"
+				"Case01" "buffBanner"
+				"Case02" "conchBanner"
+				"OnCase01" "!activator,$ChangeAttributes,buffBanner,0,-1"
+				"OnCase02" "!activator,$ChangeAttributes,conchBanner,0,-1"
+			}
+			logic_case														// This relay is used to determine what spell Wrath uses in the first half.
+			{
+				"TargetName" "spellFirstMoveset"
+				"Case01" "spellMonoculusTwoSpread"
+				"Case02" "spellTeslaboltThreeSpread"
+				"OnCase01" "!activator,$ChangeAttributes,spellMonoculusTwoSpread,0,-1"
+				"OnCase02" "!activator,$ChangeAttributes,spellTeslaboltThreeSpread,0,-1"
+			}
+			logic_case														// This relay is used to determine what spell Wrath uses after recalling at 50% HP.
+			{
+				"TargetName" "spellSecondMoveset"
+				"Case01" "spellFireballCollapsingSkies"
+				"Case02" "spellFireballSpinner"
+				"OnCase01" "!activator,$ChangeAttributes,spellFireballCollapsingSkies,0,-1"
+				"OnCase02" "!activator,$ChangeAttributes,spellFireballSpinner,0,-1"
+			}
+			logic_relay														// This relay transitions from the banner-rolling phase to spells.
+			{
+				"TargetName" "firstMovesetOpening"
+				"OnTrigger" "!activator,$ChangeAttributes,spellFireballCollapsingSkiesInitial,0,1"
+				"OnTrigger"	"tf_gamerules,PlayVO,ambient_mp3\alarms\doomsday_lift_alarm.mp3,0,-1"
+				"startDisabled" 1			// Under no circumstances should this relay ever fire unless we go from rolling banners to using the first set of spells.
+			}																
+			logic_relay														// This relay triggers when Wrath hits 50% HP. It activates the summonSubordinateTaunt event,
+			{																// which makes him use the Unleashed Rage taunt, recall, and trigger further relays defined
+				"TargetName" "weAreGonnaJumpYou"							// in the event.
+				"OnTrigger" "!activator,$ChangeAttributes,summonSubordinateTaunt,0,1"
+				"OnTrigger"	"tf_gamerules,PlayVO,vo/mvm/mght/soldier_mvm_m_directhittaunt02.mp3,0,-1"
+				"OnTrigger"	"tf_gamerules,PlayVO,vo/mvm/mght/soldier_mvm_m_directhittaunt02.mp3,1,-1"
+			}
+			logic_relay														// This relay triggers when Wrath hits 5% HP and activates his last hurrah phase.
+			{
+				"TargetName" "meleeRushRelay"
+				"OnTrigger" "!activator,$ChangeAttributes,meleeRush,0,1"
+				"OnTrigger"	"tf_gamerules,PlayVO,vo/mvm/mght/Soldier_mvm_m_paincrticialdeath02.mp3,0.5,-1"
+			}
+		}
+		bossStopSupport														// This relay resumes the subwaves defining the first set of support bots for reasons
+		{																	// explained on Lines 152 and 153.
+			OnSpawnOutput
+			{
+				Target "cease"
+				Action "trigger"
+				Delay 0.1
+			}
+			logic_relay
+            {
+                "TargetName" "cease"
+				"OnTrigger" "point_populator_interface,$ResumeWavespawn,firstSupportLeft,0,-1"
+				"OnTrigger" "point_populator_interface,$ResumeWavespawn,firstSupportRight,0,-1"
+            }
+		}
+		spellVisualCollapsingSkies												// This PointTemplate is responsible for the circle indicators used by the
+		{																		// Collapsing Skies spell.
+			logic_relay
+			{
+				"TargetName" "collapingSkiesVisual"
+				"OnTrigger" "spellRadiusBottom,Enable,,0.1,-1"						// Enable the circle
+				"OnTrigger" "spellRadiusTop,Enable,,0.1,-1"							// Enable the circle
+				"OnTrigger" "spellRadiusBottom,Disable,,5.5,-1"						// Disable the circle
+				"OnTrigger" "spellRadiusTop,Disable,,5.5,-1"						// Disable the circle
+				// "OnTrigger"	"tf_gamerules,PlayVO,ambient_mp3\alarms\doomsday_lift_alarm.mp3,0,-1"
+			}
+			prop_dynamic
+			{
+				"TargetName" "spellRadiusBottom"
+				"DisableBoneFollowers" "1"
+				"skin" "1"														// 0 = RED, 1 = BLUE
+				"model" "models/props_mvm/indicator/indicator_circle.mdl"		// Indicator model name
+				"modelscale" "19"												// Scale of the indicator
+				"DefaultAnim" "start"
+				"disableshadows" "1"
+				"origin" "0 0 800"												// Fire 800 Hammer Units above the boss
+				"angles" "0 0 0"												// Don't rotate the indicator
+				"StartDisabled" "1"												// Only fire when the spell is being cast
+			}
+			prop_dynamic
+			{
+				"TargetName" "spellRadiusTop"
+				"DisableBoneFollowers" "1"
+				"skin" "1"														// 0 = RED, 1 = BLUE
+				"model" "models/props_mvm/indicator/indicator_circle.mdl"		// Indicator model name
+				"modelscale" "19"												// Scale of the indicator
+				"DefaultAnim" "start"
+				"disableshadows" "1"
+				"origin" "0 0 000"												// Fire at the boss's feet
+				"angles" "0 0 0"												// Don't rotate the indicator
+				"StartDisabled" "1"												// Only fire when the spell is being cast
+			}
+		}
+	}
+
+	
+
+	Mission // Spy - wave 4
+	{
+		Objective Spy
+
+		InitialCooldown 150
+		Where spawnbot_mission_spy
+		BeginAtWave 4
+		RunForThisManyWaves 1
+		CooldownTime 20
+		DesiredCount 2
+
+		TFBot
+		{
+			Class Spy
+			Skill Expert
+			Name Spy
+		}
+	}
+
+	Wave
+	{
+		CustomWaveNumber 1 [$SIGSEGV]											// You can use CustomWaveNumber and CustomMaxWaveNumber
+		CustomMaxWaveNumber 5 [$SIGSEGV]										// via rafmod. When you reach Wave 5, it will play the last
+		StartWaveOutput															// wave starting sounds.
+		{
+			Target wave_start_relay
+			Action Trigger
+		}
+		DoneOutput
+		{
+			Target wave_finished_relay
+			Action trigger
+		}
+		WaitWhenDone 65
+		Checkpoint Yes
+		// The first wave only has two subwaves, which is intended to serve as a litmus test.
+		// Giant Pyros serve as anti-shield robots and come with BigHeal Medics while Direct Hit
+		// Soldiers serve as the main source of the robots' DPS. Giant Rapid Fire Demomen slowly
+		// Deploy over the course of the wave to serve as bulkier support DPS units. The second
+		// subwave is more hitscan oriented as opposed to the projectiles and flames of its
+		// predecessor, but comes with increased damage output courtesy of the Giant Buff Banner
+		// Soldiers. Super Scouts here are intended to rush up and force attention on themselves
+		// while the Deflector Heavies use the distraction to push up, healed by BigHeal Medics
+		// to mitigate some of the oncoming fire.
+
+
+		// Subwave 1 (maxActive: 22)
+		// Giant Pyro + BigHeal Medic (4 + 4 = 8)
+		// Direct Hit Soldier (12)
+		// Giant Rapid Fire Demo (2)
+
+		WaveSpawn	// First set. Bulk units (left) to free up space.
+		{
+			Name "wave01aGiant"
+			Where spawnbot_left
+			TotalCount 8
+			MaxActive 4
+			SpawnCount 4
+			WaitBeforeStarting 0
+			WaitBetweenSpawns 0
+			TotalCurrency 100
+		
+			Squad
+			{
+				TFBot
+				{
+					Template T_TFBot_Giant_Pyro
+					Attributes AlwaysFireWeapon
+					CharacterAttributes
+					{
+						"airblast vertical vulnerability multiplier" 0.25
+						"airblast vulnerability multiplier" 0.25
+						"damage force reduction" 0.25
+					}
+				}
+				TFBot
+				{
+					Template T_TFBot_Medic_BigHeal
+				}
+				TFBot
+				{
+					Template T_TFBot_Medic_BigHeal
+				}
+				TFBot
+				{
+					Template T_TFBot_Medic_BigHeal
+				}
+			}
+		}
+		WaveSpawn	// First set. Bulk units (right) to free up space.
+		{
+			Name "wave01aGiant"
+			Where spawnbot_right
+			TotalCount 8
+			MaxActive 4
+			SpawnCount 4
+			WaitBeforeStarting 0
+			WaitBetweenSpawns 0
+			TotalCurrency 100
+		
+			Squad
+			{
+				TFBot
+				{
+					Template T_TFBot_Giant_Pyro
+					Attributes AlwaysFireWeapon
+					CharacterAttributes
+					{
+						"airblast vertical vulnerability multiplier" 0.25
+						"airblast vulnerability multiplier" 0.25
+						"damage force reduction" 0.25
+					}
+				}
+				TFBot
+				{
+					Template T_TFBot_Medic_BigHeal
+				}
+				TFBot
+				{
+					Template T_TFBot_Medic_BigHeal
+				}
+				TFBot
+				{
+					Template T_TFBot_Medic_BigHeal
+				}
+			}
+		}
+		WaveSpawn	// First set. Bulk units (Middle)
+		{
+			Name "wave01aGiantDemo"
+			Where spawnbot
+			TotalCount 3
+			MaxActive 2
+			SpawnCount 1
+			WaitBeforeStarting 25
+			WaitBetweenSpawns 20
+			TotalCurrency 100
+		
+			TFBot
+			{
+				Template T_TFBot_Giant_Demoman
+				ClassIcon demo_rapid_giant
+				CharacterAttributes
+				{
+					"airblast vertical vulnerability multiplier" 0.25
+					"airblast vulnerability multiplier" 0.25
+					"damage force reduction" 0.25
+				}
+			}
+		}
+		WaveSpawn	// First set. Supporting units (middle)
+		{
+			Name "wave01a"
+			Where spawnbot
+			TotalCount 18
+			MaxActive 12
+			SpawnCount 6
+			WaitBeforeStarting 5
+			WaitBetweenSpawns 10
+			TotalCurrency 100
+		
+			TFBot
+			{
+				Template T_TFBot_Soldier_DirectHit
+			}
+		}
+		
+		// Subwave 2 (maxActive: 20)
+		// Super Scout (1)
+		// Giant Buff Banner Soldier (2)
+		// Deflector Heavy + BigHeal Medic (12)
+		// Rapid Fire Scout (4)
+		// Armored Homewrecker Pyro (1)
+
+		WaveSpawn	// Second set. Rushing units (middle)
+		{
+			Name "wave01bSupers"
+			Where spawnbot
+			TotalCount 4
+			MaxActive 1
+			SpawnCount 1
+			WaitForAllSpawned "wave01aGiant"
+			WaitBeforeStarting 6
+			WaitBetweenSpawns 15
+			TotalCurrency 100
+		
+			TFBot
+			{
+				Template T_TFBot_Giant_Scout_Fast
+				CharacterAttributes
+				{
+					"airblast vertical vulnerability multiplier" 0.35
+					"airblast vulnerability multiplier" 0.35
+					"damage force reduction" 0.35
+				}
+			}
+		}
+		WaveSpawn	// Second set. Bulk supporting units (middle)
+		{
+			Name "wave01b"
+			Where spawnbot
+			TotalCount 2
+			MaxActive 2
+			SpawnCount 1
+			WaitForAllSpawned "wave01aGiant"
+			WaitBeforeStarting 15
+			WaitBetweenSpawns 5
+			TotalCurrency 100
+		
+			TFBot
+			{
+				Template T_TFBot_Giant_Soldier_Extended_Buff_Banner
+				CharacterAttributes
+				{
+					"airblast vertical vulnerability multiplier" 0.25
+					"airblast vulnerability multiplier" 0.25
+					"damage force reduction" 0.25
+				}
+			}
+		}
+		WaveSpawn	// Second set. Survivability units (middle)
+		{
+			Name "wave01b"
+			Where spawnbot
+			TotalCount 16
+			MaxActive 12
+			SpawnCount 2
+			WaitBeforeStarting 2
+			WaitBetweenSpawns 3
+			TotalCurrency 50
+			WaitForAllSpawned wave01aGiant
+		
+			Squad
+			{
+				TFBot
+				{
+					Template T_TFBot_Heavy_Deflector
+					
+				}
+				TFBot
+				{
+					Template T_TFBot_Medic_BigHeal
+				}
+			}
+		}
+		WaveSpawn	// Second set. Bulk support units
+		{
+			Name "wave01b"
+			Where spawnbot
+			TotalCount 16
+			MaxActive 4
+			SpawnCount 2
+			WaitForAllSpawned "wave01aGiant"
+			WaitBeforeStarting 0
+			WaitBetweenSpawns 2
+			TotalCurrency 100
+		
+			TFBot
+			{
+				Template T_TFBot_Scout_FastFire
+				Skill Hard
+			}
+		}
+		WaveSpawn	// Second set. Support tank units (middle)
+		{
+			Name "wave01b"
+			Where spawnbot
+			MaxActive 2
+			SpawnCount 1
+			WaitBeforeStarting 2
+			WaitBetweenSpawns 8
+			TotalCurrency 50
+			WaitForAllDead wave01aGiant
+			Support 1
+
+			TFBot
+			{
+				Template T_TFBot_Pyro_Homewrecker_Armored
+			}
+		}
+	}
+	Wave
+	{
+		CustomWaveNumber 2 [$SIGSEGV]
+		CustomMaxWaveNumber 5 [$SIGSEGV]
+		StartWaveOutput
+		{
+			Target wave_start_relay
+			Action Trigger
+		}
+		DoneOutput
+		{
+			Target wave_finished_relay
+			Action trigger
+		}
+		WaitWhenDone 65
+		Checkpoint Yes
+		// This wave has only two subwaves, but depending on the team's ability to either drop the Armored Uber Medics or isolate them after
+		// they have Ubercharged, the second half of this wave can quickly spiral out of control. A Medic's shield is the only requirement
+		// on the second half, but a class capable of dropping Armored Uber Medics (most notably Spy) makes this wave substantially easier.
+		// The first subwave is intended as a simple soften-up subwave chained before the main DPS subwave.
+
+		// Subwave 1 (maxActive: 20)
+		// Giant Shotgun Heavy + Giant Regen Medic (2) | only one pair spawns
+		// Giant Rapid Fire Soldier (4)
+		// Crit Burst Demo (6)
+		// Fury Pyro (10)
+
+		WaveSpawn	// First set. Create breathing space for robots (middle)
+		{
+			Name "wave02Preamble"
+			Where spawnbot
+			TotalCount 2
+			MaxActive 2
+			SpawnCount 2
+			WaitBeforeStarting 0
+			WaitBetweenSpawns 0
+			TotalCurrency 100
+		
+			Squad
+			{
+				TFBot
+				{
+					Template T_TFBot_Giant_Heavyweapons_Shotgun
+					CharacterAttributes
+					{
+						"airblast vertical vulnerability multiplier" 0.25
+						"airblast vulnerability multiplier" 0.25
+						"damage force reduction" 0.25
+					}
+				}
+				TFBot
+				{
+					Template T_TFBot_Giant_Medic_Regen
+					CharacterAttributes
+					{
+						"airblast vertical vulnerability multiplier" 0.25
+						"airblast vulnerability multiplier" 0.25
+						"damage force reduction" 0.25
+					}
+				}
+			}
+		}
+		WaveSpawn	// First. Bulk DPS units (Left)
+		{
+			Name "wave02aGiant"
+			Where spawnbot
+			TotalCount 4
+			MaxActive 4
+			SpawnCount 1
+			WaitBeforeStarting 10
+			WaitBetweenSpawns 6
+			TotalCurrency 50
+
+			TFBot
+			{
+				Template T_TFBot_Giant_Soldier_Spammer
+				CharacterAttributes
+				{
+					"airblast vertical vulnerability multiplier" 0.25
+					"airblast vulnerability multiplier" 0.25
+					"damage force reduction" 0.25
+				}
+			}
+		}
+		WaveSpawn	// First set. DPS robots (middle)
+		{
+			Name "wave02aDemo"
+			Where spawnbot
+			TotalCount 18
+			MaxActive 6
+			SpawnCount 2
+			WaitBeforeStarting 6
+			WaitBetweenSpawns 3
+			TotalCurrency 25
+		
+			TFBot
+			{
+				Template T_TFBot_Demo_Burst
+				Attributes AlwaysCrit
+			}
+		}
+		WaveSpawn	// First set. Supporting units (middle)
+		{
+			Name "wave02a"
+			Where spawnbot
+			TotalCount 28
+			MaxActive 10
+			SpawnCount 2
+			WaitBeforeStarting 6
+			WaitBetweenSpawns 2
+			TotalCurrency 25
+		
+			TFBot
+			{
+				Template T_TFBot_Pyro_Dragon
+				Skill Expert
+			}
+		}
+
+		// Subwave 2 (maxActive: 22)
+		// (Giant Deflector Heavy -> Giant Spreader Soldier -> Giant Ancient Fury Pyro) + Armored Uber Medic 2 * (2 + 4) = 12
+		// Penetration Bowman (4)
+		// Bison Soldier (4)
+		// Armored Scout (12) | Generally there will never be 12 Armored Scouts on the field at once, about 4-5 on average
+
+		WaveSpawn	// Second set. DPS flank units (left)
+					// Counts: (3 + 3) + 4 + [12] = 22
+		{
+			Name "wave02b"
+			Where spawnbot_left
+			TotalCount 3
+			MaxActive 3
+			SpawnCount 3
+			WaitForAllSpawned wave02aGiant
+			WaitBeforeStarting 8
+			WaitBetweenSpawns 0
+			TotalCurrency 100
+			
+		
+			Squad
+			{
+				TFBot
+				{
+					Template T_TFBot_Giant_Heavyweapons_Deflector
+					CharacterAttributes
+					{
+						"airblast vertical vulnerability multiplier" 0.25
+						"airblast vulnerability multiplier" 0.25
+						"damage force reduction" 0.25
+					}
+				}
+				TFBot
+				{
+					Template T_TFBot_Medic_Armored
+				}
+				TFBot
+				{
+					Template T_TFBot_Medic_Armored
+				}
+			}
+		}
+		WaveSpawn	// Second set. DPS flank units (right)
+		{
+			Name "wave02b"
+			Where spawnbot_right
+			TotalCount 3
+			MaxActive 3
+			SpawnCount 3
+			WaitForAllDead wave02aGiant
+			WaitBeforeStarting 8
+			WaitBetweenSpawns 0
+			TotalCurrency 100
+		
+			Squad
+			{
+				TFBot
+				{
+					Template T_TFBot_Giant_Heavyweapons_Deflector
+					CharacterAttributes
+					{
+						"airblast vertical vulnerability multiplier" 0.25
+						"airblast vulnerability multiplier" 0.25
+						"damage force reduction" 0.25
+					}
+				}
+				TFBot
+				{
+					Template T_TFBot_Medic_Armored
+				}
+				TFBot
+				{
+					Template T_TFBot_Medic_Armored
+				}
+			}
+		}
+		WaveSpawn	// Second set. Supporting units (middle)
+		{
+			Name "wave02Support"
+			Where spawnbot_right
+			MaxActive 4
+			SpawnCount 2
+			WaitBeforeStarting 2
+			WaitBetweenSpawns 2
+			TotalCurrency 50
+			WaitForAllDead wave02aGiant
+			Support 1
+		
+			TFBot
+			{
+				Template T_TFBot_Sniper_Huntsman_Penetration
+			}
+		}
+		WaveSpawn	// Supporting units post-huntsmen (middle)
+		{
+			Name "wave02Support"
+			Where spawnbot_right
+			MaxActive 4
+			SpawnCount 2
+			WaitBeforeStarting 2
+			WaitBetweenSpawns 2
+			TotalCurrency 50
+			WaitForAllDead wave02aGiant
+			Support 1
+		
+			TFBot
+			{
+				Template T_TFBot_Soldier_Bison					// !! Replace with Soldier_Spammer_Easy if no impact
+			}
+		}
+		WaveSpawn	// Second set. Support rushing units (middle)
+		{
+			Name "wave02Scouts"
+			Where spawnbot
+			MaxActive 12
+			SpawnCount 1
+			WaitBeforeStarting 0
+			WaitBetweenSpawns 5
+			TotalCurrency 50
+			WaitForAllDead wave02aGiant
+			Support 1
+		
+			TFBot
+			{
+				Template T_TFBot_Scout_Armored
+				Skill Normal						// !! Downgrade from Skill
+				CharacterAttributes
+				{
+					"damage force reduction" 0.3	// Prevent them from getting knocked around
+				}									// Not having this reduction might make them
+			}										// more annoying to deal with
+		}
+		WaveSpawn	// Third set. DPS flank units (left)
+		{
+			Name "wave02c"
+			Where spawnbot_left
+			TotalCount 3
+			MaxActive 3
+			SpawnCount 3
+			WaitBeforeStarting 15
+			WaitBetweenSpawns 0
+			TotalCurrency 100
+			WaitForAllSpawned wave02b
+		
+			Squad
+			{
+				TFBot
+				{
+					Template T_TFBot_Giant_Soldier_Scatter
+					CharacterAttributes
+					{
+						"airblast vertical vulnerability multiplier" 0.25
+						"airblast vulnerability multiplier" 0.25
+						"damage force reduction" 0.25
+					}
+				}
+				TFBot
+				{
+					Template T_TFBot_Medic_Armored
+				}
+				TFBot
+				{
+					Template T_TFBot_Medic_Armored
+				}
+			}
+		}
+		WaveSpawn	// Third set. DPS flank units (right)
+		{
+			Name "wave02c"
+			Where spawnbot_right
+			TotalCount 3
+			MaxActive 3
+			SpawnCount 3
+			WaitBeforeStarting 15
+			WaitBetweenSpawns 0
+			TotalCurrency 100
+			WaitForAllSpawned wave02b
+		
+			Squad
+			{
+				TFBot
+				{
+					Template T_TFBot_Giant_Soldier_Scatter
+					CharacterAttributes
+					{
+						"airblast vertical vulnerability multiplier" 0.25
+						"airblast vulnerability multiplier" 0.25
+						"damage force reduction" 0.25
+					}
+
+				}
+				TFBot
+				{
+					Template T_TFBot_Medic_Armored
+				}
+				TFBot
+				{
+					Template T_TFBot_Medic_Armored
+				}
+			}
+		}
+		WaveSpawn	// Third set. DPS flank units (left)
+		{
+			Name "wave02d"
+			Where spawnbot_left
+			TotalCount 3
+			MaxActive 3
+			SpawnCount 3
+			WaitBeforeStarting 35
+			WaitBetweenSpawns 0
+			TotalCurrency 100
+			WaitForAllSpawned wave02b
+		
+			Squad
+			{
+				TFBot
+				{
+					Template T_TFBot_Giant_Pyro_Dragon_Hyper
+					CharacterAttributes
+					{
+						"airblast vertical vulnerability multiplier" 0.25
+						"airblast vulnerability multiplier" 0.25
+						"damage force reduction" 0.25
+					}
+
+				}
+				TFBot
+				{
+					Template T_TFBot_Medic_Armored
+				}
+				TFBot
+				{
+					Template T_TFBot_Medic_Armored
+				}
+			}
+		}
+		WaveSpawn	// Third set. DPS flank units (right)
+		{
+			Name "wave02d"
+			Where spawnbot_right
+			TotalCount 3
+			MaxActive 3
+			SpawnCount 3
+			WaitBeforeStarting 35
+			WaitBetweenSpawns 0
+			TotalCurrency 100
+			WaitForAllSpawned wave02b
+		
+			Squad
+			{
+				TFBot
+				{
+					Template T_TFBot_Giant_Pyro_Dragon_Hyper
+					CharacterAttributes
+					{
+						"airblast vertical vulnerability multiplier" 0.25
+						"airblast vulnerability multiplier" 0.25
+						"damage force reduction" 0.25
+					}
+
+				}
+				TFBot
+				{
+					Template T_TFBot_Medic_Armored
+				}
+				TFBot
+				{
+					Template T_TFBot_Medic_Armored
+				}
+			}
+		}
+	}
+	Wave
+	{
+		CustomWaveNumber 3 [$SIGSEGV]
+		CustomMaxWaveNumber 5 [$SIGSEGV]
+		StartWaveOutput
+		{
+			Target wave_start_relay
+			Action Trigger
+		}
+		DoneOutput
+		{
+			Target wave_finished_relay
+			Action trigger
+		}
+		WaitWhenDone 65
+		Checkpoint Yes
+
+		// Subwave 1 (maxActive: 22)
+		// Giant Burstfire Stun Soldier (2)
+		// Armored Blaster Pusher Scout (12)
+		// Penetration Bowman (8)
+
+		WaveSpawn	// First tank of the mission, spawns immediately (left)
+		{
+			Name "wave03aTank"
+			TotalCount 1
+			WaitBeforeStarting 0
+			TotalCurrency 150
+			
+			FirstSpawnOutput
+			{
+				 Target boss_spawn_relay
+				 Action Trigger
+			}
+
+			Tank
+			{
+				Health 30000
+				Speed 75
+				Name "tankboss"
+				StartingPathTrackNode "boss_path_b1"
+
+				OnKilledOutput
+				{
+					Target boss_dead_relay
+					Action Trigger
+				}
+				
+				OnBombDroppedOutput
+				{
+					Target boss_deploy_relay 
+					Action Trigger
+				}
+			}
+		}
+		WaveSpawn	// First set. DPS units (middle)
+		{
+			Name "wave03aGiant"
+			Where spawnbot
+			TotalCount 3
+			MaxActive 2
+			SpawnCount 1
+			WaitBeforeStarting 3
+			WaitBetweenSpawns 10
+			TotalCurrency 50
+			
+			TFBot
+			{
+				Template T_TFBot_Giant_Soldier_Stun_Burst
+				CharacterAttributes
+				{
+					"airblast vertical vulnerability multiplier" 0.25
+					"airblast vulnerability multiplier" 0.25
+					"damage force reduction" 0.25
+				}
+			}	
+		}
+		WaveSpawn
+		{
+			Name "wave03a"
+			Where spawnbot
+			TotalCount 30
+			MaxActive 12
+			SpawnCount 6
+			WaitBeforeStarting 3
+			WaitBetweenSpawns 4
+			TotalCurrency 50
+			
+			TFBot
+			{
+				Template T_TFBot_Scout_Blaster_Pusher_Armored
+				CharacterAttributes
+				{
+					"damage force reduction" 0.5		// Makes them less obnoxious if
+				}										// they got knocked around by rockets
+			}	
+		}
+		WaveSpawn	// First set. Anti-shield units (left)
+		{
+			Name "wave03a"
+			Where spawnbot_flank_left
+			TotalCount 16
+			MaxActive 4
+			SpawnCount 2
+			WaitBeforeStarting 0
+			WaitBetweenSpawns 5
+			TotalCurrency 100
+		
+			TFBot
+			{
+				Template T_TFBot_Sniper_Huntsman_Penetration
+			}
+		}
+		WaveSpawn	// First set. Anti-shield units (right)
+		{
+			Name "wave03a"
+			Where spawnbot_flank_right
+			TotalCount 16
+			MaxActive 4
+			SpawnCount 2
+			WaitBeforeStarting 0
+			WaitBetweenSpawns 5
+			TotalCurrency 100
+		
+			TFBot
+			{
+				Template T_TFBot_Sniper_Huntsman_Penetration
+			}
+		}
+
+		// Subwave 2 (maxActive: 22)
+		// Giant Igniter Pyro + Shield Uber Medic (8)
+		// Samurai Demo (4)
+		// Mafia Heavy (10)
+
+		WaveSpawn	// Second set. Bulk units (left)
+		{
+			Name "wave03bGiant"
+			Where spawnbot_left
+			TotalCount 6
+			MaxActive 4
+			SpawnCount 2
+			WaitBeforeStarting 0
+			WaitBetweenSpawns 15
+			TotalCurrency 50
+			WaitForAllDead wave03aGiant
+		
+			Squad
+			{
+				TFBot
+				{
+					Template T_TFBot_Giant_Pyro_Igniter
+					Attributes	AlwaysCrit
+					CharacterAttributes
+					{
+						"airblast vertical vulnerability multiplier" 0.25
+						"airblast vulnerability multiplier" 0.25
+						"damage force reduction" 0.25
+					}
+				}
+				TFBot
+				{
+					Template T_TFBot_Medic_Shield
+				}
+			}
+		}
+		WaveSpawn	// Second set. Bulk and anti-shield units (right)
+		{
+			Name "wave03bGiant"
+			Where spawnbot_right
+			TotalCount 6
+			MaxActive 4
+			SpawnCount 2
+			WaitBeforeStarting 0
+			WaitBetweenSpawns 15
+			TotalCurrency 50
+			WaitForAllDead wave03aGiant
+		
+			Squad
+			{
+				TFBot
+				{
+					Template T_TFBot_Giant_Pyro_Igniter
+					Attributes	AlwaysCrit
+					CharacterAttributes
+					{
+						"airblast vertical vulnerability multiplier" 0.25
+						"airblast vulnerability multiplier" 0.25
+						"damage force reduction" 0.25
+					}
+				}
+				TFBot
+				{
+					Template T_TFBot_Medic_Shield
+				}
+			}
+		}
+		WaveSpawn	// Second set. Rushing DPS units (middle)
+		{
+			Name "wave03b"
+			Where spawnbot
+			TotalCount 8
+			MaxActive 4
+			SpawnCount 2
+			WaitBeforeStarting 0
+			WaitBetweenSpawns 15
+			TotalCurrency 100
+			WaitForAllDead wave03aGiant
+		
+			TFBot
+			{
+				Template T_TFBot_Demoman_Samurai
+			}
+		}
+		WaveSpawn	// Second set. Supporting units (middle)
+		{
+			Name "wave03b"
+			Where spawnbot
+			TotalCount 30
+			MaxActive 10
+			SpawnCount 10
+			WaitBeforeStarting 0
+			WaitBetweenSpawns 0
+			TotalCurrency 100
+			WaitForAllDead wave03aGiant
+		
+			TFBot
+			{
+				Template T_TFBot_Heavy_Tomislav
+			}
+		}
+
+		// Subwave 3 (maxActive: 22)
+		// Giant Burst Shotgun Heavy + Giant Enforcer Medic (4)
+		// Accurate Shotgun Heavy (8)
+		// Fury Pyro (10)
+
+		WaveSpawn	// Third set. Spearhead units (middle)
+		{
+			Name "wave03c"
+			Where spawnbot
+			TotalCount 4
+			MaxActive 4
+			SpawnCount 2
+			WaitBeforeStarting 18
+			WaitBetweenSpawns 10
+			TotalCurrency 100
+			WaitForAllSpawned wave03bGiant
+		
+			Squad
+			{
+				TFBot
+				{
+					Template T_TFBot_Giant_Heavy_Shotgun_Burst
+					CharacterAttributes
+					{
+						"airblast vertical vulnerability multiplier" 0.25
+						"airblast vulnerability multiplier" 0.25
+						"damage force reduction" 0.25
+					}
+				}
+				TFBot
+				{
+					Template T_TFBot_Giant_Medic_Sturdy
+				}
+			}
+		}
+		WaveSpawn	// Third set. Support units (middle)
+		{
+			Name "wave03c"
+			Where spawnbot
+			MaxActive 8
+			SpawnCount 2
+			WaitBeforeStarting 3
+			WaitBetweenSpawns 2
+			TotalCurrency 25
+			WaitForAllDead wave03b
+			Support 1
+		
+			TFBot
+			{
+				Template T_TFBot_Heavy_Shotgun_Accurate
+			}
+		}
+		WaveSpawn	// Third set. Support units (middle)
+		{
+			Name "wave03c"
+			Where spawnbot
+			MaxActive 10
+			SpawnCount 2
+			WaitBeforeStarting 3
+			WaitBetweenSpawns 2
+			TotalCurrency 25
+			WaitForAllDead wave03b
+			Support 1
+		
+			TFBot
+			{
+				Template T_TFBot_Pyro_Dragon
+			}	
+		}
+	}
+	Wave
+	{
+		CustomWaveNumber 4 [$SIGSEGV]
+		CustomMaxWaveNumber 5 [$SIGSEGV]
+		StartWaveOutput
+		{
+			Target wave_start_relay
+			Action Trigger
+		}
+		DoneOutput
+		{
+			Target wave_finished_relay
+			Action trigger
+		}
+		WaitWhenDone 65
+		Checkpoint Yes
+
+		WaveSpawn	// First set. Bulk DPS units (right)
+					// Counts: 4 + 10 + 6 = 20
+		{
+			Name "wave04a"
+			Where spawnbot_flank_right
+			TotalCount 6
+			MaxActive 4
+			SpawnCount 2
+			WaitBeforeStarting 0
+			WaitBetweenSpawns 10
+			TotalCurrency 100
+		
+			TFBot
+			{
+				Template T_TFBot_Giant_Demo_Spammer_Hyper_NoCrit
+				CharacterAttributes
+				{
+					"airblast vertical vulnerability multiplier" 0.25
+					"airblast vulnerability multiplier" 0.25
+					"damage force reduction" 0.25
+				}
+			}
+		}
+		WaveSpawn	// First set. Rushing units (right)
+		{
+			Name "wave04a"
+			Where spawnbot_flank_right
+			TotalCount 6
+			MaxActive 4
+			SpawnCount 2
+			WaitBeforeStarting 0
+			WaitBetweenSpawns 6
+			TotalCurrency 50
+		
+			TFBot
+			{
+				Template T_TFBot_Scout_Batsaber_Armored
+				CharacterAttributes
+				{
+					"damage force reduction" 0.5
+				}
+			}
+		}
+		WaveSpawn	// First set. Rushing units (left)
+		{
+			Name "wave04a"
+			Where spawnbot_flank_left
+			TotalCount 6
+			MaxActive 2
+			SpawnCount 2
+			WaitBeforeStarting 0
+			WaitBetweenSpawns 0
+			TotalCurrency 50
+		
+			TFBot
+			{
+				Template T_TFBot_Scout_Batsaber_Armored
+				CharacterAttributes
+				{
+					"damage force reduction" 0.5
+				}
+			}
+		}
+		WaveSpawn	// First set. Supporting units (middle)
+		{
+			Name "wave04a"
+			Where spawnbot
+			TotalCount 20
+			MaxActive 10
+			SpawnCount 2
+			WaitBeforeStarting 15
+			WaitBetweenSpawns 3
+			TotalCurrency 50
+		
+			TFBot
+			{
+				Template T_TFBot_Heavy_Brassbeast
+			}
+		}
+		WaveSpawn	// Tank, spawns a few seconds after Giant Assault Demomen (left)
+		{
+			Name "wave04aTank"
+			TotalCount 1
+			WaitBeforeStarting 0
+			TotalCurrency 150
+			
+			FirstSpawnOutput
+			{
+				 Target boss_spawn_relay
+				 Action Trigger
+			}
+
+			Tank
+			{
+				Health 30000
+				Speed 75
+				Name "tankboss"
+				StartingPathTrackNode "boss_path_b1"
+
+				OnKilledOutput
+				{
+					Target boss_dead_relay
+					Action Trigger
+				}
+				
+				OnBombDroppedOutput
+				{
+					Target boss_deploy_relay 
+					Action Trigger
+				}
+			}
+		}
+		
+		WaveSpawn	// Second set. Bulk rushing units (middle)
+		{
+			Name "wave04bRush"
+			Where spawnbot
+			TotalCount 1
+			MaxActive 1
+			SpawnCount 1
+			WaitBeforeStarting 0
+			WaitBetweenSpawns 0
+			TotalCurrency 50
+			WaitForAllDead wave04a
+		
+			TFBot
+			{
+				Template T_TFBot_Giant_Scout_Hyper_Bonk
+				CharacterAttributes
+				{
+					"airblast vertical vulnerability multiplier" 0.35
+					"airblast vulnerability multiplier" 0.35
+					"damage force reduction" 0.35
+				}
+			}
+		}
+		WaveSpawn	// Second set. Bulk rushing units (left)
+		{
+			Name "wave04bRush"
+			Where spawnbot_flank_left
+			TotalCount 1
+			MaxActive 1
+			SpawnCount 1
+			WaitBeforeStarting 0
+			WaitBetweenSpawns 0
+			TotalCurrency 25
+			WaitForAllDead wave04a
+		
+			TFBot
+			{
+				Template T_TFBot_Giant_Scout_Hyper_Bonk
+				CharacterAttributes
+				{
+					"airblast vertical vulnerability multiplier" 0.35
+					"airblast vulnerability multiplier" 0.35
+					"damage force reduction" 0.35
+				}
+			}
+		}
+		WaveSpawn	// Second set. Bulk rushing units (right)
+		{
+			Name "wave04bRush"
+			Where spawnbot_flank_right
+			TotalCount 1
+			MaxActive 1
+			SpawnCount 1
+			WaitBeforeStarting 0
+			WaitBetweenSpawns 0
+			TotalCurrency 25
+			WaitForAllDead wave04a
+		
+			TFBot
+			{
+				Template T_TFBot_Giant_Scout_Hyper_Bonk
+				CharacterAttributes
+				{
+					"airblast vertical vulnerability multiplier" 0.35
+					"airblast vulnerability multiplier" 0.35
+					"damage force reduction" 0.35
+				}
+			}
+		}
+		WaveSpawn	// Second set. Bulk units (middle)
+		{
+			Name "wave04bGiant"
+			Where spawnbot
+			TotalCount 2
+			MaxActive 2
+			SpawnCount 2
+			WaitBeforeStarting 5
+			WaitBetweenSpawns 0
+			TotalCurrency 100
+			WaitForAllSpawned wave04bRush
+		
+			Squad
+			{
+				TFBot
+				{
+					Template T_TFBot_Giant_Heavy_Flame
+					CharacterAttributes
+					{
+						"airblast vertical vulnerability multiplier" 0.25
+						"airblast vulnerability multiplier" 0.25
+						"damage force reduction" 0.25
+					}
+				}
+				TFBot
+				{
+					Template T_TFBot_Giant_Medic_Shield_Uber
+					CharacterAttributes
+					{
+						"airblast vertical vulnerability multiplier" 0.25
+						"airblast vulnerability multiplier" 0.25
+						"damage force reduction" 0.25
+					}
+				}
+			}
+		}
+		WaveSpawn	// Second set. Supporting units (left)
+		{
+			Name "wave04b"
+			Where spawnbot_left
+			TotalCount 20
+			MaxActive 10
+			SpawnCount 2
+			WaitBeforeStarting 5
+			WaitBetweenSpawns 2
+			TotalCurrency 25
+			WaitForAllSpawned wave04bRush
+		
+			TFBot
+			{
+				Template T_TFBot_Soldier_Stun_Spammer
+			}
+		}
+		WaveSpawn	// Second set. Supporting units (right)
+		{
+			Name "wave04b"
+			Where spawnbot_right
+			TotalCount 20
+			MaxActive 10
+			SpawnCount 2
+			WaitBeforeStarting 5
+			WaitBetweenSpawns 2
+			TotalCurrency 25
+			WaitForAllSpawned wave04bRush
+		
+			TFBot
+			{
+				Template T_TFBot_Soldier_Stun_Spammer
+			}
+		}
+		WaveSpawn	// Intermission set. Bulk units (middle)
+		{
+			Name "wave04Intermission"
+			Where spawnbot
+			TotalCount 4
+			MaxActive 4
+			SpawnCount 2
+			WaitBeforeStarting 5
+			WaitBetweenSpawns 10
+			TotalCurrency 50
+			WaitForAllDead wave04bGiant
+		
+			Squad
+			{
+				TFBot
+				{
+					Template T_TFBot_Giant_Pyro_Hyper
+					Attributes AlwaysFireWeapon
+					CharacterAttributes
+					{
+						"airblast vertical vulnerability multiplier" 0.25
+						"airblast vulnerability multiplier" 0.25
+						"damage force reduction" 0.25
+					}
+				}
+				TFBot
+				{
+					Template T_TFBot_Giant_Medic_Regen
+					CharacterAttributes
+					{
+						"airblast vertical vulnerability multiplier" 0.25
+						"airblast vulnerability multiplier" 0.25
+						"damage force reduction" 0.25
+					}
+				}
+			}
+		}
+		WaveSpawn	// Tank, spawns 15 seconds after the intermission (right)
+					// Counts: |2| + [2 + 12 + 6] = 20
+		{
+			Name "wave04cTank"
+			TotalCount 1
+			WaitBeforeStarting 15
+			TotalCurrency 100
+			WaitForAllSpawned wave04bGiant
+			
+			FirstSpawnOutput
+			{
+				Target boss_spawn_relay
+				Action Trigger
+			}
+
+			Tank
+			{
+				Health 20000
+				Speed 75
+				Name "tankboss"
+				StartingPathTrackNode "boss_path_a1"
+
+				OnKilledOutput
+				{
+					Target boss_dead_relay
+					Action Trigger
+				}
+				
+				OnBombDroppedOutput
+				{
+					Target boss_deploy_relay 
+					Action Trigger
+				}
+			}
+		}
+		WaveSpawn	// Third set. Support units (middle)
+		{
+			Name "wave04c"
+			Where spawnbot
+			MaxActive 2
+			SpawnCount 1
+			WaitBeforeStarting 15
+			WaitBetweenSpawns 15
+			TotalCurrency 50
+			WaitForAllSpawned wave04Intermission
+			Support 1
+		
+			TFBot
+			{
+				Template T_TFBot_Giant_Scout_FAN_Knockback_Proof
+				classIcon scout_fan_anchored
+				Attributes AlwaysCrit
+			}
+		}
+		WaveSpawn	// Third set. Support units (middle)
+		{
+			Name "wave04c"
+			Where spawnbot
+			MaxActive 6
+			SpawnCount 2
+			WaitBeforeStarting 15
+			WaitBetweenSpawns 2
+			TotalCurrency 50
+			WaitForAllSpawned wave04Intermission
+			Support 1
+		
+			TFBot
+			{
+				Template T_TFBot_Soldier_Bison_Spammer_Easy
+				Attributes AlwaysCrit
+			}
+		}
+		WaveSpawn	// Third set. Support units (right)
+		{
+			Name "wave04c"
+			Where spawnbot_flank_right
+			MaxActive 6
+			SpawnCount 2
+			WaitBeforeStarting 15
+			WaitBetweenSpawns 2
+			TotalCurrency 50
+			WaitForAllSpawned wave04Intermission
+			Support 1
+		
+			TFBot
+			{
+				Template T_TFBot_Soldier_Bison_Spammer_Easy
+				Attributes AlwaysCrit
+			}
+		}
+		WaveSpawn	// Third set. Support units (middle)
+		{
+			Name "wave04c"
+			Where spawnbot
+			MaxActive 6
+			SpawnCount 2
+			WaitBeforeStarting 15
+			WaitBetweenSpawns 5
+			TotalCurrency 50
+			WaitForAllSpawned wave04Intermission
+			Support 1
+		
+			TFBot
+			{
+				Template T_TFBot_Demo_Scatter
+			}
+		}
+	}
+	Wave
+	{
+		CustomWaveNumber 5 [$SIGSEGV]
+		CustomMaxWaveNumber 5 [$SIGSEGV]
+		StartWaveOutput
+		{
+			Target wave_start_relay
+			Action Trigger
+		}
+		DoneOutput
+		{
+			Target wave_finished_relay
+			Action trigger
+		}
+		WaitWhenDone 65
+		Checkpoint Yes
+
+		WaveSpawn	// First set. Bulk Anti-shield units (left)
+					// Counts: 5 + 9 + 8 = 22
+		{
+			Name "wave04a"
+			Where spawnbot_flank_left
+			TotalCount 4
+			MaxActive 4
+			SpawnCount 1
+			WaitBeforeStarting 0
+			WaitBetweenSpawns 7
+			TotalCurrency 100
+		
+			TFBot
+			{
+				Template T_TFBot_Giant_Soldier_Bison_Hyper
+				ItemAttributes
+				{
+					ItemName	"The Righteous Bison"
+					"damage bonus" 2
+					"reload time decreased" -0.8
+					"fire rate bonus" 0.4
+					"projectile speed increased" 0.5
+				}
+				CharacterAttributes
+				{
+					"airblast vertical vulnerability multiplier" 0.25
+					"airblast vulnerability multiplier" 0.25
+					"damage force reduction" 0.25
+				}
+			}
+		}
+		WaveSpawn	// First set. Rushing units (middle)
+		{
+			Name "wave04a"
+			Where spawnbot
+			TotalCount 9
+			MaxActive 4
+			SpawnCount 1
+			WaitBeforeStarting 0
+			WaitBetweenSpawns 4
+			TotalCurrency 50
+		
+			TFBot
+			{
+				Template T_TFBot_Giant_Scout_Baseball_Hyper
+				CharacterAttributes
+				{
+					"airblast vertical vulnerability multiplier" 0.35
+					"airblast vulnerability multiplier" 0.35
+					"damage force reduction" 0.35
+				}
+			}
+		}
+		WaveSpawn	// First set. Supporting units (middle)
+		{
+			Name "wave04a"
+			Where spawnbot
+			TotalCount 24
+			MaxActive 16
+			SpawnCount 8
+			WaitBeforeStarting 3
+			WaitBetweenSpawns 0
+			TotalCurrency 50
+		
+			TFBot
+			{
+				Template T_TFBot_Heavy_Deflector_HoH
+			}
+		}
+		WaveSpawn	// Second set. Bulk units (right)
+					// Counts: 4 + 12 + 6 = 22
+		{
+			Name "wave04bGiant"
+			Where spawnbot_flank_left
+			TotalCount 6
+			MaxActive 4
+			SpawnCount 2
+			WaitBeforeStarting 20
+			WaitBetweenSpawns 7
+			TotalCurrency 100
+			WaitForAllSpawned wave04a
+		
+			TFBot
+			{
+				Template T_TFBot_Giant_Demoman_Rapid
+				Attributes AlwaysCrit
+				CharacterAttributes
+				{
+					"airblast vertical vulnerability multiplier" 0.25
+					"airblast vulnerability multiplier" 0.25
+					"damage force reduction" 0.25
+				}
+			}
+		}
+		WaveSpawn	// Second set. Rushing units (middle)
+		{
+			Name "wave04b"
+			Where spawnbot
+			TotalCount 24
+			MaxActive 6
+			SpawnCount 4
+			WaitBeforeStarting 0
+			WaitBetweenSpawns 4
+			TotalCurrency 100
+			WaitForAllDead wave04a
+		
+			TFBot
+			{
+				Template T_TFBot_Scout_Bonkboy_Hyper
+				Attributes AlwaysCrit
+			}
+		}
+		WaveSpawn	// Second set. Rushing anti-shield units (middle)
+		{
+			Name "wave04b"
+			Where spawnbot
+			TotalCount 32
+			MaxActive 12
+			SpawnCount 4
+			WaitBeforeStarting 0
+			WaitBetweenSpawns 4
+			TotalCurrency 100
+			WaitForAllDead wave04a
+		
+			TFBot
+			{
+				Template T_TFBot_Sniper_Huntsman_Spammer_Penetration
+			}
+		}
+		WaveSpawn	// Third set. Bulk units (middle)
+		{
+			Name "wave04cGiant"
+			Where spawnbot
+			TotalCount 4
+			MaxActive 3
+			SpawnCount 1
+			WaitBeforeStarting 15
+			WaitBetweenSpawns 8
+			TotalCurrency 100
+			WaitForAllSpawned wave04bGiant
+		
+			TFBot
+			{
+				Template T_TFBot_Giant_Heavyweapons_Deflector
+				CharacterAttributes
+				{
+					"airblast vertical vulnerability multiplier" 0.25
+					"airblast vulnerability multiplier" 0.25
+					"damage force reduction" 0.25
+				}
+			}
+		}
+		WaveSpawn	// Third set. Bulk units (right)
+		{
+			Name "wave04cGiant"
+			Where spawnbot_flank_right
+			TotalCount 3
+			MaxActive 3
+			SpawnCount 1
+			WaitBeforeStarting 25
+			WaitBetweenSpawns 12
+			TotalCurrency 50
+			WaitForAllSpawned wave04bGiant
+		
+			TFBot
+			{
+				Template T_TFBot_Giant_Demoknight_Hyper
+				CharacterAttributes
+				{
+					"airblast vertical vulnerability multiplier" 0.25
+					"airblast vulnerability multiplier" 0.25
+					"damage force reduction" 0.25
+				}
+				Attributes AlwaysCrit
+			}
+		}
+		WaveSpawn	// Third set. Rushing DPS units (middle)
+		{
+			Name "wave04c"
+			Where spawnbot
+			TotalCount 8
+			MaxActive 8
+			SpawnCount 2
+			WaitBeforeStarting 0
+			WaitBetweenSpawns 4
+			TotalCurrency 100
+			WaitForAllDead wave04b
+		
+			TFBot
+			{
+				Template T_TFBot_Heavy_Shotgun_Burst_Hyper
+			}
+		}
+		WaveSpawn	// Third set. Supporting units (middle)
+		{
+			Name "wave04cSupport"
+			Where spawnbot
+			TotalCount 30
+			MaxActive 6
+			SpawnCount 2
+			WaitBeforeStarting 0
+			WaitBetweenSpawns 4
+			TotalCurrency 50
+			WaitForAllDead wave04b
+			Support Limited
+		
+			TFBot
+			{
+				Template T_TFBot_Soldier_Spammer_Conch
+			}
+		}
+		WaveSpawn	// Third set. Supporting units (middle)
+		{
+			Name "wave04cSupport"
+			Where spawnbot
+			TotalCount 30
+			MaxActive 4
+			SpawnCount 2
+			WaitBeforeStarting 0
+			WaitBetweenSpawns 4
+			TotalCurrency 50
+			WaitForAllDead wave04b
+			Support Limited
+		
+			TFBot
+			{
+				Template T_TFBot_Pyro_Backburner
+				Attributes AlwaysCrit
+			}
+		}
+		WaveSpawn
+		{
+			WaitForAllDead wave04cGiant
+			FirstSpawnOutput
+			{
+				Target introPauseSupport
+				Action  ForceSpawn
+			}
+		}
+		WaveSpawn
+		{
+			WaitForAllDead wave04cGiant
+			WaitBeforeStarting 12
+			FirstSpawnWarningSound Announcer.MVM_Final_Wave_End
+		}
+		WaveSpawn
+		{
+			WaitForAllDead wave04cGiant
+			WaitBeforeStarting 14
+			FirstSpawnWarningSound MVM.Siren
+		}
+		WaveSpawn
+		{
+			WaitForAllDead wave04cGiant
+			WaitBeforeStarting 17
+			FirstSpawnWarningSound "vo/announcer_sd_monkeynaut_end_crash01.mp3"
+		}
+		WaveSpawn
+		{
+			WaitForAllDead wave04cGiant
+			WaitBeforeStarting 18
+			FirstSpawnWarningSound doomsday.alarm
+		}
+		WaveSpawn
+		{
+			WaitForAllDead wave04cGiant
+			WaitBeforeStarting 21
+			FirstSpawnWarningSound doomsday.alarm
+		}
+		WaveSpawn
+		{
+			WaitForAllDead wave04cGiant
+			WaitBeforeStarting 22
+		}
+		WaveSpawn
+		{
+			WaitForAllDead wave04cGiant
+			WaitBeforeStarting 24
+			FirstSpawnWarningSound doomsday.alarm
+		}
+		WaveSpawn
+		{
+			WaitForAllDead wave04cGiant
+			WaitBeforeStarting 26
+			FirstSpawnWarningSound "vo/mvm/mght/soldier_mvm_m_laughlong01.mp3"
+			FirstSpawnOutput
+            {
+                Target introExplosion
+                Action ForceSpawn
+            }
+		}
+	}
+	Wave
+	{
+		CustomWaveNumber 6 [$SIGSEGV] // Display custom wave number. 511 is max value
+		CustomMaxWaveNumber 6 [$SIGSEGV] // Display custom max wave number. 0 hides the max wave number
+		StartWaveOutput
+		{
+			Target wave_start_relay
+			Action Trigger
+		}
+		DoneOutput
+		{
+			Target wave_finished_relay
+			Action trigger
+		}
+		WaitWhenDone 65
+		Checkpoint Yes
+
+		WaveSpawn
+		{
+			StartWaveWarningSound mvm/giant_heavy/giant_heavy_entrance.wav
+		}
+		WaveSpawn	// "vo/mvm/mght/soldier_mvm_m_laughlong01.mp3"
+		{
+			Name "Sin"
+			Where spawnbot
+			TotalCount 1
+			MaxActive 1
+			SpawnCount 1
+			WaitBeforeStarting 0
+			WaitBetweenSpawns 0
+			TotalCurrency 0
+		
+			TFBot
+			{
+				Class Soldier
+				ClassIcon soldier_infernal_impaler
+				Health	100000
+				UseCustomModel "models\bots\soldier_boss\bot_soldier_boss_gibby.mdl" [$SIGSEGV]
+				Name "Sinful Emperor Wrath"
+				Scale 2.2
+				Skill Expert
+				Attributes AlwaysCrit
+				Attributes UseBossHealthBar
+				Attributes SpawnWithFullCharge
+				Attributes MiniBoss
+				Attributes HoldFireUntilFullReload
+				Tag dontdoublehp
+				Tag dontdoublehp_damageres
+				RocketCustomParticle	flare_glow [$SIGSEGV]
+				SpawnTemplate boss_logic [$SIGSEGV]
+				SpawnTemplate relativeRecallVisuals [$SIGSEGV] 
+				SpawnTemplate introExplosionSecond [$SIGSEGV]
+				SpawnTemplate Interface [$SIGSEGV]
+				SpawnTemplate spellVisualCollapsingSkies [$SIGSEGV]
+				Item	TF_WEAPON_ROCKETLAUNCHER
+				Item	"The Infernal Impaler"
+				Item	"Field Fatigues"
+				ItemAttributes
+				{
+					ItemName TF_WEAPON_ROCKETLAUNCHER
+					"damage bonus" 2
+					"fire rate bonus" 0.1
+					"clip size upgrade atomic" 3
+					"reload time increased" 0.15
+					"projectile spread angle penalty" 5
+				}
+				CharacterAttributes
+				{
+					"no_jump" 1
+					"displace touched enemies" 1
+					"blast dmg to self increased" 0
+					"cancel falling damage" 1
+					"damage force reduction" 0
+					"airblast vulnerability multiplier" 0
+					"airblast vertical vulnerability multiplier" 0
+					"move speed bonus" 0.4
+				}
+				FireInput [$SIGSEGV] // This banner-locking isn't foolproof but it works most of the time
+				{
+					Target "!self"
+					Action "RunScriptCode"
+					Param "ClientPrint(null, 3, `\x0799CCFFSinful Emperor Wrath \x07FFFFFFwill lock their selected banner at \x07FF3F3F70% (70,000) \x07FFFFFFHP. The Buff Banner will provide increased weapon handling, and the Concheror will provide a minor speed boost.`);"
+					Delay 0
+					Repeats 1
+				}
+				FireInput [$SIGSEGV]
+				{
+					Target !activator
+					Action $AddCond
+					Param 28
+					Delay 1
+					Cooldown 5
+					Repeats 0
+					IfSeeTarget 1
+					IfLeftSpawn 1
+				}
+				FireInput [$SIGSEGV]													// Start using banners at 90% HP
+				{
+					Target "bannerCases"
+					Action "PickRandomShuffle"
+					Delay  0
+					IfHealthBelow 90000
+					Repeats 1
+				}
+				FireInput [$SIGSEGV]													// At 70% HP, enable the first spell moveset
+				{
+					Target "firstMovesetOpening"
+					Action "enable"
+					Delay  0
+					IfHealthBelow 70000
+					Repeats 1
+				}
+				FireInput [$SIGSEGV]													// At 70% HP, trigger the first spell moveset
+				{
+					Target "firstMovesetOpening"
+					Action "trigger"
+					Delay  0.1
+					IfHealthBelow 70000
+					Repeats 1
+				}
+				FireInput [$SIGSEGV]													// At 70% HP, disable the first spell moveset
+				{
+					Target "bannerCases"
+					Action "disable"
+					Delay  0
+					IfHealthBelow 70000
+					Repeats 1
+				}
+				FireInput [$SIGSEGV]													// At 50% HP, disable the first spell moveset
+				{
+					Target "spellFirstMoveset"
+					Action "disable"
+					Delay  0
+					IfHealthBelow 50000
+					Repeats 1
+				}
+				FireInput [$SIGSEGV]													// At 50% HP, disable the first rocket moveset
+				{
+					Target "rocketCooldown"
+					Action "disable"
+					Delay 0
+					IfHealthBelow 50000
+					Repeats 1
+				}
+				FireInput [$SIGSEGV]													// At 50% HP, trigger the second spell moveset
+				{
+					Target "spellSecondMoveset"
+					Action "trigger"
+					Delay  1
+					IfHealthBelow 50000
+					Repeats 1
+				}
+				FireInput [$SIGSEGV]													// At 50% HP, summon the subordinates
+				{
+					Target "weAreGonnaJumpYou"
+					Action "trigger"
+					Delay 0
+					IfHealthBelow 50000
+					Repeats 1
+				}
+				FireInput [$SIGSEGV]													// At 5% HP, start the melee rush
+				{
+					Target "meleeRushRelay"
+					Action "trigger"
+					Delay 0
+					IfHealthBelow 5000
+					Repeats 1
+				}
+
+				EventChangeAttributes
+				{
+					bannerCooldown [$SIGSEGV]
+					{
+						FireInput [$SIGSEGV]
+						{
+							Target "!self"
+							Action "RunScriptCode"
+							Param 	"self.ValidateScriptScope();
+									local sc = self.GetScriptScope();												// Fetch the script-side data associated with the bot
+									if(!(`wrathBanner` in sc)) return;
+									if(sc.wrathBanner == `buff`) {													// If banner = Buff
+										sc.keepBuff <- true;
+										sc.keepConch <- false;
+										self.RemoveCond(29);
+										sc.KeepBuff <- function() {													// Repeatedly apply increased weapon handling
+											local s = self.GetScriptScope();										// if we cross to using spells. This block
+											if(!(`keepBuff` in s) || !s.keepBuff) return;							// defines the function itself.
+											self.AddCond(113);
+											EntFireByHandle(self,`RunScriptCode`,`KeepBuff()`,0.10,self,self);
+										}; 
+										sc.KeepBuff(); 																// Refire to re-apply.
+									}
+									else if(sc.wrathBanner == `conch`) {											// if banner = Conch
+										sc.keepConch <- true;
+										sc.keepBuff <- false;
+										self.RemoveCond(113);
+										sc.KeepConch <- function() {												// Repeatedly apply healing and speed boost
+											local s=self.GetScriptScope();
+											if(!(`keepConch` in s) || !s.keepConch) return;
+											self.AddCond(29);
+											EntFireByHandle(self,`RunScriptCode`,`KeepConch()`,0.10,self,self);
+										};
+										sc.KeepConch();
+									}"
+							Delay 0
+							Repeats 1
+						}
+						ItemAttributes
+						{
+							ItemName "TF_WEAPON_ROCKETLAUNCHER"
+							"damage bonus" 0
+							"fire rate bonus" 0.45
+							"reload time increased" -0.8
+							"projectile spread angle penalty" 3
+							"Projectile speed increased" 0.65
+						}
+						
+						WeaponRestrictions PrimaryOnly
+						CharacterAttributes									// Revert damage reduction from holding a banner
+						{
+							"dmg from ranged reduced" 1
+							"dmg from melee increased" 1
+						}
+						FireInput [$SIGSEGV]								// every day im shuffling
+						{
+							Target "bannerCases"
+							Action "PickRandomShuffle"
+							Delay  10
+							Repeats 1
+						}
+					}
+					buffBanner [$SIGSEGV]									// Buff banner event
+					{
+						FireInput [$SIGSEGV]
+						{
+							Target "!self"
+							Action "RunScriptCode"
+							Param	"self.ValidateScriptScope();
+									local sc = self.GetScriptScope();
+									sc.keepConch <- false;
+									self.RemoveCond(29);
+									self.RemoveCond(73);
+									sc.wrathBanner <- `buff`;
+									sc.keepBuff <- true;"
+							Delay 0
+							Repeats 1
+						}
+						RingOfFire 100 [$SIGSEGV]
+						WeaponRestrictions SecondaryOnly
+						Item "The Buff Banner"								// They just stand there awkwardly if you're too close
+						ItemAttributes
+						{
+							ItemName "The Buff Banner"
+							"increase buff duration" 100.0
+							"dmg from ranged reduced" 0.9					// Reduce damage to further discourage bodyblocking during banners
+							"dmg from melee increased" 0.9
+						}
+						CharacterAttributes
+						{
+							"no_jump" 0
+							"increased jump height" 3
+						}
+						AddAttribute [$SIGSEGV]   							// Revert the jump behavior
+						{
+							Item "player" 		
+							Name "no_jump"
+							Value 1
+							Delay 3
+							Repeats 1
+						}
+						FireInput [$SIGSEGV]								// Empty rage meter properly
+						{
+							Target "!self"
+							Action "RunScriptCode"
+							Param "NetProps.SetPropFloat(self, `m_Shared.m_flRageMeter`, 0.0)"
+							Delay 0.5
+							Repeats 1
+						}
+						FireInput [$SIGSEGV]								// Fill rage meter
+						{
+							Target "!self"
+							Action "RunScriptCode"
+							Param "NetProps.SetPropFloat(self, `m_Shared.m_flRageMeter`, 100.0)" // ; printl(`RAGE: ` + NetProps.GetPropFloat(self, `m_Shared.m_flRageMeter`));
+							Delay 1
+							Repeats 1
+						}
+						ChangeAttributes [$SIGSEGV]							// After 4 seconds, exit this move and swap back to Primary (hopefully)
+						{													// ((Screw you buggy banner AI!))
+							Name "bannerCooldown"
+							Delay 4
+							Repeats 1
+						}
+					}
+					conchBanner [$SIGSEGV]
+					{
+						FireInput [$SIGSEGV]
+						{
+							Target "!self"
+							Action "RunScriptCode"
+							Param	"self.ValidateScriptScope();
+									local sc=self.GetScriptScope();
+									sc.keepBuff <- false;
+									self.RemoveCond(113);
+									sc.wrathBanner <- `conch`;
+									sc.keepConch <- true;"
+							Delay 0
+							Repeats 1
+						}
+						RingOfFire 100 [$SIGSEGV]
+						Item "The Concheror"
+						WeaponRestrictions SecondaryOnly
+						ItemAttributes
+						{
+							ItemName "The Concheror"
+							"increase buff duration" 100.0
+							"dmg from ranged reduced" 0.9						// Reduce damage to further discourage bodyblocking during banners
+							"dmg from melee increased" 0.9
+						}
+						CharacterAttributes
+						{
+							"no_jump" 0
+							"increased jump height" 3
+						}
+						AddAttribute [$SIGSEGV]   								// Revert the jump behavior
+						{
+							Item "player" 		
+							Name "no_jump"
+							Value 1
+							Delay 3
+							Repeats 1
+						}
+						FireInput [$SIGSEGV]
+						{
+							Target "!self"
+							Action $SetProp$m_iszClassIcon
+							Param Conch
+							Delay 0
+							Cooldown 0
+							Repeats 1
+						}
+						FireInput [$SIGSEGV]
+						{
+							Target "!self"
+							Action "RunScriptCode"
+							Param "NetProps.SetPropFloat(self, `m_Shared.m_flRageMeter`, 0.0)"
+							Delay 0.5
+							Repeats 1
+						}
+						FireInput [$SIGSEGV]
+						{
+							Target "!self"
+							Action "RunScriptCode"
+							Param "NetProps.SetPropFloat(self, `m_Shared.m_flRageMeter`, 100.0);"
+							Delay 1
+							Repeats 1
+						}
+						ChangeAttributes [$SIGSEGV]
+						{
+							Name "bannerCooldown"
+							Delay 4
+							Repeats 1
+						}
+					}
+					spellCooldownFirstMoveset [$SIGSEGV]
+					{
+						WeaponRestrictions PrimaryOnly
+						CharacterAttributes									// Revert damage reduction from holding a banner
+						{
+							"dmg from ranged reduced" 1
+							"dmg from melee increased" 1
+						}
+						FireInput											// every day im shuffling
+						{
+							Target "rocketCases"
+							Action "PickRandomShuffle"
+							Delay  0.1
+							Repeats 1
+						}
+					}
+					rocketCooldown [$SIGSEGV]
+					{
+						WeaponRestrictions PrimaryOnly
+						CharacterAttributes									// Revert damage reduction from holding a banner
+						{
+							"dmg from ranged reduced" 1
+							"dmg from melee increased" 1
+						}
+						FireInput											// every day im shuffling
+						{
+							Target "spellFirstMoveset"
+							Action "PickRandomShuffle"
+							Delay  0.1
+							Repeats 1
+						}
+					}
+					spellCooldownSecondMoveset [$SIGSEGV]
+					{
+
+						WeaponRestrictions PrimaryOnly
+						CharacterAttributes									// Revert damage reduction from holding a banner
+						{
+							"dmg from ranged reduced" 1
+							"dmg from melee increased" 1
+						}
+						FireInput [$SIGSEGV]								// every day im shuffling
+						{
+							Target "rocketCasesSecondMoveset"
+							Action "PickRandomShuffle"
+							Delay  0.1
+							Repeats 1
+						}
+					}
+					rocketCooldownSecondMoveset [$SIGSEGV]
+					{
+						WeaponRestrictions PrimaryOnly
+						CharacterAttributes									// Revert damage reduction from holding a banner
+						{
+							"dmg from ranged reduced" 1
+							"dmg from melee increased" 1
+						}
+						FireInput [$SIGSEGV]
+						{
+							Target "spellSecondMoveset"
+							Action "PickRandomShuffle"
+							Delay  0.1
+							Repeats 1
+						}
+					}
+					laserWall [$SIGSEGV]
+					{
+						FireInput [$SIGSEGV]
+						{
+							Target "!self"
+							Action $SetProp$m_iszClassIcon
+							Param soldier_burstfire_laser
+							Delay 0
+							Cooldown 0
+							Repeats 1
+						}
+						ItemAttributes
+						{
+							ItemName	"TF_WEAPON_ROCKETLAUNCHER"
+							"override projectile type" 13
+							"energy weapon penetration" 1
+							"fire rate bonus" 0.01
+							"faster reload rate" 0.4
+							"projectile spread angle penalty" 5
+							"clip size upgrade atomic" 20
+							"set item tint RGB" 16716820
+							"dmg bonus vs buildings" 2
+							"attach particle effect" 35
+						}
+						ChangeAttributes [$SIGSEGV]
+						{
+							Name "rocketCooldown"
+							Delay 8
+							Repeats 1
+						}
+					}
+					mortar [$SIGSEGV]
+					{
+						FireInput [$SIGSEGV]
+						{
+							Target "!self"
+							Action $SetProp$m_iszClassIcon
+							Param soldier_wasp_barrage_crit_lite
+							Delay 0
+							Cooldown 0
+							Repeats 1
+						}
+						AimOffset "0 0 2000" [$SIGSEGV]
+						HomingRockets [$SIGSEGV]
+						{
+							IgnoreDisguisedSpies 1
+							IgnoreStealthedSpies 1
+							TurnPower 60
+							MaxAimError 300
+							RocketSpeed 0.5
+						}
+						ItemAttributes
+						{
+							ItemName	TF_WEAPON_ROCKETLAUNCHER
+							"clip size upgrade atomic" 8
+							"damage bonus" 2
+							"faster reload rate" -0.8
+							"projectile spread angle penalty" 5
+							"fire rate bonus" 0.25
+						}
+						ChangeAttributes [$SIGSEGV]
+						{
+							Name "rocketCooldown"
+							Delay 8
+							Repeats 1
+						}
+					}
+					blast [$SIGSEGV]
+					{
+						FireInput [$SIGSEGV]
+						{
+							Target "!self"
+							Action $SetProp$m_iszClassIcon
+							Param soldier_rocketrain_blast
+							Delay 0
+							Cooldown 0
+							Repeats 1
+						}
+						ItemAttributes
+						{
+							ItemName	TF_WEAPON_ROCKETLAUNCHER
+							"damage bonus" 2
+							"fire rate bonus" 0.6
+							"faster reload rate" -0.8
+							"damage causes airblast" 1
+							"blast radius increased" 1.5
+							"projectile speed increased" 1.2
+							"projectile spread angle penalty" 0
+						}
+						ChangeAttributes [$SIGSEGV]
+						{
+							Name "rocketCooldown"
+							Delay 8
+							Repeats 1
+						}
+					}
+					laserWallSecondMoveset [$SIGSEGV]
+					{
+						FireInput [$SIGSEGV]
+						{
+							Target "!self"
+							Action $SetProp$m_iszClassIcon
+							Param soldier_burstfire_laser
+							Delay 0
+							Cooldown 0
+							Repeats 1
+						}
+						ItemAttributes								// 50% faster projectile speed in Round 2
+						{
+							ItemName	TF_WEAPON_ROCKETLAUNCHER
+							"override projectile type" 13
+							"energy weapon penetration" 1
+							"fire rate bonus" 0.01
+							"faster reload rate" 0.4
+							"projectile spread angle penalty" 5
+							"Projectile speed increased" 1.5
+							"dmg penalty vs players" 0
+							"clip size upgrade atomic" 20
+							"set item tint RGB" 16716820
+							"dmg bonus vs buildings" 2
+							"attach particle effect" 35
+						}
+						ChangeAttributes [$SIGSEGV]
+						{
+							Name "rocketCooldownSecondMoveset"
+							Delay 8
+							Repeats 1
+						}
+					}
+					mortarSecondMoveset [$SIGSEGV]
+					{
+						FireInput [$SIGSEGV]
+						{
+							Target "!self"
+							Action $SetProp$m_iszClassIcon
+							Param soldier_wasp_barrage_crit_lite
+							Delay 0
+							Cooldown 0
+							Repeats 1
+						}
+						ItemAttributes
+						{
+							ItemName	TF_WEAPON_ROCKETLAUNCHER
+							"damage bonus" 2.25
+							"fire rate bonus" 0.25
+							"faster reload rate" -0.8
+							"clip size upgrade atomic" 8
+							"projectile spread angle penalty" 5
+						}
+						AimOffset	"0 0 2000" [$SIGSEGV]
+						HomingRockets [$SIGSEGV]					// Faster turning speed and firing speed, and slower rockets in Round 2
+						{
+							IgnoreDisguisedSpies 1
+							IgnoreStealthedSpies 1
+							TurnPower 85
+							MaxAimError 300
+							RocketSpeed 0.5
+						}
+						ChangeAttributes [$SIGSEGV]
+						{
+							Name "rocketCooldownSecondMoveset"
+							Delay 8
+							Repeats 1
+						}
+					}
+					blastSecondMoveset [$SIGSEGV]
+					{
+						FireInput [$SIGSEGV]
+						{
+							Target "!self"
+							Action $SetProp$m_iszClassIcon
+							Param soldier_rocketrain_blast
+							Delay 0
+							Cooldown 0
+							Repeats 1
+						}
+						ItemAttributes									// Replace rapid fire with burst fire and increased launch force in Round 2
+						{
+							ItemName	"TF_WEAPON_ROCKETLAUNCHER"
+							// "override projectile type" 13
+							"damage bonus" 2.25
+							"fire rate bonus" 0.4
+							"faster reload rate" 0.75
+							"projectile spread angle penalty" 2
+							"blast radius increased" 1.5
+							"projectile speed increased" 1.5
+						}
+						ChangeAttributes [$SIGSEGV]
+						{
+							Name "rocketCooldownSecondMoveset"
+							Delay 8
+							Repeats 1
+						}
+					}
+					spellMonoculusTwoSpread [$SIGSEGV]
+					{
+						FireInput [$SIGSEGV]
+						{
+							Target "!self"
+							Action $SetProp$m_iszClassIcon
+							Param monoculus_keimer
+							Delay 0
+							Cooldown 0
+							Repeats 1
+						}
+						CharacterAttributes		// Lock the boss's actions so that he can't exit his taunt
+						{
+							"no_attack" 1
+							"move speed bonus" 0
+							"dmg from ranged reduced" 0.5
+							"dmg from melee increased" 0.5
+						}
+						Taunt [$SIGSEGV]
+						{
+							Delay 0.1
+							Repeats 1 
+							Duration 99999 //Duration of a looping taunt (Default: 0.1)
+							Name "Taunt: Second Rate Sorcery"
+						}
+						FireInput [$SIGSEGV]				// Pushback
+                        {
+                            Target "!self"
+                            Action "RunScriptCode"
+                            Param	"local radius = 250; 
+									local power = 900; 
+									local up = 550; 
+									local center = self.GetOrigin(); 
+									for (local p = null; p = Entities.FindByClassnameWithin(p, `player`, center, radius); )
+									{ 
+										if (p.GetTeam() != self.GetTeam() && p.IsAlive())
+										{ 
+											local dir = p.GetOrigin() - center;
+											dir.z = 0; 
+											if (dir.Length() < 1) dir = Vector(1, 0, 0); 
+											dir.Norm(); 
+											p.SetVelocity(dir * power + Vector(0, 0, up)); 
+										} 
+									}"
+                            Delay 2.5
+                            Repeats 1
+                        }
+						FireInput [$SIGSEGV]
+						{
+							Target "!self"
+							Action "RunScriptCode"
+							Param	"local ang = self.EyeAngles();
+									local yaw = (ang.y - 90) * 3.14159 / 180.0;
+									local dir = Vector(cos(yaw), sin(yaw), 0);
+									local p = self.GetOrigin() + Vector(0, 0, 80) + (dir * 120);
+									local m = SpawnEntityFromTable(`tf_projectile_spellspawnboss`, {origin = p, angles = ang});
+									m.SetOwner(self);
+									m.SetTeam(self.GetTeam());
+									m.SetVelocity(dir * 900);"
+							Delay 2.5
+							Repeats 1
+						}
+						FireInput [$SIGSEGV]
+						{
+							Target "!self"
+							Action "RunScriptCode"
+							Param	"local ang = self.EyeAngles();
+									local yaw = (ang.y + 90) * 3.14159 / 180.0;
+									local dir = Vector(cos(yaw), sin(yaw), 0);
+									local r = Vector(-sin(yaw), cos(yaw), 0);
+									local p = self.GetOrigin()+Vector(0, 0, 80) + (dir * 120) + (r * 120);
+									local m = SpawnEntityFromTable(`tf_projectile_spellspawnboss`, {origin = p, angles = ang});
+									m.SetOwner(self);
+									m.SetTeam(self.GetTeam());
+									m.SetVelocity(dir * 900);"
+							Delay 2.5
+							Repeats 1
+						}
+						AddAttribute [$SIGSEGV]  			
+						{
+							Item "player" 		// Target is self
+							Name "no_attack"	// Attr. name
+							Value 0				// 0 = Can attack, 1 = Can't attack
+							Delay 4				// Wait this many seconds until taunt finishes
+							Repeats 1			// Execute once
+						}
+						AddAttribute [$SIGSEGV]
+						{
+							Item "player"
+							Name "move speed bonus"
+							Value 0.4
+							Delay 4
+							Repeats 1
+						}
+						ChangeAttributes [$SIGSEGV]
+						{
+							Name "spellCooldownFirstMoveset"
+							Delay  5.7
+							Repeats 1
+						}
+					}
+					spellTeslaboltThreeSpread [$SIGSEGV]
+					{
+						FireInput [$SIGSEGV]
+						{
+							Target "!self"
+							Action $SetProp$m_iszClassIcon
+							Param teslabolt_keimer
+							Delay 0
+							Cooldown 0
+							Repeats 1
+						}
+						CharacterAttributes		// Lock the boss's actions so that he can't exit his taunt
+						{
+							"no_attack" 1
+							"move speed bonus" 0
+							"dmg from ranged reduced" 0.5
+							"dmg from melee increased" 0.5
+						}
+						Taunt [$SIGSEGV]
+						{
+							Delay 0.1
+							Repeats 1 
+							Duration 99999 //Duration of a looping taunt (Default: 0.1)
+							Name "Taunt: Second Rate Sorcery"
+						}
+						FireInput  [$SIGSEGV]				// Pushback
+                        {
+                            Target "!self"
+                            Action "RunScriptCode"
+                            Param	"local radius = 250; 
+									local power = 900; 
+									local up = 550; 
+									local center = self.GetOrigin(); 
+									for (local p = null; p = Entities.FindByClassnameWithin(p, `player`, center, radius); )
+									{ 
+										if (p.GetTeam() != self.GetTeam() && p.IsAlive())
+										{ 
+											local dir = p.GetOrigin() - center;
+											dir.z = 0; 
+											if (dir.Length() < 1) dir = Vector(1, 0, 0); 
+											dir.Norm(); 
+											p.SetVelocity(dir * power + Vector(0, 0, up)); 
+										} 
+									}"
+                            Delay 2.5
+                            Repeats 1
+                        }
+						FireInput [$SIGSEGV]
+						{
+							Target "!self"
+							Action "RunScriptCode"
+							Param	"local ang = self.EyeAngles();
+									local yaw = ang.y * 3.14159 / 180.0; 
+									local dir = Vector(cos(yaw), sin(yaw), 0); 
+									local r = Vector(-sin(yaw), cos(yaw), 0); 
+									local p = self.GetOrigin() + Vector(0, 0, 80) + (dir * 120) - (r * 120); 
+									local m = SpawnEntityFromTable(`tf_projectile_lightningorb`, {origin = p, angles = ang}); 
+									m.SetOwner(self);
+									m.SetTeam(self.GetTeam()); 
+									m.SetVelocity(dir * 400);"
+							Delay 2.5
+							Repeats 1
+						}
+						FireInput [$SIGSEGV]
+						{
+							Target "!self"
+							Action "RunScriptCode"
+							Param	"local ang = self.EyeAngles(); 
+									local yaw = ang.y * 3.14159 / 180.0; 
+									local dir = Vector(cos(yaw), sin(yaw), 0); 
+									local p = self.GetOrigin() + Vector(0, 0, 80) + (dir * 120); 
+									local m = SpawnEntityFromTable(`tf_projectile_lightningorb`,{origin = p, angles = ang}); 
+									m.SetOwner(self); m.SetTeam(self.GetTeam()); 
+									m.SetVelocity(dir * 400);"
+							Delay 2.5
+							Repeats 1
+						}
+						FireInput [$SIGSEGV]
+						{
+							Target "!self"
+							Action "RunScriptCode"
+							Param	"local ang=self.EyeAngles(); 
+									local yaw = ang.y * 3.14159 / 180.0; 
+									local dir = Vector(cos(yaw), sin(yaw), 0); 
+									local r = Vector(-sin(yaw), cos(yaw), 0); 
+									local p = self.GetOrigin() + Vector(0, 0, 80) + (dir * 120) + (r * 120); 
+									local m = SpawnEntityFromTable(`tf_projectile_lightningorb`, {origin = p, angles = ang}); 
+									m.SetOwner(self);
+									m.SetTeam(self.GetTeam()); 
+									m.SetVelocity(dir * 400);"
+							Delay 2.5
+							Repeats 1
+						}
+						FireInput  [$SIGSEGV] // Duplicate set sending 1 second later
+						{
+							Target "!self"
+							Action "RunScriptCode"
+							Param	"local ang = self.EyeAngles(); 
+									local yaw = ang.y * 3.14159 / 180.0; 
+									local dir = Vector(cos(yaw), sin(yaw), 0); 
+									local r = Vector(-sin(yaw), cos(yaw), 0); 
+									local p = self.GetOrigin() + Vector(0, 0, 80) + (dir * 120) - (r * 120); 
+									local m = SpawnEntityFromTable(`tf_projectile_lightningorb`, {origin = p, angles = ang}); 
+									m.SetOwner(self);
+									m.SetTeam(self.GetTeam()); 
+									m.SetVelocity(dir * 300);"
+							Delay 3.5
+							Repeats 1
+						}
+						FireInput [$SIGSEGV]
+						{
+							Target "!self"
+							Action "RunScriptCode"
+							Param	"local ang = self.EyeAngles(); 
+									local yaw = ang.y * 3.14159 / 180.0; 
+									local dir = Vector(cos(yaw), sin(yaw), 0); 
+									local p = self.GetOrigin() + Vector(0, 0, 80) + (dir * 120); 
+									local m = SpawnEntityFromTable(`tf_projectile_lightningorb`, {origin = p, angles = ang}); 
+									m.SetOwner(self);
+									m.SetTeam(self.GetTeam()); 
+									m.SetVelocity(dir * 300);"
+							Delay 3.5
+							Repeats 1
+						}
+						FireInput [$SIGSEGV]
+						{
+							Target "!self"
+							Action "RunScriptCode"
+							Param	"local ang = self.EyeAngles(); 
+									local yaw = ang.y * 3.14159 / 180.0; 
+									local dir = Vector(cos(yaw), sin(yaw), 0); 
+									local r = Vector(-sin(yaw), cos(yaw), 0); 
+									local p = self.GetOrigin()+Vector(0, 0, 80) + (dir * 120) + (r * 120); 
+									local m=SpawnEntityFromTable(`tf_projectile_lightningorb`,{origin = p, angles = ang}); 
+									m.SetOwner(self);
+									m.SetTeam(self.GetTeam()); 
+									m.SetVelocity(dir * 300);"
+							Delay 3.5
+							Repeats 1
+						}
+						AddAttribute  [$SIGSEGV]
+						{
+							Item "player" 		// Target is self
+							Name "no_attack"	// Attr. name
+							Value 0				// 0 = Can attack, 1 = Can't attack
+							Delay 4				// Wait this many seconds until taunt finishes
+							Repeats 1			// Execute once
+						}
+						AddAttribute [$SIGSEGV]
+						{
+							Item "player"
+							Name "move speed bonus"
+							Value 0.4
+							Delay 4
+							Repeats 1
+						}
+						ChangeAttributes [$SIGSEGV]
+						{
+							Name "spellCooldownFirstMoveset"
+							Delay  5.7
+							Repeats 1
+						}
+					}
+					spellFireballCollapsingSkiesInitial [$SIGSEGV]
+					{
+						FireInput [$SIGSEGV]
+						{
+							Target "!self"
+							Action $SetProp$m_iszClassIcon
+							Param meteorshower_keimer
+							Delay 0
+							Cooldown 0
+							Repeats 1
+						}
+						CharacterAttributes		// Lock the boss's actions so that he can't exit his taunt
+						{
+							"no_attack" 1
+							"move speed bonus" 0
+							"dmg from ranged reduced" 0.8
+							"dmg from melee increased" 0.8
+						}
+						Taunt [$SIGSEGV]
+						{
+							Delay 0.1
+							Repeats 1 
+							Duration 99999 //Duration of a looping taunt (Default: 0.1)
+							Name "Taunt: Second Rate Sorcery"
+						}
+						FireInput [$SIGSEGV]
+						{
+							Target "collapingSkiesVisual"
+							Action "trigger"
+							Delay 0.1
+							Repeats 1
+						}
+						FireInput [$SIGSEGV] // Pushback on cast
+                        {
+                            Target "!self"
+                            Action "RunScriptCode"
+                            Param	"local radius = 250; 
+									local power = 900; 
+									local up = 550; 
+									local center = self.GetOrigin(); 
+									for (local p = null; p = Entities.FindByClassnameWithin(p, `player`, center, radius); )
+									{ 
+										if (p.GetTeam() != self.GetTeam() && p.IsAlive())
+										{ 
+											local dir = p.GetOrigin() - center;
+											dir.z = 0; 
+											if (dir.Length() < 1) dir = Vector(1,0,0); 
+											dir.Norm(); 
+											p.SetVelocity(dir * power + Vector(0, 0, up)); 
+										} 
+									}"
+                            Delay 2.5
+                            Repeats 1
+                        }
+						FireInput [$SIGSEGV]
+						{
+							Target "!self"
+							Action "RunScriptCode"
+							Param	"local center = self.GetOrigin(); 
+									for (local i = 0; i < 6; i++)
+									{
+										local p = center + Vector(RandomInt(-500, 500), RandomInt(-500, 500), RandomInt(800, 800)); 
+										local m = SpawnEntityFromTable(`tf_projectile_spellfireball`, {origin = p, angles = QAngle(90, 0, 0)}); 
+										m.SetOwner(self); m.SetTeam(self.GetTeam()); 
+										m.SetVelocity(Vector(0, 0, -900));
+									}"
+							Delay 3
+							Repeats 1
+						}
+						FireInput [$SIGSEGV]
+						{
+							Target "!self"
+							Action "RunScriptCode"
+							Param	"local center = self.GetOrigin(); 
+									for(local i = 0; i < 6; i++)
+									{
+										local p = center + Vector(RandomInt(-500, 500), RandomInt(-500, 500), RandomInt(800, 800)); 
+										local m = SpawnEntityFromTable(`tf_projectile_spellfireball`, {origin = p, angles = QAngle(90, 0, 0)}); 
+										m.SetOwner(self);
+										m.SetTeam(self.GetTeam()); 
+										m.SetVelocity(Vector(0, 0, -900));
+									}"
+							Delay 3.5
+							Repeats 1
+						}
+						FireInput [$SIGSEGV]
+						{
+							Target "!self"
+							Action "RunScriptCode"
+							Param	"local center=self.GetOrigin(); 
+									for(local i=0;i<6;i++)
+									{
+										local p=center+Vector(RandomInt(-500,500),RandomInt(-500,500),RandomInt(800,800)); 
+										local m=SpawnEntityFromTable(`tf_projectile_spellfireball`,{origin=p,angles=QAngle(90,0,0)}); 
+										m.SetOwner(self); m.SetTeam(self.GetTeam()); 
+										m.SetVelocity(Vector(0,0,-900));
+									}"
+							Delay 4
+							Repeats 1
+						}
+						FireInput [$SIGSEGV]
+						{
+							Target "!self"
+							Action "RunScriptCode"
+							Param	"local center=self.GetOrigin(); 
+									for(local i=0;i<6;i++)
+									{
+										local p=center+Vector(RandomInt(-500,500),RandomInt(-500,500),RandomInt(800,800)); 
+										local m=SpawnEntityFromTable(`tf_projectile_spellfireball`,{origin=p,angles=QAngle(90,0,0)}); 
+										m.SetOwner(self); m.SetTeam(self.GetTeam()); 
+										m.SetVelocity(Vector(0,0,-900));
+									}"
+							Delay 4.5
+							Repeats 1
+						}
+						FireInput [$SIGSEGV]
+						{
+							Target "!self"
+							Action "RunScriptCode"
+							Param	"local center=self.GetOrigin(); 
+									for(local i=0;i<6;i++)
+									{
+										local p=center+Vector(RandomInt(-500,500),RandomInt(-500,500),RandomInt(800,800)); 
+										local m=SpawnEntityFromTable(`tf_projectile_spellfireball`,{origin=p,angles=QAngle(90,0,0)}); 
+										m.SetOwner(self); m.SetTeam(self.GetTeam()); 
+										m.SetVelocity(Vector(0,0,-900));
+									}"
+							Delay 5
+							Repeats 1
+						}
+						FireInput [$SIGSEGV]
+						{
+							Target "!self"
+							Action "RunScriptCode"
+							Param "local center=self.GetOrigin(); for(local i=0;i<6;i++){local p=center+Vector(RandomInt(-500,500),RandomInt(-500,500),RandomInt(800,800)); local m=SpawnEntityFromTable(`tf_projectile_spellfireball`,{origin=p,angles=QAngle(90,0,0)}); m.SetOwner(self); m.SetTeam(self.GetTeam()); m.SetVelocity(Vector(0,0,-900));}"
+							Delay 5.5
+							Repeats 1
+						}
+						AddAttribute [$SIGSEGV]  			
+						{
+							Item "player" 		// Target is self
+							Name "no_attack"	// Attr. name
+							Value 0				// 0 = Can attack, 1 = Can't attack
+							Delay 4				// Wait this many seconds until taunt finishes
+							Repeats 1			// Execute once
+						}
+						AddAttribute [$SIGSEGV]
+						{
+							Item "player"
+							Name "move speed bonus"
+							Value 0.3
+							Delay 4
+							Repeats 1
+						}
+						ChangeAttributes [$SIGSEGV]
+						{
+							Name "spellCooldownFirstMoveset"
+							Delay  5.7
+							Repeats 1
+						}
+					}
+					summonSubordinateTaunt [$SIGSEGV]
+					{
+						FireInput [$SIGSEGV]
+						{
+							Target "!self"
+							Action $SetProp$m_iszClassIcon
+							Param soldier_infernal_impaler
+							Delay 3
+							Cooldown 0
+							Repeats 1
+						}
+						CharacterAttributes		// Lock the boss's actions so that he can't exit his taunt
+						{
+							"no_attack" 1
+							"move speed bonus" 0				// Set to 0?
+							"dmg from ranged reduced" 0
+							"dmg from melee increased" 0
+							"voice pitch scale" 0
+						}
+						FireInput [$SIGSEGV]
+						{
+							Target "!self"
+							Action "RunScriptCode"
+							Param "self.RemoveCond(7);"
+							Delay 0
+							Repeats 1
+						}
+						Taunt [$SIGSEGV]
+						{
+							Delay 0.2
+							Repeats 1 
+							Duration 5
+							Name "Taunt: Unleashed Rage"
+						}
+						FireInput [$SIGSEGV]
+                        {
+                            Target "player"
+                            Action "$PlaySoundToSelf"
+                            Param "ambient\alarms\razortrain_horn1.wav"
+                            Delay 1
+                            Repeats 1
+                        }
+						FireInput [$SIGSEGV]
+						{
+							Target "bossIntroSubordinate"
+							Action "trigger"
+							Delay  3
+							Repeats 1
+						}
+						FireInput [$SIGSEGV]
+						{
+							Target "relativePositionParticle"
+							Action "Start"
+							Delay  2.9
+							Repeats 1
+						}
+						AddAttribute [$SIGSEGV]
+						{
+							Item "player" 		// Target is self
+							Name "no_attack"	// Attr. name
+							Value 0				// 0 = Can attack, 1 = Can't attack
+							Delay 5				// Wait this many seconds until taunt finishes
+							Repeats 1			// Execute once
+						}
+						AddAttribute [$SIGSEGV]
+						{
+							Item "player"
+							Name "move speed bonus"
+							Value 0.3
+							Delay 5
+							Repeats 1
+						}
+						AddAttribute [$SIGSEGV]
+						{
+							Item "player"
+							Name "dmg from range reduced"
+							Value 1
+							Delay 5
+							Repeats 1
+						}
+						AddAttribute [$SIGSEGV]
+						{
+							Item "player"
+							Name "dmg from melee increased"
+							Value 1
+							Delay 5
+							Repeats 1
+						}
+						AddAttribute [$SIGSEGV]
+						{
+							Item "player"
+							Name "voice pitch scale"
+							Value 1
+							Delay 5
+							Repeats 1
+						}
+						ChangeAttributes [$SIGSEGV]
+						{
+							Name "spellCooldownSecondMoveset"
+							Delay 30
+							Repeats 1
+						}
+						FireInput [$SIGSEGV]
+						{
+							Target "!self"
+							Action "RunScriptCode"
+							Param "ClientPrint(null, 3, `\x0799CCFFSinful Emperor Wrath \x01has used their \x079BBF4DRECALL \x01Power Up Canteen!`)"
+							Delay 3
+							Repeats 1
+						}
+						FireInput [$SIGSEGV]
+						{
+							Target "player"
+							Action "$PlaySoundToSelf"
+							Param "=40|mvm/mvm_used_powerup.wav"
+							Delay 3
+							Repeats 1
+						}
+						FireInput [$SIGSEGV]						// Using textualtimer_v3 makes his teleport REALLY buggy.
+						{											// Either teleports far from the intended coordinates, or
+							Target "!self"							// he teleports back to his original spot if NoFixUp = 1.
+							Action "RunScriptCode"
+							Param "self.SetAbsOrigin(Vector(-10,-4310,-280));"
+							Delay 3
+							Repeats 1
+						}
+						FireInput [$SIGSEGV]
+						{
+							Target "!self"
+							Action "RunScriptCode"
+							Param "DispatchParticleEffect(`mvm_hatch_destroy`, Vector(-1330,-3775,10), Vector(0,0,0));"
+							Delay 3
+							Repeats 1
+						}
+						FireInput [$SIGSEGV]
+						{
+							Target "!self"
+							Action "RunScriptCode"
+							Param "DispatchParticleEffect(`fireSmoke_Collumn_mvmAcres`, Vector(-1330,-3775,10), Vector(0,0,0));"
+							Delay 3
+							Repeats 1
+						}
+						FireInput [$SIGSEGV]
+						{
+							Target "!self"
+							Action "RunScriptCode"
+							Param "DispatchParticleEffect(`mvm_hatch_destroy`, Vector(940,-3775,10), Vector(0,0,0));"
+							Delay 3
+							Repeats 1
+						}
+						FireInput [$SIGSEGV]
+						{
+							Target "!self"
+							Action "RunScriptCode"
+							Param "DispatchParticleEffect(`fireSmoke_Collumn_mvmAcres`, Vector(940,-3775,10), Vector(0,0,0));"
+							Delay 3
+							Repeats 1
+						}
+					}
+					meleeRush [$SIGSEGV]
+					{
+						FireInput [$SIGSEGV]
+						{
+							Target "!self"
+							Action $SetProp$m_iszClassIcon
+							Param soldier_escapeplan
+							Delay 0
+							Cooldown 0
+							Repeats 1
+						}
+						WeaponRestrictions MeleeOnly
+						Attributes DisableDodge
+						Item "The Escape Plan"
+						ItemAttributes
+						{
+							ItemName "The Escape Plan"
+							"damage bonus" 10
+						}
+						CharacterAttributes
+						{
+							"move speed bonus" 1.5
+						}
+					}
+					spellFireballSpinner [$SIGSEGV]
+					{
+						FireInput [$SIGSEGV]
+						{
+							Target "!self"
+							Action $SetProp$m_iszClassIcon
+							Param fireball_spinner_keimer
+							Delay 0
+							Cooldown 0
+							Repeats 1
+						}
+						CharacterAttributes		// Lock the boss's actions so that he can't exit his taunt
+						{
+							"no_attack" 1
+							"move speed bonus" 0
+							"dmg from ranged reduced" 0.8
+							"dmg from melee increased" 0.8
+						}
+						Taunt [$SIGSEGV]
+						{
+							Delay 0.1
+							Repeats 1 
+							Duration 99999 //Duration of a looping taunt (Default: 0.1)
+							Name "Taunt: Second Rate Sorcery"
+						}
+						FireInput [$SIGSEGV]				// Pushback
+                        {
+                            Target "!self"
+                            Action "RunScriptCode"
+                            Param	"local radius = 250; 
+									local power = 900; 
+									local up = 550; 
+									local center = self.GetOrigin(); 
+									for (local p = null; p = Entities.FindByClassnameWithin(p, `player`, center, radius); )
+									{ 
+										if (p.GetTeam() != self.GetTeam() && p.IsAlive())
+										{ 
+											local dir = p.GetOrigin() - center;
+											dir.z = 0; 
+											if (dir.Length() < 1) dir = Vector(1,0,0); 
+											dir.Norm(); 
+											p.SetVelocity(dir * power + Vector(0,0,up)); 
+										} 
+									}"
+                            Delay 2.5
+                            Repeats 1
+                        }
+						FireInput [$SIGSEGV]
+						{
+							Target "!self"
+							Action "RunScriptCode"
+							Param	"self.ValidateScriptScope(); 
+									local sc=self.GetScriptScope(); 
+									local boss=self; 
+									sc.spinStep <- 0; 
+									sc.FireSpinner <- function(){ 
+										local center=boss.GetOrigin()+Vector(0,0,50); 
+										local phase=spinStep*10.0; 
+										spinStep++; 
+										local rad=phase*0.0174533; 
+										local dir=Vector(cos(rad),sin(rad),0); 
+										local offset=75; 
+										local speed=850; 
+										local pos1=center+dir*offset; 
+										local pos2=center-dir*offset; 
+										local fb1=SpawnEntityFromTable(`tf_projectile_spellfireball`,{origin=pos1,angles=QAngle(0,phase,0)}); 
+										local fb2=SpawnEntityFromTable(`tf_projectile_spellfireball`,{origin=pos2,angles=QAngle(0,phase+180,0)}); 
+										fb1.SetOwner(boss); 
+										fb2.SetOwner(boss); 
+										fb1.SetTeam(boss.GetTeam()); 
+										fb2.SetTeam(boss.GetTeam()); 
+										fb1.SetVelocity(dir*speed); fb2.SetVelocity(dir*-speed); 
+									}; 
+									for(local i=0;i<30;i++)
+									{ 
+										EntFireByHandle(boss,`RunScriptCode`,`FireSpinner()`,i*0.08,boss,boss); 
+									}"
+							Delay 2.5
+							Repeats 1
+						}
+						AddAttribute [$SIGSEGV]  			
+						{
+							Item "player" 		// Target is self
+							Name "no_attack"	// Attr. name
+							Value 0				// 0 = Can attack, 1 = Can't attack
+							Delay 4				// Wait this many seconds until taunt finishes
+							Repeats 1			// Execute once
+						}
+						AddAttribute [$SIGSEGV]
+						{
+							Item "player"
+							Name "move speed bonus"
+							Value 0.3
+							Delay 4
+							Repeats 1
+						}
+						ChangeAttributes [$SIGSEGV]
+						{
+							Name "spellCooldownSecondMoveset"
+							Delay  5.7
+							Repeats 1
+						}
+					}
+					spellFireballCollapsingSkies [$SIGSEGV]
+					{
+						FireInput [$SIGSEGV]
+						{
+							Target "!self"
+							Action $SetProp$m_iszClassIcon
+							Param meteorshower_keimer
+							Delay 0
+							Cooldown 0
+							Repeats 1
+						}
+						CharacterAttributes		// Lock the boss's actions so that he can't exit his taunt
+						{
+							"no_attack" 1
+							"move speed bonus" 0
+							"dmg from ranged reduced" 0.8
+							"dmg from melee increased" 0.8
+						}
+						Taunt [$SIGSEGV]
+						{
+							Delay 0.1
+							Repeats 1 
+							Duration 99999 //Duration of a looping taunt (Default: 0.1)
+							Name "Taunt: Second Rate Sorcery"
+						}
+						FireInput [$SIGSEGV]
+						{
+							Target "collapingSkiesVisual"
+							Action "trigger"
+							Delay 0.1
+							Repeats 1
+						}
+						FireInput [$SIGSEGV] // Pushback on cast
+                        {
+                            Target "!self"
+                            Action "RunScriptCode"
+                            Param	"local radius = 250; 
+									local power = 900; 
+									local up = 550; 
+									local center = self.GetOrigin(); 
+									for (local p = null; p = Entities.FindByClassnameWithin(p, `player`, center, radius); )
+									{ 
+										if (p.GetTeam() != self.GetTeam() && p.IsAlive())
+										{ 
+											local dir = p.GetOrigin() - center;
+											dir.z = 0; 
+											if (dir.Length() < 1) dir = Vector(1,0,0); 
+											dir.Norm(); 
+											p.SetVelocity(dir * power + Vector(0,0,up)); 
+										} 
+									}"
+                            Delay 2.5
+                            Repeats 1
+                        }
+						FireInput [$SIGSEGV]
+						{
+							Target "!self"
+							Action "RunScriptCode"
+							Param	"local center = self.GetOrigin(); 
+									for (local i = 0; i < 6; i++)
+									{
+										local p = center + Vector(RandomInt(-500,500), RandomInt(-500,500), RandomInt(800,800)); 
+										local m = SpawnEntityFromTable(`tf_projectile_spellfireball`, {origin = p, angles = QAngle(90,0,0)}); 
+										m.SetOwner(self);
+										m.SetTeam(self.GetTeam()); 
+										m.SetVelocity(Vector(0,0,-900));
+									}"
+							Delay 3
+							Repeats 1
+						}
+						FireInput [$SIGSEGV]
+						{
+							Target "!self"
+							Action "RunScriptCode"
+							Param	"local center = self.GetOrigin(); 
+									for (local i = 0; i < 6; i++)
+									{
+										local p = center + Vector(RandomInt(-500,500), RandomInt(-500,500), RandomInt(800,800)); 
+										local m = SpawnEntityFromTable(`tf_projectile_spellfireball`, {origin = p, angles = QAngle(90,0,0)}); 
+										m.SetOwner(self);
+										m.SetTeam(self.GetTeam()); 
+										m.SetVelocity(Vector(0,0,-900));
+									}"
+							Delay 3.5
+							Repeats 1
+						}
+						FireInput [$SIGSEGV]
+						{
+							Target "!self"
+							Action "RunScriptCode"
+							Param	"local center = self.GetOrigin(); 
+									for (local i = 0; i < 6; i++)
+									{
+										local p = center + Vector(RandomInt(-500,500), RandomInt(-500,500), RandomInt(800,800)); 
+										local m = SpawnEntityFromTable(`tf_projectile_spellfireball`, {origin = p, angles = QAngle(90,0,0)}); 
+										m.SetOwner(self);
+										m.SetTeam(self.GetTeam()); 
+										m.SetVelocity(Vector(0,0,-900));
+									}"
+							Delay 4
+							Repeats 1
+						}
+						FireInput [$SIGSEGV]
+						{
+							Target "!self"
+							Action "RunScriptCode"
+							Param	"local center = self.GetOrigin(); 
+									for (local i = 0; i < 6; i++)
+									{
+										local p = center + Vector(RandomInt(-500,500), RandomInt(-500,500), RandomInt(800,800)); 
+										local m = SpawnEntityFromTable(`tf_projectile_spellfireball`, {origin = p, angles = QAngle(90,0,0)}); 
+										m.SetOwner(self);
+										m.SetTeam(self.GetTeam()); 
+										m.SetVelocity(Vector(0,0,-900));
+									}"
+							Delay 4.5
+							Repeats 1
+						}
+						FireInput [$SIGSEGV]
+						{
+							Target "!self"
+							Action "RunScriptCode"
+							Param	"local center = self.GetOrigin(); 
+									for (local i = 0; i < 6; i++)
+									{
+										local p = center + Vector(RandomInt(-500,500), RandomInt(-500,500), RandomInt(800,800)); 
+										local m = SpawnEntityFromTable(`tf_projectile_spellfireball`, {origin = p, angles = QAngle(90,0,0)}); 
+										m.SetOwner(self);
+										m.SetTeam(self.GetTeam()); 
+										m.SetVelocity(Vector(0,0,-900));
+									}"
+							Delay 5
+							Repeats 1
+						}
+						FireInput [$SIGSEGV]
+						{
+							Target "!self"
+							Action "RunScriptCode"
+							Param	"local center = self.GetOrigin(); 
+									for (local i = 0; i < 6; i++)
+									{
+										local p = center + Vector(RandomInt(-500,500), RandomInt(-500,500), RandomInt(800,800)); 
+										local m = SpawnEntityFromTable(`tf_projectile_spellfireball`, {origin = p, angles = QAngle(90,0,0)}); 
+										m.SetOwner(self);
+										m.SetTeam(self.GetTeam()); 
+										m.SetVelocity(Vector(0,0,-900));
+									}"
+							Delay 5.5
+							Repeats 1
+						}
+						AddAttribute [$SIGSEGV]
+						{
+							Item "player" 		// Target is self
+							Name "no_attack"	// Attr. name
+							Value 0				// 0 = Can attack, 1 = Can't attack
+							Delay 4				// Wait this many seconds until taunt finishes
+							Repeats 1			// Execute once
+						}
+						AddAttribute [$SIGSEGV]
+						{
+							Item "player"
+							Name "move speed bonus"
+							Value 0.25
+							Delay 4
+							Repeats 1
+						}
+						ChangeAttributes [$SIGSEGV]
+						{
+							Name "spellCooldownSecondMoveset"
+							Delay  5.7
+							Repeats 1
+						}
+					}
+				}
+			}
+		}
+		WaveSpawn
+		{
+			WaitForAllDead Sin
+			FirstSpawnOutput
+			{
+				Target bossStopSupport
+				Action  ForceSpawn
+			}
+		}
+		WaveSpawn
+		{
+			Name "darkFlame"
+			Where spawnbot_flank_left
+			TotalCount 1
+			MaxActive 1
+			SpawnCount 1
+			WaitBeforeStarting 1
+			WaitBetweenSpawns 0
+			TotalCurrency 500
+		
+			TFBot
+			{
+				ClassIcon	pyro_backburner
+				Health	7500
+				Name	"Accursed Dark Flame Pyro"
+				Class	Pyro
+				Skill	Expert
+				WeaponRestrictions	PrimaryOnly
+				Attributes	MiniBoss
+				Attributes	UseBossHealthBar
+				Attributes	AlwaysCrit
+				Item	"The Backburner"
+				Item	"Blazing Bull"
+				Item	"Fallen Angel"
+				Item	"Tail From the Crypt"
+				ItemAttributes
+				{
+					ItemName	"The Backburner"
+					"damage bonus" 3
+					"heal on kill"	1000
+					"heal on hit for rapidfire"	50
+					"slow enemy on hit major" 3
+					"weapon burn dmg increased" 3
+					"weapon burn time increased" 3
+					"flame_speed" 1500
+					"flame_drag" 4
+					"max_flame_reflection_count" 30
+					"flame_reflect_on_collision" 2
+					"SPELL: Halloween green flames" 1
+					"apply z velocity on damage"	-300
+					"apply look velocity on damage"	-300
+				}
+				CharacterAttributes
+				{
+					"damage force reduction" 0.3
+					"airblast vulnerability multiplier" 0.3
+					"override footstep sound set" 5
+					"move speed bonus" 0.8
+				}
+			}
+		}
+		WaveSpawn
+		{
+			Name "darkFlame"
+			Where spawnbot_flank_right
+			TotalCount 1
+			MaxActive 1
+			SpawnCount 1
+			WaitBeforeStarting 1
+			WaitBetweenSpawns 0
+			TotalCurrency 500
+		
+			TFBot
+			{
+				ClassIcon	pyro_darkflame_fury
+				Health	7500
+				Name	"Accursed Dark Fury Pyro"
+				Class	Pyro
+				Skill	Expert
+				WeaponRestrictions PrimaryOnly
+				Attributes	UseBossHealthBar
+				Attributes	MiniBoss
+				Attributes	AlwaysCrit
+				Item	"The Dragon's Fury"
+				Item	"Blazing Bull"
+				Item	"Fallen Angel"
+				Item	"Tail From the Crypt"
+				ItemAttributes
+				{
+					ItemName    "The Dragon's Fury"
+					"damage bonus" 3
+					"heal on kill" 1000
+					"heal on hit for rapidfire" 100
+					"slow enemy on hit major" 3
+					"item_meter_charge_rate" 0.5
+					"apply z velocity on damage"	-300
+					"apply look velocity on damage" -300
+				}
+				CharacterAttributes
+				{
+					"move speed bonus" 0.8
+					"damage force reduction" 0.3
+					"airblast vulnerability multiplier" 0.3
+					"override footstep sound set" 6
+				}
+			}
+		}
+		WaveSpawn
+		{
+			Name "firstSupportLeft"
+			Where spawnbot_flank_left
+			MaxActive 10
+			SpawnCount 2
+			WaitBeforeStarting 1
+			WaitBetweenSpawns 1
+			TotalCurrency 0
+			Support 1
+		
+			TFBot
+			{
+				Template T_TFBot_Scout_Blaster_Pusher
+			}
+		}
+		WaveSpawn
+		{
+			Name "firstSupportRight"
+			Where spawnbot_flank_right
+			MaxActive 10
+			SpawnCount 2
+			WaitBeforeStarting 1
+			WaitBetweenSpawns 1
+			TotalCurrency 0
+			Support 1
+		
+			TFBot
+			{
+				Template T_TFBot_Demo_Burst
+			}
+		}
+		WaveSpawn
+		{
+			Name "secondSupportRight"
+			Where spawnbot_flank_right
+			MaxActive 2
+			SpawnCount 2
+			WaitForAllDead "darkFlame"
+			WaitBeforeStarting 0
+			WaitBetweenSpawns 1
+			TotalCurrency 0
+			Support 1
+		
+			TFBot
+			{
+				Template T_TFBot_Pyro_Dragon_Heal
+			}
+		}
+		WaveSpawn
+		{
+			Name "secondSupportLeft"
+			Where spawnbot_flank_right
+			MaxActive 10
+			SpawnCount 2
+			WaitForAllDead "darkFlame"
+			WaitBeforeStarting 0
+			WaitBetweenSpawns 1
+			TotalCurrency 0
+			Support 1
+		
+			TFBot
+			{
+				Template T_TFBot_Scout_Soda_Hyper
+				Attributes AlwaysCrit
+			}
+		}
+		WaveSpawn
+		{
+			Name "secondSupportLeft"
+			Where spawnbot_flank_right
+			MaxActive 8
+			SpawnCount 2
+			WaitForAllDead "darkFlame"
+			WaitBeforeStarting 0
+			WaitBetweenSpawns 1
+			TotalCurrency 0
+			Support 1
+		
+			TFBot
+			{
+				Template T_TFBot_Demo_Sticky
+				Attributes AlwaysCrit
+			}
+		}
+
+		WaveSpawn													// This dummy wavespawn effectively precaches the icons
+		{															// used for the boss fight in case you don't already have them.
+            Support 1
+		    Squad
+		    {
+				TFBot
+		        {
+		            ClassIcon fireball_spinner_keimer
+		        }
+				TFBot
+		        {
+		            ClassIcon meteorshower_keimer
+		        }
+				TFBot
+		        {
+		            ClassIcon teslabolt_keimer
+		        }
+				TFBot
+		        {
+		            ClassIcon monoculus_keimer
+		        }
+				TFBot
+		        {
+		            ClassIcon buff
+		        }
+				TFBot
+		        {
+		            ClassIcon conch
+		        }
+				TFBot
+		        {
+		            ClassIcon soldier_escapeplan
+		        }
+				TFBot
+		        {
+		            ClassIcon soldier_rocketrain_blast
+		        }
+		    }
+		}
+	}
+}

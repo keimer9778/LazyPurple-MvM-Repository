@@ -1,0 +1,1193 @@
+// zythe_ //
+
+#base robot_standard.pop
+#base robot_giant.pop
+#base zythe_robots.pop
+
+// TEMPLATE QUICK ACCESS //
+// 
+// --- COMMONS ---
+// T_TFBot_Pyro
+// T_TFBot_Pyro_Flaregun
+// T_TFBot_ScorchShot
+// T_TFBot_ScorchShot_FastShot
+// 
+// T_TFBot_Heavyweapons_Fist
+// T_TFBot_Heavyweapons_Heavyweight_Champ
+// T_TFBot_Heavyweapons_Heavyweight_Champ_Fast
+// T_TFBot_Heavyweapons_Gnome
+// T_TFBot_Heavyweapons_Shotgun
+// T_TFBot_Heavy_IronFist_Airblast / big /
+// 
+// --- GIANTS ---
+// T_TFBot_Giant_Pyro
+// T_TFBot_Giant_Pyro_Flare_Spammer
+// T_TFBot_Giant_Pyro_Flare_Spammer_ScorchShot
+// T_TFBot_Giant_Pyro_Pusher
+// T_TFBot_Chief_Pyro / BOSS /
+// 
+// T_TFBot_Giant_Boxing_Heavy
+// T_TFBot_Chief_Gauntlet
+// T_TFBot_Giant_Heavyweapons
+// T_TFBot_Giant_Heavyweapons_Deflector
+// T_TFBot_Giant_Heavyweapons_Shotgun
+// T_TFBot_Giant_Heavyweapons_BrassBeast
+// T_TFBot_Giant_Heavyweapons_Natascha
+// T_TFBot_Giant_Heavyweapons_HealOnKill
+// T_TFBot_Chief_Heavyweapons_HealOnKill / BOSS /
+// T_TFBot_Heavyweapons_Heater
+
+// ZYTHE_ TEMPLATES QUICK ACCESS
+//
+// --- COMMONS ---
+// T_TFBot_Demoman_LochnLoad
+// T_TFBot_Demoman_Golfer
+// T_TFBot_Pyro_Fast
+// T_TFBot_Pyro_Range
+// T_TFBot_Scout_Mosquito
+//
+// --- GIANTS ---
+// T_TFBot_Giant_Demo_RapidFire_LochnLoad
+// T_TFBot_Giant_Demo_Burst_LochnLoad
+//
+// --- BOSSES ---
+// T_TFBot_Pyro_Boss_Fast
+// TO-DO: HEAVY BOSS
+
+WaveSchedule
+{
+	StartingCurrency 600
+	RespawnWaveTime 7
+	CanBotsAttackWhileInSpawnRoom no
+	
+	Mission
+	{
+		Objective DestroySentries
+		
+		InitialCooldown 5
+		Where spawnbot_mission_sentrybuster
+		
+		BeginAtWave 1
+		RunForThisManyWaves 9
+		CooldownTime 35
+	
+		TFBot
+		{
+			Template T_TFBot_SentryBuster
+			Tag nav_giant_roof_avoid
+			Tag nav_flank_bridge_prefer
+		}
+	}
+	
+	Mission // Spy wave 2
+	{
+		Objective Spy
+		
+		InitialCooldown 15
+		Where spawnbot_mission_spy
+		
+		BeginAtWave 3
+		RunForThisManyWaves 1
+		CooldownTime 35
+	
+		TFBot
+		{
+			Template T_TFBot_Spy
+		}
+	}
+
+	Mission // Sniper wave 3
+	{
+		Objective Sniper
+
+		InitialCooldown 35
+		Where spawnbot3_house_flank
+		BeginAtWave 4
+		RunForThisManyWaves 3
+		CooldownTime 35
+		DesiredCount 2
+
+		TFBot
+		{
+			Class Sniper
+			Skill Expert
+			Name Sniper
+			MaxVisionRange 3000
+		}
+	}
+	
+//////////////////////////////////////////////////////
+// WAVE 1 // ---------- total currency: 600 ----------
+//////////////////////////////////////////////////////
+	Wave
+	{
+		StartWaveOutput
+		{
+			Target wave_start_relay
+			Action Trigger
+		}
+		DoneOutput
+		{
+			Target wave_finished_relay
+			Action Trigger
+		}
+		
+		WaveSpawn
+		{
+			Name Wave1Opener
+			
+			Where spawnbot
+			TotalCount 40
+			MaxActive  20
+			SpawnCount 2
+			
+			WaitBeforeStarting 3
+			WaitBetweenSpawns 0.5
+			
+			TotalCurrency 100
+			
+			TFBot
+			{
+				Template T_TFBot_Pyro_Fast
+				Skill Easy
+			}
+		}
+		
+		WaveSpawn
+		{
+			WaitForAllDead Wave1Opener
+			
+			Where spawnbot1
+			TotalCount 20
+			MaxActive 5
+			SpawnCount 5
+			
+			WaitBeforeStarting 3
+			WaitBetweenSpawns 0.5
+			
+			TotalCurrency 200
+			
+			TFBot
+			{
+				Template T_TFBot_Heavy_IronFist_Airblast
+				Health 800
+			}
+		}
+		
+		WaveSpawn
+		{
+			WaitForAllDead Wave1Opener
+			
+			Where spawnbot3
+			TotalCount 3
+			MaxActive 1
+			SpawnCount 1
+			
+			WaitBeforeStarting 1
+			WaitBetweenSpawns 3
+			
+			TotalCurrency 300
+			
+			TFBot
+			{
+				Template T_TFBot_Giant_Boxing_Heavy
+				Health 4000
+			}
+		}
+	}
+//////////////////////////////////////////////////////
+// WAVE 2 // ---------- total currency: 800 ----------
+//////////////////////////////////////////////////////
+	Wave
+	{
+		StartWaveOutput
+		{
+			Target wave_start_relay
+			Action Trigger
+		}
+		DoneOutput
+		{
+			Target wave_finished_relay
+			Action Trigger
+		}
+		
+		WaveSpawn
+		{
+			Name Wave2Opener
+			
+			Where spawnbot
+			TotalCount 60
+			MaxActive  18
+			SpawnCount 1
+			
+			WaitBeforeStarting 3
+			WaitBetweenSpawns 0.5
+			
+			TotalCurrency 200
+			
+			TFBot
+			{
+				Template T_TFBot_Heavyweapons_Heavyweight_Champ
+			}
+		}
+		
+		WaveSpawn
+		{
+			Name Wave2Opener
+			
+			Where spawnbot
+			TotalCount 16
+			MaxActive  4
+			SpawnCount 4
+			
+			WaitBeforeStarting 3
+			WaitBetweenSpawns 0.5
+			
+			TotalCurrency 200
+			
+			Squad
+			{
+				TFBot
+				{
+					Template T_TFBot_Heavyweapons_Shotgun
+				}
+				TFBot
+				{
+					Template T_TFBot_Medic
+				}
+			}
+		}
+		
+		WaveSpawn
+		{
+			WaitForAllDead Wave2Opener
+			
+			Where spawnbot
+			TotalCount 6
+			MaxActive 2
+			SpawnCount 1
+			
+			WaitBeforeStarting 3
+			WaitBetweenSpawns 0.5
+			
+			TotalCurrency 200
+			
+			TFBot
+			{
+				Template T_TFBot_Giant_Pyro
+				Skill Easy
+			}
+		}
+		
+		WaveSpawn
+		{
+			WaitForAllDead Wave2Opener
+			
+			Where spawnbot
+			TotalCount 50
+			MaxActive  10
+			SpawnCount 2
+			
+			WaitBeforeStarting 3
+			WaitBetweenSpawns 0.5
+			
+			TotalCurrency 200
+			
+			TFBot
+			{
+				Template T_TFBot_Pyro_Fast
+				Skill Easy
+			}
+		}
+	}
+//////////////////////////////////////////////////////
+// WAVE 3 // ---------- total currency: 800 ----------
+//////////////////////////////////////////////////////
+	Wave
+	{
+		StartWaveOutput
+		{
+			Target wave_start_relay
+			Action Trigger
+		}
+		DoneOutput
+		{
+			Target wave_finished_relay
+			Action Trigger
+		}
+		
+		WaveSpawn
+		{
+			Name Wave3TankOpener
+			
+			TotalCount 1
+			WaitBeforeStarting 1
+			TotalCurrency 200
+			
+			Tank
+			{
+				Health 20000
+				Speed 75
+				Name "boss"
+				StartingPathTrackNode "tank_path_long"
+				
+				OnKilledOutput
+				{
+					Target boss_dead_relay
+					Action Trigger
+				}
+				
+				OnBombDroppedOutput
+				{
+					Target boss_deploy_relay
+					Action Trigger
+				}
+			}
+		}
+		
+		WaveSpawn
+		{
+			WaitForAllDead Wave3TankOpener
+			
+			Where spawnbot1
+			TotalCount 15
+			MaxActive 5
+			SpawnCount 5
+			
+			WaitBeforeStarting 3
+			WaitBetweenSpawns 1
+			
+			TotalCurrency 200
+			
+			TFBot
+			{
+				Template T_TFBot_Heavy_IronFist_Airblast
+			}
+		}
+		
+		WaveSpawn
+		{
+			WaitForAllDead Wave3TankOpener
+			
+			Where spawnbot1
+			TotalCount 20
+			MaxActive 5
+			SpawnCount 5
+			
+			WaitBeforeStarting 3
+			WaitBetweenSpawns 1
+			
+			TotalCurrency 200
+			
+			TFBot
+			{
+				Template T_TFBot_Demoman_Knight
+			}
+		}
+		
+		WaveSpawn
+		{
+			WaitForAllDead Wave3TankOpener
+			
+			Where spawnbot2
+			TotalCount 3
+			MaxActive 1
+			SpawnCount 1
+			
+			WaitBeforeStarting 1
+			WaitBetweenSpawns 3
+			
+			TotalCurrency 200
+			
+			TFBot
+			{
+				Template T_TFBot_Giant_Pyro_Flare_Spammer
+			}
+		}
+		
+		WaveSpawn
+		{
+			Where spawnbot
+			MaxActive 5
+			SpawnCount 5
+			
+			WaitBeforeStarting 6
+			WaitBetweenSpawns 2
+			
+			Support 1
+			
+			TotalCurrency 0
+			
+			TFBot
+			{
+				Template T_TFBot_Pyro_Range
+			}
+		}
+		
+		WaveSpawn
+		{
+			Where spawnbot_tank
+			MaxActive 5
+			SpawnCount 5
+			
+			WaitBeforeStarting 6
+			WaitBetweenSpawns 2
+			
+			Support 1
+			
+			TotalCurrency 0
+			
+			TFBot
+			{
+				Template T_TFBot_Heavyweapons_Heavyweight_Champ
+			}
+		}
+	}
+//////////////////////////////////////////////////////
+// WAVE 4 // ---------- total currency: 700 ----------
+//////////////////////////////////////////////////////
+	Wave
+	{
+		StartWaveOutput
+		{
+			Target wave_start_relay
+			Action Trigger
+		}
+		DoneOutput
+		{
+			Target wave_finished_relay
+			Action Trigger
+		}
+		
+		WaveSpawn
+		{
+			Name Wave4Opener
+			
+			Where spawnbot3
+			TotalCount 16 // 24
+			MaxActive 2
+			SpawnCount 2
+			
+			WaitBeforeStarting 1
+			WaitBetweenSpawns 3
+			
+			TotalCurrency 300
+			
+			Squad
+			{
+				TFBot
+				{
+					Template T_TFBot_Giant_Pyro_Flare_Spammer
+				}
+				TFBot
+				{
+					Template T_TFBot_Medic_BigHeal
+				}
+				TFBot
+				{
+					Template T_TFBot_Medic_BigHeal
+				}
+				TFBot
+				{
+					Template T_TFBot_Medic_BigHeal
+				}
+			}
+		}
+		
+		WaveSpawn
+		{
+			Name Wave4Opener
+			
+			Where spawnbot
+			TotalCount 80
+			MaxActive  10
+			SpawnCount 2
+			
+			WaitBeforeStarting 3
+			WaitBetweenSpawns 0.5
+			
+			TotalCurrency 100
+			
+			TFBot
+			{
+				Template T_TFBot_Pyro
+				Skill Normal
+				Attributes AlwaysCrit
+				Attributes AlwaysFireWeapon
+				Name "Chef Pyro"
+				Item "Connoisseur's Cap"
+			}
+		}
+		
+		WaveSpawn
+		{
+			WaitForAllDead Wave4Opener
+			
+			Where spawnbot1
+			TotalCount 16 // 24
+			MaxActive 4
+			SpawnCount 4
+			
+			WaitBeforeStarting 3
+			WaitBetweenSpawns 3
+			
+			TotalCurrency 200
+			
+			Squad
+			{
+				TFBot
+				{
+					Template T_TFBot_Giant_Heavyweapons
+				}
+				TFBot
+				{
+					Template T_TFBot_Medic_BigHeal
+				}
+				TFBot
+				{
+					Template T_TFBot_Medic_BigHeal
+				}
+				TFBot
+				{
+					Template T_TFBot_Medic_BigHeal
+				}
+			}
+		}
+		
+		WaveSpawn
+		{
+			WaitForAllDead Wave4Opener
+			
+			Where spawnbot
+			TotalCount 80
+			MaxActive  10
+			SpawnCount 2
+			
+			WaitBeforeStarting 3
+			WaitBetweenSpawns 0.5
+			
+			TotalCurrency 100
+			
+			TFBot
+			{
+				Template T_TFBot_Heavyweapons_Shotgun
+			}
+		}
+	}
+//////////////////////////////////////////////////////
+// WAVE 5 // ---------- total currency: 800 ----------
+//////////////////////////////////////////////////////
+	Wave
+	{
+		StartWaveOutput
+		{
+			Target wave_start_relay
+			Action Trigger
+		}
+		DoneOutput
+		{
+			Target wave_finished_relay
+			Action Trigger
+		}
+		
+		WaveSpawn
+		{
+			Name Wave5Tanks
+			
+			TotalCount 1
+			WaitBeforeStarting 1
+			TotalCurrency 200
+			
+			Tank
+			{
+				Health 24000
+				Speed 75
+				Name "boss"
+				StartingPathTrackNode "tank_path_short"
+				
+				OnKilledOutput
+				{
+					Target boss_dead_relay
+					Action Trigger
+				}
+				
+				OnBombDroppedOutput
+				{
+					Target boss_deploy_relay
+					Action Trigger
+				}
+			}
+		}
+		
+		WaveSpawn
+		{
+			Name Wave5Tanks
+			
+			TotalCount 1
+			WaitBeforeStarting 25
+			TotalCurrency 200
+			
+			Tank
+			{
+				Health 24000
+				Speed 75
+				Name "boss"
+				StartingPathTrackNode "tank_path_long"
+				
+				OnKilledOutput
+				{
+					Target boss_dead_relay
+					Action Trigger
+				}
+				
+				OnBombDroppedOutput
+				{
+					Target boss_deploy_relay
+					Action Trigger
+				}
+			}
+		}
+		
+		WaveSpawn
+		{
+			Name Wave5Shotguns
+			
+			Where spawnbot
+			TotalCount 80
+			MaxActive  10
+			SpawnCount 2
+			
+			WaitBeforeStarting 3
+			WaitBetweenSpawns 0.5
+			
+			TotalCurrency 100
+			
+			TFBot
+			{
+				Template T_TFBot_Heavyweapons_Shotgun
+				Attributes AlwaysCrit
+			}
+		}
+		
+		WaveSpawn
+		{
+			WaitForAllDead Wave5Tanks
+			
+			Where spawnbot1
+			TotalCount 8
+			MaxActive 2
+			SpawnCount 2
+			
+			WaitBeforeStarting 1
+			WaitBetweenSpawns 6
+			
+			TotalCurrency 200
+			
+			Squad
+			{
+				TFBot
+				{
+					Template T_TFBot_Giant_Heavyweapons_Natascha
+					Attributes AlwaysCrit
+				}
+				TFBot
+				{
+					Template T_TFBot_Giant_Medic_Regen
+				}
+			}
+		}
+		
+		WaveSpawn
+		{
+			WaitForAllDead Wave5Shotguns
+			
+			Where spawnbot
+			TotalCount 46
+			MaxActive  10
+			SpawnCount 2
+			
+			WaitBeforeStarting 3
+			WaitBetweenSpawns 0.5
+			
+			TotalCurrency 100
+			
+			TFBot
+			{
+				Template T_TFBot_Pyro_Fast
+			}
+		}
+		
+		WaveSpawn
+		{
+			WaitForAllDead Wave5Shotguns
+			
+			Where spawnbot2
+			TotalCount 4
+			MaxActive  1
+			SpawnCount 1
+			
+			WaitBeforeStarting 3
+			WaitBetweenSpawns 2
+			
+			TotalCurrency 0
+			
+			TFBot
+			{
+				Template T_TFBot_Giant_Scout_FAN
+			}
+		}
+	}
+//////////////////////////////////////////////////////
+// WAVE 6 // ---------- total currency: 700 ----------
+//////////////////////////////////////////////////////
+	Wave
+	{
+		StartWaveOutput
+		{
+			Target wave_start_relay
+			Action Trigger
+		}
+		DoneOutput
+		{
+			Target wave_finished_relay
+			Action Trigger
+		}
+		
+		WaveSpawn
+		{
+			Name Wave6Opener
+			
+			Where spawnbot2
+			TotalCount 6
+			MaxActive 2
+			SpawnCount 2
+			
+			WaitBeforeStarting 1
+			WaitBetweenSpawns 3
+			
+			TotalCurrency 200
+			
+			Squad
+			{
+				TFBot
+				{
+					Template T_TFBot_Giant_Pyro_Flare_Spammer
+				}
+				TFBot
+				{
+					Template T_TFBot_Giant_Medic_Regen
+				}
+			}
+		}
+		
+		WaveSpawn
+		{
+			Name Wave6Opener
+			
+			Where spawnbot1
+			TotalCount 6
+			MaxActive 2
+			SpawnCount 2
+			
+			WaitBeforeStarting 1
+			WaitBetweenSpawns 3
+			
+			TotalCurrency 200
+			
+			Squad
+			{
+				TFBot
+				{
+					Template T_TFBot_Giant_Pyro
+					Attributes AlwaysCrit
+				}
+				TFBot
+				{
+					Template T_TFBot_Giant_Medic_Regen
+				}
+			}
+		}
+		
+		WaveSpawn
+		{
+			Name Wave6Opener
+			
+			Where spawnbot
+			TotalCount 80
+			MaxActive  10
+			SpawnCount 1
+			
+			WaitBeforeStarting 3
+			WaitBetweenSpawns 0.5
+			
+			TotalCurrency 100
+			
+			TFBot
+			{
+				Template T_TFBot_Demo_Burst
+				Attributes AlwaysCrit
+				Tag nav_2fort
+			}
+		}
+		
+		WaveSpawn
+		{
+			WaitForAllDead Wave6Opener
+			
+			Where spawnbot3_house_flank
+			TotalCount 30
+			MaxActive  6
+			SpawnCount 6
+			
+			WaitBeforeStarting 3
+			WaitBetweenSpawns 1
+			
+			TotalCurrency 100
+			
+			TFBot
+			{
+				Template T_TFBot_Soldier_Buff_Banner
+				Tag nav_2fort
+			}
+		}
+		
+		WaveSpawn
+		{
+			WaitForAllDead Wave6Opener
+			
+			Where spawnbot2
+			TotalCount 40
+			MaxActive  8
+			SpawnCount 8
+			
+			WaitBeforeStarting 3
+			WaitBetweenSpawns 1
+			
+			TotalCurrency 100
+			
+			TFBot
+			{
+				Class Heavy
+			}
+		}
+	}
+//////////////////////////////////////////////////////
+// WAVE 7 // ---------- total currency: 600 ----------
+//////////////////////////////////////////////////////
+	Wave
+	{
+		StartWaveOutput
+		{
+			Target wave_start_relay
+			Action Trigger
+		}
+		DoneOutput
+		{
+			Target wave_finished_relay
+			Action Trigger
+		}
+		
+		WaveSpawn
+		{
+			Where spawnbot2
+			TotalCount 30
+			MaxActive 5
+			SpawnCount 5
+			
+			WaitBeforeStarting 3
+			WaitBetweenSpawns 3
+			
+			TotalCurrency 200
+			
+			Squad
+			{
+				TFBot
+				{
+					Template T_TFBot_Giant_Soldier_SlowBarrage
+				}
+				TFBot
+				{
+					Template T_TFBot_Medic
+				}
+				TFBot
+				{
+					Template T_TFBot_Medic
+				}
+				TFBot
+				{
+					Template T_TFBot_Medic_BigHeal
+				}
+				TFBot
+				{
+					Template T_TFBot_Medic_BigHeal
+				}
+			}
+		}
+		
+		WaveSpawn
+		{
+			Where spawnbot
+			TotalCount 100
+			MaxActive 8
+			SpawnCount 1
+			
+			WaitBeforeStarting 1
+			WaitBetweenSpawns 0.5
+			
+			TotalCurrency 200
+			
+			TFBot
+			{
+				Template T_TFBot_Pyro_Range
+			}
+		}
+		
+		WaveSpawn
+		{
+			Where spawnbot
+			TotalCount 100
+			MaxActive 8
+			SpawnCount 1
+			
+			WaitBeforeStarting 1
+			WaitBetweenSpawns 0.5
+			
+			TotalCurrency 200
+			
+			TFBot
+			{
+				Class Heavy
+			}
+		}
+	}
+//////////////////////////////////////////////////////
+// WAVE 8 // ---------- total currency: 800 ----------
+//////////////////////////////////////////////////////
+	Wave
+	{
+		StartWaveOutput
+		{
+			Target wave_start_relay
+			Action Trigger
+		}
+		DoneOutput
+		{
+			Target wave_finished_relay
+			Action Trigger
+		}
+		
+		WaveSpawn // TANK LONG //
+		{
+			Name Wave8TankOpener
+			
+			TotalCount 1
+			WaitBeforeStarting 5
+			TotalCurrency 200
+			
+			Tank
+			{
+				Health 26000
+				Speed 75
+				Name "boss"
+				StartingPathTrackNode "tank_path_long"
+				
+				OnKilledOutput
+				{
+					Target boss_dead_relay
+					Action Trigger
+				}
+				
+				OnBombDroppedOutput
+				{
+					Target boss_deploy_relay
+					Action Trigger
+				}
+			}
+		}
+		
+		WaveSpawn
+		{
+			Name Wave8TankOpener
+			
+			Where spawnbot_tank
+			TotalCount 40
+			MaxActive  8
+			SpawnCount 8
+			
+			WaitBeforeStarting 1
+			WaitBetweenSpawns 1
+			
+			TotalCurrency 200
+			
+			TFBot
+			{
+				Class Heavy
+			}
+		}
+		
+		WaveSpawn // PYRO BOSS //
+		{
+			WaitForAllDead Wave8TankOpener
+			
+			Where spawnbot1
+			TotalCount 5
+			MaxActive 5
+			SpawnCount 5
+			
+			WaitBeforeStarting 1
+			WaitBetweenSpawns 6
+			
+			TotalCurrency 400
+			
+			Squad
+			{
+				TFBot
+				{
+					Template T_TFBot_Pyro_Boss_Fast
+				}
+				TFBot
+				{
+					Template T_TFBot_Medic
+				}
+				TFBot
+				{
+					Template T_TFBot_Medic
+				}
+				TFBot
+				{
+					Template T_TFBot_Medic
+				}
+				TFBot
+				{
+					Template T_TFBot_Medic
+				}
+			}
+		}
+		
+		WaveSpawn
+		{
+			WaitForAllDead Wave8TankOpener
+			
+			Where spawnbot2
+			MaxActive  6
+			SpawnCount 3
+			
+			WaitBeforeStarting 3
+			WaitBetweenSpawns 1
+			
+			Support 1
+			
+			TotalCurrency 200
+			
+			TFBot
+			{
+				Class T_TFBot_Pyro_Range
+			}
+		}
+		
+		WaveSpawn
+		{
+			WaitForAllDead Wave8TankOpener
+			
+			Where spawnbot3_house_flank
+			MaxActive  6
+			SpawnCount 3
+			
+			WaitBeforeStarting 3
+			WaitBetweenSpawns 1
+			
+			Support 1
+			
+			TotalCurrency 200
+			
+			TFBot
+			{
+				Class T_TFBot_Pyro_Flaregun
+			}
+		}
+	}
+//////////////////////////////////////////////////////
+// WAVE 9 // ---------- total currency: 800 ----------
+//////////////////////////////////////////////////////
+	Wave
+	{
+		StartWaveOutput
+		{
+			Target wave_start_relay
+			Action Trigger
+		}
+		DoneOutput
+		{
+			Target wave_finished_relay
+			Action Trigger
+		}
+		
+		WaveSpawn // HEAVY BOSS //
+		{
+			// WaitForAllDead 
+			
+			Where spawnbot3
+			TotalCount 7
+			MaxActive 7
+			SpawnCount 7
+			
+			WaitBeforeStarting 1
+			WaitBetweenSpawns 6
+			
+			TotalCurrency 800
+			
+			Squad
+			{
+				TFBot
+				{
+					Template T_TFBot_Heavyweapons_Boss_Heater
+				}
+				TFBot
+				{
+					Template T_TFBot_Giant_Medic_Regen
+				}
+				TFBot
+				{
+					Template T_TFBot_Giant_Medic_Regen
+				}
+				TFBot
+				{
+					Template T_TFBot_Medic
+				}
+				TFBot
+				{
+					Template T_TFBot_Medic
+				}
+				TFBot
+				{
+					Template T_TFBot_Medic
+				}
+				TFBot
+				{
+					Template T_TFBot_Medic
+				}
+			}
+		}
+		
+		WaveSpawn
+		{
+			// WaitForAllDead 
+			
+			Where spawnbot2
+			MaxActive  6
+			SpawnCount 3
+			
+			WaitBeforeStarting 3
+			WaitBetweenSpawns 1
+			
+			Support 1
+			
+			TotalCurrency 200
+			
+			TFBot
+			{
+				Class T_TFBot_Heavyweapons_Shotgun
+			}
+		}
+	}
+}

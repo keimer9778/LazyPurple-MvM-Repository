@@ -1,0 +1,1528 @@
+
+#base robot_standard.pop 
+#base robot_giant.pop
+#base robot_moonlight_nai.pop
+
+// Hanami Int
+// Why Not
+
+//spawnbot - Near Tank Barrier
+//spawnbot_flank - Near Tank Start Path
+//spawnbot_river - Front
+
+WaveSchedule
+{
+	StartingCurrency 1000
+	RespawnWaveTime 4
+	FixedRespawnWaveTime No
+	NoRomevisionCosmetics 1
+	CanBotsAttackWhileInSpawnRoom No
+
+	PrecacheGeneric "materials/hud/leaderboard_class_demoknight_samurai_sakura"
+	PrecacheGeneric "materials/hud/leaderboard_class_soldier_sakura"
+
+	PrecacheModel "models/bots/boss_bot/boss_blimp_main.mdl"    
+	PrecacheModel "models/bots/boss_bot/boss_blimp_main_damage1.mdl"    
+	PrecacheModel "models/bots/boss_bot/boss_blimp_main_damage2.mdl"    
+ 	PrecacheModel "models/bots/boss_bot/boss_blimp_main_damage3.mdl"   
+
+	PointTemplates
+	{
+		PinkTank
+		{
+			OnspawnOutput
+			{
+				Target !activator
+				Action color
+				Param "255 153 204"
+			}
+		}
+		Springtext
+        {
+			OnSpawnOutput
+			{
+				Target "upper_text"
+				Action "Display"
+				Delay 1.5
+			}
+			OnSpawnOutput
+			{
+				Target "text_lower"
+				Action "Display"
+				Delay 3
+			}
+            game_text
+			{
+				"origin" "1984 1984 99999"
+				"targetname" "upper_text"
+				"message" "Embodiment of Spring"
+				"x" "-1"
+				"y" "0.4"
+				"spawnflags" "1"
+				"effect" "2"
+				"channel" "1"
+				"color" "255 255 255"
+				"fxtime" "0.2"
+				"fadeout" "1"
+				//"fadein" "0"
+				"holdtime" "3"
+			}
+
+			game_text
+			{
+				"origin" "1984 1984 99999"
+				"targetname" "text_lower"
+				"message" "Takizakura & Zakura"
+				"x" "-1"
+				"y" "0.45"
+				"channel" "0"
+				"spawnflags" "1"
+				"color" "255 153 204"
+				"fadein" "0.2"
+				"fadeout" "1"
+				"holdtime" "3.5"
+			}
+            game_text
+			{
+				"origin" "1984 1984 99999"
+				"targetname" "layer_text"
+				"message" "Takizakura & Zakura"
+				"x" "-1"
+				"y" "0.45"
+				"channel" "4"
+				"spawnflags" "1"
+				"color" "255 153 204"
+				"fadein" "0.2"
+				"fadeout" "1"
+				"holdtime" "3.5"
+			}
+        }
+	}
+	ExtraTankPath
+	{
+		Name "tank_blimp_path1"
+		Node "-1920 -1536 384"    // tank_path_1
+		Node "-1536 -1064 328"    // tank_path_2
+		Node "-1216 -232 288"    // tank_path_3
+		Node "-1200 976 272"    // tank_path_4
+		Node "-1216 1448 288"    // tank_path_5
+		Node "-736 1960 264"    // tank_path_6
+		Node "-672 3264 240"    // tank_path_7
+		Node "-648 3952 248"    // tank_path_8
+		Node "376 4312 200"    // tank_path_9
+		Node "512 4736 192"    // tank_path_10
+
+	}
+	Mission
+	{
+		Where spawnbot
+        Where spawnbot_river
+        Where spawnbot_flank
+		Where spawnbot_mission_sentrybuster
+		Objective DestroySentries
+		InitialCooldown 30
+		CooldownTime 40
+		TFBot
+		{
+			Template T_TFBot_SentryBuster
+			Name "Banzai Buster" 
+			Skill Expert
+			Item "Humanitarian's Hachimaki"
+			CharacterAttributes
+			{
+				"head scale" 2.5
+				"torso scale" 0.3
+				"voice pitch scale" 2
+				"dmg penalty vs players" 0
+			}
+		}
+	}
+	Mission
+	{
+		Where spawnbot
+		Objective Spy
+		BeginAtWave 2
+		RunForThisManyWaves 1
+		InitialCooldown 20
+		CooldownTime 45
+		DesiredCount 2
+		TFBot
+		{
+			Template T_TFBot_Spy
+			Item "Legendary Lid"
+			Name "Ninja Spy"
+		}
+	}
+	Mission
+	{
+		Where spawnbot
+		Objective Spy
+		BeginAtWave 4
+		RunForThisManyWaves 1
+		InitialCooldown 20
+		CooldownTime 45
+		DesiredCount 2
+		TFBot
+		{
+			Template T_TFBot_Spy
+			Item "Legendary Lid"
+			Name "Ninja Spy"
+		}
+	}
+	Wave
+	{
+		StartWaveOutput
+		{
+			Target wave_start_1bomb_classic_relay
+			Action Trigger
+		}
+		InitWaveOutput	
+		{
+			Target wave_start_1bomb_classic_relay
+			Action RunScriptCode
+			Param "
+			EntFire(`tf_objective_resource`, `$SetClientProp$m_iszMvMPopfileName`, `(INT) Sakura Season `)
+			"
+		}
+		DoneOutput
+		{
+			Target wave_finished_relay
+			Action Trigger
+		}
+		WaveSpawn
+		{
+			Where spawnbot 
+			Name "BigBot1A"
+			TotalCount 4
+			MaxActive 2
+			SpawnCount 1
+			WaitBeforeStarting 0
+			WaitBetweenSpawns 25
+			TotalCurrency 150
+			TFBot
+			{
+				Template T_TFBot_Giant_Soldier
+				Item "Benefactor's Kanmuri"
+				Item "The Shogun's Shoulder Guard"
+				Item "Upgradeable TF_WEAPON_ROCKETLAUNCHER"
+				ItemAttributes
+				{
+					ItemName "Upgradeable TF_WEAPON_ROCKETLAUNCHER"
+					"paintkit_proto_def_index" 223 //Hana
+					"set_item_texture_wear" 0
+				}
+				
+			}
+		}
+		WaveSpawn
+		{
+			Where spawnbot
+			Where spawnbot_river
+			Where spawnbot_flank
+			Name "SmallBot1A"
+			TotalCount 32
+			MaxActive 6
+			SpawnCount 4
+			WaitBeforeStarting 1
+			Support Limited
+			WaitBetweenSpawns 3.5
+			TotalCurrency 100
+			TFBot
+			{
+				Template T_TFBot_Scout_Fish
+				Item "Humanitarian's Hachimaki"
+				ClassIcon scout_fish_nys
+				Name "Fish Scout"
+			}
+			
+		}
+		WaveSpawn
+		{
+			Where spawnbot 
+			Where spawnbot_river
+			Where spawnbot_flank
+			Name "SmallBot1B"
+			TotalCount 15
+			MaxActive 4
+			SpawnCount 3
+			WaitBeforeStarting 5
+			WaitBetweenSpawns 10
+			TotalCurrency 150
+			TFBot
+			{
+				Class Soldier
+				Skill Hard
+				ClassIcon demoknight_samurai
+				Item "Soldier Samurai Hat"
+				Item "Spy Oni Mask"
+				Item "The Shogun's Shoulder Guard"
+				Name "Samurai Soldier"
+				Item "The Half-Zatoichi"
+				WeaponRestrictions MeleeOnly
+				
+			}
+			
+		}
+		WaveSpawn
+		{
+			Where spawnbot 
+			Where spawnbot_river
+			Where spawnbot_flank
+			Name "SmallBot1C"
+			TotalCount 15
+			MaxActive 5
+			SpawnCount 3
+			WaitBeforeStarting 9
+			WaitBetweenSpawns 4
+			TotalCurrency 100
+			TFBot
+			{
+				Template T_TFBot_Heavyweapons_Shotgun
+				Item "Humanitarian's Hachimaki"
+				Skill Easy
+			}
+		}
+		WaveSpawn
+		{
+			Where spawnbot 
+			Where spawnbot_river
+			Where spawnbot_flank
+			Name "SmallBot1D"
+			TotalCount 16
+			MaxActive 4
+			SpawnCount 4
+			WaitBeforeStarting 15
+			WaitBetweenSpawns 4
+			TotalCurrency 150
+			TFBot
+			{
+				Class Pyro
+				WeaponRestrictions MeleeOnly
+				Item "Humanitarian's Hachimaki"
+				Item "The Homewrecker"
+				Name "Homewrecker Pyro"
+				Skill Hard
+				ClassIcon pyro_homewrecker_lite
+			}
+		}
+		WaveSpawn
+		{
+			Where spawnbot 
+			Where spawnbot_river
+			Where spawnbot_flank
+			Name "Support1A"
+			TotalCount 150
+			MaxActive 3
+			SpawnCount 3
+			Support 1
+			WaitBeforeStarting 25
+			WaitBetweenSpawns 10
+			TotalCurrency 150
+			TFBot
+			{
+				Class Soldier
+				Item "Humanitarian's Hachimaki"
+				Skill Easy
+			}
+		}
+	}
+	Wave
+	{
+		StartWaveOutput
+		{
+			Target wave_start_1bomb_classic_relay
+			Action Trigger
+		}
+		InitWaveOutput	
+		{
+			Target wave_start_1bomb_classic_relay
+			Action RunScriptCode
+			Param "
+			EntFire(`tf_objective_resource`, `$SetClientProp$m_iszMvMPopfileName`, `(INT) Sakura Season `)
+			"
+		}
+		DoneOutput
+		{
+			Target wave_finished_relay
+			Action Trigger
+		}
+		WaveSpawn
+		{
+			Where spawnbot 
+			Name "BigBot2A"
+			TotalCount 4
+			MaxActive 2
+			SpawnCount 1
+			WaitBeforeStarting 0
+			WaitBetweenSpawns 24.5
+			TotalCurrency 150
+			TFBot
+			{
+				Template T_TFBot_Giant_Demo_RapidFire
+				Item "Benefactor's Kanmuri"
+				Item "Upgradeable TF_WEAPON_GRENADELAUNCHER"
+				ItemAttributes
+				{
+					ItemName "Upgradeable TF_WEAPON_GRENADELAUNCHER"
+					"paintkit_proto_def_index" 223 //Hana
+					"set_item_texture_wear" 0
+					"fire rate bonus" 0.5
+				}
+			}
+		}
+		WaveSpawn
+		{
+			Where spawnbot 
+			Name "BigBot2B"
+			TotalCount 3
+			MaxActive 2
+			SpawnCount 1
+			WaitBeforeStarting 0
+			WaitForAllDead "BigBot2A"
+			WaitBetweenSpawns 24.5
+			TotalCurrency 150
+			TFBot
+			{
+				Class Demoman
+				ClassIcon demoknight_samurai
+				Name "Giant Samurai"
+				Skill Expert
+				Health 3300
+				Item "Demo Kabuto"
+				Item "The Splendid Screen"
+				Item "The Half-Zatoichi"
+				Item	"Spy Oni Mask"
+				WeaponRestrictions MeleeOnly
+				Attributes MiniBoss
+				ItemAttributes
+				{
+					ItemName  "The Half-Zatoichi"
+					"critboost on kill" 3
+					"restore health on kill" 10
+					"honorbound" 0
+				}
+				CharacterAttributes
+				{
+					"move speed bonus" 0.5
+					"damage force reduction" 0.5
+					"airblast vulnerability multiplier" 0.5
+					"override footstep sound set" 4
+				}
+			}
+		}
+		WaveSpawn
+		{
+			Where spawnbot
+			Where spawnbot_river
+			Where spawnbot_flank
+			Name "SmallBot2A"
+			TotalCount 21
+			MaxActive 5
+			SpawnCount 3
+			WaitBeforeStarting 6
+			WaitBetweenSpawns 3.5
+			TotalCurrency 100
+			TFBot
+			{
+				Class Demoman
+				Item "Humanitarian's Hachimaki"
+				Skill Easy
+			}
+			
+		}
+		WaveSpawn
+		{
+			Where spawnbot 
+			Where spawnbot_river
+			Where spawnbot_flank
+			Name "SmallBot2B"
+			TotalCount 21
+			MaxActive 4
+			SpawnCount 3
+			WaitBeforeStarting 10
+			WaitBetweenSpawns 11
+			TotalCurrency 100
+			TFBot
+			{
+				Class Pyro
+				Item "Humanitarian's Hachimaki"
+				Skill Easy
+			}
+
+		}
+		WaveSpawn
+		{
+			Where spawnbot 
+			Where spawnbot_river
+			Where spawnbot_flank
+			Name "SmallBot2C"
+			TotalCount 16
+			MaxActive 6
+			SpawnCount 4
+			WaitBeforeStarting 0
+			WaitForAllDead "BigBot2A"
+			WaitBetweenSpawns 4.5
+			TotalCurrency 100
+			TFBot
+			{
+				Template T_TFBot_Sniper_Huntsman
+				Item "Humanitarian's Hachimaki"
+				Skill Normal
+			}
+		}
+		WaveSpawn
+		{
+			Where spawnbot 
+			Name "SmallBot2D"
+			TotalCount 15
+			MaxActive 6
+			SpawnCount 3
+			WaitForAllDead "BigBot2A"
+			WaitBeforeStarting 0
+			WaitBetweenSpawns 4
+			TotalCurrency 100
+			TFBot
+			{
+				Template T_TFBot_Soldier_Extended_Concheror
+			}
+		}
+		WaveSpawn
+		{
+			Where spawnbot 
+			Where spawnbot_river
+			Where spawnbot_flank
+			Name "Support2A"
+			TotalCount 150
+			MaxActive 5
+			SpawnCount 3
+			Support 1                 
+			WaitBeforeStarting 30
+			WaitBetweenSpawns 6
+			TotalCurrency 150
+			TFBot
+			{
+				Class Heavyweapons
+				Item "Humanitarian's Hachimaki"
+				Skill Easy
+			}
+		}
+	}
+	Wave
+	{
+		StartWaveOutput
+		{
+			Target BigNet
+			Action RunScriptCode
+			Param "
+			EntFire(`wave_start_1bomb_classic_relay`, `Trigger` )
+			EntFire(`SendGlobalGameEvent`, `Trigger`)
+			"
+		}
+		InitWaveOutput	
+		{
+			Target bignet
+			Action RunScriptCode
+			Param "
+			IncludeScript(`tankextensions_main`, getroottable())
+			IncludeScript(`tankextensions/blimp`, getroottable())
+			EntFire(`wave_start_1bomb_classic_relay`, `Trigger` )
+			EntFire(`tf_objective_resource`, `$SetClientProp$m_iszMvMPopfileName`, `(INT) Sakura Season `)
+			"
+		}
+		DoneOutput
+		{
+			Target wave_finished_relay
+			Action Trigger
+		}
+		WaveSpawn
+		{
+			Where spawnbot 
+			Where spawnbot_river
+			Name "BigBot3A"
+			TotalCount 4
+			MaxActive 2
+			SpawnCount 1
+			WaitBeforeStarting 0
+			WaitBetweenSpawns 25
+			TotalCurrency 150
+			TFBot
+			{
+				Template T_TFBot_Giant_Pyro
+				Item "Upgradeable TF_WEAPON_FLAMETHROWER"
+				Item "Benefactor's Kanmuri"
+				ItemAttributes
+				{
+					ItemName "Upgradeable TF_WEAPON_FLAMETHROWER"
+					"airblast disabled" 1
+					"paintkit_proto_def_index" 223 //Hana
+					"set_item_texture_wear" 0
+				}
+			}
+		}
+		WaveSpawn 
+		{
+			Name Annotation
+			WaitBeforeStarting 0
+			WaitForAllSpawned "Blimp1"
+			FirstSpawnOutput
+			{
+				Target gamerules
+				Action RunScriptCode
+				Param 
+				"
+					SendGlobalGameEvent(`show_annotation`, {
+					text = `Blimp deployed with 12000 HP .`
+					lifetime = 5
+					worldPosX = -1855
+					worldPosY = -1469
+					worldPosZ = 546
+					id = -1
+					play_sound = `misc/null.wav`
+					show_distance = false
+					show_effect = false
+					visibilityBitfield = 0
+					})
+				"
+			}
+		}
+		WaveSpawn //Blimp Guy
+		{
+			Name "Blimp1"
+			TotalCount 1
+			WaitForAllSpawned "BigBot3A"
+			WaitBeforeStarting 8
+			TotalCurrency 200
+			FirstSpawnWarningSound "mvm_tank_start.wav"
+			FirstSpawnOutPut
+			{
+				Target wave_start_relay
+				Action RunScriptCode
+				Param "
+					ClientPrint(null,3,`\x0799CCFFBlimp deployed with 12000 HP!`)
+				"
+			}
+			Tank
+			{
+				Name "blimp"
+				Health 12000
+                Speed 75
+                DisableSmokestack 1    
+                Classicon blimp2_lite 
+				SpawnTemplate PinkTank
+                MaxTurnRate 25
+                Gravity 0    
+                DisableTracks 1    
+                ReplaceModelCollisions 1    
+                DisableChildModels 1    
+                EngineLoopSound "npc\combine_gunship\dropship_engine_distant_loop1.wav"    
+                PingSound "npc\combine_gunship\ping_Search.wav"
+                StartingPathTrackNode "tank_blimp_path1_1"
+				Model  
+                {
+                    Default    "models/bots/boss_bot/boss_blimp_main.mdl"
+                    Damage1    "models/bots/boss_bot/boss_blimp_main_damage1.mdl"
+                    Damage2    "models/bots/boss_bot/boss_blimp_main_damage2.mdl"
+                    Damage3    "models/bots/boss_bot/boss_blimp_main_damage3.mdl"
+                }
+				OnKilledOutput
+				{
+					Target boss_dead_relay
+					Action Trigger
+				}
+				OnBombDroppedOutput
+				{
+					Target boss_deploy_relay
+					Action Trigger
+				}
+			}	
+		}
+		WaveSpawn
+		{
+			Where spawnbot 
+			Where spawnbot_river
+			Name "BigBot3B"
+			TotalCount 6
+			MaxActive 4
+			SpawnCount 2
+			WaitBeforeStarting 0
+			WaitForAllDead "BigBot3A"
+			WaitBetweenSpawns 22
+			TotalCurrency 150
+			Squad
+			{
+				ShouldPreserveSquad 1
+				TFBot
+				{
+					Template T_TFBot_Giant_Soldier_Spammer_Reload
+					Item "Benefactor's Kanmuri"
+					Item "The Shogun's Shoulder Guard"
+					Item "Upgradeable TF_WEAPON_ROCKETLAUNCHER"
+					ItemAttributes
+					{
+						ItemName "Upgradeable TF_WEAPON_ROCKETLAUNCHER"
+						"paintkit_proto_def_index" 223 //Hana
+						"set_item_texture_wear" 0
+						"faster reload rate" 0.6
+						"fire rate bonus" 0.1
+						"clip size upgrade atomic" 5.0
+						"Projectile speed increased" 0.65
+						"move speed bonus" 0.5
+					}
+				}
+				TFBot
+				{
+					Template T_TFBot_Medic_BigHeal_Moonlight
+					Item "Medic Geisha Hair"
+				}
+				TFBot
+				{
+					Template T_TFBot_Medic_BigHeal_Moonlight
+					Item "Medic Geisha Hair"
+				}
+			}
+		}
+		WaveSpawn
+		{
+			Where spawnbot
+			Where spawnbot_river
+			Where spawnbot_flank
+			Name "SmallBot3A"
+			TotalCount 32
+			MaxActive 6
+			SpawnCount 3
+			WaitBeforeStarting 6
+			WaitBetweenSpawns 5
+			TotalCurrency 150
+			TFBot
+			{
+				Class Heavyweapons
+				Item "Humanitarian's Hachimaki"
+				Skill Easy
+			}
+			
+		}
+		WaveSpawn
+		{
+			Where spawnbot 
+			Where spawnbot_river
+			Where spawnbot_flank
+			Name "SmallBot3B"
+			TotalCount 21
+			MaxActive 5
+			SpawnCount 3
+			WaitBeforeStarting 23.5
+			WaitBetweenSpawns 5.5
+			TotalCurrency 150
+			TFBot
+			{
+				Class Soldier
+				Item "Humanitarian's Hachimaki"
+				Skill Normal
+			}
+			
+		}
+		WaveSpawn
+		{
+			Where spawnbot 
+			Where spawnbot_river
+			Where spawnbot_flank
+			Name "SmallBot3C"
+			TotalCount 28
+			MaxActive 8
+			SpawnCount 4
+			WaitForAllDead "BigBot3A"
+			WaitBeforeStarting 3
+			WaitBetweenSpawns 2
+			TotalCurrency 100
+			TFBot
+			{
+				Class Scout
+				Item "Humanitarian's Hachimaki"
+				Skill Easy
+			}
+		}
+	}
+	Wave
+	{
+		StartWaveOutput
+		{
+			Target wave_start_1bomb_classic_relay
+			Action Trigger
+		}
+		InitWaveOutput	
+		{
+			Target wave_start_1bomb_classic_relay
+			Action RunScriptCode
+			Param "
+			EntFire(`tf_objective_resource`, `$SetClientProp$m_iszMvMPopfileName`, `(INT) Sakura Season `)
+			"
+		}
+		DoneOutput
+		{
+			Target wave_finished_relay
+			Action Trigger
+		}
+		WaveSpawn
+		{
+			Where spawnbot 
+			Where spawnbot_river
+			Name "BigBot4A"
+			TotalCount 6
+			MaxActive 2
+			SpawnCount 1
+			WaitBeforeStarting 0
+			WaitBetweenSpawns 24
+			TotalCurrency 350
+			TFBot
+			{
+					Class Medic
+					ClassIcon medic_crossbow
+					Name "Giant Bow Medic"
+					Health 4500
+					Skill Hard
+					Attributes MiniBoss
+					Item    "The Crusader's Crossbow"
+					Item	"Medic Geisha Hair"
+					Action FetchFlag  
+					WeaponRestrictions	PrimaryOnly
+					Tag bot_giant
+					ItemAttributes
+					{
+						ItemName "The Crusader's Crossbow"
+						"paintkit_proto_def_index" 223 //Hana
+						"set_item_texture_wear" 0
+						"override projectile type"	8
+						"dmg bonus vs buildings" 1.3
+					}
+					CharacterAttributes
+					{
+						"airblast vulnerability multiplier" 0.4
+						"damage force reduction" 0.4
+						"move speed bonus" 0.45
+					}
+			}
+		}
+		WaveSpawn
+		{
+			Where spawnbot 
+			Name "Tonk"
+			TotalCount 1
+			WaitBeforeStarting 10
+			TotalCurrency 200
+			FirstSpawnWarningSound "mvm_tank_start.wav"
+			FirstSpawnOutPut
+			{
+				Target wave_start_relay
+				Action RunScriptCode
+				Param "
+					ClientPrint(null,3,`\x0799CCFFTank deployed with 15000 HP!`)
+				"
+			}
+			Tank
+			{
+				Name "tank"
+				Health 15000
+				SpawnTemplate PinkTank
+				Speed 75
+				StartingPathTrackNode tank_start_main
+				OnKilledOutput
+				{
+					Target boss_dead_relay
+					Action Trigger
+				}
+				OnBombDroppedOutput
+				{
+					Target boss_deploy_relay
+					Action Trigger
+				}
+			}
+		}
+		WaveSpawn
+		{
+			Where spawnbot 
+			Where spawnbot_river
+			Name "SmallBot4A"
+			TotalCount 28
+			MaxActive 6
+			SpawnCount 2
+			WaitBeforeStarting 3
+			WaitBetweenSpawns 9.5
+			TotalCurrency 150
+			Squad
+			{
+				ShouldPreserveSquad 1
+				TFBot
+				{
+					Template T_TFBot_Heavyweapons_Fist
+					Item "Humanitarian's Hachimaki"
+				}
+				TFBot
+				{
+					Class Soldier
+					WeaponRestrictions MeleeOnly
+					Attributes AlwaysFireWeapon
+					Item "Humanitarian's Hachimaki"
+					Item "The Disciplinary Action"
+					ClassIcon vex_soldier_whip
+					Name "Whip Soldier"
+				}
+			}
+		}
+		WaveSpawn
+		{
+			Where spawnbot 
+			Where spawnbot_river
+			Where spawnbot_flank
+			Name "SmallBot4B"
+			TotalCount 48
+			MaxActive 6
+			SpawnCount 2
+			WaitBeforeStarting 10
+			WaitBetweenSpawns 4.5
+			TotalCurrency 100
+			TFBot
+			{
+				Class Scout
+				Skill Easy
+				Item "Hong Kong Cone"
+		
+			}
+		}
+		WaveSpawn
+		{
+			Where spawnbot 
+			Where spawnbot_river
+			Where spawnbot_flank
+			Name "SmallBot4B"
+			TotalCount 150
+			MaxActive 3
+			Support 1
+			SpawnCount 3
+			WaitBeforeStarting 24
+			WaitBetweenSpawns 12
+			TotalCurrency 150
+			TFBot
+			{
+				Class Demoman
+				Item "Humanitarian's Hachimaki"
+				Skill Normal
+			}
+		}
+	}
+	
+	Wave
+	{
+		StartWaveOutput
+		{
+			Target BigNet
+			Action RunScriptCode
+			Param "
+			EntFire(`Target wave_start_1bomb_classic_relay`, `Trigger` )
+			EntFire(`SendGlobalGameEvent`, `Trigger`)
+			"
+		}
+		InitWaveOutput	
+		{
+			Target bignet
+			Action RunScriptCode
+			Param "
+			IncludeScript(`tankextensions_main`, getroottable())
+			IncludeScript(`tankextensions/blimp`, getroottable())
+			EntFire(`wave_start_1bomb_classic_relay`, `Trigger` )
+			EntFire(`tf_objective_resource`, `$SetClientProp$m_iszMvMPopfileName`, `(INT) Sakura Season `)
+			"
+		}
+		DoneOutput
+		{
+			Target wave_finished_relay
+			Action Trigger
+		}
+		WaveSpawn 
+		{
+			Name Annotation
+			WaitBeforeStarting 0
+			WaitForAllSpawned "BlimpBoss"
+			FirstSpawnOutput
+			{
+				Target gamerules
+				Action RunScriptCode
+				Param 
+				"
+					SendGlobalGameEvent(`show_annotation`, {
+					text = `Blimp deployed with 18000 HP .`
+					lifetime = 5
+					worldPosX = -1855
+					worldPosY = -1469
+					worldPosZ = 546
+					id = -1
+					play_sound = `misc/null.wav`
+					show_distance = false
+					show_effect = false
+					visibilityBitfield = 0
+					})
+				"
+			}
+		}
+		WaveSpawn //Blimp Guy
+		{
+			Name "BlimpBoss"
+			TotalCount 1
+			WaitBeforeStarting 0
+			TotalCurrency 200
+			FirstSpawnWarningSound "mvm_tank_start.wav"
+			FirstSpawnOutPut
+			{
+				Target wave_start_relay
+				Action RunScriptCode
+				Param "
+					ClientPrint(null,3,`\x0799CCFFBlimp deployed with 18000 HP!`)
+				"
+			}
+			Tank
+			{
+				Name "blimp"
+				Health 18000
+                Speed 75
+                DisableSmokestack 1    
+                Classicon blimp2_lite 
+				SpawnTemplate PinkTank
+                MaxTurnRate 25
+                Gravity 0    
+                DisableTracks 1    
+				Skin 1
+                ReplaceModelCollisions 1    
+                DisableChildModels 1    
+                EngineLoopSound "npc\combine_gunship\dropship_engine_distant_loop1.wav"    
+                PingSound "npc\combine_gunship\ping_Search.wav"
+                StartingPathTrackNode "tank_blimp_path1_1"
+				Model  
+                {
+                    Default    "models/bots/boss_bot/boss_blimp_main.mdl"
+                    Damage1    "models/bots/boss_bot/boss_blimp_main_damage1.mdl"
+                    Damage2    "models/bots/boss_bot/boss_blimp_main_damage2.mdl"
+                    Damage3    "models/bots/boss_bot/boss_blimp_main_damage3.mdl"
+                }
+				OnKilledOutput
+				{
+					Target boss_dead_relay
+					Action Trigger
+				}
+				OnBombDroppedOutput
+				{
+					Target boss_deploy_relay
+					Action Trigger
+				}
+			}
+		}
+		WaveSpawn
+		{
+			Where spawnbot 
+			Name "BigBot5A"
+			TotalCount 2
+			MaxActive 2
+			SpawnCount 1
+			WaitBeforeStarting 3.5
+			WaitBetweenSpawns 27.5
+			TotalCurrency 75
+			TFBot
+			{
+				Template T_TFBot_Giant_Soldier_Spammer
+				Item "Legendary Lid"
+				Item "The Shogun's Shoulder Guard"
+				Item "Upgradeable TF_WEAPON_ROCKETLAUNCHER"
+				ItemAttributes
+				{
+					ItemName "Upgradeable TF_WEAPON_ROCKETLAUNCHER"
+					"paintkit_proto_def_index" 223 //Hana
+					"set_item_texture_wear" 0
+					"faster reload rate" -0.8
+					"fire rate bonus" 0.5
+				}
+			}
+		}
+		WaveSpawn
+		{
+			where spawnbot_river
+			Name "BigBot5APart2"
+			TotalCount 2
+			WaitForAllSpawned "BigBot5A"
+			MaxActive 2
+			SpawnCount 1
+			WaitBeforeStarting 25
+			WaitBetweenSpawns 27.5
+			TotalCurrency 75
+			TFBot
+			{
+				Template T_TFBot_Giant_Soldier_Spammer
+				Item "Legendary Lid"
+				Item "Upgradeable TF_WEAPON_ROCKETLAUNCHER"
+				ItemAttributes
+				{
+					ItemName "Upgradeable TF_WEAPON_ROCKETLAUNCHER"
+					"paintkit_proto_def_index" 223 //Hana
+					"set_item_texture_wear" 0
+					"faster reload rate" -0.8
+					"fire rate bonus" 0.5
+				}
+			}
+		}
+		WaveSpawn
+		{
+			Where spawnbot_river
+			Name "BigBot5B"
+			TotalCount 2
+			MaxActive 2
+			SpawnCount 1
+			WaitBeforeStarting 0
+			WaitBetweenSpawns 27.5
+			TotalCurrency 75
+			TFBot
+			{
+				Template T_TFBot_Giant_Demo_RapidFire
+				Name "Giant Demoman"
+				Item "Legendary Lid"
+				Item "Upgradeable TF_WEAPON_GRENADELAUNCHER"
+				ItemAttributes
+				{
+					ItemName "Upgradeable TF_WEAPON_GRENADELAUNCHER"
+					"paintkit_proto_def_index" 223 //Hana
+					"set_item_texture_wear" 0
+					"fire rate bonus" 0.5
+				}
+			}
+		}
+		WaveSpawn
+		{
+			Where spawnbot
+			Name "BigBot5BPart2"
+			TotalCount 2
+			MaxActive 2
+			SpawnCount 1
+			WaitForAllSpawned "BigBot5B"
+			WaitBeforeStarting 25
+			WaitBetweenSpawns 27.5
+			TotalCurrency 75
+			TFBot
+			{
+				Template T_TFBot_Giant_Demo_RapidFire
+				Name "Giant Demoman"
+				Item "Legendary Lid"
+				Item "Upgradeable TF_WEAPON_GRENADELAUNCHER"
+				ItemAttributes
+				{
+					ItemName "Upgradeable TF_WEAPON_GRENADELAUNCHER"
+					"paintkit_proto_def_index" 223 //Hana
+					"set_item_texture_wear" 0
+					"fire rate bonus" 0.5
+				}
+			}
+		}
+
+		WaveSpawn
+		{
+			Where spawnbot
+			Where spawnbot_river
+			Where spawnbot_flank
+			Name "SmallBot5A"
+			TotalCount 30
+			MaxActive  10
+			SpawnCount 4
+			WaitBeforeStarting 4
+			WaitBetweenSpawns 4
+			TotalCurrency 100
+			TFBot
+			{
+				Class Demoman
+				Skill Hard
+				ClassIcon demoknight_samurai
+				WeaponRestrictions MeleeOnly
+				Item "The Half-Zatoichi"
+				Item "Spy Oni Mask"
+				Item "The Splendid Screen"
+				Item "Demo Kabuto"
+				Name "Samurai Demo"
+			}
+		}
+		WaveSpawn
+		{
+			Where spawnbot 
+			Where spawnbot_river
+			Name "SmallBot5B"
+			TotalCount 12
+			MaxActive  6
+			SpawnCount 3
+			WaitBeforeStarting 3.5
+			WaitBetweenSpawns 25.5
+			TotalCurrency 50
+			TFBot
+			{
+				Template T_TFBot_Soldier_Extended_Concheror
+				Item "Humanitarian's Hachimaki"
+			}
+		}
+		WaveSpawn
+		{
+			Where spawnbot 
+			Where spawnbot_river
+			Where spawnbot_flank
+			Name "Support5A"
+			TotalCount 150
+			MaxActive 3
+			SpawnCount 3
+			Support 1                 
+			WaitBeforeStarting 8
+			WaitBetweenSpawns 4
+			TotalCurrency 150
+			TFBot
+			{
+				Class Scout
+				Item "Humanitarian's Hachimaki"
+				Skill Normal
+			}
+		}
+		WaveSpawn
+		{
+			Where spawnbot 
+			Where spawnbot_river
+			Where spawnbot_flank
+			Name "Support5A"
+			TotalCount 100
+			MaxActive 3
+			SpawnCount 3
+			Support 1                 
+			WaitBeforeStarting 6
+			WaitBetweenSpawns 5.5
+			TotalCurrency 100
+			TFBot
+			{
+				Class Heavyweapons
+				Item "Humanitarian's Hachimaki"
+				Skill Easy
+			}
+		}
+		WaveSpawn
+		{
+			Where spawnbot 
+			Where spawnbot_river
+			Where spawnbot_flank
+			Name "Support5A"
+			TotalCount 100
+			MaxActive 3
+			SpawnCount 3
+			Support 1                 
+			WaitBeforeStarting 20
+			WaitForAllSpawned "BigBot5A"
+			WaitBetweenSpawns 4.5
+			TotalCurrency 100
+			TFBot
+			{
+				Class Pyro
+				Skill Normal
+				Item "Humanitarian's Hachimaki"
+				Item "TF_WEAPON_FLAMETHROWER"
+				ItemAttributes
+				{
+					ItemName "TF_WEAPON_FLAMETHROWER"
+					"airblast disabled" 1
+				}
+			}
+		}
+	}
+	Wave
+	{
+		StartWaveOutput
+		{
+			Target wave_start_1bomb_classic_relay
+			Action Trigger
+		}
+		InitWaveOutput
+        {
+            Target wave_start_1bomb_classic_relay
+            Action RunScriptCode
+            Param "
+				EntFire(`tf_objective_resource`, `$SetClientProp$m_iszMvMPopfileName`, `(INT) Sakura Season `)
+
+			"
+		}
+		DoneOutput
+		{
+			Target wave_finished_relay
+			Action Trigger
+		}
+		WaveSpawn
+		{
+			Where spawnbot 
+			Name "Takizakura"
+			TotalCount 1
+			MaxActive 1
+			SpawnCount 1
+			WaitBeforeStarting 12
+			TotalCurrency 200
+			TFBot
+			{
+					Class Soldier
+					ClassIcon soldier_sakura
+					Name "Takizakura"
+					SpawnTemplate Springtext
+					Health 18000
+					Attributes UseBossHealthBar
+					Skill Expert
+					Attributes MiniBoss
+					Attributes HoldFireUntilFullReload
+					Item    "The Original"
+					Item "The Shogun's Shoulder Guard"
+					Item	"Mangnanimous Monarch"
+					WeaponRestrictions	PrimaryOnly
+					Tag bot_giant
+					ItemAttributes
+					{
+						ItemName "The Original"
+						"fire rate bonus" 0
+                        "clip size upgrade atomic" 0
+                        "damage bonus" 1.50
+                        "faster reload rate" 0.35
+                        "projectile spread angle penalty" 2
+                        "Projectile speed increased" 0.5
+                        "blast dmg to self increased" 0
+						"dmg bonus vs buildings" 1.50
+					}
+					CharacterAttributes
+					{
+						"move speed bonus"	0.40
+						"damage force reduction"			0.0
+						"airblast vulnerability multiplier"	0.0
+						"override footstep sound set"		3
+						"airblast vertical vulnerability multiplier"	0.0
+						"rage giving scale"	0.75
+						"cancel falling damage"	1
+						"self dmg push force decreased" 0
+					}
+			}
+		}
+		WaveSpawn
+		{
+			Where spawnbot_river
+			Name "Zakura"
+			TotalCount 1
+			MaxActive 1
+			SpawnCount 1
+			WaitBeforeStarting 12.5
+			TotalCurrency 200
+			TFBot
+			{
+					Class Demoman
+					ClassIcon demoknight_samurai_Sakura
+					WeaponRestrictions MeleeOnly
+					Name "Zakura"
+					Health 18000
+					AutoJumpMin 8
+					AutoJumpMax 8
+					Attributes UseBossHealthBar
+					Attributes AutoJump
+					Attributes AirChargeOnly
+					Skill Expert
+					Item "The Half-Zatoichi"
+					Attributes MiniBoss
+					Item    "Demo Kabuto"
+					Item	"Spy Oni Mask"
+					Item "The Splendid Screen"
+					Tag bot_giant
+					ItemAttributes
+					{
+						ItemName "The Half-Zatoichi"
+						"honorbound" 0
+						"critboost on kill" 3
+						"damage bonus" 1.50
+						"restore health on kill" 10
+						"is_a_sword" 1
+					}
+					ItemAttributes
+					{
+						ItemName "The Splendid Screen"
+						"charge time increased" 1.20
+						"charge recharge rate increased" 5
+						"Attack not cancel charge" 1
+					}
+					CharacterAttributes
+					{
+						"increased jump height" 2.5
+						"move speed bonus"	0.45
+						"damage force reduction"			0.0
+						"airblast vulnerability multiplier"	0.0
+						"override footstep sound set"		3
+						"airblast vertical vulnerability multiplier"	0.0
+						"rage giving scale"	0.75
+						"cancel falling damage"	1
+						"self dmg push force decreased" 0
+					}
+			}
+		}
+		WaveSpawn
+		{
+			WaitBeforeStarting		10
+			FirstSpawnWarningSound	items/samurai/tf_samurai_noisemaker_setb_03.wav
+		}
+		WaveSpawn
+		{
+			WaitBeforeStarting		14
+			FirstSpawnWarningSound	items/samurai/tf_samurai_noisemaker_setb_02.wav
+		}
+		WaveSpawn
+		{
+			Where spawnbot 
+			Where spawnbot_river
+			Where spawnbot_flank
+			Name "Support6AL"
+			TotalCount 8
+			MaxActive 4
+			SpawnCount 4
+			Support Limited           
+			WaitBeforeStarting 0
+			WaitBetweenSpawns 6
+			TotalCurrency 50
+			TFBot
+			{
+				Template T_TFBot_Soldier_Extended_Concheror
+				Item "Humanitarian's Hachimaki"
+				CharacterAttributes
+				{
+					"cannot pick up intelligence" 1
+				}
+			}
+		}
+		WaveSpawn
+		{
+			Where spawnbot 
+			Where spawnbot_river
+			Where spawnbot_flank
+			Name "Support6BL"
+			TotalCount 4
+			MaxActive 4
+			SpawnCount 2
+			Support Limited               
+			WaitBeforeStarting 0
+			WaitBetweenSpawns 6
+			TotalCurrency 50
+			TFBot
+			{
+				Template T_TFBot_Sniper_Huntsman_Spammer
+				ClassIcon sniper_bow_multi
+				Item "Humanitarian's Hachimaki"
+				CharacterAttributes
+				{
+					"cannot pick up intelligence" 1
+				}
+			}
+		}
+		WaveSpawn
+		{
+			Where spawnbot 
+			Where spawnbot_river
+			Where spawnbot_flank
+			Name "Support6CL"
+			TotalCount 7
+			MaxActive 7
+			SpawnCount 4
+			Support Limited               
+			WaitBeforeStarting 0
+			WaitBetweenSpawns 6
+			TotalCurrency 50
+			TFBot
+			{
+			   Class Pyro
+			   Skill Normal
+			   Item "TF_WEAPON_FLAMETHROWER"
+				ItemAttributes
+				{
+					ItemName "TF_WEAPON_FLAMETHROWER"
+					"airblast disabled" 1
+				}
+				CharacterAttributes
+				{
+					"cannot pick up intelligence" 1
+				}
+			}
+		}
+		WaveSpawn
+		{
+			Where spawnbot 
+			Where spawnbot_river
+			Where spawnbot_flank
+			Name "Support6A"
+			TotalCount 50
+			MaxActive 5
+			SpawnCount 3
+			WaitForAllDead "Support6AL"
+			Support 1                 
+			WaitBeforeStarting 3
+			WaitBetweenSpawns 8
+			TotalCurrency 50
+			TFBot
+			{
+				Template T_TFBot_Soldier_Extended_Concheror
+				Item "Humanitarian's Hachimaki"
+				CharacterAttributes
+				{
+					"cannot pick up intelligence" 1
+				}
+			}
+		}
+		WaveSpawn
+		{
+			Where spawnbot 
+			Where spawnbot_river
+			Where spawnbot_flank
+			Name "Support6B"
+			TotalCount 100
+			MaxActive 3
+			SpawnCount 2
+			Support 1
+			WaitForAllDead "Support6BL"                 
+			WaitBeforeStarting 9
+			WaitBetweenSpawns 18
+			TotalCurrency 100
+			TFBot
+			{
+				Template T_TFBot_Sniper_Huntsman_Spammer
+				ClassIcon sniper_bow_multi
+				Item "Humanitarian's Hachimaki"
+				Skill Normal
+				CharacterAttributes
+				{
+					"cannot pick up intelligence" 1
+				}
+			}
+		}
+		WaveSpawn
+		{
+			Where spawnbot 
+			Where spawnbot_river
+			Where spawnbot_flank
+			Name "Support6B"
+			TotalCount 100
+			MaxActive 4
+			SpawnCount 3
+			Support 1
+			WaitForAllDead "Support6CL"                 
+			WaitBeforeStarting 3
+			WaitBetweenSpawns 12
+			TotalCurrency 100
+			TFBot
+			{
+				Class Pyro
+				Item "Humanitarian's Hachimaki"
+			    Skill Normal
+			    Item "TF_WEAPON_FLAMETHROWER"
+				ItemAttributes
+				{
+					ItemName "TF_WEAPON_FLAMETHROWER"
+					"airblast disabled" 1
+				}
+				CharacterAttributes
+				{
+					"cannot pick up intelligence" 1
+				}
+			}
+		}
+	}
+}
