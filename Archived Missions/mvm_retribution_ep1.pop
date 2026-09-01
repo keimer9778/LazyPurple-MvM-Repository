@@ -1,0 +1,337 @@
+#base robot_giant.pop
+#base robot_standard.pop
+#base retribution_tmp.pop
+WaveSchedule
+{
+	StartingCurrency		3500
+	RespawnWaveTime 		5
+	CanBotsAttackWhileInSpawnRoom yes
+	FixedRespawnWaveTime Yes
+	AddSentryBusterWhenDamageDealtExceeds 1000
+	AddSentryBusterWhenKillCountExceeds 15
+
+	PeriodicSpawn{
+		Where botspawn1_red_undg
+		Where botspawn2_red_rmp
+		Where botspawn3_bridge
+		Where botspawn4_blu_rmp
+		When 3
+		RandomChoice{
+		Squad{
+			FormationSize 48
+			TFBot{
+				Template T_Soldier_Rookie
+				Name "Trooper"
+			}
+			TFBot{
+				Template T_Demoman_Trained
+				Name "Bomber"
+			}
+			TFBot{
+				Template T_Scout_Rookie
+				Name "Scoot"
+			}
+		}
+		TFBot{
+			Template T_Scout_Rookie
+			Name "Scoot"
+		}
+		}
+	}
+
+	PeriodicSpawn{
+		Where botspawn2_red_rmp
+		When 2
+		TFBot{
+			Template T_Demoman_Expert
+			Name "Ayelander"
+			Item "The Eyelander"
+			Item "The Chargin' Targe"
+			Item "The Bolgan"
+			Attributes SpawnWithFullCharge
+			WeaponRestrictions MeleeOnly
+			ItemAttributes{
+				ItemName "The Chargin' Targe"
+				"dmg taken from fire reduced" "0.15"
+				"dmg taken from blast reduced" "0.25"
+			}
+		}			
+	}
+
+	PeriodicSpawn{
+		Where botspawn3_bridge
+		When 8
+		Squad{    //Defenders
+			FormationSize 48
+			TFBot{
+				Template T_Heavy_Expert
+				Name "Deflector"
+				Item "Deflector"
+				ItemAttributes
+				{
+					ItemName "Deflector"
+					"damage bonus"	1.5 // copied from base mighty heavy
+					"attack projectiles" 1  // force ability to shoot down projectiles
+				}
+				WeaponRestrictions PrimaryOnly
+				
+			}
+			TFBot{
+				Class Medic
+				Skill Expert
+				Item "The Quick-Fix"
+				Item "The Ubersaw"
+			}
+			TFBot{
+				Template T_Soldier_Expert
+				Item "The Battalion's Backup"
+				Item "The Black Box"
+			}
+			TFBot{
+				Template T_Skirmisher_Expert
+				Item "The Tribalman's Shiv"
+				Item "The Huntsman"
+			}
+		}
+	}
+
+	PeriodicSpawn{
+		Where botspawn3_bridge
+		When 3
+		Squad{    //Hellraisers
+			FormationSize 32
+			TFBot{
+				Template T_Pyro_Trained
+				Name "Hellraiser"
+				Item "The Degreaser"
+				Item "The Flare Gun"
+				Item "Sharpened Volcano Fragment"
+			}
+			TFBot{
+				Template T_Pyro_Trained
+                                                       		Name "Axxecutor"
+				WeaponRestrictions MeleeOnly
+				Item "The Axtinguisher"
+			}
+			TFBot{
+				Template T_Scout_Trained
+				Name "Ember"
+				WeaponRestrictions MeleeOnly
+				Item "Sun-On-A-Stick"
+			}			
+		}
+	}
+
+	PeriodicSpawn{
+		Where botspawn4_BLUrmpX
+		When 10
+		Squad{    //Defenders
+			FormationSize 64
+			TFBot{
+				Template T_Heavy_Expert
+				Name "Deflector"
+				Item "Deflector"
+				ItemAttributes
+				{
+					ItemName "Deflector"
+					"damage bonus"	1.5 // copied from base mighty heavy
+					"attack projectiles" 1  // force ability to shoot down projectiles
+				}
+				WeaponRestrictions PrimaryOnly
+				
+			}
+			TFBot{
+				Class Medic
+				Skill Expert
+				Item "The Quick-Fix"
+				Item "The Ubersaw"
+			}
+			TFBot{
+				Template T_Soldier_Expert
+				Item "The Battalion's Backup"
+				Item "The Black Box"
+			}
+			TFBot{
+				Template T_Skirmisher_Expert
+				Item "The Tribalman's Shiv"
+				Item "The Huntsman"
+			}
+		}
+	}
+
+	PeriodicSpawn{
+		Where botspawn4_BLU_rmp
+		When 4
+		RandomChoice{  //Skirmishers
+			TFBot{
+				Template T_Soldier_Trained
+			}
+			TFBot{
+				Template T_Skirmisher_Trained
+				Item "The Tribalman's Shiv"
+				Item "The Huntsman"
+			}
+		}
+	}
+
+	Mission {
+		Objective DestroySentries
+		InitialCooldown 35
+		Where botspawn3_bridge_aux
+		BeginAtWave 1
+		RunForThisManyWaves 1
+		CooldownTime 45
+		TFBot{
+			Template T_TFBot_SentryBuster
+		}
+	}
+
+	Mission 	
+	{
+		Objective Sniper
+		InitialCooldown 10
+		Where botspawn3_bridge_aux
+		BeginAtWave 1
+		RunForThisManyWaves 1
+		CooldownTime 40
+		DesiredCount 3	
+		TFBot
+		{
+			Template T_Sniper_Trained
+		}
+	}
+
+	Mission 
+	{
+		Objective Engineer
+		InitialCooldown 30
+		Where botspawn3_bridge_aux
+		BeginAtWave 1
+		RunForThisManyWaves 1
+		CooldownTime 20
+		DesiredCount 1
+		TFBot
+		{
+			Template T_TFBot_Engineer_Sentry_Battle
+			TeleportWhere sentry_bridge
+		}
+	}
+	
+	Wave
+	{
+		StartWaveOutput
+		{
+			Target flgbomb
+			Action enable
+			Target wave_start_relay
+			Action Trigger
+		}
+		
+		WaveSpawn{
+			Name "dummy"
+			WaitForAllSpawned "dummy"
+			TotalCount 1
+			TFBot{
+				Class Soldier
+				ClassIcon soldier_crit
+			}
+		}
+		
+		WaveSpawn{
+			Name "dummy2"
+			WaitForAllSpawned "dummy2"
+			//Where botspawn5_blu_undg
+			TotalCount 9
+			Support 1
+			TotalCurrency 1
+			Squad{
+				TFBot{
+					Class Scout
+					ClassIcon scout_bat
+				}
+				TFBot{
+					Class Soldier
+					ClassIcon heavy_shotgun
+				}
+				TFBot{
+					Class Demoman
+				}
+				TFBot{
+					Class Demoman
+					ClassIcon demoknight
+				}
+				TFBot{
+					Class Heavyweapons
+					ClassIcon heavy_deflector
+				}
+				TFBot{
+					Class Medic
+				}
+				TFBot{
+					Class Pyro
+				}
+				TFBot{
+					Class Soldier
+					ClassIcon soldier_backup
+				}
+				TFBot{
+					Class Sniper
+					ClassIcon sniper_bow
+				}
+			}
+		}
+		
+		WaveSpawn //WAVE 05: Overlord
+		{
+			Name "Uberbot"
+			Where boss_spawn_BLU_undg
+			MaxActive 1
+			SpawnCount 1
+			WaitBetweenSpawns 1
+			WaitBeforeStarting 6
+			TotalCurrency 0
+			TFBot
+			{
+				Template T_Uber_Soldier
+				Name "Overlord Soldier"
+				ClassIcon soldier_crit
+				Tag soldier_boss
+			}
+		}
+		WaveSpawn //WAVE 05b: placeholder scout
+		{
+			Where boss_spawn_aux
+			WaitForAllSpawned "Uberbot"
+			MaxActive 1
+			SpawnCount 1
+			WaitBetweenSpawns 1
+			WaitBeforeStarting 0
+			TotalCurrency 3500
+			TFBot
+			{
+					Name "BLU Passage"
+					Class Scout
+					Skill Easy
+					Health 2
+					WeaponRestrictions MeleeOnly
+					Attributes IgnoreFlag
+					Attributes SuppressFire
+					Attributes Aggressive
+					MaxVisionRange 1
+					CharacterAttributes
+					{
+						"rage giving scale" 0.0
+						"airblast vulnerability multiplier" 0.0
+						"airblast vertical vulnerability multiplier" 0.0
+						"damage force reduction" 0.0
+						"cannot be backstabbed" 1
+					}
+			}
+		}
+		DoneOutput
+		{
+			Target wave_finished_relay
+			Action trigger
+		}
+	}
+}

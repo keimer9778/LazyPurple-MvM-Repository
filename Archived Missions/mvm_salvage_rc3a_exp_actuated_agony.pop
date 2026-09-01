@@ -1,0 +1,1476 @@
+// Ismac
+#base robot_giant.pop
+#base robot_standard.pop
+
+WaveSchedule
+{
+    StartingCurrency                      400
+    RespawnWaveTime                       5
+    CanBotsAttackWhileInSpawnRoom         No 
+    AddSentryBusterWhenKillCountExceeds   15 
+    AddSentryBusterWhenDamageDealtExceeds 3000 
+    FixedRespawnWaveTime                  Yes
+    Advanced                              1 
+    // Wave 1-3 Sentry Busters
+    Mission
+    {
+        Objective           DestroySentries
+        Where               spawnbot_mission_sentry_buster
+        BeginAtWave         1
+        RunForThisManyWaves 3
+        CooldownTime        70
+        DesiredCount        1
+        InitialCooldown     30
+        TFBot
+        {
+            Template T_TFBot_SentryBuster
+        }
+    }
+
+    // Wave 2 Spies
+    Mission
+    {
+        Objective           Spy
+        Where               spawnbot_mission_spy
+        BeginAtWave         2
+        RunForThisManyWaves 1
+        CooldownTime        90
+        DesiredCount        2
+        InitialCooldown     45
+        TFBot
+        {
+            Template T_TFBot_Spy
+        }
+    }
+    
+
+    // Wave 3 Snipers
+    Mission
+    {
+        Objective           Sniper
+        Where               spawnbot_mission_sniper
+        BeginAtWave         3
+        RunForThisManyWaves 1
+        CooldownTime        50
+        DesiredCount        2
+        InitialCooldown     45
+        TFBot
+        {
+            Template T_TFBot_Sniper_Sydney_Sleeper
+            Skill Normal
+        }
+    }
+    
+
+    // Wave 1 - 1000
+    Wave
+    {
+
+        StartWaveOutput
+        {
+            Target wave_start_relay 
+            Action Trigger
+        }
+
+        DoneOutput
+        {
+            Target wave_finished_relay
+            Action Trigger
+        }
+
+        //  Pyro Reflectors + Uber Medic
+        WaveSpawn
+        {
+            Name "wave1a"
+            Where spawnbot_main
+            TotalCount 24
+            MaxActive 12
+            SpawnCount 2
+            WaitBetweenSpawns 2
+            TotalCurrency 200
+            Squad
+            {
+                FormationSize 200
+                ShouldPreserveSquad 1 
+                TFBot
+                {
+                    Class Pyro
+                    Skill Expert
+                    ClassIcon pyro_reflect_daan
+                    Name "Airblast Pyro"
+                    Item "The Triclops"
+                    Item "The Degreaser"
+                    ItemAttributes
+                    {
+                        ItemName "The Degreaser"
+                        "mult airblast refire time" 0.25
+                        "airblast pushback scale" 5
+                    }
+                }
+        
+                TFBot
+                {
+                    Template T_TFBot_Medic_QuickUber
+                }
+            }
+        }
+         WaveSpawn
+        {
+            Where spawnbot_flanker_highground
+            TotalCount 6
+            MaxActive 4
+            SpawnCount 1
+            WaitBeforeStarting 5
+            WaitBetweenSpawns 16
+            TotalCurrency 100
+            TFBot
+            {
+                Template T_TFBot_Sniper_Huntsman_Spammer
+                ClassIcon sniper_bow_multi
+            }
+        }
+
+         WaveSpawn
+        {
+            Name "wave1b"
+            WaitForAllDead "wave1a"
+            Where spawnbot_flanker_medium
+            TotalCount 10
+            MaxActive 5
+            SpawnCount 5
+            WaitBeforeStarting 2
+            WaitBetweenSpawns 20
+            TotalCurrency 50
+            Squad
+            {
+                FormationSize 48
+                ShouldPreserveSquad 1 
+                TFBot
+                {
+                    Template T_TFBot_Giant_Pyro
+                    Attributes AlwaysFireWeapon
+                }
+        
+                TFBot
+                {
+                     Name    "Projectile Shield Medic"
+                     Class   Medic
+                     ClassIcon    medic_shield_lite 
+                     Skill        Expert
+                     Attributes   SpawnWithFullCharge
+                     Attributes   ProjectileShield 
+                     Attributes   IgnoreEnemies
+                     WeaponRestrictions    SecondaryOnly
+                     ItemAttributes
+                     {
+                       ItemName "TF_WEAPON_MEDIGUN"
+                       "ubercharge rate penalty" -3
+                       "generate rage on heal" 2
+                       "increase buff duration" 1001
+                     }
+                     CharacterAttributes
+                     {
+                        "bot medic uber health threshold" 25
+                        "bot medic uber deploy delay duration" 9999
+                     }
+                }
+
+                TFBot
+                {
+                        Class Medic
+                        Name "Kritz Medic"
+                        Skill Expert
+                        ClassIcon medic_kritz_lite
+                        WeaponRestrictions SecondaryOnly
+                        Attributes SpawnWithFullCharge
+                        Attributes IgnoreEnemies
+                        Item  "the kritzkrieg"
+                        Item "Platinum Pickelhaube"
+                        ItemAttributes
+                        {
+                          ItemName "The Kritzkrieg"
+                          "ubercharge rate bonus" 999
+                          "uber duration bonus" 999
+                        }
+                        CharacterAttributes
+                        {
+                          "bot medic uber health threshold" 999            
+                        }
+                }
+
+                TFBot
+                {
+                        Class Medic
+                        Name "Kritz Medic"
+                        Skill Expert
+                        ClassIcon medic_kritz_lite
+                        WeaponRestrictions SecondaryOnly
+                        Attributes SpawnWithFullCharge
+                        Attributes IgnoreEnemies
+                        Item  "the kritzkrieg"
+                        Item "Platinum Pickelhaube"
+                        ItemAttributes
+                        {
+                          ItemName "The Kritzkrieg"
+                          "ubercharge rate bonus" 999
+                          "uber duration bonus" 999
+                        }
+                        CharacterAttributes
+                        {
+                          "bot medic uber health threshold" 999            
+                        }
+                }
+
+                TFBot
+                {
+                        Class Medic
+                        Name "Kritz Medic"
+                        Skill Expert
+                        ClassIcon medic_kritz_lite
+                        WeaponRestrictions SecondaryOnly
+                        Attributes SpawnWithFullCharge
+                        Attributes IgnoreEnemies
+                        Item  "the kritzkrieg"
+                        Item "Platinum Pickelhaube"
+                        ItemAttributes
+                        {
+                          ItemName "The Kritzkrieg"
+                          "ubercharge rate bonus" 999
+                          "uber duration bonus" 999
+                        }
+                        CharacterAttributes
+                        {
+                          "bot medic uber health threshold" 999            
+                        }
+                }
+        
+            }
+        }
+         WaveSpawn
+        {
+            Name "wave1b"
+            WaitForAllDead "wave1a"
+            Where spawnbot_main
+            TotalCount 10
+            MaxActive 5
+            SpawnCount 5
+            WaitBeforeStarting 2
+            WaitBetweenSpawns 20
+            TotalCurrency 50
+            Squad
+            {
+                FormationSize 48
+                ShouldPreserveSquad 1 
+                TFBot
+                {
+                    Template T_TFBot_Giant_Pyro
+                    Attributes AlwaysFireWeapon
+                }
+        
+                TFBot
+                {
+                     Name    "Projectile Shield Medic"
+                     Class   Medic
+                     ClassIcon    medic_shield_lite 
+                     Skill        Expert
+                     Attributes   SpawnWithFullCharge
+                     Attributes   ProjectileShield 
+                     Attributes   IgnoreEnemies
+                     WeaponRestrictions    SecondaryOnly
+                     ItemAttributes
+                     {
+                       ItemName "TF_WEAPON_MEDIGUN"
+                       "ubercharge rate penalty" -3
+                       "generate rage on heal" 2
+                       "increase buff duration" 1001
+                     }
+                     CharacterAttributes
+                     {
+                        "bot medic uber health threshold" 25
+                        "bot medic uber deploy delay duration" 9999
+                     }
+                }
+
+                TFBot
+                {
+                        Class Medic
+                        Name "Kritz Medic"
+                        Skill Expert
+                        ClassIcon medic_kritz_lite
+                        WeaponRestrictions SecondaryOnly
+                        Attributes SpawnWithFullCharge
+                        Attributes IgnoreEnemies
+                        Item  "the kritzkrieg"
+                        Item "Platinum Pickelhaube"
+                        ItemAttributes
+                        {
+                          ItemName "The Kritzkrieg"
+                          "ubercharge rate bonus" 999
+                          "uber duration bonus" 999
+                        }
+                        CharacterAttributes
+                        {
+                          "bot medic uber health threshold" 999            
+                        }
+                }
+
+                TFBot
+                {
+                        Class Medic
+                        Name "Kritz Medic"
+                        Skill Expert
+                        ClassIcon medic_kritz_lite
+                        WeaponRestrictions SecondaryOnly
+                        Attributes SpawnWithFullCharge
+                        Attributes IgnoreEnemies
+                        Item  "the kritzkrieg"
+                        Item "Platinum Pickelhaube"
+                        ItemAttributes
+                        {
+                          ItemName "The Kritzkrieg"
+                          "ubercharge rate bonus" 999
+                          "uber duration bonus" 999
+                        }
+                        CharacterAttributes
+                        {
+                          "bot medic uber health threshold" 999            
+                        }
+                }
+
+                TFBot
+                {
+                        Class Medic
+                        Name "Kritz Medic"
+                        Skill Expert
+                        ClassIcon medic_kritz_lite
+                        WeaponRestrictions SecondaryOnly
+                        Attributes SpawnWithFullCharge
+                        Attributes IgnoreEnemies
+                        Item  "the kritzkrieg"
+                        Item "Platinum Pickelhaube"
+                        ItemAttributes
+                        {
+                          ItemName "The Kritzkrieg"
+                          "ubercharge rate bonus" 999
+                          "uber duration bonus" 999
+                        }
+                        CharacterAttributes
+                        {
+                          "bot medic uber health threshold" 999            
+                        }
+                }
+        
+            }
+        }
+         WaveSpawn
+        {
+            Name "wave1b"
+            WaitForAllDead "wave1a"
+            Where spawnbot_main
+            TotalCount 24
+            MaxActive 12
+            SpawnCount 6
+            WaitBeforeStarting 6
+            WaitBetweenSpawns 12
+            TotalCurrency 15
+            TFBot
+            {
+                Template T_TFBot_Scout_Bonk
+            }
+        }
+         WaveSpawn
+        {
+            Name "wave1c"
+            WaitForAllDead "wave1b"
+            Where spawnbot_flanker_highground
+            TotalCount 20
+            MaxActive 10
+            SpawnCount 5
+            WaitBeforeStarting 2
+            WaitBetweenSpawns 10
+            TotalCurrency 15
+            TFBot
+            {
+                Class Demoman
+                Skill Hard
+            }
+        }
+         WaveSpawn
+        {
+            Name "wave1c"
+            WaitForAllDead "wave1b"
+            Where spawnbot_flanker_medium
+            TotalCount 20
+            MaxActive 10
+            SpawnCount 5
+            WaitBeforeStarting 2
+            WaitBetweenSpawns 10
+            TotalCurrency 15
+            TFBot
+            {
+                Template T_TFBot_Soldier_RocketShotgun
+                Skill Hard
+            }
+        }
+         WaveSpawn
+        {
+            Name "wave1d"
+            WaitForAllDead "wave1c"
+            Where spawnbot_main
+            TotalCount 14
+            MaxActive 14
+            SpawnCount 7
+            WaitBeforeStarting 2
+            WaitBetweenSpawns 20
+            TotalCurrency 100
+            Squad
+            {
+                FormationSize 200
+                ShouldPreserveSquad 1 
+                TFBot
+                {
+                    Template T_TFBot_Giant_Soldier_Spammer
+                    Skill Expert
+                }
+        
+                TFBot
+                {
+                    Template T_TFBot_Medic_QuickUber
+                }
+
+                TFBot
+                {
+                    Template T_TFBot_Medic_QuickUber
+                }
+
+                TFBot
+                {
+                    Template T_TFBot_Medic_QuickUber
+                }
+
+                TFBot
+                {
+                    Template T_TFBot_Medic_QuickUber
+                }
+
+                TFBot
+                {
+                    Class Medic
+                        Name "Kritz Medic"
+                        Skill Expert
+                        ClassIcon medic_kritz_lite
+                        WeaponRestrictions SecondaryOnly
+                        Attributes SpawnWithFullCharge
+                        Attributes IgnoreEnemies
+                        Item  "the kritzkrieg"
+                        Item "Platinum Pickelhaube"
+                        ItemAttributes
+                        {
+                          ItemName "The Kritzkrieg"
+                          "ubercharge rate bonus" 999
+                          "uber duration bonus" 999
+                        }
+                        CharacterAttributes
+                        {
+                          "bot medic uber health threshold" 999            
+                        }
+                }
+
+                TFBot
+                {
+                    Class Medic
+                        Name "Kritz Medic"
+                        Skill Expert
+                        ClassIcon medic_kritz_lite
+                        WeaponRestrictions SecondaryOnly
+                        Attributes SpawnWithFullCharge
+                        Attributes IgnoreEnemies
+                        Item  "the kritzkrieg"
+                        Item "Platinum Pickelhaube"
+                        ItemAttributes
+                        {
+                          ItemName "The Kritzkrieg"
+                          "ubercharge rate bonus" 999
+                          "uber duration bonus" 999
+                        }
+                        CharacterAttributes
+                        {
+                          "bot medic uber health threshold" 999            
+                        }
+                }
+            }
+        }
+         WaveSpawn
+        {
+            WaitForAllDead "wave1c"
+            Where spawnbot_main
+            TotalCount 20
+            MaxActive 10
+            SpawnCount 5
+            WaitBeforeStarting 2
+            WaitBetweenSpawns 10
+            TotalCurrency 5
+            TFBot
+            {
+                Class Scout
+                Skill Easy
+            }
+        }
+        // 1 Tank
+        WaveSpawn
+        {
+            Name "wave1e"
+            TotalCount 1
+            WaitForAllDead "wave1d"
+            WaitBeforeStarting 5
+            WaitBetweenSpawns 15
+            TotalCurrency 200
+            Tank
+            {
+                Name "tankboss" 
+                Health 20000
+                Speed 75
+                StartingPathTrackNode "tank_path_b_1"
+                OnKilledOutput
+                {
+                    Target boss_dead_relay
+                    Action Trigger
+                }
+        
+                OnBombDroppedOutput
+                {
+                    Target boss_deploy_relay
+                    Action Trigger
+                }
+            }
+        }
+          WaveSpawn
+        {
+            Name "wave1e"
+            WaitForAllDead "wave1d"
+            Where spawnbot_flanker_medium
+            TotalCount 1
+            MaxActive 1
+            SpawnCount 1
+            WaitBeforeStarting 20
+            WaitBetweenSpawns 10
+            TotalCurrency 300
+            TFBot
+            {
+                Template T_TFBot_Heavyweapons_Heater
+                MaxVisionRange 1200
+            }
+        }
+          WaveSpawn
+        {
+            Name "wave1e"
+            WaitForAllDead "wave1d"
+            Where spawnbot_flanker_highground
+            TotalCount 1
+            MaxActive 1
+            SpawnCount 1
+            WaitBeforeStarting 50
+            WaitBetweenSpawns 10
+            TotalCurrency 300
+            TFBot
+            {
+                Template T_TFBot_Heavyweapons_Heater
+                MaxVisionRange 1200
+            }
+        }
+          WaveSpawn
+        {
+            WaitForAllDead "wave1d"
+            Where spawnbot_main
+            TotalCount 80
+            MaxActive 20
+            SpawnCount 5
+            WaitBeforeStarting 2
+            WaitBetweenSpawns 10
+            Support Limited
+            TFBot
+            {
+                Template T_TFBot_Pyro_Flaregun
+                Skill Hard
+            }
+        }
+    }
+
+    // Wave 2 - 1600
+    Wave
+    {
+
+        StartWaveOutput
+        {
+            Target wave_start_relay 
+            Action Trigger
+        }
+
+        DoneOutput
+        {
+            Target wave_finished_relay
+            Action Trigger
+        }
+
+        WaveSpawn
+        {
+            Where spawnbot_flanker_medium
+            TotalCount 48
+            MaxActive 12
+            SpawnCount 6
+            WaitBeforeStarting 0
+            WaitBetweenSpawns 4
+            TotalCurrency 60
+            Squad
+            {
+                FormationSize 100
+                ShouldPreserveSquad 1 
+                TFBot
+                {
+                    Class Heavyweapons
+                    Skill Hard
+                }
+        
+                TFBot
+                {
+                    Template T_TFBot_Soldier_Extended_Concheror
+                }
+            }
+        }
+
+        WaveSpawn
+        {
+            Where spawnbot_main
+            TotalCount 12
+            MaxActive 8
+            SpawnCount 2
+            WaitBeforeStarting 0
+            WaitBetweenSpawns 20
+            TotalCurrency 100
+            Squad
+            {
+                FormationSize 200
+                ShouldPreserveSquad 1 
+                TFBot
+                {
+                    Template T_TFBot_Heavy_IronFist_Airblast
+                    Attributes AlwaysCrit
+                }
+        
+                TFBot
+                {
+                    Template T_TFBot_Medic_QuickUber
+                }
+            }
+        }
+
+        WaveSpawn
+        {
+            WaitForAllDead "wave2a"
+            Where spawnbot_flanker_medium
+            TotalCount 16
+            MaxActive 4
+            SpawnCount 2
+            WaitBeforeStarting 0
+            WaitBetweenSpawns 60
+            Support Limited
+            Squad
+            {
+                FormationSize 200
+                ShouldPreserveSquad 1 
+                TFBot
+                {
+                    Template T_TFBot_Engineer_Sentry_Tele_Battle
+                    Attributes Ignoreflag
+                    TeleportWhere spawnbot_main
+                    TeleportWhere spawnbot_flanker_highground
+                    TeleportWhere spawnbot_flanker_medium
+                }
+        
+                TFBot
+                {
+                    Template T_TFBot_Medic_QuickUber
+                }
+            }
+        }
+
+        // 4 Tanks
+        WaveSpawn
+        {
+            Name "wave2a"
+            TotalCount 2
+            WaitBeforeStarting 20
+            WaitBetweenSpawns 25
+            TotalCurrency 500
+            Tank
+            {
+                Name "tankboss" 
+                Health 8000
+                Speed 75
+                StartingPathTrackNode "tank_path_a_1"
+                OnKilledOutput
+                {
+                    Target boss_dead_relay
+                    Action Trigger
+                }
+        
+                OnBombDroppedOutput
+                {
+                    Target boss_deploy_relay
+                    Action Trigger
+                }
+            }
+        }
+        WaveSpawn
+        {
+            Name "wave2a"
+            TotalCount 2
+            WaitBeforeStarting 50
+            WaitBetweenSpawns 25
+            TotalCurrency 400
+            Tank
+            {
+                Name "tankboss" 
+                Health 8000
+                Speed 75
+                StartingPathTrackNode "tank_path_b_1"
+                OnKilledOutput
+                {
+                    Target boss_dead_relay
+                    Action Trigger
+                }
+        
+                OnBombDroppedOutput
+                {
+                    Target boss_deploy_relay
+                    Action Trigger
+                }
+            }
+        }
+        WaveSpawn
+        {
+            Name "wave2b"
+            WaitForAllDead "wave2a"
+            Where spawnbot_main
+            TotalCount 36
+            MaxActive 12
+            SpawnCount 12
+            WaitBeforeStarting 8
+            WaitBetweenSpawns 12
+            TotalCurrency 60
+            TFBot
+            {
+                Name "Demoknight"
+                Class Demoman
+                ClassIcon demoknight
+                Skill Hard
+                WeaponRestrictions MeleeOnly
+
+                Item "Sultan's Ceremonial"
+                Item "Ali Baba's Wee Booties"
+                Item "The Persian Persuader"
+                Item "The Splendid Screen"
+
+                ItemAttributes
+                {
+                    ItemName "The Splendid Screen"
+                    "Attack not cancel charge" 1
+                }
+
+                CharacterAttributes
+                {
+                    "critboost on kill" 3
+                }
+
+            }
+        }
+        WaveSpawn
+        {
+            Name "wave2b"
+            WaitForAllDead "wave2a"
+            Where spawnbot_flanker_medium
+            TotalCount 36
+            MaxActive 12
+            SpawnCount 1
+            WaitBeforeStarting 5
+            WaitBetweenSpawns 1
+            TotalCurrency 60
+            RandomChoice
+            {
+              TFBot
+              {
+                Class Scout
+                Skill Normal
+              }
+
+              TFBot
+              {
+                Class Scout
+                Skill Hard
+              }
+
+              TFBot
+              {
+                Class Scout
+                Skill Easy
+              }
+            }
+        }
+         WaveSpawn
+        {
+            Name "wave2b"
+            WaitForAllDead "wave2a"
+            Where spawnbot_main
+            TotalCount 12
+            MaxActive 12
+            SpawnCount 3
+            WaitBeforeStarting 7
+            WaitBetweenSpawns 15
+            TotalCurrency 60
+            Squad
+            {
+                FormationSize 200
+                ShouldPreserveSquad 1 
+                TFBot
+                {
+                    Template T_TFBot_Giant_DemoMan_PrinceTavish
+                    Attributes AlwaysCrit
+                }
+        
+                TFBot
+                {
+                    Template T_TFBot_Medic_SlowRecharge
+                }
+
+                TFBot
+                {
+                    Template T_TFBot_Medic_SlowRecharge
+                }
+            }
+        }
+         WaveSpawn
+        {
+            Name "wave2c"
+            WaitForAllDead "wave2b"
+            Where spawnbot_main
+            TotalCount 4
+            MaxActive 2
+            SpawnCount 1
+            WaitBeforeStarting 10
+            WaitBetweenSpawns 20
+            TotalCurrency 60
+            TFBot
+            {
+                Template T_TFBot_Giant_Scout_Fast
+            }
+        }
+         WaveSpawn
+        {
+            Name "wave2c"
+            WaitForAllDead "wave2b"
+            Where spawnbot_flanker_highground
+            TotalCount 16
+            MaxActive 6
+            SpawnCount 2
+            WaitBeforeStarting 6
+            WaitBetweenSpawns 6
+            TotalCurrency 60
+            TFBot
+            {
+                Template T_TFBot_Soldier_RocketPush
+            }
+        }
+         WaveSpawn
+        {
+            Name "wave2c"
+            WaitForAllDead "wave2b"
+            Where spawnbot_flanker_medium
+            TotalCount 16
+            MaxActive 6
+            SpawnCount 2
+            WaitBeforeStarting 4
+            WaitBetweenSpawns 2
+            TotalCurrency 60
+            TFBot
+            {
+                Template T_TFBot_Soldier_RocketPush
+            }
+        }
+        WaveSpawn
+        {
+            Name "wave2d"
+            WaitForAllDead "wave2c"
+            Where spawnbot_main
+            TotalCount 4
+            MaxActive 4
+            SpawnCount 4
+            WaitBeforeStarting 4
+            WaitBetweenSpawns 2
+            TotalCurrency 120
+            Squad
+            {
+                FormationSize 48
+                ShouldPreserveSquad 1 
+                TFBot
+                {
+                    Template T_TFBot_Giant_Pyro
+                    Class Pyro
+                    Skill Expert
+                    ClassIcon pyro_reflect_daan_giant
+                    Name "Giant Airblast Pyro"
+                    Item "The Triclops"
+                    Item "The Degreaser"
+                    ItemAttributes
+                    {
+                        ItemName "The Degreaser"
+                        "flame_spread_degree" 3
+                        "mult airblast refire time" 0.25
+                        "airblast pushback scale" 5
+                    }
+                }
+        
+                TFBot
+                {
+                     Name    "Giant Projectile Shield Medic"
+                     Class   Medic
+                     ClassIcon    medic_shield_lite_giant
+                     Skill        Expert
+                     Health 4500
+                     Attributes   SpawnWithFullCharge
+                     Attributes   ProjectileShield 
+                     Attributes   IgnoreEnemies
+                     Attributes MiniBoss
+                     WeaponRestrictions    SecondaryOnly
+                     Item "The Quick-Fix"
+                     ItemAttributes
+                     {
+                       ItemName "The Quick-Fix"
+                       "ubercharge rate penalty" -3
+                       "generate rage on heal" 2
+                       "increase buff duration" 1001
+                     }
+                     CharacterAttributes
+                     {
+                        "bot medic uber health threshold" 25
+                        "bot medic uber deploy delay duration" 9999
+				        "move speed bonus"	0.7
+				        "damage force reduction" 0.6
+				        "airblast vulnerability multiplier" 0.6
+				        "heal rate bonus" 200 
+                     }
+                     
+                }
+
+                TFBot
+                {
+                    Class Heavyweapons
+                    Skill Expert
+                }
+
+                TFBot
+                {
+                    Class Heavyweapons
+                    Skill Expert
+                }
+        
+            }
+        }
+        WaveSpawn
+        {
+            WaitForAllDead "wave2c"
+            Where spawnbot_flanker_medium
+            TotalCount 24
+            MaxActive 6
+            SpawnCount 2
+            WaitBeforeStarting 4
+            WaitBetweenSpawns 2
+            TotalCurrency 60
+            TFBot
+            {
+                    Class Heavyweapons
+			        Name "Milk Nailgun Heavy"
+			        ClassIcon heavy_nail_milk 
+			        Skill Expert
+                    Item "Der Maschinensoldaten-Helm"
+			        Item "Natascha"
+			        WeaponRestrictions PrimaryOnly
+			        MaxVisionRange 1200
+			        ItemAttributes 
+			        {
+				      ItemName "Natascha"
+                      "override projectile type" 5
+                      "fire rate bonus" 0.25
+                      "damage bonus" 1.1
+                      "head scale" 1.1
+                      "projectile spread angle penalty" 9
+                      "slow enemy on hit" 0
+                      "heal on hit for rapidfire" 20
+                      "mad milk syringes" 1
+			        }
+            }
+        }
+    }
+
+    // Wave 3 - 1200
+    Wave
+    {
+
+        StartWaveOutput
+        {
+            Target wave_start_relay 
+            Action Trigger
+        }
+
+        DoneOutput
+        {
+            Target wave_finished_relay
+            Action Trigger
+        }
+
+
+        WaveSpawn
+        {
+            Name "wave3a"
+            Where spawnbot_flanker_highground
+            TotalCount 4
+            MaxActive 2
+            SpawnCount 2
+            WaitBeforeStarting 0
+            WaitBetweenSpawns 27
+            TotalCurrency 60
+            Squad
+            {
+                FormationSize 48
+                ShouldPreserveSquad 1 
+                TFBot
+                {
+                  Template T_TFBot_Giant_Pyro
+                  Name "Giant Dragon's Fury Pyro"
+                  Item "The Dragon's Fury"
+                  Item "Dead Heat"
+                  Skill Expert
+                  ClassIcon pyro_dragon_fury_giant
+                }
+        
+                TFBot
+                {
+                    Template T_TFBot_Giant_Medic_Regen
+                }
+            }
+        }
+        WaveSpawn
+        {
+            Name "wave3a"
+            Where spawnbot_flanker_medium
+            TotalCount 4
+            MaxActive 2
+            SpawnCount 2
+            WaitBeforeStarting 0
+            WaitBetweenSpawns 27
+            TotalCurrency 60
+            Squad
+            {
+                FormationSize 48
+                ShouldPreserveSquad 1 
+                TFBot
+                {
+                    Template T_TFBot_Giant_Pyro
+                    Name "Giant Dragon's Fury Pyro"
+                    Item "The Dragon's Fury"
+                    Item "Dead Heat"
+                    Skill Expert
+                    ClassIcon pyro_dragon_fury_giant
+                }
+        
+                TFBot
+                {
+                    Template T_TFBot_Giant_Medic_Regen
+                }
+            }
+        }
+
+        WaveSpawn
+        {
+            Name "wave3a"
+            Where spawnbot_main
+            TotalCount 6
+            MaxActive 2
+            SpawnCount 2
+            WaitBeforeStarting 0
+            WaitBetweenSpawns 25
+            TotalCurrency 60
+            TFBot
+            {
+              Template T_TFBot_Giant_Scout_Fast
+            }
+        }
+
+        WaveSpawn
+        {
+            Name "wave3b"
+            WaitForAllDead "wave3a"
+            Where spawnbot_main
+            TotalCount 8
+            MaxActive 4
+            SpawnCount 4
+            WaitBeforeStarting 5
+            WaitBetweenSpawns 8
+            TotalCurrency 60
+            TFBot
+            {
+              Template T_TFBot_Soldier_Extended_Buff_Banner
+            }
+        }
+
+        WaveSpawn
+        {
+            Name "wave3b"
+            WaitForAllDead "wave3a"
+            Where spawnbot_flanker_highground
+            TotalCount 8
+            MaxActive 4
+            SpawnCount 4
+            WaitBeforeStarting 5
+            WaitBetweenSpawns 8
+            TotalCurrency 60
+            TFBot
+            {
+              Template T_TFBot_Soldier_Extended_Buff_Banner
+            }
+        }
+
+        WaveSpawn
+        {
+            Name "wave3b"
+            WaitForAllDead "wave3a"
+            Where spawnbot_flanker_medium
+            TotalCount 8
+            MaxActive 4
+            SpawnCount 4
+            WaitBeforeStarting 5
+            WaitBetweenSpawns 8
+            TotalCurrency 60
+            TFBot
+            {
+              Template T_TFBot_Soldier_Extended_Buff_Banner
+            }
+        }
+
+        WaveSpawn
+        {
+            Name "wave3c"
+            WaitForAllDead "wave3b"
+            Where spawnbot_main
+            TotalCount 3
+            MaxActive 3
+            SpawnCount 3
+            WaitBeforeStarting 10
+            WaitBetweenSpawns 8
+            TotalCurrency 60
+             Squad
+            {
+                FormationSize 200
+                ShouldPreserveSquad 1 
+                TFBot
+                {
+                              Class Heavyweapons
+			Name "Giant Milk Nailgun Heavy"
+			ClassIcon heavy_giant_nail_milk
+			Skill Expert
+			Health 6500
+            Item "Der Maschinensoldaten-Helm"
+            Item "Big Steel Jaw of Summer Fun"
+			Item "Natascha"
+			WeaponRestrictions PrimaryOnly
+            Attributes UseBossHealthBar
+			MaxVisionRange 1200
+			Attributes MiniBoss
+			ItemAttributes 
+			{
+				ItemName "Natascha"
+                "override projectile type" 5
+                "centerfire projectile" 1
+                "fire rate penalty" 0.15
+                "damage bonus" 1.76
+                "head scale" 0.8
+                "projectile spread angle penalty" 12
+                "slow enemy on hit" 0
+                "heal on hit for rapidfire" 20
+                "mad milk syringes" 1
+			}
+			CharacterAttributes
+			{
+				"move speed bonus"	0.5
+				"damage force reduction" 0.3
+				"airblast vulnerability multiplier" 0.3
+				"override footstep sound set" 2
+			}
+                }
+        
+                TFBot
+                {
+                            Class Medic
+			Name "Giant Kritz Medic"
+			ClassIcon medic_kritz_lite
+			Skill Expert
+			Health 4500
+			Attributes SpawnWithFullCharge
+			Item  "the kritzkrieg"
+            Item "Platinum Pickelhaube"
+            ItemAttributes
+            {
+                ItemName "The Kritzkrieg"
+                "ubercharge rate bonus" 999
+                "uber duration bonus" 999
+            }
+			WeaponRestrictions SecondaryOnly
+			Attributes MiniBoss
+			ItemAttributes
+			{
+				ItemName "TF_WEAPON_SYRINGEGUN_MEDIC"
+				"damage penalty" 0.1
+			}
+			CharacterAttributes
+			{
+                "bot medic uber health threshold" 9999  
+				"move speed bonus"	0.7
+				"damage force reduction" 0.6
+				"airblast vulnerability multiplier" 0.6
+				"heal rate bonus" 200 
+			}
+                }
+                TFBot
+                {
+                   Class Medic
+			Name "Giant Kritz Medic"
+			ClassIcon medic_kritz_lite
+			Skill Expert
+			Health 4500
+			Attributes SpawnWithFullCharge
+			Item  "the kritzkrieg"
+            Item "Platinum Pickelhaube"
+            ItemAttributes
+            {
+                ItemName "The Kritzkrieg"
+                "ubercharge rate bonus" 999
+                "uber duration bonus" 999
+            }
+			WeaponRestrictions SecondaryOnly
+			Attributes MiniBoss
+			ItemAttributes
+			{
+				ItemName "TF_WEAPON_SYRINGEGUN_MEDIC"
+				"damage penalty" 0.1
+			}
+			CharacterAttributes
+			{
+                "bot medic uber health threshold" 9999  
+				"move speed bonus"	0.7
+				"damage force reduction" 0.6
+				"airblast vulnerability multiplier" 0.6
+				"heal rate bonus" 200 
+			}
+                }
+            }
+        }
+         WaveSpawn
+        {
+            WaitForAllDead "wave3b"
+            Where spawnbot_flanker_medium
+            TotalCount 32
+            MaxActive 8
+            SpawnCount 4
+            WaitBeforeStarting 2
+            WaitBetweenSpawns 8
+            TotalCurrency 60
+            TFBot
+            {
+              Class Scout
+              Skill Hard
+            }
+        }
+
+        WaveSpawn
+        {
+            Name "wave3d"
+            WaitForAllDead "wave3c"
+            Where spawnbot_main
+            TotalCount 2
+            MaxActive 2
+            SpawnCount 2
+            WaitBeforeStarting 14
+            WaitBetweenSpawns 8
+            TotalCurrency 60
+             Squad
+            {
+                FormationSize 200
+                ShouldPreserveSquad 1 
+                TFBot
+                {
+                    Template T_TFBot_Giant_Soldier_RocketShotgun
+                }
+        
+                TFBot
+                {
+                    Template T_TFBot_Medic_SlowRecharge
+                }
+            }
+        }
+
+        WaveSpawn
+        {
+            Name "wave3d"
+            WaitForAllDead "wave3c"
+            Where spawnbot_flanker_highground
+            TotalCount 2
+            MaxActive 2
+            SpawnCount 2
+            WaitBeforeStarting 8
+            WaitBetweenSpawns 8
+            TotalCurrency 60
+             Squad
+            {
+                FormationSize 200
+                ShouldPreserveSquad 1 
+                TFBot
+                {
+                    Template T_TFBot_Giant_Soldier_RocketShotgun
+                }
+        
+                TFBot
+                {
+                    Template T_TFBot_Medic_SlowRecharge
+                }
+            }
+        }
+
+        WaveSpawn
+        {
+            Name "wave3d"
+            WaitForAllDead "wave3c"
+            Where spawnbot_flanker_medium
+            TotalCount 2
+            MaxActive 2
+            SpawnCount 2
+            WaitBeforeStarting 2
+            WaitBetweenSpawns 8
+            TotalCurrency 60
+            Squad
+            {
+                FormationSize 200
+                ShouldPreserveSquad 1 
+                TFBot
+                {
+                    Template T_TFBot_Giant_Soldier_RocketShotgun
+                }
+        
+                TFBot
+                {
+                    Template T_TFBot_Medic_SlowRecharge
+                }
+            }
+        }
+
+
+        WaveSpawn
+        {
+            Name "wave3e"
+            TotalCount 2
+            WaitForAllDead "wave3d"
+            WaitBeforeStarting 3
+            WaitBetweenSpawns 15 
+            TotalCurrency 400
+            Tank
+            {
+                Name "tankboss" 
+                Health 20000
+                Speed 75
+                StartingPathTrackNode "tank_path_b_1"
+                OnKilledOutput
+                {
+                    Target boss_dead_relay
+                    Action Trigger
+                }
+        
+                OnBombDroppedOutput
+                {
+                    Target boss_deploy_relay
+                    Action Trigger
+                }
+            }
+        }
+
+        WaveSpawn
+        {
+            Name "wave3e"
+            WaitForAllDead "wave3d"
+            Where spawnbot_flanker_medium
+            TotalCount 36
+            MaxActive 12
+            SpawnCount 4
+            WaitBeforeStarting 2
+            WaitBetweenSpawns 4
+            TotalCurrency 60
+            TFBot
+            {
+              Class Heavyweapons
+			Name "Deflector Heavy"
+			ClassIcon heavy_deflector
+			Skill Hard
+			Item "The U-clank-a"
+			Item "Deflector"
+			WeaponRestrictions PrimaryOnly
+			MaxVisionRange 1200
+			ItemAttributes 
+			{
+				ItemName "Deflector"
+				"attack projectiles" 1
+			}
+            }
+        }
+
+        WaveSpawn
+        {
+            Name "wave3f"
+            WaitForAllDead "wave3e"
+            Where spawnbot_main
+            TotalCount 8
+            MaxActive 8
+            SpawnCount 4
+            WaitBeforeStarting 2
+            WaitBetweenSpawns 25
+            TotalCurrency 380
+            Squad
+			{
+				TFBot
+				{
+					Template T_TFBot_Giant_Pyro
+                    Item "The Dragon's Fury"
+                    Skill Expert
+                    ClassIcon pyro_dragon_fury_giant
+				}
+				
+				TFBot
+				{
+					Template T_TFBot_Medic_QuickUber
+				}
+			}
+        }
+
+        WaveSpawn
+        {
+            WaitForAllDead "wave3e"
+            Where spawnbot_main
+            TotalCount 32
+            MaxActive 12
+            SpawnCount 2
+            WaitBeforeStarting 2
+            WaitBetweenSpawns 6
+            Support 1
+            TFBot
+            {
+              Template T_TFBot_ScorchShot_FastShot
+            }
+        }
+    }
+}

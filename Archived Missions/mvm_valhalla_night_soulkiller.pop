@@ -1,0 +1,2445 @@
+#base robot_giant.pop
+#base robot_standard.pop
+
+WaveSchedule
+{
+    StartingCurrency 2500
+    RespawnWaveTime 3
+    CanBotsAttackWhileInSpawnRoom no
+    Advanced	1
+
+	Mission // Spy support across all waves
+	{
+		Objective Spy
+		InitialCooldown 60
+		Where spawnbot_mission_spy_A
+		Where spawnbot_mission_spy_B
+		BeginAtWave 1
+		RunForThisManyWaves 3
+		CooldownTime 200
+		DesiredCount 2
+
+		TFBot
+		{
+			Class Spy
+			Skill Expert
+		}
+	}
+
+	Mission // Sniper support - starts wave 2
+	{
+		Objective Sniper
+		InitialCooldown 40
+		Where spawnbot_mission_sniper_A
+		Where spawnbot_mission_sniper_B
+		BeginAtWave 2
+		RunForThisManyWaves 1
+		CooldownTime 160
+		DesiredCount 2
+
+		TFBot
+		{
+			Class Sniper
+			Skill Expert
+			MaxVisionRange 2000
+		}
+	}
+
+	Mission // Sniper support - wave 3
+	{
+		Objective Sniper
+		InitialCooldown 40
+		Where spawnbot_mission_sniper_A
+		Where spawnbot_mission_sniper_B
+		BeginAtWave 3
+		RunForThisManyWaves 1
+		CooldownTime 120
+		DesiredCount 3
+
+		TFBot
+		{
+			Health 200
+			Scale 1.25
+			MaxVisionRange 3000
+			WeaponRestrictions PrimaryOnly
+			Template T_TFBot_Sniper
+			Item "gold botkiller sniper rifle mk.ii"
+			Item "letch's led"
+		}
+	}
+	
+	
+//WAVE 1 - Warmup Expert Difficulty - Total Currency 3500 (1000 Bonus) =========================================================
+
+	Wave
+	{
+		StartWaveOutput
+		{
+			Target wave_start_relay
+			Action Trigger
+		}
+		DoneOutput					
+		{
+			Target wave_finished_relay
+			Action trigger
+		}
+		WaitWhenDone 300
+		Checkpoint Yes
+		
+	//STAGE 1-1: Currency ---
+	
+		WaveSpawn //SECTION 1-1A: Random Scouts
+		{
+			Name "group1-1"
+			Where spawnbot_A
+			Where spawnbot_B
+			TotalCount 56
+			MaxActive 16
+			SpawnCount 8
+			WaitBeforeStarting 0
+			WaitBetweenSpawns 1
+			TotalCurrency 250			
+			
+			RandomChoice
+			{
+				TFBot
+				{
+					Class Scout
+					Skill Expert
+					WeaponRestrictions PrimaryOnly
+					
+				}
+				TFBot
+				{
+					Class Scout
+					Skill Expert
+					WeaponRestrictions PrimaryOnly
+					
+				}
+				TFBot
+				{
+					Template T_TFBot_Scout_Bonk
+					Skill Expert
+					
+				}
+				TFBot
+				{
+					Template T_TFBot_Scout_Sandman
+					Skill Expert
+					
+				}			
+			}			
+		}
+		
+		WaveSpawn //SECTION 1-1B: Scorchshot Pyros
+		{
+			Name "group1-1"
+			Where spawnbot_A
+			Where spawnbot_B
+			TotalCurrency	150
+			TotalCount	27
+			MaxActive	9
+			SpawnCount	3
+			WaitBeforeStarting	5
+			WaitBetweenSpawns	5
+
+			TFBot
+			{
+				Template	T_TFBot_ScorchShot
+				Skill Expert
+				Tag "path_required"
+			}
+
+		}
+	
+	//STAGE 1-2A: Currency ---
+	
+		WaveSpawn //SECTION 1-2A: (Two burst demos + heavy)
+		{
+			Name "group1-2"
+			TotalCurrency	300
+			TotalCount	48
+			MaxActive	12
+			SpawnCount	6
+			WaitBeforeStarting	0
+			WaitBetweenSpawns	3
+			WaitForAllDead "group1-1"
+			Where	spawnbot_A
+			Where	spawnbot_B
+			Squad
+			{
+				TFBot
+				{
+					Template	T_TFBot_Demo_Burst
+					Item	"the tavish degroot experience"
+					Item	"the ornament armament"
+					Skill Expert
+					Tag "path_required"
+				}
+				TFBot
+				{
+					Template	T_TFBot_Demo_Burst
+					Item	"the tavish degroot experience"
+					Item	"the ornament armament"
+					Skill Expert
+					Tag "path_required"
+				}
+				TFBot
+				{
+					Template	T_TFBot_Heavyweapons_Heavyweight_Champ_Fast
+					Skill Expert
+					Tag "path_required"
+				}
+			}
+		}
+		
+		WaveSpawn //SECTION 1-2B: Soldier Support
+		{
+			Name "group1-2"
+			TotalCurrency	200
+			TotalCount	6
+			MaxActive	2
+			SpawnCount	1
+			WaitBeforeStarting	15
+			WaitBetweenSpawns	15
+			WaitForAllDead "group1-1"
+			Support	Limited
+			Where	spawnbot_A
+			Where	spawnbot_B
+			TFBot
+			{
+				Template	T_TFBot_Soldier_Extended_Battalion
+				Item	"the market gardener"
+				Skill Expert
+				Tag "path_required"
+			}
+		}
+	
+	//STAGE 1-3A: Currency ---
+	
+		WaveSpawn  //SECTION 1-3A: [GIANT] (Heavy Fire + Shotgun Heavy Support)
+		{
+			Name "group1-3"
+			TotalCurrency	350
+			TotalCount	13
+			MaxActive	13
+			SpawnCount	13
+			WaitBeforeStarting	0
+			WaitBetweenSpawns	0
+			WaitForAllDead "group1-2"
+			Where	spawnbot_giant_A
+			Where	spawnbot_giant_B
+			Squad
+			{
+				TFBot
+				{
+					Template	T_TFBot_Heavyweapons_Heater
+					Health	10000
+					Tag "path_required"
+					Scale 2.6
+					Attributes UseBossHealthBar
+					CharacterAttributes
+					{
+						"dmg taken from fire reduced"	0.5
+						"weapon burn time increased"	0.5
+						"minigun spinup time decreased"	0.25
+						"move speed bonus"	0.5
+					}
+				}
+				TFBot
+				{
+					Template	T_TFBot_Heavyweapons_Shotgun
+					Health	500
+					Tag "path_required"
+				}
+				TFBot
+				{
+					Template	T_TFBot_Heavyweapons_Shotgun
+					Health	500
+					Tag "path_required"
+				}
+				TFBot
+				{
+					Template	T_TFBot_Heavyweapons_Shotgun
+					Health	500
+					Tag "path_required"
+				}
+				TFBot
+				{
+					Template	T_TFBot_Heavyweapons_Shotgun
+					Health	500
+					Tag "path_required"
+				}
+				TFBot
+				{
+					Template	T_TFBot_Heavyweapons_Shotgun
+					Health	500
+					Tag "path_required"
+				}
+				TFBot
+				{
+					Template	T_TFBot_Heavyweapons_Shotgun
+					Health	500
+					Tag "path_required"
+				}
+				TFBot
+				{
+					Template	T_TFBot_Heavyweapons_Shotgun
+					Health	500
+					Tag "path_required"
+				}
+				TFBot
+				{
+					Template	T_TFBot_Heavyweapons_Shotgun
+					Health	500
+					Tag "path_required"
+				}
+				TFBot
+				{
+					Template	T_TFBot_Heavyweapons_Shotgun
+					Health	500
+					Tag "path_required"
+				}
+				TFBot
+				{
+					Template	T_TFBot_Heavyweapons_Shotgun
+					Health	500
+					Tag "path_required"
+				}
+				TFBot
+				{
+					Template	T_TFBot_Heavyweapons_Shotgun
+					Health	500
+					Tag "path_required"
+				}
+				TFBot
+				{
+					Template	T_TFBot_Heavyweapons_Shotgun
+					Health	500
+					Tag "path_required"
+				}
+			}
+		}
+		
+		WaveSpawn //SECTION 1-3B: Medium Size Pyros
+		{
+			Name "group1-3"
+			TotalCurrency	200
+			TotalCount	12
+			MaxActive	4
+			SpawnCount	2
+			WaitBeforeStarting	15
+			WaitBetweenSpawns	2
+			WaitForAllDead "group1-2"
+			Where	spawnbot_A
+			Where	spawnbot_B
+			Squad
+			{
+				TFBot
+				{
+					Template	T_TFBot_Pyro
+					Scale 1.6
+					Health 750
+					Tag "path_required"
+					Attributes "AlwaysFireWeapon"
+					CharacterAttributes
+					{
+						"move speed penalty"	0.75
+						"dmg taken from fire reduced"	0.5
+						"throwable fire speed"	1.0
+						"flame size bonus"	0.25
+					}
+					Item	"the backburner"
+					Item	"blazing bull"
+				}
+			}
+		}
+	
+	//Stage 1-4: Currency ---
+	
+		WaveSpawn //SECTION 1-4A: [GIANT] (Bow Snipers + Medics)
+		{
+			Name "group1-4"
+			TotalCurrency	350
+			TotalCount	20
+			MaxActive	10
+			SpawnCount	5
+			WaitBeforeStarting	5
+			WaitBetweenSpawns	10
+			WaitForAllDead "group1-3"
+			Where	spawnbot_A
+			Where	spawnbot_B
+			Squad
+			{
+				TFBot
+				{
+					WeaponRestrictions	PrimaryOnly
+					Scale 2.0
+					Health 1500
+					Tag "path_required"
+					CharacterAttributes
+					{
+						"fire rate bonus"	1.0
+					}
+					Template	T_TFBot_Sniper_Huntsman_Spammer
+					Item	"larrikin robin"
+				}
+				TFBot
+				{
+					Template	T_TFBot_Medic_QuickFix
+					Item	"blighted beak"
+					Tag "path_required"
+				}
+				TFBot
+				{
+					Template	T_TFBot_Medic_QuickFix
+					Item	"blighted beak"
+					Tag "path_required"
+				}
+				TFBot
+				{
+					Template	T_TFBot_Medic_BigHeal
+					Item	"berlin brain bowl"
+					Tag "path_required"
+				}
+				TFBot
+				{
+					Template	T_TFBot_Medic_BigHeal
+					Item	"berlin brain bowl"
+					Tag "path_required"
+				}
+			}
+		}
+		
+		WaveSpawn //SECTION 1-4B: Shortstop scouts
+		{
+			Name "group1-4"
+			TotalCurrency	250
+			TotalCount	36
+			MaxActive	12
+			SpawnCount	6
+			WaitBeforeStarting	0
+			WaitBetweenSpawns	5
+			WaitForAllDead "group1-3"
+			Where	spawnbot_A
+			Where	spawnbot_B
+			TFBot
+			{
+				Template	T_TFBot_Scout_Shortstop
+				Scale 1.25
+				Health 200
+				Item	"ttg max pistol"
+				Item	"that '70s chapeau"
+			}
+		}
+	
+		WaveSpawn //SECTION 1-5A: [1 TANK]  
+		{
+			Name "group1-5"
+			TotalCount 1
+			WaitForAllDead "group1-4"
+			WaitBeforeStarting 25
+			WaitBetweenSpawns 0
+			WaitForAllDead "group1-4"
+			TotalCurrency 800
+			
+			FirstSpawnOutput                                                                                                                                                            
+			{
+				 Target boss_spawn_relay                                            
+				 Action Trigger                         
+			}
+
+			Tank
+			{
+				Health 30000
+				Speed 70
+				Name "tankboss"
+				StartingPathTrackNode "boss_path_1"
+
+				OnKilledOutput                                  
+				{
+					Target boss_dead_relay
+					Action Trigger                         
+				}
+				
+				OnBombDroppedOutput                             
+				{
+					Target boss_deploy_relay 
+					Action Trigger                         
+				}
+			}
+		}
+		
+		WaveSpawn //SECTION 1-5B: (2 Blast Soldiers + Blackbox Soldier + Medic) 
+		{
+			Name "group1-5"
+			TotalCurrency	300
+			TotalCount	56
+			MaxActive	16
+			SpawnCount	8
+			WaitBeforeStarting	0
+			WaitBetweenSpawns	1
+			WaitForAllDead "group1-4"
+			Where	spawnbot_A
+			Where	spawnbot_B
+			Squad
+			{
+				TFBot
+				{
+					Template	T_TFBot_Soldier_RocketPush
+				}
+				TFBot
+				{
+					Template	T_TFBot_Soldier_RocketPush
+				}
+				TFBot
+				{
+					Template	T_TFBot_Soldier_RocketPush
+				}
+				TFBot
+				{
+					Template	T_TFBot_Soldier_RocketShotgun
+					Item	"the team captain"
+				}
+			}
+		}
+		
+		WaveSpawn //SECTION 1-5C: [GIANT] (rapid fire demo + 6 support demos) 
+		{
+			Name "group1-5"
+			TotalCurrency	350
+			TotalCount	7
+			MaxActive	7
+			SpawnCount	7
+			WaitBeforeStarting	0
+			WaitBetweenSpawns	0
+			WaitForAllDead "group1-4"
+			Where	spawnbot_giant_A
+			Where	spawnbot_giant_B
+			Squad
+			{
+				TFBot
+				{
+					Template	T_TFBot_Giant_Demo_RapidFire
+					Scale 2.0
+					Health 7500
+					Tag "path_required"
+				}
+				TFBot
+				{
+					WeaponRestrictions	PrimaryOnly
+					Template	T_TFBot_Demoman
+					Attributes	"HoldFireUntilFullReload"
+					Health 500
+					Tag "path_required"
+					CharacterAttributes
+					{
+						"faster reload rate"	1
+					}
+					ItemAttributes
+					{
+						"Blast radius increased"	0.25
+					}
+					Item	"the iron bomber"
+					Item	"the ornament armament"
+					Item	"loyalty reward"
+				}
+				TFBot
+				{
+					WeaponRestrictions	PrimaryOnly
+					Template	T_TFBot_Demoman
+					Attributes	"HoldFireUntilFullReload"
+					Health 500
+					Tag "path_required"
+					CharacterAttributes
+					{
+						"faster reload rate"	1
+					}
+					ItemAttributes
+					{
+						"Blast radius increased"	0.25
+					}
+					Item	"the iron bomber"
+					Item	"the ornament armament"
+					Item	"loyalty reward"
+				}
+				TFBot
+				{
+					WeaponRestrictions	PrimaryOnly
+					Template	T_TFBot_Demoman
+					Attributes	"HoldFireUntilFullReload"
+					Health 500
+					Tag "path_required"
+					CharacterAttributes
+					{
+						"faster reload rate"	1
+					}
+					ItemAttributes
+					{
+						"Blast radius increased"	0.25
+					}
+					Item	"the iron bomber"
+					Item	"the ornament armament"
+					Item	"loyalty reward"
+				}
+				TFBot
+				{
+					WeaponRestrictions	PrimaryOnly
+					Template	T_TFBot_Demoman
+					Attributes	"HoldFireUntilFullReload"
+					Health 500
+					Tag "path_required"
+					CharacterAttributes
+					{
+						"faster reload rate"	1
+					}
+					ItemAttributes
+					{
+						"Blast radius increased"	0.25
+					}
+					Item	"the iron bomber"
+					Item	"the ornament armament"
+					Item	"loyalty reward"
+				}
+				TFBot
+				{
+					WeaponRestrictions	PrimaryOnly
+					Template	T_TFBot_Demoman
+					Attributes	"HoldFireUntilFullReload"
+					Health 400
+					Tag "path_required"
+					CharacterAttributes
+					{
+						"faster reload rate"	1
+					}
+					ItemAttributes
+					{
+						"Blast radius increased"	0.25
+					}
+					Item	"the iron bomber"
+					Item	"the ornament armament"
+					Item	"loyalty reward"
+				}
+				TFBot
+				{
+					WeaponRestrictions	PrimaryOnly
+					Template	T_TFBot_Demoman
+					Attributes	"HoldFireUntilFullReload"
+					Health 400
+					Tag "path_required"
+					CharacterAttributes
+					{
+						"faster reload rate"	1
+					}
+					ItemAttributes
+					{
+						"Blast radius increased"	0.25
+					}
+					Item	"the iron bomber"
+					Item	"the ornament armament"
+					Item	"loyalty reward"
+				}
+			}
+		}
+	}
+		
+//WAVE 2 - Ghost Town / Wave 666 Spin - Total Currency 5000 (2000 Bonus) (12000 Cumulative) ====================================
+
+	Wave
+	{
+		StartWaveOutput
+		{
+			Target wave_start_relay
+			Action Trigger
+		}
+		DoneOutput					
+		{
+			Target wave_finished_relay
+			Action trigger
+		}
+		WaitWhenDone 300
+		Checkpoint Yes
+
+	//STAGE 2-1: Currency 500 
+
+		WaveSpawn //SECTION 2-1A: Scout (bonk) 
+		{
+			Name "group01"
+            Where spawnbot_A
+            Where spawnbot_B
+			TotalCount 60
+			MaxActive 12
+			SpawnCount 6
+			WaitBeforeStarting 5
+			WaitBetweenSpawns 0
+			TotalCurrency 150		
+		
+			TFBot
+			{
+				Template T_TFBot_Scout_Bonk
+				Attributes AlwaysCrit
+				Item "Point and Shoot"
+				
+			}
+		}
+		WaveSpawn //SECTION 2-1B: Pyro (always fire or normal)
+		{
+			Name "group01"
+            Where spawnbot_A
+            Where spawnbot_B
+			TotalCount 40
+			MaxActive 8
+			SpawnCount 4
+			WaitBeforeStarting 0
+			WaitBetweenSpawns 0
+			TotalCurrency 150
+		
+			RandomChoice
+			{
+				TFBot
+				{
+					Template T_TFBot_Pyro
+					Item "Old Guadalajara"
+					
+				}
+				TFBot
+				{
+					Class Pyro
+					Skill Easy
+					Attributes "AlwaysFireWeapon"
+					Item "Old Guadalajara"
+					
+				}
+			}
+		}
+		WaveSpawn //SECTION 2-1C: [GIANT] Demoman (demoknight)
+		{
+			Name "group01"
+            Where spawnbot_giant_A
+            Where spawnbot_giant_B
+			TotalCount 15
+			MaxActive 5
+			SpawnCount 5
+			WaitBeforeStarting 6
+			WaitBetweenSpawns 3
+			TotalCurrency 250
+		
+			TFBot
+			{
+				Template T_TFBot_Giant_DemoMan_PrinceTavish
+				Attributes AlwaysCrit
+				Item "Spine-Chilling Skull"
+				Tag "path_required"
+			}
+		}
+		
+	//STAGE 2-2: Currency 300
+
+		WaveSpawn //SECTION 2-2A: [GIANT] Soldier (slow crit + uber medic)
+		{
+			Name "group02"
+			Where spawnbot_A
+			Where spawnbot_B
+			TotalCount 25
+			MaxActive 25
+			SpawnCount 5
+			WaitForAllDead "group01"
+			WaitBeforeStarting 5
+			WaitBetweenSpawns 0
+			TotalCurrency 400		
+		
+			Squad
+			{
+				TFBot
+				{
+					Template T_TFBot_Giant_Soldier_Crit
+					Item "Idiot box"
+					Item "Shoestring Budget"
+					Tag "path_required"
+				}
+				TFBot
+				{
+					Template T_TFBot_Medic_QuickUber
+					Item "The Warsworn Helmet"
+					Tag "path_required"
+				}
+			}
+		}
+		
+	//STAGE 2-3: Currency 1000 
+
+		WaveSpawn //SECTION 2-3A: Soldier 
+		{
+			Name "group03"
+			Where spawnbot_A
+			Where spawnbot_B
+			TotalCount 45
+			MaxActive 15
+			SpawnCount 5
+			WaitForAllDead "group02"
+			WaitBeforeStarting 5
+			WaitBetweenSpawns 2
+			TotalCurrency 250		
+		
+			TFBot
+			{
+				Class Soldier
+				Skill Easy
+				Item "Defiant Spartan"
+				Tag "path_required"
+			}
+		}
+		WaveSpawn //SECTION 2-3B: Heavyweapons 
+		{
+			Name "group03"
+			Where spawnbot_A
+			Where spawnbot_B
+			TotalCount 54
+			MaxActive 12
+			SpawnCount 6
+			WaitForAllDead "group02"
+			WaitBeforeStarting 5
+			WaitBetweenSpawns 2
+			TotalCurrency 200		
+		
+			TFBot
+			{
+				Class Heavyweapons
+				Skill Easy
+				Item "The Crone's Dome"
+				Tag "path_required"
+			}
+		}
+		WaveSpawn //SECTION 2-3C: [GIANT] Soldier 
+		{
+			Name "group03"
+			Where spawnbot_giant_A
+			Where spawnbot_giant_B
+			TotalCount 8
+			MaxActive 2
+			SpawnCount 2
+			WaitForAllDead "group02"
+			WaitBeforeStarting 8
+			WaitBetweenSpawns 5
+			TotalCurrency 250		
+		
+			TFBot
+			{
+				Template T_TFBot_Giant_Soldier_Spammer
+				Item "Idiot box"
+				Item "Shoestring Budget"
+				Tag "path_required"
+			}
+		}
+		WaveSpawn //SECTION 2-3D: [GIANT] Heavyweapons 
+		{
+			Name "group03"
+			Where spawnbot_giant_A
+			Where spawnbot_giant_B
+			TotalCount 6
+			MaxActive 2
+			SpawnCount 2
+			WaitForAllDead "group02"
+			WaitBeforeStarting 8
+			WaitBetweenSpawns 15
+			TotalCurrency 300		
+		
+			TFBot
+			{
+				Template T_TFBot_Giant_Heavyweapons
+				Item "The Crone's Dome"
+				Tag "path_required"
+			}
+		}
+	//STAGE 2-4: Currency 1000
+
+		WaveSpawn //SECTION 2-4A: Scout
+		{
+			Name "group04"
+			Where spawnbot_A
+			Where spawnbot_B
+			TotalCount 91
+			MaxActive 14
+			SpawnCount 7
+			WaitForAllDead "group03"
+			WaitBeforeStarting 10
+			WaitBetweenSpawns 15
+			TotalCurrency 150		
+		
+			TFBot
+			{
+				Class Scout
+				Skill Easy
+				Attributes AlwaysCrit
+				Item "Point and Shoot"
+				
+			}
+		}
+		WaveSpawn //SECTION 2-4B: [3 TANKS]  
+		{
+			Name "group04"
+			TotalCount 3
+			WaitForAllDead "group03"
+			WaitBeforeStarting 0
+			WaitBetweenSpawns 60
+			TotalCurrency 1200
+			
+			FirstSpawnOutput                                                                                                                                                            
+			{
+				 Target boss_spawn_relay                                            
+				 Action Trigger                         
+			}
+
+			Tank
+			{
+				Health 30000
+				Speed 75
+				Name "tankboss"
+				StartingPathTrackNode "boss_path_1"
+
+				OnKilledOutput                                  
+				{
+					Target boss_dead_relay
+					Action Trigger                         
+				}
+				
+				OnBombDroppedOutput                             
+				{
+					Target boss_deploy_relay 
+					Action Trigger                         
+				}
+			}
+		}
+	//STAGE 2-5: Currency 1000 
+
+		WaveSpawn //SECTION 2-5A: [GIANT] Demoman
+		{
+			Name "group05"
+			Where spawnbot_giant_A
+			Where spawnbot_giant_B
+			TotalCount 36
+			MaxActive 12
+			SpawnCount 6
+			WaitForAllDead "group04"
+			WaitBeforeStarting 10
+			WaitBetweenSpawns 10
+			TotalCurrency 350		
+			TFBot
+			{
+				Template T_TFBot_Giant_Demo_RapidFire
+				Item "Spine-Chilling Skull"
+				Tag "path_required"
+			}
+		}
+		WaveSpawn //SECTION 2-5B: Demoman (Eyelander + Charge N Targe)
+		{
+			Name "group05"
+			Where spawnbot_A
+			Where spawnbot_B
+			TotalCount 45
+			MaxActive 10
+			SpawnCount 5
+			WaitForAllDead "group04"
+			WaitBeforeStarting 25
+			WaitBetweenSpawns 0
+			TotalCurrency 250		
+			
+			TFBot
+			{
+				Template T_TFBot_Demoman_Knight
+				Attributes AlwaysCrit
+				Item "Spine-Chilling Skull"
+				Tag "path_required"
+			}
+		}
+		WaveSpawn //SECTION 2-5C: [TANK]  
+		{
+			Name "group05"
+			TotalCount 1
+			WaitForAllDead "group04"
+			WaitBeforeStarting 60
+			WaitBetweenSpawns 0
+			TotalCurrency 600
+			
+			FirstSpawnOutput                                                                                                                                                            
+			{
+				 Target boss_spawn_relay                                            
+				 Action Trigger                         
+			}
+
+			Tank
+			{
+				Health 35000
+				Speed 75
+				Name "tankboss"
+				StartingPathTrackNode "boss_path_1"
+
+				OnKilledOutput                                  
+				{
+					Target boss_dead_relay
+					Action Trigger                         
+				}
+				
+				OnBombDroppedOutput                             
+				{
+					Target boss_deploy_relay 
+					Action Trigger                         
+				}
+			}
+		}
+		
+	//STAGE 2-6: Currency 700 
+
+		WaveSpawn //SECTION 2-6A: Soldier (Direct hit, buff banner)
+		{
+			Name "group06A"
+			Where spawnbot_A
+			Where spawnbot_B
+			TotalCount 60
+			MaxActive 24
+			SpawnCount 12
+			WaitForAllDead "group05"
+			WaitBeforeStarting 15
+			WaitBetweenSpawns 2
+			TotalCurrency 300		
+		
+			TFBot
+			{
+				Class Soldier
+				Skill Expert
+				WeaponRestrictions PrimaryOnly
+				Item "The Direct Hit"
+				Item "The Buff Banner"
+				Item "Defiant Spartan"
+				Attributes SpawnWithFullCharge
+				Tag "path_required"
+				ItemAttributes
+				{
+					ItemName "The Direct Hit"
+					"damage bonus"	2.0 
+				}
+				CharacterAttributes 
+				{
+					"increase buff duration"	9.0					
+				}
+			}
+		}
+		WaveSpawn //SECTION 2-6B: [GIANT] Heavyweapons (Always Crit + Giant medic)
+		{
+			Name "group06b"
+			Where spawnbot_giant_A
+			Where spawnbot_giant_B
+			TotalCount 9
+			MaxActive 6
+			SpawnCount 3
+			WaitForAllSpawned "group06A"
+			WaitBeforeStarting 0
+			WaitBetweenSpawns 10
+			TotalCurrency 250		
+		
+			Squad
+			{
+				TFBot
+				{
+					Template T_TFBot_Giant_Heavyweapons_Deflector
+					Attributes AlwaysCrit
+					Item "The Crone's Dome"
+					Tag "path_required"
+				}
+				TFBot
+				{
+					Template T_TFBot_Giant_Medic
+					Item "The Warsworn Helmet"
+					Tag "path_required"
+				}
+			}
+		}
+	//STAGE 2-7: Currency 1300
+
+		WaveSpawn //SECTION 2-7A: [4 TANKS]  
+		{
+			Name "group07"
+			TotalCount 4
+			WaitForAllDead "group06b"
+			WaitBeforeStarting 10
+			WaitBetweenSpawns 30
+			TotalCurrency 1600
+			
+			FirstSpawnOutput                                                                                                                                                            
+			{
+				 Target boss_spawn_relay                                            
+				 Action Trigger                         
+			}
+
+			Tank
+			{
+				Health 35000
+				Speed 75
+				Name "tankboss"
+				StartingPathTrackNode "boss_path_1"
+
+				OnKilledOutput                                  
+				{
+					Target boss_dead_relay
+					Action Trigger                         
+				}
+				
+				OnBombDroppedOutput                             
+				{
+					Target boss_deploy_relay 
+					Action Trigger                         
+				}
+			}
+		}
+		WaveSpawn //SECTION 2-7B: Bowman Snipers
+		{
+			Name "group07"
+			Where spawnbot_A
+			Where spawnbot_B
+			TotalCount 72
+			MaxActive 16
+			SpawnCount 8
+			WaitForAllDead "group06b"
+			WaitBeforeStarting 10
+			WaitBetweenSpawns 10
+			TotalCurrency 200		
+		
+				TFBot
+				{
+					Template	T_TFBot_Sniper_Huntsman
+					Item	"the fortified compound"
+					Item	"that '70s chapeau"
+					Skill	Expert
+					
+				}
+		}
+		
+	//STAGE 08 //Currency 1400 ///////////////////////////////////////////////////////////////////////////////////////////////////////
+
+		WaveSpawn //SECTION 2-8A: 75 total, 20 active, Sniper (Huntsman)
+		{
+			Name "group08a"
+			Where spawnbot_A
+			Where spawnbot_B
+			TotalCount 60
+			MaxActive 20
+			SpawnCount 5
+			WaitForAllDead "group07"
+			WaitBeforeStarting 10
+			WaitBetweenSpawns 0
+			TotalCurrency 200		
+		
+			TFBot
+			{
+				Template T_TFBot_Sniper_Huntsman
+				Skill Expert
+				Item "Larrikin Robin"
+				Attributes AlwaysCrit
+				
+				ItemAttributes
+				{
+					ItemName "The Huntsman"
+					"damage bonus"	1.5
+					"faster reload rate" 0.2
+				}
+			}
+		}
+		WaveSpawn //SECTION 2-8A: Soldier (Always Crit)
+		{
+			Name "group08a"
+			Where spawnbot_A
+			Where spawnbot_B
+			TotalCount 60
+			MaxActive 20
+			SpawnCount 5
+			WaitForAllSpawned "group07"
+			WaitBeforeStarting 10
+			WaitBetweenSpawns 1
+			TotalCurrency 250		
+		
+			TFBot
+			{
+				Class Soldier
+				Skill Expert
+				Attributes AlwaysCrit
+				Item "Defiant Spartan"
+				Tag "path_required"
+				ItemAttributes
+				{
+					ItemName "TF_WEAPON_ROCKETLAUNCHER"
+					"damage bonus"	2.0
+					"faster reload rate" -0.8
+					"fire rate bonus" 0.6
+				}
+			}
+		}
+		WaveSpawn //SECTION 2-8B: Demoman (Always Crit)
+		{
+			Name "group08b"
+			Where spawnbot_A
+			Where spawnbot_B
+			TotalCount 60
+			MaxActive 20
+			SpawnCount 5
+			WaitForAllSpawned "group08a"
+			WaitBeforeStarting 5
+			WaitBetweenSpawns 1
+			TotalCurrency 250		
+		
+			TFBot
+			{
+				Class Demoman
+				Skill Expert
+				Attributes AlwaysCrit
+				Item "Spine-Chilling Skull"
+				Tag "path_required"
+				ItemAttributes
+				{
+					ItemName "TF_WEAPON_GRENADELAUNCHER"
+					"damage bonus"	2.0
+					"faster reload rate" -0.8
+					"Projectile speed increased" 2.0
+				}
+			}
+		}
+		WaveSpawn //SECTION 2-8B: Pyro (Always Crit)
+		{
+			Name "group08b"
+			Where spawnbot_A
+			Where spawnbot_B
+			TotalCount 60
+			MaxActive 20
+			SpawnCount 5
+			WaitForAllSpawned "group08a"
+			WaitBeforeStarting 10
+			WaitBetweenSpawns 1
+			TotalCurrency 200		
+		
+			TFBot
+			{
+				Class Pyro
+				Skill Expert
+				Attributes AlwaysCrit
+				
+				Item "Old Guadalajara"
+				ItemAttributes
+				{
+					ItemName "TF_WEAPON_FLAMETHROWER"
+					"damage bonus"	2.0
+				}
+				CharacterAttributes
+				{
+					
+					"move speed bonus"	1.5
+				}
+			}
+		}
+		WaveSpawn //SECTION 2-8C: Scout (Always Crit)
+		{
+			Name "group08c"
+			Where spawnbot_A
+			Where spawnbot_B
+			TotalCount 60
+			MaxActive 20
+			SpawnCount 5
+			WaitForAllSpawned "group08b"
+			WaitBeforeStarting 5
+			WaitBetweenSpawns 1
+			TotalCurrency 150		
+		
+			TFBot
+			{
+				Class Scout
+				Skill Expert
+				Attributes AlwaysCrit
+				Item "Point and Shoot"
+				
+			}
+		}
+		WaveSpawn //SECTION 2-8D: Heavyweapons (Always Crit + Uber medic)
+		{
+			Name "group08d"
+			Where spawnbot_A
+			Where spawnbot_B
+			TotalCount 52
+			MaxActive 22
+			SpawnCount 4
+			WaitForAllSpawned "group08c"
+			WaitBeforeStarting 5
+			WaitBetweenSpawns 1
+			TotalCurrency 200		
+		
+			Squad
+			{
+				TFBot
+				{
+					Class Heavyweapons
+					Skill Expert
+					Attributes AlwaysCrit
+					Tag "path_required"
+					Item "The Crone's Dome"
+					ItemAttributes
+					{
+						ItemName "TF_WEAPON_MINIGUN"
+						"damage bonus"	1.75
+					}
+				}
+				TFBot
+				{
+					Template T_TFBot_Medic_QuickUber
+					Item "The Warsworn Helmet"
+					Tag "path_required"
+				}
+			}
+		}
+		WaveSpawn //SECTION 2-8E: [FINAL TANK]  
+		{
+			Name "group08e"
+			TotalCount 1
+			WaitForAllDead "group08b"
+			WaitBeforeStarting 30
+			WaitBetweenSpawns 0
+			TotalCurrency 900
+			
+			FirstSpawnOutput                                                                                                                                                            
+			{
+				 Target boss_spawn_relay                                            
+				 Action Trigger                         
+			}
+
+			Tank
+			{
+				Health 45000
+				Speed 70
+				Name "tankboss"
+				Skin 1
+				StartingPathTrackNode "boss_path_1"
+
+				OnKilledOutput                                  
+				{
+					Target boss_dead_relay
+					Action Trigger                         
+				}
+				
+				OnBombDroppedOutput                             
+				{
+					Target boss_deploy_relay 
+					Action Trigger                         
+				}
+			}
+		}
+	}	
+	
+//WAVE 3 - Soulkiller - Total Currency 
+
+	Wave
+	{
+		StartWaveOutput
+		{
+			Target wave_start_relay
+			Action Trigger
+		}
+		DoneOutput					
+		{
+			Target wave_finished_relay
+			Action trigger
+		}
+		WaitWhenDone 300
+		Checkpoint Yes
+		
+	//STAGE 3-1: Currency ---
+	
+	
+		WaveSpawn //SECTION 3-1A: [GIANT] (Fast scout + 3 fast small scouts)
+		{
+			Name "group3-1"
+			TotalCurrency	250
+			TotalCount	32
+			MaxActive	8
+			SpawnCount	4
+			WaitBeforeStarting	0
+			WaitBetweenSpawns	10
+			Where	spawnbot_giant_A
+			Where	spawnbot_giant_B
+			Squad
+			{
+				TFBot
+				{
+					Template	T_TFBot_Giant_Scout_Fast
+					Tag "path_required"
+					Scale 2.0
+					Health 1500
+				}
+				TFBot
+				{
+					Template	T_TFBot_Scout_FAN
+					Tag "path_required"
+					Scale 1.2
+					Health 300
+					CharacterAttributes
+					{
+						"move speed bonus"	2
+						"airblast vulnerability multiplier"	0.7
+						"override footstep sound set"	3
+					}
+				}
+				TFBot
+				{
+					Template	T_TFBot_Scout_FAN
+					Tag "path_required"
+					Scale 1.2
+					Health 300
+					CharacterAttributes
+					{
+						"move speed bonus"	2
+						"airblast vulnerability multiplier"	0.7
+						"override footstep sound set"	3
+					}
+				}
+				TFBot
+				{Tag "path_required"
+					Template	T_TFBot_Scout_FAN
+					Tag "path_required"
+					Scale 1.2
+					Health 300
+					CharacterAttributes
+					{
+						"move speed bonus"	2
+						"airblast vulnerability multiplier"	0.7
+						"override footstep sound set"	3
+					}
+				}
+			}
+		}
+		
+		WaveSpawn //SECTION 3-1B: [GIANT] (extra burst soldier + medic)
+		{
+			Name "group3-1"
+			TotalCurrency	200
+			TotalCount	10
+			MaxActive	4
+			SpawnCount	2
+			WaitBeforeStarting	5
+			WaitBetweenSpawns	60
+			Where	spawnbot_giant_A
+			Where	spawnbot_giant_B
+			Squad
+			{
+				TFBot
+				{
+					Health	6000
+					Tag "path_required"
+					Scale 2.2
+					Template	T_TFBot_Soldier_BurstFire
+					Attributes	"UseBossHealthBar"
+					ItemAttributes
+					{
+						ItemName	tf_weapon_rocketlauncher
+						//"faster reload rate"	
+						"fire rate bonus"	0.1
+						"clip size upgrade atomic"	12.0
+					}
+					Item	"glitched circuit board"
+					Item	"the chief constable"
+				}
+				TFBot
+				{
+					WeaponRestrictions	PrimaryOnly
+					Tag "path_required"
+					Template	T_TFBot_Giant_Medic_Regen
+					Scale 2.0
+					Attributes	"SpawnWithFullCharge"
+					Item	"mecha-medes"
+					Item	"the virus doctor"
+				}
+			}
+		}
+		
+		WaveSpawn //SECTION 3-1C: rapid fire soldiers, slower rockets
+		{
+			Name "group3-1"
+			TotalCurrency	300
+			TotalCount	78
+			MaxActive	12
+			SpawnCount	6
+			WaitBeforeStarting	5
+			WaitBetweenSpawns	5
+			Where	spawnbot_A
+			Where	spawnbot_B
+			TFBot
+			{
+				Class	soldier
+				Tag "path_required"
+				Health	200
+				Name	Soldier
+				Class	Soldier
+				Skill	Easy
+				WeaponRestrictions	PrimaryOnly
+				Attributes	"AlwaysCrit"
+				CharacterAttributes
+				{
+					"damage bonus"	2.5
+					"fire rate bonus"	-2.0
+					"Projectile speed decreased"	0.2
+				}
+				Item	"gold botkiller rocket launcher mk.ii"
+				Item	"hellhunter's headpiece"
+				Item	"the soldier's stogie"
+			}
+
+		}
+		
+	//STAGE 3-2: Currency ---
+	
+		WaveSpawn //SECTION 3-2A: (Atom Bomb Demo Boss + 3 support)
+		{
+			Name "group3-2"
+			TotalCurrency	500
+			TotalCount	4
+			MaxActive	4
+			SpawnCount	4
+			WaitBeforeStarting	0
+			WaitBetweenSpawns	0
+			WaitForAllDead "group3-1"
+			Where	spawnbot_giant_A
+			Where	spawnbot_giant_B
+			
+			Squad
+			{
+				TFBot
+				{
+					Scale	2.65
+					Template	T_TFBot_Chief_Demo_Atomic
+					Tag "path_required"
+					ItemAttributes
+					{
+						ItemName	"the loose cannon"
+						"blast radius increased"	3.0
+					}
+				}
+				TFBot
+				{
+					Health	5000
+					Tag "path_required"
+					Name	"Sir Nukesalot Jr"
+					Scale	1.9
+					Class	Demoman
+					Skill	Expert
+					WeaponRestrictions	PrimaryOnly
+					Attributes	"HoldFireUntilFullReload"
+					Attributes	"AlwaysCrit"
+					ItemAttributes
+					{
+						ItemName	"the loose cannon"
+						"grenade launcher mortar mode"	0
+						"faster reload rate"	1.8
+						"fire rate bonus"	2
+						"clip size penalty"	0.5
+						"Projectile speed increased"	1.0
+						"projectile spread angle penalty"	2
+						"damage bonus"	3
+						"damage causes airblast"	1
+						"blast radius increased"	1.1
+						"use large smoke explosion"	0
+					}
+					CharacterAttributes
+					{
+						"move speed bonus"	0.35
+						"damage force reduction"	0.4
+						"airblast vulnerability multiplier"	0.4
+						"override footstep sound set"	4
+					}
+					Item	"the loose cannon"
+				}
+				TFBot
+				{
+					Health	5000
+					Name	"Sir Nukesalot Jr"
+					Tag "path_required"
+					Scale	1.9
+					Class	Demoman
+					Skill	Expert
+					WeaponRestrictions	PrimaryOnly
+					Attributes	"HoldFireUntilFullReload"
+					Attributes	"AlwaysCrit"
+					ItemAttributes
+					{
+						ItemName	"the loose cannon"
+						"grenade launcher mortar mode"	0
+						"faster reload rate"	1.8
+						"fire rate bonus"	2
+						"clip size penalty"	0.5
+						"Projectile speed increased"	1.0
+						"projectile spread angle penalty"	2
+						"damage bonus"	3
+						"damage causes airblast"	1
+						"blast radius increased"	1.1
+						"use large smoke explosion"	0
+					}
+					CharacterAttributes
+					{
+						"move speed bonus"	0.35
+						"damage force reduction"	0.4
+						"airblast vulnerability multiplier"	0.4
+						"override footstep sound set"	4
+					}
+					Item	"the loose cannon"
+				}
+				TFBot
+				{
+					Health	5000
+					Name	"Sir Nukesalot Jr"
+					Tag "path_required"
+					Scale	1.9
+					Class	Demoman
+					Skill	Expert
+					WeaponRestrictions	PrimaryOnly
+					Attributes	"HoldFireUntilFullReload"
+					Attributes	"AlwaysCrit"
+					ItemAttributes
+					{
+						ItemName	"the loose cannon"
+						"grenade launcher mortar mode"	0
+						"faster reload rate"	1.8
+						"fire rate bonus"	2
+						"clip size penalty"	0.5
+						"Projectile speed increased"	1.0
+						"projectile spread angle penalty"	2
+						"damage bonus"	3
+						"damage causes airblast"	1
+						"blast radius increased"	1.1
+						"use large smoke explosion"	0
+					}
+					CharacterAttributes
+					{
+						"move speed bonus"	0.35
+						"damage force reduction"	0.4
+						"airblast vulnerability multiplier"	0.4
+						"override footstep sound set"	4
+					}
+					Item	"the loose cannon"
+				}
+			}
+		}
+		
+		WaveSpawn //SECTION 3-2B: Random Scouts
+		{
+			Name "group3-2"
+			TotalCurrency	300
+			TotalCount	90
+			MaxActive	18
+			SpawnCount	6
+			WaitBeforeStarting	5
+			WaitBetweenSpawns	5
+			WaitForAllDead "group3-1"
+			Where	spawnbot_A
+			Where	spawnbot_B
+			
+			RandomChoice
+			{
+				TFBot
+				{
+					Template	T_TFBot_Scout_Bonk
+					Attributes	"AlwaysCrit"
+					CharacterAttributes
+					{
+						"melee attack rate bonus"	1.0
+					}
+					Item	"batsaber"
+					Item	"the bolt boy"
+				}
+				TFBot
+				{
+					Template	T_TFBot_Scout_Wrap_Assassin
+					Attributes	"AlwaysCrit"
+					CharacterAttributes
+					{
+						"melee attack rate bonus"	1.0
+					}
+					Item	"the cross-comm express"
+				}
+				TFBot
+				{
+					WeaponRestrictions	PrimaryOnly
+					Template	T_TFBot_Scout_Scattergun_SlowFire
+					Attributes	"AlwaysCrit"
+					ItemAttributes
+					{
+						ItemName	"baby face's blaster"
+						"fire rate bonus"	-0.25
+					}
+					CharacterAttributes
+					{
+						"faster reload rate"	1.0
+					}
+					Item	"baby face's blaster"
+					Item	"the virtual viewfinder"
+				}
+			}
+		}
+	
+		WaveSpawn //SECTION 3-2C:
+		{
+			Name "group3-2"
+			TotalCurrency	400
+			TotalCount	64
+			MaxActive	12
+			SpawnCount	4
+			WaitBeforeStarting	10
+			WaitBetweenSpawns	5
+			Where	spawnbot_giant_A
+			Where	spawnbot_giant_B
+			WaitForAllDead "group3-1"
+			Squad
+			{
+				TFBot
+				{
+					Template	T_TFBot_Giant_DemoMan_PrinceTavish
+					Item	"the warsworn helmet"
+					Tag "path_required"
+					CharacterAttributes
+					{
+					"move speed bonus"	0.75
+					}
+				}
+				TFBot
+				{
+					Template	T_TFBot_Medic_QuickUber
+					Tag "path_required"
+					CharacterAttributes
+					{
+					"move speed bonus"	0.75
+					}
+				}
+				TFBot
+				{
+					Template	T_TFBot_Medic_QuickUber
+					Tag "path_required"
+					CharacterAttributes
+					{
+					"move speed bonus"	0.75
+					}
+				}
+				TFBot
+				{
+					Template	T_TFBot_Medic_QuickFix
+					Tag "path_required"
+					CharacterAttributes
+					{
+					"move speed bonus"	0.75
+					}
+				}
+			}
+		}
+		
+	//STAGE 3-3: Currency ---
+	
+		WaveSpawn //SECTION 3-3A: [2 TANKS]  
+		{
+			Name "group3-3"
+			TotalCount 2
+			WaitForAllDead "group3-2"
+			WaitBeforeStarting 0
+			WaitBetweenSpawns 210
+			TotalCurrency 1200
+			WaitForAllDead "group3-2"
+			
+			FirstSpawnOutput                                                                                                                                                            
+			{
+				 Target boss_spawn_relay                                            
+				 Action Trigger                         
+			}
+
+			Tank
+			{
+				Health 50000
+				Speed 75
+				Name "tankboss"
+				Skin 1
+				StartingPathTrackNode "boss_path_1"
+
+				OnKilledOutput                                  
+				{
+					Target boss_dead_relay
+					Action Trigger                         
+				}
+				
+				OnBombDroppedOutput                             
+				{
+					Target boss_deploy_relay 
+					Action Trigger                         
+				}
+			}
+		}
+		
+		WaveSpawn //SECTION 3-3B: (Blackbox Shotgun Soldiers)
+		{
+			Name "group3-3"
+			TotalCurrency	300
+			TotalCount	45
+			MaxActive	15
+			SpawnCount	5
+			WaitBeforeStarting	3
+			WaitBetweenSpawns	25
+			Where	spawnbot_giant_A
+			Where	spawnbot_giant_B
+			WaitForAllDead "group3-2"
+			Squad
+			{
+				TFBot
+				{
+					Health	5000
+					Scale	2.0
+					Template	T_TFBot_Giant_Soldier_RocketShotgun
+					Tag	"path_required"
+					Attributes	"AlwaysCrit"
+					CharacterAttributes
+					{
+						"Projectile speed increased"	1.9
+					}
+					ItemAttributes
+					{
+						ItemName	"the black box"
+						"faster reload rate"	0.8
+						"heal on hit for rapidfire"	50
+					}
+					Item	"the law"
+				}
+			}
+		}
+
+		WaveSpawn //SECTION 3-C: (Fast Scorchshot Pyros)
+		{
+			Name "group3-3"
+			TotalCurrency	200
+			TotalCount	72
+			MaxActive	12
+			SpawnCount	6
+			WaitBeforeStarting	5
+			WaitBetweenSpawns	5
+			Where	spawnbot_A
+			Where	spawnbot_B
+			WaitForAllDead "group3-2"
+
+			TFBot
+			{
+				Health	225
+				Scale	1.15
+				Template	T_TFBot_ScorchShot_FastShot
+				ItemAttributes
+				{
+					ItemName	"the scorch shot"
+					"faster reload rate"	0.8
+					"damage bonus"	1.0
+					"Projectile speed increased"	1.1
+				}
+				CharacterAttributes
+				{
+					"move speed bonus"	2.0
+				}
+				Item	"the macabre mask"
+			}
+		}
+		
+	//STAGE 3-4: Currency ---
+	
+		WaveSpawn //SECTION 3-4A: [GIANT] Major Crits +
+		{
+			Name "group3-4"
+			TotalCurrency	450
+			TotalCount	1
+			MaxActive	1
+			SpawnCount	1
+			WaitBeforeStarting	0
+			WaitBetweenSpawns	0
+			WaitForAllDead "group3-3"
+			Where	spawnbot_giant_A
+			Where	spawnbot_giant_B
+
+				TFBot
+				{
+					Health	50000
+					Scale	2.6
+					Template	T_TFBot_Chief_Soldier_SlowCrit
+					Tag	"path_required"
+					ItemAttributes
+					{
+						ItemName	tf_weapon_rocketlauncher
+						"damage bonus"	1.3
+						"Projectile speed increased"	1.25
+						"faster reload rate"	0.25
+					}
+					CharacterAttributes
+					{
+						"health regen"	0
+					}
+				}
+
+		}
+	
+		WaveSpawn //SECTION 3-4B: [GIANT] Deflector Heavy + Heal
+		{
+			Name "group3-4"
+			TotalCurrency	450
+			TotalCount	1
+			MaxActive	1
+			SpawnCount	1
+			WaitBeforeStarting	210
+			WaitBetweenSpawns	0
+			WaitForAllDead "group3-3"
+			Where	spawnbot_giant_A
+			Where	spawnbot_giant_B
+
+				TFBot
+				{
+					Health	50000
+					Scale	2.6
+					Template	T_TFBot_Chief_Heavyweapons_HealOnKill
+					Attributes	"AlwaysCrit"
+					Tag	"path_required"
+					ItemAttributes
+					{
+						ItemName	deflector
+						"damage bonus"	1.65
+						"heal on kill"	5000
+					}
+					CharacterAttributes
+					{
+						"move speed bonus"	0.5
+					}
+				}
+
+		}
+
+		WaveSpawn //SECTION 3-4C: [GIANT] (Shotgun Heavy + Medic)
+		{
+			Name "group3-4"
+			TotalCurrency	300
+			TotalCount	24
+			MaxActive	8
+			SpawnCount	2
+			WaitBeforeStarting	30
+			WaitBetweenSpawns	10
+			WaitForAllDead "group3-3"
+			Where	spawnbot_giant_A
+			Where	spawnbot_giant_B
+			Squad
+			{
+				TFBot
+				{
+					Template	T_TFBot_Giant_Heavyweapons_Shotgun
+					Attributes	"AlwaysCrit"
+					Tag	"path_required"
+					ItemAttributes
+					{
+						ItemName	tf_weapon_shotgun_hwg
+						"bullets per shot bonus"	12
+					}
+					CharacterAttributes
+					{
+						"move speed bonus"	0.65
+					}
+					Item	"the bunsen brave"
+				}
+				TFBot
+				{
+					Template	T_TFBot_Giant_Medic
+					Tag	"path_required"
+					Health 3000
+					Item	"the alternative medicine mann"
+					CharacterAttributes
+					{
+						"move speed bonus"	0.65
+					}
+				}
+			}
+		}
+		
+		WaveSpawn //SECTION 3-4D: Random Pyros
+		{
+			Name "group3-4"
+			TotalCurrency	300
+			TotalCount	72
+			MaxActive	16
+			SpawnCount	8
+			WaitBeforeStarting	10
+			WaitBetweenSpawns	3
+			Where	spawnbot_A
+			Where	spawnbot_B
+			WaitForAllDead "group3-3"
+			RandomChoice
+			{
+				TFBot
+				{
+					Health	200
+					Template	T_TFBot_Pyro
+					Attributes	"AlwaysCrit"
+					ItemAttributes
+					{
+						ItemName	"the degreaser"
+						"damage bonus"	1.0
+					}
+					CharacterAttributes
+					{
+						"move speed bonus"	1.5
+					}
+					Item	"the degreaser"
+					Item	"the triclops"
+				}
+				TFBot
+				{
+					Health	200
+					Template	T_TFBot_Pyro_Flaregun
+					ItemAttributes
+					{
+						ItemName	"the flare gun"
+						"Projectile speed increased"	0.6
+						"faster reload rate"	0.8
+						"damage bonus"	1.0
+					}
+					CharacterAttributes
+					{
+						"move speed bonus"	1.5
+					}
+					Item	"phobos filter"
+				}
+			}
+		}
+		
+	//STAGE 3-5: Currency ---
+		
+		WaveSpawn //SECTION 3-5A: Sandman Scouts Fast
+		{
+			Name "group3-5a"
+			TotalCurrency	200
+			TotalCount	16
+			MaxActive	16
+			SpawnCount	16
+			WaitBeforeStarting	0
+			WaitBetweenSpawns	0
+			WaitForAllDead "group3-4"
+			Where	spawnbot_A
+			Where	spawnbot_B
+
+			TFBot
+			{
+				Template	T_TFBot_Scout_Sandman_FastCharge
+				Attributes	"AlwaysCrit"
+				ItemAttributes
+				{
+					ItemName	"the sandman"
+					"melee attack rate bonus"	1.0
+					"Projectile speed increased" 1.2
+				}
+				CharacterAttributes
+				{
+					"move speed bonus"	2.0
+				}
+			}
+		}
+		
+		WaveSpawn //SECTION 3-5B: [GIANT] Fast Sandman Scout
+		{
+			Name "group3-5a"
+			TotalCurrency	150
+			TotalCount	1
+			MaxActive	1
+			SpawnCount	1
+			WaitBeforeStarting	10
+			WaitBetweenSpawns	10
+			WaitForAllDead "group3-4"
+			Where	spawnbot_giant_A
+			Where	spawnbot_giant_B
+
+			TFBot
+			{
+				Scale 2.3
+				Template	T_TFBot_Giant_Major_League
+			}
+		}
+		
+		WaveSpawn //SECTION 3-5C: [GIANT] Mixed Demolition Squad
+		{
+			Name "group3-5b"
+			TotalCurrency	500
+			TotalCount	60
+			MaxActive	15
+			SpawnCount	5
+			WaitBeforeStarting	0
+			WaitBetweenSpawns	5
+			Where	spawnbot_giant_A
+			Where	spawnbot_giant_B
+			WaitForAllDead "group3-4"
+			Squad
+			{
+				TFBot
+				{
+					Health	3500
+					Template	T_TFBot_Giant_Demo_RapidFire
+					Attributes	"AlwaysCrit"
+					ItemAttributes
+					{
+						ItemName	tf_weapon_grenadelauncher
+						"Projectile speed increased"	3.0
+						"faster reload rate"	0.8
+						"damage bonus"	1.5
+						"Blast radius increased"	1.0
+					}
+					CharacterAttributes
+					{
+						"move speed bonus"	0.6
+					}
+					Item	"the tavish degroot experience"
+				}
+				TFBot
+				{
+					Health	3500
+					Template	T_TFBot_Giant_Demo_RapidFire
+					Attributes	"AlwaysCrit"
+					ItemAttributes
+					{
+						ItemName	tf_weapon_grenadelauncher
+						"Projectile speed increased"	3.0
+						"faster reload rate"	0.8
+						"damage bonus"	1.5
+						"Blast radius increased"	1.0
+					}
+					CharacterAttributes
+					{
+						"move speed bonus"	0.6
+					}
+					Item	"the tavish degroot experience"
+				}
+				TFBot
+				{
+					Health	4000
+					Template	T_TFBot_Giant_Soldier_Extended_Buff_Banner
+					Attributes	"AlwaysCrit"
+					ItemAttributes
+					{
+						ItemName	tf_weapon_rocketlauncher
+						"faster reload rate"	0.4
+						"Projectile speed increased"	0.5
+						"damage bonus"	1.0
+					}
+					CharacterAttributes
+					{
+						"move speed bonus"	0.6
+					}
+					Item	"the cotton head"
+				}
+				TFBot
+				{
+					Health	4000
+					Template	T_TFBot_Giant_Soldier_Extended_Concheror
+					Attributes	"AlwaysCrit"
+					ItemAttributes
+					{
+						ItemName	"the liberty launcher"
+						"faster reload rate"	0.4
+						"Projectile speed increased"	0.5
+						"damage bonus"	1.0
+					}
+					CharacterAttributes
+					{
+						"move speed bonus"	0.6
+					}
+					Item	"the liberty launcher"
+					Item	"the chief constable"
+					Item	"the soldier's stogie"
+				}
+				TFBot
+				{
+					Template	T_TFBot_Giant_Medic_Regen
+					CharacterAttributes
+					{
+						"move speed bonus"	0.6
+					}
+					Item	"berlin brain bowl"
+				}
+			}
+		}
+
+		WaveSpawn
+		{
+			Name "group3-5b"
+			TotalCurrency	500
+			TotalCount	24
+			MaxActive	6
+			SpawnCount	3
+			WaitBeforeStarting	3
+			WaitBetweenSpawns	12
+			Where	spawnbot_A
+			Where	spawnbot_B
+			WaitForAllDead "group3-4"
+			Squad
+			{
+				TFBot
+				{
+					Health	10000
+					Scale	1.8
+					Template	T_TFBot_Giant_Metalbeard
+					Attributes	"AlwaysCrit"
+					ItemAttributes
+					{
+						ItemName	"the iron bomber"
+						"fire rate bonus"	0.15
+						"faster reload rate"	0.1
+						"damage bonus"	1.5
+						"Blast radius increased"	1.25
+					}
+					CharacterAttributes
+					{
+						"move speed bonus"	0.5
+						"override footstep sound set"	3
+						"health regen"	10
+					}
+					Item	"the iron bomber"
+				}
+				TFBot
+				{
+					Health	6000
+					Scale	1.4
+					Template	T_TFBot_Giant_Heavyweapons
+					Attributes	"AlwaysCrit"
+					ItemAttributes
+					{
+						ItemName	"iron curtain"
+						"minigun spinup time decreased"	0.5
+						"bullets per shot bonus"	3
+						"damage bonus"	0.4
+					}
+					CharacterAttributes
+					{
+						"move speed bonus"	0.6
+					}
+					Item	"iron curtain"
+				}
+				TFBot
+				{
+					Health	6000
+					Scale	1.4
+					Template	T_TFBot_Giant_Heavyweapons
+					Attributes	"AlwaysCrit"
+					ItemAttributes
+					{
+						ItemName	"iron curtain"
+						"minigun spinup time decreased"	0.5
+						"bullets per shot bonus"	3
+						"damage bonus"	0.4
+					}
+					CharacterAttributes
+					{
+						"move speed bonus"	0.6
+					}
+					Item	"iron curtain"
+				}
+			}
+		}
+		
+		WaveSpawn //SECTION 3-5D: [BOSS] (Atomic Major Crits + Chief Pyro)
+		{
+			Name "group3-5b"
+			TotalCurrency	800
+			TotalCount	2
+			MaxActive	2
+			SpawnCount	2
+			WaitBeforeStarting	3
+			WaitBetweenSpawns	3
+			Where	spawnbot_giant_A
+			Where	spawnbot_giant_B
+			WaitForAllDead "group3-5a"
+			Squad
+			{
+				TFBot
+				{
+					Health	60000
+					Scale	2.5
+					Template	T_TFBot_Chief_Soldier_Atomic
+					ItemAttributes
+					{
+						ItemName	"the black box"
+						"blast radius increased"	3
+					}
+					CharacterAttributes
+					{
+						"health regen"	0
+					}
+				}
+				TFBot
+				{
+					Health	40000
+					Scale	2.3
+					Template	T_TFBot_Chief_Pyro
+					Attributes	"AlwaysCrit"
+					Attributes "AlwaysFireWeapon"
+					Item	"fallen angel"
+					Item	"py-40 incinibot"
+					CharacterAttributes
+					{
+						"health regen"	0
+					}
+				}
+			}
+		}
+		
+		WaveSpawn //SECTION 3-5E: Completely Random Bots Mix
+		{
+			Name "group3-5b"
+			TotalCurrency	500
+			TotalCount	97
+			MaxActive	18
+			SpawnCount	6
+			WaitBeforeStarting	0
+			WaitBetweenSpawns	3
+			Where	spawnbot_A
+			Where	spawnbot_B
+			WaitForAllDead "group3-4"
+			RandomChoice
+			{
+					TFBot
+					{
+						Health	300
+						Scale	1.2
+						WeaponRestrictions	PrimaryOnly
+						Template	T_TFBot_Scout_Shortstop
+						Attributes	"AlwaysCrit"
+						ItemAttributes
+						{
+							ItemName	"the shortstop"
+							"fire rate bonus"	0.3
+							"Projectile range increased"	1.0
+							"faster reload rate"	0.5
+						}
+						CharacterAttributes
+						{
+							"move speed bonus"	1.5
+							"head scale"	0.8
+						}
+						Item	"the bolt boy"
+						Item	"the cross-comm express"
+					}
+					TFBot
+					{
+						Template	T_TFBot_Scout_FAN
+						Attributes	"AlwaysCrit"
+						ItemAttributes
+						{
+							ItemName	"the force-a-nature"
+							"damage bonus"	1.5
+						}
+						CharacterAttributes
+						{
+							"move speed bonus"	1.5
+						}
+						Item	"the winger"
+						Item	"the virtual viewfinder"
+						Item	"the crosslinker's coil"
+					}
+					TFBot
+					{
+						Template	T_TFBot_Demoman_Samurai
+						Attributes	"AlwaysCrit"
+						ItemAttributes
+						{
+							ItemName	"the half-zatoichi"
+							"melee range multiplier"	0.25
+							"melee attack rate bonus"	1.0
+						}
+					}
+					TFBot
+					{
+						Health	200
+						Template	T_TFBot_Demo_Burst
+						Attributes	"AlwaysCrit"
+						ItemAttributes
+						{
+							ItemName	"tf_weapon_grenadelauncher"
+							"damage bonus"	1.5
+						}
+						CharacterAttributes
+						{
+							"move speed bonus"	1.6
+						}
+						Item	"the grenadier helm"
+					}
+					TFBot
+					{
+						Template	T_TFBot_Sniper_Huntsman
+						Attributes	"AlwaysCrit"
+						ItemAttributes
+						{
+							ItemName	"the huntsman"
+							"damage bonus"	1.0
+							"fire rate bonus"	2.0
+							"faster reload rate"	0.2
+						}
+						CharacterAttributes
+						{
+							"move speed bonus"	1.2
+						}
+						Item	"eotl_hiphunter_hat"
+					}
+					TFBot
+					{
+						Class	heavy
+						Health	400
+						Skill	Normal
+						WeaponRestrictions	PrimaryOnly
+						Attributes	"AlwaysCrit"
+						ItemAttributes
+						{
+							ItemName	"natascha"
+							"fire rate bonus"	0.4
+						}
+						CharacterAttributes
+						{
+							"move speed bonus"	2.0
+							"aiming movespeed increased"	1.5
+							"ring of fire while aiming"	1
+						}
+						Item	"natascha"
+						Item	"the bunsen brave"
+						Item	"potassium bonnett"
+					}
+			}
+		}
+	
+		WaveSpawn //SECTION 3-5F: [FINAL TANK]  
+		{
+			Name "group3-5b"
+			TotalCount 1
+			WaitBeforeStarting 120
+			WaitBetweenSpawns 0
+			TotalCurrency 0
+			WaitForAllDead "group3-4"
+			
+			FirstSpawnOutput                                                                                                                                                            
+			{
+				 Target boss_spawn_relay                                            
+				 Action Trigger                         
+			}
+
+			Tank
+			{
+				Health 60000
+				Speed 60
+				Name "tankboss"
+				Skin 2
+				StartingPathTrackNode "boss_path_1"
+
+				OnKilledOutput                                  
+				{
+					Target boss_dead_relay
+					Action Trigger                         
+				}
+				
+				OnBombDroppedOutput                             
+				{
+					Target boss_deploy_relay 
+					Action Trigger                         
+				}
+			}
+		}
+	}
+}

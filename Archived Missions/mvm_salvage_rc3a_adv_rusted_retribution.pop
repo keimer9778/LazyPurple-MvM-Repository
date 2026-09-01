@@ -1,0 +1,1283 @@
+// Ismac
+#base robot_giant.pop
+#base robot_standard.pop
+
+WaveSchedule
+{
+    StartingCurrency                      400
+    RespawnWaveTime                       7 
+    CanBotsAttackWhileInSpawnRoom         No 
+
+    AddSentryBusterWhenKillCountExceeds   15 
+    AddSentryBusterWhenDamageDealtExceeds 3000 
+    FixedRespawnWaveTime                  No 
+    Advanced                              1 
+
+    Templates
+    {
+        T_TFBot_Chief_Soldier_SlowNuke
+		{
+			Class Soldier
+			Skill Expert
+			WeaponRestrictions PrimaryOnly
+			Name "General Gamma Garbage"
+			Item "Big Steel Jaw of Summer Fun"
+            Item "The Helmet Without a Home"
+            Item "The Air Strike"
+			ClassIcon soldier_nuke2
+			Health 7000
+			Attributes MiniBoss
+			Attributes AlwaysCrit
+            Attributes AlwaysFireWeapon
+			ItemAttributes
+			{
+				ItemName "The Air Strike"
+				"clip size penalty" 0.25
+				"Reload time increased" 4.25
+				"fire rate bonus" 1.25
+				"Projectile speed increased" 0.15
+                "use large smoke explosion" 1
+                "Blast radius increased" 2.25
+			}
+			CharacterAttributes
+			{
+				"health regen"	50
+				"move speed bonus"	0.5
+				"damage bonus" 5
+				"damage force reduction" 0.4
+				"airblast vulnerability multiplier" 0.4
+				"override footstep sound set" 3
+				"airblast vertical vulnerability multiplier" 0.1
+				"rage giving scale" 0.1
+			}
+		}
+    }
+
+    // Wave 1-6 Sentry Busters
+    Mission
+    {
+        Objective           DestroySentries
+        Where               spawnbot_main
+        BeginAtWave         1
+        RunForThisManyWaves 6
+        CooldownTime        70
+        DesiredCount        1
+        InitialCooldown     30
+        TFBot
+        {
+            Template T_TFBot_SentryBuster
+        }
+    }
+    
+    // Wave 5 Snipers
+    Mission
+    {
+        Objective           Sniper
+        Where               spawnbot_mission_sniper
+        BeginAtWave         5
+        RunForThisManyWaves 1
+        CooldownTime        45
+        DesiredCount        2
+        InitialCooldown     20
+        TFBot
+        {
+            Template T_TFBot_Sniper
+        }
+    }
+    
+
+    // Wave 3-4 Spies
+    Mission
+    {
+        Objective           Spy
+        Where               spawnbot_mission_spy
+        BeginAtWave         3
+        RunForThisManyWaves 2
+        CooldownTime        60
+        DesiredCount        2
+        InitialCooldown     10
+        TFBot
+        {
+            Template T_TFBot_Spy
+        }
+    }
+
+    // Wave 6 Sentry Battle Engis 
+    Mission
+    {
+        Objective           Engineer
+        InitialCooldown     40
+        Where               spawnbot_flanker_medium
+        BeginAtWave         6
+        RunForThisManyWaves 1
+        CooldownTime        45
+        DesiredCount        1
+    
+        TFBot
+        {
+            Template T_TFBot_Engineer_Sentry_Battle
+        }
+    }
+    
+
+    // Wave 1 - 900
+    Wave
+    {
+
+        StartWaveOutput
+        {
+            Target wave_start_relay 
+            Action Trigger
+        }
+
+        DoneOutput
+        {
+            Target wave_finished_relay
+            Action Trigger
+        }
+
+        // 24 Demoman Start 
+        // 2 G Soldiers
+        WaveSpawn
+        {
+            Name "wave1a" 
+            Where spawnbot_main
+            TotalCount 32
+            MaxActive 16
+            SpawnCount 16
+            WaitBetweenSpawns 1
+            TotalCurrency 100
+            TFBot
+            {
+                Class Soldier
+                Skill Normal
+                Item "The Cow Mangler 5000"
+                ClassIcon soldier_cowmangler
+                CharacterAttributes
+                {
+                    "fire rate penalty" 1.5
+                }
+            }
+        }
+        WaveSpawn
+        {
+            Name "wave1a_giant"
+            Where spawnbot_main
+            WaitForAllSpawned "wave1a"
+            TotalCount 2
+            MaxActive 2
+            SpawnCount 1
+            WaitBetweenSpawns 20
+            TotalCurrency 300
+            TFBot
+            {
+                Template T_TFBot_Giant_Soldier
+            }
+        }
+        WaveSpawn
+        {
+            Name "wave1b" 
+            WaitForAllDead "wave1a"
+            Where spawnbot_main
+            TotalCount 24
+            MaxActive 12
+            SpawnCount 6
+            WaitBetweenSpawns 6
+            TotalCurrency 100
+            TFBot
+            {
+                Template T_TFBot_Heavyweapons_Heavyweight_Champ_Fast
+            }
+        }
+        WaveSpawn
+        {
+            Name "wave1c"
+            Where spawnbot_main
+            WaitForAllDead "wave1a_giant"
+            TotalCount 24
+            MaxActive 24
+            SpawnCount 12
+            WaitBetweenSpawns 12
+            TotalCurrency 100
+            Squad
+            {
+                FormationSize 200
+                ShouldPreserveSquad 1 
+                TFBot
+                {
+                    Class Pyro
+                    Skill Easy
+                    Attributes AlwaysFireWeapon
+                }
+        
+                TFBot
+                {
+                    Template T_TFBot_Sniper_Huntsman
+                    Skill Normal
+                }
+            }
+        }
+        // Giant Pyro + Giant Medic
+        WaveSpawn
+        {
+            Name "wave1d"
+            Where spawnbot_chief
+            TotalCount 4
+            MaxActive 4
+            SpawnCount 4
+            WaitForAllDead "wave1c"
+            WaitBeforeStarting 5
+            TotalCurrency 300
+            Squad
+            {
+                FormationSize 200
+                ShouldPreserveSquad 1 
+                TFBot
+                {
+                    Template T_TFBot_Giant_Pyro
+                    Skill Hard
+                    Attributes AlwaysFireWeapon
+                }
+        
+                TFBot
+                {
+                    Template T_TFBot_Medic_SlowRecharge
+                }
+
+                TFBot
+                {
+                    Template T_TFBot_Medic_SlowRecharge
+                }
+
+                TFBot
+                {
+                    Template T_TFBot_Medic_SlowRecharge
+                }
+            }
+        }
+        WaveSpawn
+        {
+            Name "wave1d"
+            Where spawnbot_main
+            WaitForAllDead "wave1c"
+            TotalCount 24
+            MaxActive 12
+            SpawnCount 6
+            WaitBetweenSpawns 6
+            Support 1 
+            TFBot
+            {
+                Template T_TFBot_Pyro_Flaregun
+                Skill Normal
+            }
+        }
+    }
+
+    // Wave 2 - 1000
+    Wave
+    {
+
+        StartWaveOutput
+        {
+            Target wave_start_relay 
+            Action Trigger
+        }
+
+        DoneOutput
+        {
+            Target wave_finished_relay
+            Action Trigger
+        }
+
+        // Charged Soldiers + Little Soldiers
+        WaveSpawn
+        {
+            Name "wave2a"
+            Where spawnbot_main
+            TotalCount 12
+            MaxActive 8
+            SpawnCount 4
+            WaitBetweenSpawns 20
+            TotalCurrency 120
+            Squad
+            {
+                FormationSize 200
+                ShouldPreserveSquad 1 // If the squad leader dies, should the rest stay as a squad?
+                TFBot
+                {
+                    Template T_TFBot_Giant_Demoman
+                    Name "Giant Demoman"
+                    Skill Hard
+                    CharacterAttributes
+                    {
+                        "fire rate penalty" 2.5
+                    }
+                }
+        
+                TFBot
+                {
+                    Class Soldier
+                    Skill Easy
+                }
+
+                TFBot
+                {
+                    Class Soldier
+                    Skill Easy
+                }
+
+                TFBot
+                {
+                    Class Soldier
+                    Skill Easy
+                }
+            }
+        }
+         WaveSpawn
+        {
+            Where spawnbot_flanker_medium
+            TotalCount 48
+            MaxActive 16
+            SpawnCount 2
+            WaitBetweenSpawns 2
+            WaitBeforeStarting 2
+            TotalCurrency 100
+            TFBot
+            {
+                Class Scout
+                Skill Easy
+            }
+        }
+        // 1 Tank
+        WaveSpawn
+        {
+            Name "wave2b"
+            TotalCount 1
+            WaitForAllDead "wave2a"
+            WaitBeforeStarting 10
+            TotalCurrency 300
+            Tank
+            {
+                Name "tankboss" 
+                Health 23000
+                Speed 75
+                StartingPathTrackNode "tank_path_a_1"
+                OnKilledOutput
+                {
+                    Target boss_dead_relay
+                    Action Trigger
+                }
+        
+                OnBombDroppedOutput
+                {
+                    Target boss_deploy_relay
+                    Action Trigger
+                }
+            }
+        }
+         WaveSpawn
+        {
+            WaitForAllDead "wave2a"
+            Where spawnbot_flanker_medium
+            TotalCount 48
+            MaxActive 12
+            SpawnCount 12
+            WaitBeforeStarting 5
+            WaitBetweenSpawns 16
+            TotalCurrency 100
+            TFBot
+            {
+               Template T_TFBot_Demoman_Knight
+               Skill Normal
+            }
+        }
+         WaveSpawn
+        {
+            WaitForAllDead "wave2a"
+            Where spawnbot_main
+            TotalCount 24
+            MaxActive 6
+            SpawnCount 6
+            WaitBetweenSpawns 8
+            TotalCurrency 100
+            TFBot
+            {
+               Class Heavyweapons
+               Skill Easy
+            }
+        }
+         WaveSpawn
+        {
+            Name "wave2b"
+            WaitForAllDead "wave2a"
+            Where spawnbot_flanker_highground
+            TotalCount 12
+            MaxActive 8
+            SpawnCount 4
+            WaitBeforeStarting 45
+            WaitBetweenSpawns 20
+            TotalCurrency 120
+            Squad
+            {
+                FormationSize 200
+                ShouldPreserveSquad 1 // If the squad leader dies, should the rest stay as a squad?
+                TFBot
+                {
+                    Template T_TFBot_Giant_Demoman
+                    Name "Giant Demoman"
+                    Skill Hard
+                    CharacterAttributes
+                    {
+                        "fire rate penalty" 2.5
+                    }
+                }
+        
+                TFBot
+                {
+                    Class Soldier
+                    Skill Easy
+                }
+
+                TFBot
+                {
+                    Class Soldier
+                    Skill Easy
+                }
+
+                TFBot
+                {
+                    Class Soldier
+                    Skill Easy
+                }
+            }
+        }
+    }
+
+    // Wave 3 - 900
+    Wave
+    {
+
+        StartWaveOutput
+        {
+            Target wave_start_relay // Replace with "Target wave_start_relay_classic" for Rottenburg
+            Action Trigger
+        }
+
+        DoneOutput
+        {
+            Target wave_finished_relay
+            Action Trigger
+        }
+
+        // Crit Pyro + Sandmen
+        WaveSpawn
+        {
+            Name "wave3a"
+            Where spawnbot_main
+            TotalCount 4
+            MaxActive 2
+            SpawnCount 1
+            WaitBeforeStarting 0
+            WaitBetweenSpawns 15
+            TotalCurrency 100
+            TFBot
+            {
+                Template T_TFBot_Giant_Scout_Fast
+            }
+        }
+        WaveSpawn
+        {
+            Where spawnbot_flanker_medium
+            TotalCount 40
+            MaxActive 10
+            SpawnCount 5
+            WaitBeforeStarting 12
+            WaitBetweenSpawns 5
+            TotalCurrency 100
+            TFBot
+            {
+               Template T_TFBot_Pyro_Flaregun
+            }
+        }
+        WaveSpawn
+        {
+            Where spawnbot_main
+            TotalCount 12
+            MaxActive 6
+            SpawnCount 3
+            WaitBeforeStarting 12
+            WaitBetweenSpawns 3
+            Support 1
+            TFBot
+            {
+               Class Soldier
+               Skill Normal
+            }
+        }
+        // Crit Spammer + Uber Meds
+        WaveSpawn
+        {
+            Name "wave3b"
+            Where spawnbot_main
+            TotalCount 8
+            MaxActive 8
+            SpawnCount 4
+            WaitForAllSpawned "wave3a"
+            WaitBeforeStarting 5
+            WaitBetweenSpawns 30
+            TotalCurrency 200
+            Squad
+            {
+                FormationSize 200
+                ShouldPreserveSquad 1 
+                TFBot
+                {
+                    Template T_TFBot_Giant_Soldier_Spammer_Reload
+                    Skill Hard
+                }
+        
+                TFBot
+                {
+                    Template T_TFBot_Medic_QuickUber
+                }
+
+                TFBot
+                {
+                    Template T_TFBot_Medic_QuickUber
+                }
+
+                TFBot
+                {
+                    Template T_TFBot_Medic_QuickUber
+                }
+            }
+        }
+        WaveSpawn
+        {
+            Name "wave3C"
+            Where spawnbot_main
+            TotalCount 24
+            MaxActive 15
+            SpawnCount 3
+            WaitForAllDead "wave3b"
+            WaitBetweenSpawns 3
+            TotalCurrency 270
+            Squad
+            {
+                FormationSize 200
+                ShouldPreserveSquad 1 
+                TFBot
+                {
+                    Class Heavyweapons
+                    Skill Hard
+                }
+        
+                TFBot
+                {
+                   Class Demoman
+                   Skill Hard
+                }
+
+                TFBot
+                {
+                   Class Demoman
+                   Skill Hard
+                }
+            }
+        }
+         WaveSpawn
+        {
+            Name "wave3C"
+            Where spawnbot_flanker_medium
+            TotalCount 2
+            WaitForAllDead "wave3b"
+            MaxActive 1
+            SpawnCount 1
+            WaitBetweenSpawns 15
+            WaitBeforeStarting 15
+            TotalCurrency 80
+            TFBot
+            {
+               Template T_TFBot_Giant_Scout_Fast
+            }
+        }
+         WaveSpawn
+        {
+            Name "wave3C"
+            Where spawnbot_main
+            TotalCount 3
+            WaitForAllDead "wave3b"
+            MaxActive 1
+            SpawnCount 1
+            WaitBeforeStarting 30
+            WaitBetweenSpawns 15
+            TotalCurrency 150
+            TFBot
+            {
+               Template T_TFBot_Giant_Scout_Fast
+            }
+        }
+    }
+
+    // Wave 4 - 800
+    Wave
+    {
+
+        StartWaveOutput
+        {
+            Target wave_start_relay 
+            Action Trigger
+        }
+
+        DoneOutput
+        {
+            Target wave_finished_relay
+            Action Trigger
+        }
+
+        // Crit GDemoknights
+        WaveSpawn
+        {
+            Name "wave4a"
+            Where spawnbot_main
+            TotalCount 4
+            MaxActive 2
+            SpawnCount 1
+            WaitBetweenSpawns 15
+            TotalCurrency 40
+            TFBot
+            {
+                Template T_TFBot_Giant_DemoMan_PrinceTavish
+                Attributes AlwaysCrit
+            }
+        }
+        // 1 Tank Left
+        WaveSpawn
+        {
+            Name "wave4a_tank_left"
+            TotalCount 1
+            TotalCurrency 360
+            Tank
+            {
+                Name "tankboss" 
+                Health 23000
+                Speed 75
+                StartingPathTrackNode "tank_path_a_1"
+                OnKilledOutput
+                {
+                    Target boss_dead_relay
+                    Action Trigger
+                }
+        
+                OnBombDroppedOutput
+                {
+                    Target boss_deploy_relay
+                    Action Trigger
+                }
+            }
+        }
+        WaveSpawn
+        {
+            Name "wave4a_tank_right"
+            TotalCount 1
+            TotalCurrency 360
+            WaitBeforeStarting 60
+            Tank
+            {
+                Name "tankboss" 
+                Health 23000
+                Speed 75
+                StartingPathTrackNode "tank_path_b_1"
+                OnKilledOutput
+                {
+                    Target boss_dead_relay
+                    Action Trigger
+                }
+        
+                OnBombDroppedOutput
+                {
+                    Target boss_deploy_relay
+                    Action Trigger
+                }
+            }
+        }
+        WaveSpawn
+        {
+            Name "wave4a_scout"
+            Where spawnbot_flanker_highground
+            TotalCount 50
+            MaxActive 3
+            SpawnCount 3
+            WaitBetweenSpawns 5
+            Support 1
+            TFBot
+            {
+                Class Scout
+                Skill Normal
+            }
+        }
+        WaveSpawn
+        {
+            Name "wave4a_scout"
+            Where spawnbot_flanker_medium
+            TotalCount 50
+            MaxActive 5
+            SpawnCount 5
+            WaitBetweenSpawns 10
+            Support 1
+            TFBot
+            {
+                Class Soldier
+                Skill Normal
+            }
+        }
+        // Giant Crit Heavy + GMedics
+        WaveSpawn
+        {
+            Name "wave4b"
+            Where spawnbot_chief
+            TotalCount 4
+            MaxActive 4
+            SpawnCount 2
+            WaitForAllSpawned "wave4a"
+            WaitBeforeStarting 10
+            WaitBetweenSpawns 35
+            TotalCurrency 40
+            Squad
+            {
+                FormationSize 200
+                ShouldPreserveSquad 1 // If the squad leader dies, should the rest stay as a squad?
+                TFBot
+                {
+                    Template T_TFBot_Giant_Heavyweapons
+                }
+        
+                TFBot
+                {
+                    Template T_TFBot_Giant_Medic
+                }
+            }
+        }
+    }
+
+    // Wave 5 - 900
+    Wave
+    {
+
+        StartWaveOutput
+        {
+            Target wave_start_relay // Replace with "Target wave_start_relay_classic" for Rottenburg
+            Action Trigger
+        }
+
+        DoneOutput
+        {
+            Target wave_finished_relay
+            Action Trigger
+        }
+
+        // Crit Soldier Start Off
+        WaveSpawn
+        {
+            Name "wave5a"
+            Where spawnbot_main
+            TotalCount 40
+            MaxActive 20
+            SpawnCount 20
+            WaitBetweenSpawns 5
+            TotalCurrency 100
+            Squad
+            {
+                FormationSize 200
+                ShouldPreserveSquad 1 // If the squad leader dies, should the rest stay as a squad?
+                TFBot
+                {
+                    Class Soldier
+                Skill Hard
+                ClassIcon soldier_crit
+                Name "Charged Soldier"
+                Item "The Original"
+                Item "The Cross-Comm Crash Helmet"
+                Attributes AlwaysCrit
+                ItemAttributes
+                {
+                    ItemName "The Original"
+                    "Projectile speed decreased" 0.40
+                    "fire rate penalty" 3
+                }
+                }
+        
+                TFBot
+                {
+                    Template T_TFBot_Medic_BigHeal
+                }
+            }
+        }
+        WaveSpawn
+        {
+            Name "wave5b"
+            Where spawnbot_flanker_medium
+            TotalCount 5
+            MaxActive 5
+            SpawnCount 5
+            WaitForAllDead "wave5a"
+            WaitBetweenSpawns 25
+            TotalCurrency 120
+            Squad
+            {
+                FormationSize 200
+                ShouldPreserveSquad 1 // If the squad leader dies, should the rest stay as a squad?
+                TFBot
+                {
+                    Template T_TFBot_Giant_Demo_Burst
+                    Skill Expert
+                    Attributes AlwaysCrit
+                }
+        
+                TFBot
+                {
+                    Template T_TFBot_Medic_BigHeal
+                }
+
+                TFBot
+                {
+                    Template T_TFBot_Medic_BigHeal
+                }
+
+                TFBot
+                {
+                    Template T_TFBot_Medic_BigHeal
+                }
+
+                TFBot
+                {
+                    Template T_TFBot_Medic_BigHeal
+                }
+            }
+        }
+        WaveSpawn
+        {
+            Name "wave5b"
+            Where spawnbot_flanker_highground
+            TotalCount 5
+            MaxActive 5
+            SpawnCount 5
+            WaitForAllDead "wave5a"
+            WaitBetweenSpawns 25
+            TotalCurrency 120
+            Squad
+            {
+                FormationSize 200
+                ShouldPreserveSquad 1 // If the squad leader dies, should the rest stay as a squad?
+                TFBot
+                {
+                    Template T_TFBot_Giant_Demo_Burst
+                    Skill Expert
+                    Attributes AlwaysCrit
+                }
+        
+                TFBot
+                {
+                    Template T_TFBot_Medic_BigHeal
+                }
+
+                TFBot
+                {
+                    Template T_TFBot_Medic_BigHeal
+                }
+
+                TFBot
+                {
+                    Template T_TFBot_Medic_BigHeal
+                }
+
+                TFBot
+                {
+                    Template T_TFBot_Medic_BigHeal
+                }
+            }
+        }
+        WaveSpawn
+        {
+            Where spawnbot_main
+            TotalCount 20
+            MaxActive 2
+            SpawnCount 2
+            WaitBetweenSpawns 10
+            TotalCurrency 100
+            Support 1
+            TFBot
+            {
+                Template T_TFBot_Scout_Sandman
+                Skill Normal
+            }
+        }
+        WaveSpawn
+        {
+            Where spawnbot_main
+            WaitForAllDead "wave5a"
+            TotalCount 20
+            MaxActive 10
+            SpawnCount 10
+            WaitBetweenSpawns 15
+            TotalCurrency 100
+            Support 1
+            TFBot
+            {
+                Template T_TFBot_Demoman_Knight
+                Skill Normal
+            }
+        }
+        WaveSpawn
+        {
+            Name "wave5c"
+            Where spawnbot_main
+            TotalCount 20
+            MaxActive 10
+            SpawnCount 5
+            WaitForAllDead "wave5b"
+            WaitBetweenSpawns 20
+            TotalCurrency 120
+            Squad
+            {
+                FormationSize 200
+                ShouldPreserveSquad 1 // If the squad leader dies, should the rest stay as a squad?
+                TFBot
+                {
+                    Template T_TFBot_Sniper_Huntsman_Spammer
+                    Skill Expert
+                    Attributes AlwaysCrit
+                    ClassIcon sniper_bow_conch
+                    Item "The Concheror"
+                    Attributes SpawnWithFullCharge
+                    CharacterAttributes
+                    {
+                        "increase buff duration" 200
+                    }
+                }
+        
+                TFBot
+                {
+                    Class Heavyweapons
+                    Skill Normal
+                }
+
+                TFBot
+                {
+                    Class Heavyweapons
+                    Skill Normal
+                }
+
+                TFBot
+                {
+                    Class Heavyweapons
+                    Skill Normal
+                }
+
+                TFBot
+                {
+                    Class Heavyweapons
+                    Skill Normal
+                }
+            }
+        }
+        WaveSpawn
+        {
+            Name "wave5d"
+            Where spawnbot_flanker_medium
+            TotalCount 5
+            MaxActive 5
+            SpawnCount 5
+            WaitForAllDead "wave5c"
+            WaitBetweenSpawns 25
+            TotalCurrency 120
+            Squad
+            {
+                FormationSize 200
+                ShouldPreserveSquad 1 // If the squad leader dies, should the rest stay as a squad?
+                TFBot
+                {
+                    Template T_TFBot_Giant_Demo_Burst
+                    Skill Expert
+                    Attributes AlwaysCrit
+                }
+        
+                TFBot
+                {
+                    Template T_TFBot_Medic_SlowRecharge
+                }
+
+                TFBot
+                {
+                    Template T_TFBot_Medic_SlowRecharge
+                }
+
+                TFBot
+                {
+                    Template T_TFBot_Medic_SlowRecharge
+                }
+
+                TFBot
+                {
+                    Template T_TFBot_Medic_SlowRecharge
+                }
+            }
+        }
+        WaveSpawn
+        {
+            Name "wave5d"
+            Where spawnbot_flanker_highground
+            TotalCount 5
+            MaxActive 5
+            SpawnCount 5
+            WaitForAllDead "wave5c"
+            WaitBetweenSpawns 25
+            TotalCurrency 120
+            Squad
+            {
+                FormationSize 200
+                ShouldPreserveSquad 1 // If the squad leader dies, should the rest stay as a squad?
+                TFBot
+                {
+                    Template T_TFBot_Giant_Demo_Burst
+                    Skill Expert
+                    Attributes AlwaysCrit
+                }
+        
+                TFBot
+                {
+                    Template T_TFBot_Medic_SlowRecharge
+                }
+
+                TFBot
+                {
+                    Template T_TFBot_Medic_SlowRecharge
+                }
+
+                TFBot
+                {
+                    Template T_TFBot_Medic_SlowRecharge
+                }
+
+                TFBot
+                {
+                    Template T_TFBot_Medic_SlowRecharge
+                }
+            }
+        }
+    }
+
+    // Wave 6 - 1000
+    Wave
+    {
+
+        StartWaveOutput
+        {
+            Target wave_start_relay 
+            Action Trigger
+        }
+
+        DoneOutput
+        {
+            Target wave_finished_relay
+            Action Trigger
+        }
+
+        // Heavy + Buff Banner
+        WaveSpawn
+        {
+            Name "wave6a"
+            Where spawnbot_main
+            TotalCount 16
+            MaxActive 8
+            SpawnCount 4
+            WaitBetweenSpawns 4
+            WaitBeforeStarting 5
+            TotalCurrency 200
+            Squad
+            {
+                FormationSize 200
+                ShouldPreserveSquad 1 // If the squad leader dies, should the rest stay as a squad?
+                TFBot
+                {
+                    Template T_TFBot_Soldier_Extended_Concheror
+                    Skill Normal
+                }
+        
+                TFBot
+                {
+                    Class Heavyweapons
+                    Skill Easy
+                }
+
+                TFBot
+                {
+                    Class Heavyweapons
+                    Skill Easy
+                }
+
+                TFBot
+                {
+                    Class Heavyweapons
+                    Skill Easy
+                }
+            }
+        }
+        WaveSpawn
+        {
+            Name "wave6a"
+            Where spawnbot_flanker_medium
+            TotalCount 2
+            MaxActive 1
+            SpawnCount 1
+            WaitBetweenSpawns 15
+            TotalCurrency 100
+            TFBot
+            {
+                Template T_TFBot_Giant_Heavyweapons
+                Skill Hard
+            }
+        }
+        WaveSpawn
+        {
+            Name "wave6a"
+            Where spawnbot_flanker_highground
+            TotalCount 2
+            MaxActive 1
+            SpawnCount 1
+            WaitBetweenSpawns 15
+            TotalCurrency 100
+            TFBot
+            {
+                Template T_TFBot_Giant_Heavyweapons
+                Skill Hard
+            }
+        }
+        // 1 Tank 
+        WaveSpawn
+        {
+            Name "wave6b"
+            TotalCount 1
+            WaitForAllDead "wave6a"
+            TotalCurrency 400
+            Tank
+            {
+                Name "tankboss" 
+                Health 37000
+                Speed 75
+                StartingPathTrackNode "tank_path_a_1"
+                Skin 1 
+                OnKilledOutput
+                {
+                    Target boss_dead_relay
+                    Action Trigger
+                }
+        
+                OnBombDroppedOutput
+                {
+                    Target boss_deploy_relay
+                    Action Trigger
+                }
+            }
+        }
+        WaveSpawn
+        {
+            Name "wave6b"
+            Where spawnbot_main
+            TotalCount 48
+            WaitForAllDead "wave6a"
+            MaxActive 12
+            SpawnCount 6
+            WaitBeforeStarting 5
+            WaitBetweenSpawns 6
+            TotalCurrency 100
+            TFBot
+            {
+                Template T_TFBot_Demo_Burst
+                Skill Normal
+                Attributes AlwaysCrit
+            }
+        }
+        WaveSpawn
+        {
+            Name "wave6b"
+            Where spawnbot_main
+            TotalCount 4
+            WaitForAllDead "wave6a"
+            MaxActive 4
+            SpawnCount 2
+            WaitBeforeStarting 30
+            WaitBetweenSpawns 30
+            TotalCurrency 100
+            Squad
+            {
+                FormationSize 200
+                ShouldPreserveSquad 1 // If the squad leader dies, should the rest stay as a squad?
+                TFBot
+                {
+                    Template T_TFBot_Chief_Soldier_SlowNuke
+                    Skill Expert
+                }
+        
+                TFBot
+                {
+                    Template T_TFBot_Giant_Medic
+                }
+            }
+        }
+        WaveSpawn
+        {
+            Name "wave6c"
+            Where spawnbot_main
+            TotalCount 4
+            WaitForAllDead "wave6b"
+            MaxActive 4
+            SpawnCount 2
+            WaitBetweenSpawns 30
+            TotalCurrency 100
+            Squad
+            {
+                FormationSize 200
+                ShouldPreserveSquad 1 // If the squad leader dies, should the rest stay as a squad?
+                TFBot
+                {
+                    Template T_TFBot_Giant_Soldier_SlowBarrage
+                    Skill Expert
+                    Attributes AlwaysCrit
+                }
+        
+                TFBot
+                {
+                    Template T_TFBot_Giant_Medic
+                }
+            }
+        }
+        WaveSpawn
+        {
+            Name "wave6c"
+            Where spawnbot_main
+            TotalCount 36
+            WaitForAllDead "wave6b"
+            MaxActive 12
+            SpawnCount 12
+            WaitBetweenSpawns 6
+            TotalCurrency 100
+            Support 1
+            Squad
+            {
+                FormationSize 200
+                ShouldPreserveSquad 1 // If the squad leader dies, should the rest stay as a squad?
+                TFBot
+                {
+                    Template T_TFBot_Soldier_RocketShotgun
+                    Skill Expert
+                }
+        
+                TFBot
+                {
+                    Template T_TFBot_Medic_BigHeal
+                }
+            }
+        }
+    }
+}

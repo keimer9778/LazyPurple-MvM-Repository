@@ -1,0 +1,839 @@
+//Normal Mode
+//mvm_faux
+
+#base robot_faux.pop
+#base robot_giant.pop
+#base robot_standard.pop
+
+WaveSchedule
+{
+	StartingCurrency 700
+	RespawnWaveTime 5
+	FixedRespawnWaveTime Yes
+	CanBotsAttackWhileInSpawnRoom No
+	
+//Missions
+	Mission // Sentry Buster
+	{
+		Where spawnbot_bomber
+		Objective DestroySentries
+		CooldownTime 45
+		InitialCooldown 30
+		
+		TFBot
+		{
+			Template T_TFBot_SentryBuster
+			Name "Sentry Buster"
+		}
+	}
+	
+	Mission // Sniper for waves 2-4
+	{
+		Where spawnbot
+		Objective Sniper
+		Cooldowntime 20
+		BeginAtWave 2
+		RunForThisManyWaves 3
+		
+		TFBot
+		{
+			Template T_TFBot_Sniper_Razorback
+		}
+	}
+	
+	Mission // Sniper for waves 5-7
+	{
+		Where spawnbot
+		Objective Sniper
+		CooldownTime 20
+		BeginAtWave 5
+		RunForThisManyWaves 3
+		
+		TFBot
+		{
+			Template T_TFBot_Sniper_Sydney_Sleeper
+		}
+	}
+		
+	Mission // Spy for waves 3-6
+	{
+		Where spawnbot_mission_spy
+		Objective Spy
+		BeginAtWave 3
+		CooldownTime 50
+		RunForThisManyWaves 4
+		
+		TFBot
+		{
+			Template T_TFBot_Spy
+		}
+	}
+	
+//Waves
+	
+	Wave // Wave 1
+	{
+		StartWaveOutput
+		{
+			Target wave_start_relay
+			Action Trigger
+		}
+		DoneOutput					
+		{
+			Target wave_finished_relay
+			Action trigger
+		}
+		WaitWhenDone 50
+		Checkpoint Yes
+		Sound "Announcer.IncomingMob"
+		
+		WaveSpawn // Wave 1a, Scouts
+		{
+			Name "w1a"
+			Where spawnbot
+			TotalCount 18
+			MaxActive 6
+			SpawnCount 6
+			WaitBeforeStarting 5
+			WaitBetweenSpawns 3
+			TotalCurrency 90
+			
+			TFBot
+			{
+				Class Scout
+				Skill Normal
+				WeaponRestrictions MeleeOnly
+				Item "The Holy Mackerel"
+				Item "The Milkman"
+				Name "FishBot"
+			}
+		}
+		
+		WaveSpawn // Wave 1b, Shotgun Soldiers after Scouts 
+		{
+			Name "w1b"
+			WaitForAllDead "w1a"
+			Where spawnbot
+			TotalCount 9
+			MaxActive 3
+			SpawnCount 3
+			WaitBeforeStarting 3
+			WaitBetweenSpawns 1
+			TotalCurrency 100
+			
+			TFBot
+			{
+				Class Soldier
+				Name "SeargentBot"
+				Health 150
+				Skill Easy
+				Scale 0.8
+				WeaponRestrictions SecondaryOnly
+				Item "Soldier's Sparkplug"
+				Item "Full Metal Drill Hat"
+			}
+		}
+		
+		WaveSpawn // Wave 1b, Heavyweight Heavies
+		{
+			Name "w1b"
+			WaitForAllDead "w1a"
+			Where spawnbot
+			TotalCount 6
+			MaxActive 2
+			SpawnCount 2
+			WaitBeforeStarting 3
+			WaitBetweenSpawns 1
+			TotalCurrency 120
+			
+			TFBot
+			{
+				Template T_TFBot_Heavyweapons_Heavyweight_Champ_Fast
+			}
+		}
+		
+		WaveSpawn // Wave 1c, Drunk Demomen
+		{
+			Name "w1c"
+			WaitForAllDead "w1b"
+			Where spawnbot
+			TotalCount 15
+			MaxActive 5
+			SpawnCount 5
+			WaitBeforeStarting 7
+			WaitBetweenSpawns 3
+			TotalCurrency 100
+			
+			TFBot
+			{
+				Class Demoman
+				Skill Normal
+				Name "DrunkBot"
+				WeaponRestrictions MeleeOnly
+				Scale 1.1
+				Item "The Strontium Stove Pipe"
+			}
+		}
+	}
+	
+	Wave // Wave 2
+	{
+		StartWaveOutput
+		{
+			Target wave_start_relay
+			Action Trigger
+		}
+		DoneOutput					
+		{
+			Target wave_finished_relay
+			Action trigger
+		}
+		WaitWhenDone 50
+		Checkpoint Yes
+		Sound "Announcer.IncomingMob"
+		
+		WaveSpawn // Wave 2a, Heavies
+		{
+			Name "w2a"
+			WaitForAllDead "w1b"
+			Where spawnbot
+			TotalCount 16
+			MaxActive 4
+			SpawnCount 4
+			WaitBeforeStarting 3
+			WaitBetweenSpawns 0
+			TotalCurrency 100
+			TFBot
+			{
+				Class Heavyweapons
+				Skill Easy
+				Name "HeavyBot"
+				WeaponRestrictions PrimaryOnly
+				Item "The Tungsten Toque"
+				
+				ItemAttributes
+				{	
+					ItemName "Minigun"
+					"damage penalty" 0.30
+				}
+			}
+		}
+		
+		WaveSpawn // 2b, TANNK!!! KILL IT!!
+		{
+			TotalCurrency 250
+			TotalCount 1
+			WaitForAllDead "w2a"
+			Name "w2b"
+			
+			Tank
+			{
+				Name "w2b"
+				StartingPathTrackNode "tankpath_a_1"
+				Speed 60
+				Health 20000
+				OnBombDroppedOutput
+				{
+					Target boss_deploy_relay
+					Action Trigger
+				}
+			}
+		}
+		
+		WaveSpawn // 2b, Tank Minions, SMG Snipers
+		{
+			Name "w2b"
+			WaitForAllDead "w2a"
+			Where spawnbot
+			TotalCount 18
+			MaxActive 9
+			SpawnCount 3
+			TotalCurrency 100
+			
+			TFBot
+			{
+				Class Sniper
+				WeaponRestrictions SecondaryOnly
+				Name "SMGBot"
+			}
+		}
+		
+		WaveSpawn // 2b, Axe-bound Pyros
+		{
+			Name "w2c"
+			WaitForAllDead "w2b"
+			Where spawnbot
+			Totalcount 15
+			MaxActive 10
+			SpawnCount 5
+			TotalCurrency 90
+			
+			TFBot
+			{
+				Class Pyro
+				WeaponRestrictions MeleeOnly
+				Name "AxeBot"
+				Item "The Third Degree"
+				Skill Hard
+			}
+		}
+	}
+	
+	Wave // Wave 3
+	{
+		StartWaveOutput
+		{
+			Target wave_start_relay
+			Action Trigger
+		}
+		DoneOutput					
+		{
+			Target wave_finished_relay
+			Action trigger
+		}
+		WaitWhenDone 50
+		Checkpoint Yes
+		Sound "Announcer.IncomingMob"
+		
+		WaveSpawn // 3a, Pyro and FlarePyro squad
+		{
+			Name "w3a"
+			WaitBeforeStarting 3
+			TotalCount 12
+			Maxactive 6
+			Spawncount 3
+			WaitBetweenSpawns 3
+			Where spawnbot
+			TotalCurrency 200
+			
+			Squad
+			{
+				TFbot
+				{
+					Template T_TFBot_Pyro
+				}
+				TFBot
+				{
+					Template T_TFBot_Pyro_Flaregun
+				}
+			}
+		}
+		
+		WaveSpawn // 3b, crit sollies
+		{
+			Name "w3b"
+			WaitBeforeStarting 5
+			WaitBetweenSpawns 5
+			WaitForAllDead "w3a"
+			TotalCount 3
+			MaxActive 1
+			SpawnCount 1
+			Where spawnbot
+			TotalCurrency 200
+			
+			TFBot
+			{
+				Template T_TFBot_Giant_Soldier_Crit
+			}
+			
+		}
+		
+		WaveSpawn // 3b, Shovel Soldiers
+		{	
+			Name "w3b"
+			WaitForAllDead "w3a"
+			TotalCount 20
+			MaxActive 7
+			SpawnCount 4
+			Where spawnbot
+			TotalCurrency 90
+			
+			TFBot
+			{
+				Class Soldier
+				WeaponRestrictions MeleeOnly
+				Name "ShovelBot"
+				Skill Hard
+				Health 150
+				Item "Steel Shako"
+			}
+		}
+		
+		WaveSpawn // 3c, Gnome Hoovies
+		{
+			Name "w3c"
+			TotalCount 20
+			MaxActive 5
+			SpawnCount 5
+			WaitBetweenSpawns 2
+			WaitForAllDead "w3b"
+			Where spawnbot
+			TotalCurrency 110
+			
+			TFBot
+			{
+				Template T_TFBot_Heavyweapons_Gnome
+			}
+		}
+	}
+	
+	Wave // Wave 4
+	{
+		StartWaveOutput
+		{
+			Target wave_start_relay
+			Action Trigger
+		}
+		DoneOutput					
+		{
+			Target wave_finished_relay
+			Action trigger
+		}
+		WaitWhenDone 50
+		Checkpoint Yes
+		Sound "Announcer.IncomingMob"
+		
+		WaveSpawn // 4a, Melee Demomen
+		{
+			Name "w4a"
+			TotalCount 20
+			MaxActive 5
+			SpawnCount 5
+			Where spawnbot
+			TotalCurrency 110
+			
+			TFBot
+			{
+				Class Demoman
+				Skill Hard
+				WeaponRestrictions MeleeOnly
+				Name "SlightlySoberBot"
+				Item "The Strontium Stove Pipe"
+			}
+		}
+		
+		WaveSpawn // 4b, Tank, weaker than the last one
+		{
+			Name "w4b"
+			WaitForAllDead "w4a"
+			WaitBeforeStarting 3
+			TotalCurrency 300
+			TotalCount 1
+			Where spawnbot
+			
+			Tank
+			{
+				Name "w4b"
+				StartingPathTrackNode "tankpath_b_1"
+				Speed 60
+				Health 15000
+				OnBombDroppedOutput
+				{
+					Target boss_deploy_relay
+					Action Trigger
+				}
+			}
+		}
+		
+		WaveSpawn // 4b, Syringe Medics
+		{
+			Name "w4b"
+			TotalCurrency 90
+			MaxActive 10
+			TotalCount 25
+			SpawnCount 5
+			TotalCurrency 90
+			WaitForAllDead "w4a"
+			Where spawnbot
+			
+			TFBot
+			{
+				Class Medic
+				WeaponRestrictions PrimaryOnly
+				Skill Normal
+				CharacterAttributes
+				{	
+					"health regen" 0
+				}
+				
+				ItemAttributes
+				{
+					ItemName "Syringe Gun"
+					"damage bonus" 1.0
+				}
+			}
+		}
+		
+		WaveSpawn // 4c, Bonk Scouts
+		{
+			Name "w4c"
+			WaitForAllDead "w4b"
+			WaitBeforeStarting 2
+			TotalCount 2
+			MaxActive 1
+			SpawnCount 1
+			TotalCurrency 140
+			Where spawnbot
+			
+			TFBot
+			{
+				Template T_TFBot_Giant_Scout_Bonk
+			}
+		}
+	}
+	
+	Wave // Wave 5
+	{
+		StartWaveOutput
+		{
+			Target wave_start_relay
+			Action Trigger
+		}
+		DoneOutput					
+		{
+			Target wave_finished_relay
+			Action Tigger
+		}
+		WaitWhenDone 50
+		Checkpoint Yes
+		Sound "Announcer.IncomingMob"
+		
+		WaveSpawn // 5a, Slow-fire Scouts
+		{
+			Name "w5a"
+			WaitBeforeStarting 5
+			WaitBetweenSpawns 2
+			TotalCount 20
+			MaxActive 5
+			SpawnCount 5
+			Where spawnbot
+			TotalCurrency 110
+			
+			TFBot
+			{
+				Template T_TFBot_Scout_Scattergun_SlowFire
+			}
+		}
+		
+		WaveSpawn // 5b, Fast and Giant Scouts
+		{
+			Name "w5b"
+			WaitForAllDead "w5a"
+			TotalCount 3
+			MaxActive 1
+			SpawnCount 1
+			Where spawnbot
+			TotalCurrency 300
+			
+			TFBot
+			{
+				Template T_TFBot_Giant_Scout_Fast
+			}
+		}
+		
+		WaveSpawn // 5b, Sunstick Scouts
+		{
+			Name "w5b"
+			WaitForAllDead "w5a"
+			WaitBeforeStarting 5
+			TotalCount 15
+			Maxactive 10
+			SpawnCount 5
+			Where spawnbot
+			TotalCurrency 80
+			
+			TFBot
+			{
+				Template T_TFBot_Scout_SunStick
+			}
+		}
+		
+		WaveSpawn // 5c, Sunstick Scouts and Pyros
+		{
+			Name "w5c"
+			WaitForAllDead "w5b"
+			WaitBeforeStarting 5
+			TotalCount 24
+			Maxactive 6
+			SpawnCount 6
+			Where spawnbot
+			TotalCurrency 190
+			
+			Squad
+			{
+				TFBot
+				{
+					Template T_TFBot_Scout_SunStick
+				}
+				
+				TFBot
+				{
+					Template T_TFBot_Pyro
+				}
+			}
+		}
+		
+		WaveSpawn // Sandman Scouts
+		{
+			Name "w5d"
+			WaitForAllDead "w5c"
+			WaitBeforeStarting 3
+			TotalCount 8
+			MaxActive 4
+			SpawnCount 4
+			Where spawnbot
+			TotalCurrency 90
+			
+			TFBot
+			{
+				Template T_TFBot_Scout_Sandman
+			}
+		}
+	}
+
+	Wave // Wave 6
+	{
+		StartWaveOutput
+		{
+			Target wave_start_relay
+			Action Trigger
+		}
+		DoneOutput					
+		{
+			Target wave_finished_relay
+			Action Tigger
+		}
+		WaitWhenDone 50
+		Checkpoint Yes
+		Sound "Announcer.IncomingMob"
+		
+		WaveSpawn // 6a, Shotgun Heavies
+		{
+			Name "w6a"
+			TotalCount 12
+			MaxActive 4
+			SpawnCount 4
+			Where spawnbot
+			TotalCurrency 100
+			
+			TFBot
+			{
+				Class Heavyweapons
+				Skill Hard
+				WeaponRestrictions SecondaryOnly
+				Health 150
+				Name "ShotgunBot"
+				Item "The Gridiron Guardian"
+				Scale 0.9
+			}
+		}
+		
+		WaveSpawn // Golfer Demos
+		{
+			Name "w6a"
+			TotalCount 9
+			MaxActive 3
+			SpawnCount 3
+			Where spawnbot
+			TotalCurrency 110
+			
+			TFBot
+			{	
+				Template T_TFBot_Demoknight_Golfer
+			}
+		}
+		
+		WaveSpawn // 6b, Three-rune Blade Scouts
+		{
+			Name "w6b"
+			WaitForAllDead "w6a"
+			WaitBeforeStarting 5
+			TotalCount 20
+			MaxActive 5
+			SpawnCount 5
+			Where spawnbot
+			TotalCurrency 100
+			
+			TFBot
+			{
+				Class Scout
+				Skill Hard
+				Item "Three-rune Blade"
+				WeaponRestrictions MeleeOnly
+				Health 150
+			}
+		}
+		
+		WaveSpawn // 6c, Equalizer Soldiers
+		{
+			Name "w6c"
+			WaitForAllDead "w6b"
+			WaitBeforeStarting 3
+			TotalCount 16
+			MaxActive 4
+			Where spawnbot
+			SpawnCount 4
+			TotalCurrency 110
+			
+			TFBot
+			{
+				Template T_TFBot_Soldier_Equalizer
+			}
+		}
+		
+		WaveSpawn // 6d, Kukri Sniper
+		{
+			Name "w6d"
+			WaitForAllDead "w6c"
+			WaitBeforeStarting 3
+			Totalcount 25
+			MaxActive 5
+			SpawnCount 5
+			Where spawnbot
+			TotalCurrency 90
+			
+			TFBot
+			{
+				Name "KukriBot"
+				Class Sniper
+				Skill Hard
+				WeaponRestrictions MeleeOnly
+			}
+		}
+	}
+	
+	Wave // Wave 7
+	{
+		StartWaveOutput
+		{
+			Target wave_start_relay
+			Action Trigger
+		}
+		DoneOutput					
+		{
+			Target wave_finished_relay
+			Action Tigger
+		}
+		WaitWhenDone 50
+		Checkpoint Yes
+		Sound "Announcer.IncomingMob"
+		
+		WaveSpawn // Giant Crit Soldiers
+		{
+			Name "w7a"
+			TotalCount 3
+			WaitBetweenSpawns 5
+			MaxActive 1
+			SpawnCount 1
+			Where spawnbot
+			TotalCurrency 200
+			
+			TFBot
+			{
+				Template T_TFBot_Giant_Soldier_Crit
+			}
+		}
+		
+		WaveSpawn // Steel Gauntlets
+		{
+			Name "w7b"
+			TotalCount 12
+			WaitBeforeStarting 3
+			MaxActive 4
+			SpawnCount 4
+			Where spawnbot
+			TotalCurrency 120
+			
+			TFBot
+			{
+				Template T_TFBot_Heavyweapons_Fist
+			}
+		}
+		
+		WaveSpawn // Shotgun Soldiers and Pyros
+		{
+			Name "w7b"
+			TotalCount 32
+			WaitBeforeStarting 4
+			WaitForAllDead "w7a"
+			MaxActive 8
+			SpawnCount 8
+			TotalCurrency 200
+			Where spawnbot
+			
+			Squad
+			{
+				TFBot
+				{
+					Template T_TFBot_Pyro
+				}
+				
+				TFBot
+				{
+					Class Soldier
+					Skill Hard
+					Health 210
+					WeaponRestrictions SecondaryOnly
+					Name "SmartSeagentBot"
+					Item "Soldier's Sparkplug"
+					Item "Full Metal Drill Hat"
+				}
+			}
+		}
+		
+		WaveSpawn // Bonk Scouts
+		{
+			Name "w7c"
+			WaitForAllDead "w7b"
+			TotalCount 20
+			MaxActive 10
+			SpawnCount 5
+			TotalCurrency 90
+			Where spawnbot
+			
+			TFBot
+			{
+				Template T_TFBot_Scout_Bonk
+			}
+		}
+		
+		WaveSpawn // 7d, Shortstop Scouts
+		{
+			Name "w7d"
+			WaitForAllDead "w7c"
+			WaitBeforeStarting 1
+			TotalCount 9
+			MaxActive 6
+			SpawnCount 3
+			Where spawnbot
+			TotalCurrency 110
+			
+			TFBot
+			{
+				Template T_TFBot_Scout_Shortstop
+			}
+		}
+		
+		WaveSpawn // 7e, New Fishbots
+		{
+			Name "w7e"
+			WaitForAllDead "w7d"
+			WaitBeforeStarting 2
+			TotalCount 10
+			MaxActive 5
+			SpawnCount 5
+			TotalCurrency 100
+			Where spawnbot
+			
+			TFBot
+			{
+				Class Scout
+				Skill Hard
+				WeaponRestrictions MeleeOnly
+				Item "The Holy Mackerel"
+				Name "FishBot2.0"
+				Item "The Milkman"
+			}
+		}
+	}
+}

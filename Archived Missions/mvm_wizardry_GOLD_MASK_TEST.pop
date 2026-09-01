@@ -1,0 +1,262 @@
+#base robot_giant.pop
+#base robot_standard.pop
+#base robot_sports.pop
+#base robot_click.pop
+#base robot_click_giant.pop
+
+//Where:
+//spawn_generic
+//spawn_left
+//spawn_mission_sniper
+//spawn_mission_spy
+//spawn_right
+//spawn_sides
+//spawn_side_main
+//spawn_nowhere used for wheel
+
+//Tank:
+//tank_path_start_main
+//tank_path_start_opposite
+
+WaveSchedule
+{
+	StartingCurrency 80000
+	RespawnWaveTime	7
+	CanBotsAttackWhileInSpawnRoom No
+	
+	PointTemplates [$SIGSEGV]
+	{
+		mask_boss_logic
+        {
+            OnSpawnOutput
+			{
+				Target "maskintro"
+				Action "Trigger"
+				Delay 0.1
+			}
+			
+            logic_relay
+            {
+                "targetname" "maskintro"
+                "OnTrigger"  "upper_text,Display,,1,1"
+                "OnTrigger"  "text_lower,Display,,2,1"
+                "OnTrigger"  "layer_text,Display,,4.5,1"
+                
+            }
+			
+            game_text
+			{
+				"origin" "1984 1984 99999"
+				"targetname" "upper_text"
+				"message" "YOUNG NOBLE OF DANGEROUS WEAPONRY"
+				"x" "-1"
+				"y" "0.4"
+				"spawnflags" "1"
+				"effect" "2"
+				"channel" "1"
+				"color" "255 255 255"
+				"fxtime" "0.2"
+				"fadeout" "1"
+				//"fadein" "0"
+				"holdtime" "5"
+			}
+
+			game_text
+			{
+				"origin" "1984 1984 99999"
+				"targetname" "text_lower"
+				"message" "GOLD MASK"
+				"x" "-1"
+				"y" "0.45"
+				"channel" "0"
+				"spawnflags" "1"
+				"color" "255 255 255"
+				"fadein" "0.2"
+				"fadeout" "1"
+				"holdtime" "2.8"
+			}
+            game_text
+			{
+				"origin" "1984 1984 99999"
+				"targetname" "layer_text"
+				"message" "GOLD MASK"
+				"x" "-1"
+				"y" "0.45"
+				"channel" "4"
+				"spawnflags" "1"
+				"color" "255 0 0"
+				"fadein" "0.2"
+				"fadeout" "1"
+				"holdtime" "3"
+			}
+		}
+	}
+	
+//sentry busters and such
+	Mission
+	{
+		Objective	DestroySentries
+		Where	spawn_generic
+		BeginAtWave	1
+		RunForThisManyWaves 4 //6 later
+		CooldownTime	30
+		DesiredCount	1
+		
+		TFBot
+		{
+			Template	T_TFBot_SentryBuster
+		}
+	}
+	
+	Mission
+	{
+		Objective Sniper
+		Where spawn_mission_sniper
+		BeginAtWave 1
+		RunForThisManyWaves 1 //give him an encore on wave 6 later
+		CooldownTime 30
+		DesiredCount 1
+		HideIcon 1
+		
+		TFBot
+		{
+			Template	Golf_Creature
+		}
+	}
+	
+	Mission
+	{
+		Objective	Spy
+		Where		spawn_mission_spy
+		BeginAtWave 1
+		RunForThisManyWaves 1 //3 later
+		CooldownTime 20
+		DesiredCount 3
+		
+		TFBot
+		{
+			Template	T_TFBot_Spy
+		}
+	}
+	
+	Wave
+	{
+		StartWaveOutput
+		{
+			Target wave_start_relay
+			Action Trigger
+		}
+		
+		DoneOutput
+		{
+			Target wave_finished_relay
+			Action Trigger
+		}
+		
+		WaveSpawn
+		{
+			Name	"wave4a"
+			
+			TotalCurrency 400
+			Where	spawn_sides
+			TotalCount 30
+			SpawnCount 3
+			MaxActive 6
+			WaitBeforeStarting 0
+			WaitBetweenSpawns 10
+			
+			Support 1
+			
+			TFBot
+			{
+				Template	Batter
+				Attributes "AlwaysCrit"
+			}
+		}
+		
+		WaveSpawn
+		{
+			Name	"wave4a"
+			
+			TotalCurrency 400
+			Where	spawn_generic
+			TotalCount 4
+			SpawnCount 2
+			MaxActive 2
+			WaitBeforeStarting 10
+			WaitBetweenSpawns 30
+			
+			Support 1
+			
+			TFBot
+			{
+				Template	Pitcher
+			}
+		}
+		
+		WaveSpawn
+		{
+			Name	"wave4b"
+			
+			TotalCurrency 400
+			Where	spawn_sides
+			TotalCount 4
+			SpawnCount 4
+			MaxActive 4
+			WaitBeforeStarting 30
+			
+			Squad
+			{
+				TFBot
+				{
+					Template	No_Escape
+				}
+				
+				TFBot
+				{
+					Template	Shield_Medic_Giant
+				}
+			}
+		}
+		
+		WaveSpawn
+		{
+			Name "wave4c"
+			
+			TotalCurrency 0
+			Where spawn_generic
+			TotalCount 1
+			SpawnCount	1
+			MaxActive 1
+			WaitBeforeStarting 10
+			WaitForAllSpawned "wave4b"
+			
+			TFBot
+			{
+				Template	Gold_Mask
+				SpawnTemplate mask_boss_logic
+			}
+		}
+		
+		WaveSpawn
+		{
+			Name	"wave4c"
+			
+			TotalCurrency 200
+			Where spawn_sides
+			TotalCount 10
+			SpawnCount 2
+			MaxActive 4
+			WaitBeforeStarting	15
+			WaitForAllSpawned	"wave4b"
+			WaitBetweenSpawns 15
+			
+			Support Limited
+			
+			TFBot
+			{
+				Template	T_TFBot_Giant_Scout_Blaster_Hyper
+			}
+		}
+	}
+}

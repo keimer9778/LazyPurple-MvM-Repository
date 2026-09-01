@@ -1,0 +1,806 @@
+///////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////
+
+//WAVE RELAYS
+//wave_start_relay_max (players must manage EVERYTHING!!!)
+//wave_start_relay_4_objectives (players manage power generator and 4 random objectives)
+//wave_start_relay_3_objectives (players manage power generator and 3 random objectives)
+//wave_start_relay_1_objective (players manage power generator and 3 random objectives)
+//wave_start_relay_1_objective (players manage power generator and 3 random objectives)
+
+//Enable objectives manually (relay)
+//wave_start_relay_antifog
+//wave_start_relay_power_batteries
+//wave_start_relay_food_supply
+//wave_start_relay_siege_gun
+//wave_start_relay_enemy_blimp
+///////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////
+
+//SPAWNBOT NAMES
+//front
+///////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////
+
+////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////
+//---------------------Mission File-------------------------
+////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////
+
+//#base expert_robot_kmlp.pop
+//#base expert_robot_kmlp_nojump.pop
+//#base expert_medium_robot_kmlp.pop
+//#base expert_medium_standard_robot_kmlp.pop
+//#base expert_giant_robot_kmlp.pop
+#base expert_leaders_kmlp.pop
+
+#base tiny_robot_kmlp.pop
+#base robot_kmlp.pop
+#base robot_kmlp_nojump.pop
+#base medium_robot_kmlp.pop
+#base medium_standard_robot_kmlp.pop
+#base giant_robot_kmlp.pop
+//#base leaders_kmlp.pop
+#base capital_kmlp.pop
+#base guardian_kmlp.pop
+#base super_ultra_mega_robot_kmlp.pop
+#base master_mundy_kmlp.pop
+#base gold_plated_kmlp.pop
+
+#base survivor_robot_kmlp.pop
+#base survivor_medium_robot_kmlp.pop
+#base survivor_medium_standard_robot_kmlp.pop
+#base survivor_giant_robot_kmlp.pop
+
+#base daddy_robot_kmlp.pop
+#base bubble_giant_robot_kmlp.pop
+#base bubble_medium_robot_kmlp.pop
+#base bubble_medium_standard_robot_kmlp.pop
+
+waveschedule
+{
+
+	startingcurrency	0
+	respawnwavetime 0
+	fixedrespawnwavetime	1
+	canbotsattackwhileinspawnroom no
+	Advanced	1
+
+	////////////////////////////////////////////////////////////////////
+	////////////////////////////////////////////////////////////////////
+	////////////////////////////////////////////////////////////////////
+	////////////////////////////////////////////////////////////////////
+	////////////////////////////////////////////////////////////////////
+	////////////////////////////////////////////////////////////////////
+	//Wave 1
+
+	wave
+	{
+		waitwhendone	65
+		checkpoint	yes
+
+		startwaveoutput
+		{
+			target	wave_start_relay_max
+			action	trigger
+		}
+		doneoutput
+		{
+			target	wave_complete_relay
+			action	trigger
+		}
+
+		/////////////////////////////////////////////Isolated
+		wavespawn
+		{
+			support	1
+
+			totalcount	1
+
+			waitbeforestarting	0
+			waitbetweenspawns	1
+
+			maxactive	1
+			spawncount	1
+
+			where	put_bomb_carrier_here
+
+			randomchoice
+			{
+				squad
+				{
+					tfbot
+					{
+						template	kmlp_scout_sunonastick
+					}
+				}
+			}
+		}
+
+		/////////////////////////////////////////////Phase 1
+		wavespawn
+		{
+			name	phase1
+
+			totalcount	21
+
+			waitbeforestarting	1
+			waitbetweenspawns	0.05
+
+			maxactive	21
+			spawncount	1
+
+			where	front
+
+			randomchoice
+			{
+				tfbot
+				{
+					template	kmlp_demo_samurai_giant_crit
+				}
+			}
+		}
+
+		/////////////////////////////////////////////Phase 2
+		wavespawn
+		{
+			name	phase2
+
+			totalcount	4
+			totalcurrency	0
+
+			waitforalldead	phase1
+			waitbeforestarting	120
+			waitbetweenspawns	1
+
+			maxactive	3
+			spawncount	1
+
+			where	front
+
+			squad
+			{
+				tfbot
+				{
+					template	kmlp_heavy_yeetmaster_boss
+					health	150000
+
+					Name	"KING OF YEET"
+
+					ItemAttributes
+					{
+						ItemName	"Fists of Steel"
+						"fire rate bonus"	0.25
+						"damage penalty"	0.10
+						"dmg bonus vs buildings"	2
+						"apply look velocity on damage"	9000
+						"apply z velocity on damage"	3000
+						"damage causes airblast"	1
+						"melee range multiplier"	2.25
+					}
+					
+					CharacterAttributes
+					{
+						"move speed bonus"	0.3
+						"damage force reduction" 0.000001
+						"airblast vulnerability multiplier" 0.000001
+						"cancel falling damage"	1
+						"increased jump height"	2
+						"hand scale"	3
+					}
+				}
+			}
+		}
+
+		/////////////////////////////////////////////Phase 3
+		wavespawn
+		{
+			name	phase3
+
+			totalcount	4
+			totalcurrency	0
+
+			waitforalldead	phase2
+			waitbeforestarting	60
+			waitbetweenspawns	1
+
+			maxactive	2
+			spawncount	1
+
+			where	front
+
+			squad
+			{
+				tfbot
+				{
+					template	kmlp_medic_boss
+				}
+			}
+		}
+
+		/////////////////////////////////////////////Support
+		wavespawn
+		{
+			support	1
+
+			name	supportlsum
+
+			totalcount	256
+
+			waitbeforestarting	1
+			waitbetweenspawns	60
+
+			maxactive	1
+			spawncount	1
+
+			where	front
+
+			randomchoice
+			{
+				tfbot
+				{
+					template	kmlp_scout_boss
+					classicon	scout
+				}
+				tfbot
+				{
+					template	kmlp_soldier_black_box_boss
+					classicon	soldier
+				}
+				tfbot
+				{
+					template	kmlp_pyro_fart_machine_boss
+					classicon	pyro
+				}
+				tfbot
+				{
+					template	kmlp_demo_boss
+					classicon	demo
+				}
+				tfbot
+				{
+					template	kmlp_heavy_tomislav_boss
+					classicon	heavy
+				}
+				tfbot
+				{
+					template	kmlp_sniper_smg_boss
+					classicon	sniper_smg
+				}
+				tfbot
+				{
+					template	kmlp_scout_guardian
+					classicon	scout
+				}
+				tfbot
+				{
+					template	kmlp_soldier_guardian
+					classicon	soldier
+				}
+				tfbot
+				{
+					template	kmlp_demo_samurai_guardian
+					classicon	demo
+				}
+				tfbot
+				{
+					template	kmlp_heavy_shotgun_guardian
+					classicon	heavy
+				}
+				tfbot
+				{
+					template	kmlp_scout_superultramega
+					classicon	scout
+				}
+				tfbot
+				{
+					template	kmlp_scout_superultramega_accurate
+					classicon	scout
+				}
+				tfbot
+				{
+					template	kmlp_scout_superultramega_back_scatter
+					classicon	scout
+				}
+				tfbot
+				{
+					template	kmlp_soldier_superultramega
+					classicon	soldier
+				}
+				tfbot
+				{
+					template	kmlp_soldier_superultramega_chadd
+					classicon	soldier
+				}
+				tfbot
+				{
+					template	kmlp_pyro_superultramega
+					classicon	pyro
+				}
+				tfbot
+				{
+					template	kmlp_pyro_superultramega_averagegamer
+					classicon	pyro
+				}
+				tfbot
+				{
+					template	kmlp_demo_superultramega
+					classicon	demo
+				}
+				tfbot
+				{
+					template	kmlp_heavy_superultramega
+					classicon	heavy
+				}
+				tfbot
+				{
+					template	kmlp_heavy_superultramega_tomislav
+					classicon	heavy
+				}
+			}
+		}
+
+		wavespawn
+		{
+			support	1
+
+			name	supportg
+
+			totalcount	256
+
+			waitbeforestarting	1
+			waitbetweenspawns	1
+
+			maxactive	4
+			spawncount	1
+
+			where	front
+
+			randomchoice
+			{
+				tfbot
+				{
+					template	kmlp_scout_giant
+					classicon	scout
+				}
+				tfbot
+				{
+					template	kmlp_scout_bat_giant
+					classicon	scout
+				}
+				tfbot
+				{
+					template	kmlp_scout_public_giant
+					classicon	scout
+				}
+				tfbot
+				{
+					template	kmlp_scout_shortstop_giant
+					classicon	scout
+				}
+				tfbot
+				{
+					template	kmlp_scout_phalanx_giant
+					classicon	scout
+				}
+				tfbot
+				{
+					template	kmlp_soldier_giant
+					classicon	soldier
+				}
+				tfbot
+				{
+					template	kmlp_soldier_conch_giant
+					classicon	soldier
+				}
+				tfbot
+				{
+					template	kmlp_soldier_buff_giant
+					classicon	soldier
+				}
+				tfbot
+				{
+					template	kmlp_soldier_shotgun_giant
+					classicon	soldier
+				}
+				tfbot
+				{
+					template	kmlp_soldier_daddy_giant
+					classicon	soldier
+				}
+				tfbot
+				{
+					template	kmlp_pyro_giant
+					classicon	pyro
+				}
+				tfbot
+				{
+					template	kmlp_pyro_phlog_giant
+					classicon	pyro
+				}
+				tfbot
+				{
+					template	kmlp_pyro_manmelter_giant
+					classicon	pyro
+				}
+				tfbot
+				{
+					template	kmlp_pyro_shotgun_giant
+					classicon	pyro
+				}
+				tfbot
+				{
+					template	kmlp_pyro_fart_machine_giant
+					classicon	pyro
+				}
+				tfbot
+				{
+					template	kmlp_carpet_bomber_giant
+					classicon	demo
+				}
+				tfbot
+				{
+					template	kmlp_demo_loch_giant
+					classicon	demo
+				}
+				tfbot
+				{
+					template	kmlp_heavy_giant
+					classicon	heavy
+				}
+				tfbot
+				{
+					template	kmlp_heavy_brassbeast_giant
+					classicon	heavy
+				}
+				tfbot
+				{
+					template	kmlp_heavy_shotgun_giant
+					classicon	heavy
+				}
+				tfbot
+				{
+					template	kmlp_heavy_shotgun_spread_giant
+					classicon	heavy
+				}
+				tfbot
+				{
+					template	kmlp_heavy_rocket_giant
+					classicon	heavy
+				}
+				tfbot
+				{
+					template	kmlp_sniper_smg_giant
+					classicon	sniper
+				}
+				tfbot
+				{
+					template	kmlp_scout_giant_crit
+					classicon	scout
+				}
+				tfbot
+				{
+					template	kmlp_scout_bat_giant_crit
+					classicon	scout
+				}
+				tfbot
+				{
+					template	kmlp_scout_public_giant_crit
+					classicon	scout
+				}
+				tfbot
+				{
+					template	kmlp_scout_shortstop_giant_crit
+					classicon	scout
+				}
+				tfbot
+				{
+					template	kmlp_scout_phalanx_giant_crit
+					classicon	scout
+				}
+				tfbot
+				{
+					template	kmlp_soldier_giant_crit
+					classicon	soldier
+				}
+				tfbot
+				{
+					template	kmlp_soldier_conch_giant_crit
+					classicon	soldier
+				}
+				tfbot
+				{
+					template	kmlp_soldier_buff_giant_crit
+					classicon	soldier
+				}
+				tfbot
+				{
+					template	kmlp_soldier_shotgun_giant_crit
+					classicon	soldier
+				}
+				tfbot
+				{
+					template	kmlp_soldier_daddy_giant_crit
+					classicon	soldier
+				}
+				tfbot
+				{
+					template	kmlp_pyro_giant_crit
+					classicon	pyro
+				}
+				tfbot
+				{
+					template	kmlp_pyro_manmelter
+					classicon	pyro
+				}
+				tfbot
+				{
+					template	kmlp_carpet_bomber_giant_crit
+					classicon	demo
+				}
+				tfbot
+				{
+					template	kmlp_demo_loch_giant_crit
+					classicon	demo
+				}
+				tfbot
+				{
+					template	kmlp_heavy_giant_crit
+					classicon	heavy
+				}
+				tfbot
+				{
+					template	kmlp_heavy_brassbeast_giant_crit
+					classicon	heavy
+				}
+				tfbot
+				{
+					template	kmlp_heavy_shotgun_giant_crit
+					classicon	heavy
+				}
+				tfbot
+				{
+					template	kmlp_heavy_shotgun_spread_giant_crit
+					classicon	heavy
+				}
+				tfbot
+				{
+					template	kmlp_heavy_rocket_giant_crit
+					classicon	heavy
+				}
+				tfbot
+				{
+					template	kmlp_sniper_smg_giant_crit
+					classicon	sniper
+				}
+			}
+		}
+
+		wavespawn
+		{
+			support	1
+
+			name	supportg
+
+			totalcount	256
+
+			waitbeforestarting	1
+			waitbetweenspawns	1
+
+			maxactive	15
+			spawncount	1
+
+			where	front
+
+			randomchoice
+			{
+				tfbot
+				{
+					template	kmlp_scout
+					classicon	scout
+				}
+				tfbot
+				{
+					template	kmlp_scout_medium
+					classicon	scout
+				}
+				tfbot
+				{
+					template	kmlp_scout_back_scatter
+					classicon	scout
+				}
+				tfbot
+				{
+					template	kmlp_soldier
+					classicon	soldier
+				}
+				tfbot
+				{
+					template	kmlp_soldier_conch
+					classicon	soldier
+				}
+				tfbot
+				{
+					template	kmlp_soldier_buff
+					classicon	soldier
+				}
+				tfbot
+				{
+					template	kmlp_soldier_shotgun
+					classicon	soldier
+				}
+				tfbot
+				{
+					template	kmlp_soldier_direct_hit
+					classicon	soldier
+				}
+				tfbot
+				{
+					template	kmlp_pyro
+					classicon	pyro
+				}
+				tfbot
+				{
+					template	kmlp_pyro_phlog
+					classicon	pyro
+				}
+				tfbot
+				{
+					template	kmlp_pyro_manmelter
+					classicon	pyro
+				}
+				tfbot
+				{
+					template	kmlp_pyro_shotgun
+					classicon	pyro
+				}
+				tfbot
+				{
+					template	kmlp_pyro_medium
+					classicon	pyro
+				}
+				tfbot
+				{
+					template	kmlp_carpet_bomber
+					classicon	demo
+				}
+				tfbot
+				{
+					template	kmlp_demo_samurai
+					classicon	demo
+				}
+				tfbot
+				{
+					template	kmlp_demo_arrow_auto
+					classicon	demo
+				}
+				tfbot
+				{
+					template	kmlp_demo_loch
+					classicon	demo
+				}
+				tfbot
+				{
+					template	kmlp_heavy
+					classicon	heavy
+				}
+				tfbot
+				{
+					template	kmlp_heavy_brassbeast
+					classicon	heavy
+				}
+				tfbot
+				{
+					template	kmlp_heavy_medium
+					classicon	heavy
+				}
+				tfbot
+				{
+					template	kmlp_heavy_brassbeast
+					classicon	heavy
+				}
+				tfbot
+				{
+					template	kmlp_heavy_rocket
+					classicon	heavy
+				}
+				tfbot
+				{
+					template	kmlp_mundy_big
+					classicon	sniper
+				}
+				tfbot
+				{
+					template	kmlp_scout_crit
+					classicon	scout
+				}
+				tfbot
+				{
+					template	kmlp_scout_medium_crit
+					classicon	scout
+				}
+				tfbot
+				{
+					template	kmlp_soldier_crit
+					classicon	soldier
+				}
+				tfbot
+				{
+					template	kmlp_soldier_conch_crit
+					classicon	soldier
+				}
+				tfbot
+				{
+					template	kmlp_soldier_buff_crit
+					classicon	soldier
+				}
+				tfbot
+				{
+					template	kmlp_soldier_shotgun_crit
+					classicon	soldier
+				}
+				tfbot
+				{
+					template	kmlp_soldier_direct_hit_crit
+					classicon	soldier
+				}
+				tfbot
+				{
+					template	kmlp_pyro_crit
+					classicon	pyro
+				}
+				tfbot
+				{
+					template	kmlp_pyro_shotgun_crit
+					classicon	pyro
+				}
+				tfbot
+				{
+					template	kmlp_pyro_medium_crit
+					classicon	pyro
+				}
+				tfbot
+				{
+					template	kmlp_carpet_bomber_crit
+					classicon	demo
+				}
+				tfbot
+				{
+					template	kmlp_demo_samurai_crit
+					classicon	demo
+				}
+				tfbot
+				{
+					template	kmlp_heavy_crit
+					classicon	heavy
+				}
+				tfbot
+				{
+					template	kmlp_heavy_brassbeast_crit
+					classicon	heavy
+				}
+				tfbot
+				{
+					template	kmlp_heavy_medium_crit
+					classicon	heavy
+				}
+				tfbot
+				{
+					template	kmlp_heavy_brassbeast_crit
+					classicon	heavy
+				}
+				tfbot
+				{
+					template	kmlp_sniper_smg_crit
+					classicon	sniper
+				}
+			}
+		}
+	}
+}

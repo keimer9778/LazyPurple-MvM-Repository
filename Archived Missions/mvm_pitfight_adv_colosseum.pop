@@ -1,0 +1,282 @@
+//mission by randomguy
+#base robot_randomguy.pop
+#base robot_gatebot_randomguy.pop
+
+WaveSchedule
+{
+	CanBotsAttackWhileInSpawnRoom no
+	RespawnWaveTime	1
+	StartingCurrency 800
+	Advanced 1
+	AddSentryBusterWhenDamageDealtExceeds 6000
+	AddSentryBusterWhenKillCountExceeds	30
+	// EventPopFile Halloween
+	Templates
+	{
+	}
+	
+	Mission
+	{
+		Objective Spy
+
+		InitialCooldown 15
+		Where spawnbot_top
+		BeginAtWave 0
+		RunForThisManyWaves 1
+		CooldownTime 40
+		DesiredCount 2
+
+		TFBot
+		{
+			Template T_TFBot_Spy
+		}
+	}
+	
+	Mission
+	{
+		Objective Sniper
+		
+		Where spawnbot_top
+		BeginAtWave 0
+		RunForThisManyWaves 1
+		InitialCooldown 25
+		CooldownTime 40
+		DesiredCount 1
+		TFBot
+		{
+			Template T_TFBot_Sniper
+		}
+	}
+	
+	Mission
+	{
+		Objective	DestroySentries
+		
+		Where spawnbot_left
+		InitialCooldown 45
+		CooldownTime 60
+		BeginAtWave 1
+		RunForThisManyWaves 10
+		TFBot
+		{
+			Template T_TFBot_SentryBuster
+			CharacterAttributes 
+			{
+				"increase player capture value" -1
+			}
+		}
+	}
+	//spawns: spawnbot_left, spawnbot_top, spawnbot_right_main_1, spawnbot_right_main_2, spawnbot_right_left, spawnbot_right_right, spawnbot_main_left, spawnbot_main_right, spawnbot_door
+//WAVE 1 //////////CURRENCY 000///////////////////////////////////
+	Wave
+	{
+		StartWaveOutput
+		{
+			Target wave_start_relay
+			Action Trigger
+		}
+		DoneOutput
+		{
+			Target wave_finished_relay
+			Action trigger
+		}
+		
+		WaveSpawn
+		{
+			Name giant
+			Where spawnbot_right_main_1
+			Where spawnbot_right_main_2
+			TotalCount 2
+			MaxActive 1
+			SpawnCount 1
+			WaitBeforeStarting 0
+			WaitBetweenSpawns 0
+			TotalCurrency 100
+			RandomSpawn 1
+			
+			
+				TFBot
+				{
+					Template T_TFBot_Giant_Pyro
+					BehaviorModifiers push
+					Attributes IgnoreFlag
+				}
+		}
+		
+		WaveSpawn
+		{
+			Name giant2
+			WaitForAllSpawned giant
+			Where spawnbot_main_right
+			Where spawnbot_main_left
+			TotalCount 4
+			MaxActive 3
+			SpawnCount 1
+			WaitBeforeStarting 15
+			WaitBetweenSpawns 25
+			TotalCurrency 100
+			RandomSpawn 0
+			
+			
+				TFBot
+				{
+					Template T_TFBot_Giant_Soldier_Crit
+					BehaviorModifiers push
+					Attributes IgnoreFlag
+				}
+		}
+		
+		WaveSpawn
+		{
+			Name stage1
+			Where spawnbot_main_left
+			TotalCount 30
+			MaxActive 10
+			SpawnCount 5
+			WaitBeforeStarting 0
+			WaitBetweenSpawns 8
+			TotalCurrency 150
+			RandomSpawn 0
+			
+			
+				TFBot
+				{
+					Template T_TFBot_Scout_FAN
+					BehaviorModifiers push
+					Attributes IgnoreFlag
+				}
+		}
+		
+		WaveSpawn
+		{
+			Name stage1
+			Where spawnbot_main_right
+			TotalCount 15
+			MaxActive 6
+			SpawnCount 3
+			WaitBeforeStarting 0
+			WaitBetweenSpawns 8
+			TotalCurrency 100
+			RandomSpawn 0
+			
+			
+				TFBot
+				{
+					Class Heavy
+					Skill Easy
+					BehaviorModifiers push
+					Attributes IgnoreFlag
+				}
+		}
+		
+		WaveSpawn
+		{
+			Name stage2
+			WaitForAllSpawned stage1
+			Where spawnbot_main_right
+			Where spawnbot_main_left
+			TotalCount 36
+			MaxActive 15
+			SpawnCount 3
+			WaitBeforeStarting 5
+			WaitBetweenSpawns 6
+			TotalCurrency 100
+			RandomSpawn 0
+			
+			
+				TFBot
+				{
+					Template T_TFBot_Pyro_Shotgun
+					Skill Normal
+					BehaviorModifiers push
+					Attributes IgnoreFlag
+				}
+		}
+		
+		WaveSpawn
+		{
+			Name stage3
+			WaitForAllSpawned stage2
+			Where spawnbot_main_right
+			Where spawnbot_main_left
+			TotalCount 8
+			MaxActive 4
+			SpawnCount 2
+			WaitBeforeStarting 10
+			WaitBetweenSpawns 10
+			TotalCurrency 100
+			RandomSpawn 0
+			
+			
+			Squad
+			{
+				TFBot
+				{
+					Template T_TFBot_HeavyWeapons_Fist
+					BehaviorModifiers push
+					Attributes IgnoreFlag
+				}
+				
+				TFBot
+				{
+					Template T_TFBot_Medic_QuickUber
+					BehaviorModifiers push
+					Attributes IgnoreFlag
+				}
+			}
+		}
+		
+		WaveSpawn
+		{
+			Name challenger
+			WaitForAllDead stage3
+			WaitForAllSpawned giant2
+			Where spawnbot_door
+			TotalCount 1
+			MaxActive 1
+			SpawnCount 1
+			WaitBeforeStarting 10
+			WaitBetweenSpawns 0
+			TotalCurrency 50
+			RandomSpawn 0
+			
+			
+				TFBot
+				{
+					Template T_TFBot_HeavyWeapons_Heater
+					BehaviorModifiers push
+					Attributes IgnoreFlag
+					Name "The Challenger"
+					Health 12500
+				}
+		}
+	}
+	
+	Wave ////NAV TEST WAVE!
+	{
+	WaveSpawn
+		{
+			Name giant3
+			Where spawnbot_door
+			TotalCount 1
+			MaxActive 1
+			SpawnCount 1
+			WaitBeforeStarting 0
+			WaitBetweenSpawns 0
+			TotalCurrency 50
+			RandomSpawn 0
+			
+			
+				TFBot
+				{
+					Template T_TFBot_HeavyWeapons_Heater
+					BehaviorModifiers push
+					Attributes IgnoreFlag
+					Name "Nav Tester"
+				}
+		}
+	}
+	
+	
+	
+}
