@@ -1,0 +1,1917 @@
+//Custom population file for mvm_manndarin_final made by Geosus Theodore Foxworth.
+//Thanks to Valve and the MvM Thread on Facepunch for reference.
+
+//Version 1.0 
+
+#base robot_giant.pop
+#base robot_standard.pop
+
+WaveSchedule
+{
+	StartingCurrency 500
+	RespawnWaveTime 5
+	FixedRespawnWaveTime no
+	CanBotsAttackWhileInSpawnRoom no
+	AddSentryBusterWhenDamageDealtExceeds 3000
+	AddSentryBusterWhenKillCountExceeds 15
+	Advanced 1
+
+Templates
+	{
+	T_TFbot_MachinaSniper
+		{
+		Class Sniper
+		Name "Machina Sniper"
+		ClassIcon sniper_d
+		Skill Expert
+		Item "The Machina"
+		Item "The Deus Specs"
+		WeaponRestrictions PrimaryOnly
+		CharacterAttributes
+			{
+			"sniper charge per sec" 0
+			"sniper no headshots" 1
+			"damage bonus" 4
+			"aiming knockback resistance" 0.5
+			"aiming no flinch" 1
+			"dmg from sentry reduced" 0
+			"dmg taken from blast reduced" 0.25
+			"dmg penalty vs players" .5
+			}
+		}
+		
+	T_TFbot_EarnerSpy
+		{
+		Class Spy
+		Skill Expert
+		Item "The Big Earner"
+		Item "The Made Man"
+		Item "The Enforcer"
+		Item "Cosa Nostra Cap"
+		Health 150
+		}
+
+	T_TFbot_ZombiePyro
+		{
+		Class Pyro
+		Skill Hard
+		Item "The Neon Annihilator"
+		WeaponRestrictions MeleeOnly
+		Tag nav_prefer_flank_middle
+		CharacterAttributes
+			{
+			"damage force reduction" 0.5
+			"fire rate bonus" 1.2
+			"dmg from sentry reduced" 0.75
+			"move speed bonus" 0.8
+			"dmg from melee increased" 1.2
+			}
+		}
+
+	T_TFbot_GasJockey
+			{
+			Class Pyro
+			Name "Gas Jockey"
+			Skill Hard
+			Item "The Powerjack"
+			Item "The Attendant"
+			WeaponRestrictions MeleeOnly
+			CharacterAttributes
+				{
+				"move speed bonus" 1.1
+				"dmg taken from bullets increased" 1.1
+				}
+			}
+
+	T_TFbot_ButcherScout
+			{
+			Name "Butcher Scout"
+			Class Scout
+			Skill Expert
+			WeaponRestrictions SecondaryOnly
+			Item "The Flying Guillotine"
+			CharacterAttributes
+				{
+				"effect bar recharge rate increased" 0.05
+				}
+			}
+
+	T_TFbot_Giant_UberMedic
+			{
+			Class Medic
+			Name "Uber Medic X"
+			ClassIcon medic_uber
+			Skill Expert
+			Scale 1
+			Health 2000
+			CharacterAttributes
+				{
+				"damage force reduction" 0.6
+				"airblast vulnerability multiplier" 0.3
+				}
+			}
+	}	
+
+Mission // sentry buster 1
+	{
+		Objective DestroySentries
+
+		InitialCooldown 30
+		Where spawnbot
+		BeginAtWave 1
+		RunForThisManyWaves 8
+
+		CooldownTime 30        
+
+            TFBot
+			{
+				Template T_TFbot_SentryBuster
+            	}
+	}
+
+Mission // pisssniper
+	{
+		Objective Sniper
+
+		InitialCoolDown 20
+		Where spawnbot_mission_sniper
+		BeginAtWave 2
+		RunForThisManyWaves 1
+		DesiredCount 2
+
+		CooldownTime 10
+
+            TFBot
+			{
+				Template T_TFBot_Sniper_Sydney_Sleeper
+				Item "Ol' SnaggleTooth"
+				Item "Darwin's Danger Shield"
+				Item "The Bushwacka"
+            	}
+	}
+
+Mission // sniper 1
+	{
+		Objective Sniper
+
+		InitialCoolDown 40
+		Where spawnbot_mission_sniper
+		BeginAtWave 6
+		RunForThisManyWaves 1
+		DesiredCount 2
+
+		CooldownTime 40
+
+            TFBot
+			{
+				Template T_TFbot_MachinaSniper
+            	}
+	}
+
+Mission // sniper 2
+	{
+		Objective Sniper
+
+		InitialCoolDown 40
+		Where Behind
+		BeginAtWave 7
+		RunForThisManyWaves 1
+		DesiredCount 2
+		RandomSpawn 1
+
+		CooldownTime 25
+
+            TFBot
+			{
+				Template T_TFbot_MachinaSniper
+            	}
+	}
+
+Mission // spy 1
+	{
+		Objective Spy
+		
+		InitialCoolDown 0
+		Where behind
+		BeginAtWave 3
+		RunForThisManyWaves 1
+		DesiredCount 3
+
+		CooldownTime 25
+
+		TFBot
+			{
+				Template T_TFbot_EarnerSpy
+			}
+	}
+
+Mission // spy 2
+	{
+		Objective Spy
+		
+		InitialCoolDown 0
+		Where behind
+		BeginAtWave 6
+		RunForThisManyWaves 2
+		DesiredCount 3
+
+		CooldownTime 25
+
+		TFBot
+			{
+				Template T_TFbot_EarnerSpy
+			}
+	}
+
+/////////////////////////////////////////
+/////////////WAVES BEGIN HERE////////////
+/////////////////////////////////////////
+
+Wave // Wave 1 //Currency 600 w/o Bonus
+	{
+		StartWaveOutput
+		{
+			Target wave_start_relay
+			Action Trigger
+		}
+		DoneOutput					
+		{
+			Target wave_finished_relay
+			Action trigger
+		}
+		WaitWhenDone 65
+		Description "Feudal"
+		Checkpoint Yes
+
+		WaveSpawn // Wave 1
+		{
+			Name "SIEGE 1A"
+
+			Where spawnbot
+			TotalCount 20
+			MaxActive 10
+			SpawnCount 5
+			WaitBeforeStarting 0
+			WaitBetweenSpawns 30
+			TotalCurrency 100
+			
+				TFBot
+				{
+				Template T_TFBot_Demoman_Knight	
+				Name "Samurai Demo"
+				Item "The Half-Zatoichi"
+				Item "Demo Kabuto"
+				CharacterAttributes
+					{
+					"melee range multiplier" 1.37 
+					}
+				}
+		
+		} //WaveSpawn END
+
+		WaveSpawn // Wave 1
+		{
+			Name "SIEGE 1B"
+
+			Where spawnbot_left
+			TotalCount 20
+			MaxActive 10
+			SpawnCount 5
+			WaitBeforeStarting 15
+			WaitBetweenSpawns 30
+			TotalCurrency 100
+			
+				TFBot
+				{
+				Template T_TFBot_Soldier_Buff_Banner
+				ClassIcon soldier_d
+				Name "Samurai Soldier"
+				WeaponRestrictions MeleeOnly
+				Item "The Half-Zatoichi"
+				Item "The Concheror"
+				Item "Soldier Samurai Hat"
+				CharacterAttributes
+					{
+					"melee range multiplier" 1.37 
+					}
+				}
+
+		} //WaveSpawn END
+
+		WaveSpawn // Wave 1
+		{
+			Name "SIEGE 1C"
+
+			Where spawnbot
+			TotalCount 20
+			MaxActive 10
+			SpawnCount 10
+			WaitBeforeStarting 30
+			WaitBetweenSpawns 30
+			TotalCurrency 100
+			WaitForAllSpawned "SIEGE 1A"
+			
+				TFBot
+				{
+				Template T_TFBot_Demoman_Knight	
+				Name "Samurai Demo"
+				Item "The Half-Zatoichi"
+				Item "Demo Kabuto"
+				CharacterAttributes
+					{
+					"melee range multiplier" 1.37 
+					}
+				}
+		
+		} //WaveSpawn END
+
+		WaveSpawn // Wave 1
+		{
+			Name "SIEGE 1D"
+
+			Where spawnbot_left
+			TotalCount 20
+			MaxActive 10
+			SpawnCount 10
+			WaitBeforeStarting 30
+			WaitBetweenSpawns 30
+			TotalCurrency 100
+			WaitForAllSpawned "SIEGE 1B"
+			
+				TFBot
+				{
+				Template T_TFBot_Soldier_Buff_Banner
+				ClassIcon soldier_d
+				Name "Samurai Soldier"
+				WeaponRestrictions MeleeOnly
+				Item "The Half-Zatoichi"
+				Item "The Concheror"
+				Item "Soldier Samurai Hat"
+				CharacterAttributes
+					{
+					"melee range multiplier" 1.37 
+					}
+				}
+
+		} //WaveSpawn END
+
+		WaveSpawn // Wave 1
+		{
+			Name "SIEGE 1E"
+
+			Where spawnbot_right
+			TotalCount 8
+			MaxActive 4
+			SpawnCount 1
+			WaitBeforeStarting 61
+			WaitBetweenSpawns 15
+			TotalCurrency 36
+			
+				TFBot
+				{
+				Template T_TFBot_Medic
+				Item "Medic Geisha Hair"
+				}
+		
+		} //WaveSpawn END
+
+		WaveSpawn // Wave 1 // MINI-BOSS 1A
+		{
+			Name "SIEGE 1F"
+
+			Where spawnbot_right
+			TotalCount 2
+			MaxActive 4
+			SpawnCount 1
+			WaitBeforeStarting 15
+			WaitBetweenSpawns 1
+			TotalCurrency 82
+			WaitForAllSpawned "SIEGE 1D"
+			
+			 Squad
+			 {
+				TFBot
+				{
+				Template T_TFBot_Giant_DemoMan_PrinceTavish
+				Name "Lord Demo"
+				ClassIcon "demo_giant"
+				Item "The Half-Zatoichi"
+				Item "Demo Kabuto"
+				Item "The Menpo"
+				CharacterAttributes
+					{
+					"melee range multiplier" 1.37 
+					}
+				}
+				TFBot
+				{
+				Template T_TFBot_Medic
+				Item "Medic Geisha Hair"
+				Health 200
+				}
+			 }
+		
+		} //WaveSpawn END		
+
+		WaveSpawn // Wave 1 // MINI-BOSS 1B
+		{
+			Name "SIEGE 1G"
+
+			Where spawnbot_left
+			TotalCount 2
+			MaxActive 4
+			SpawnCount 1
+			WaitBeforeStarting 15
+			WaitBetweenSpawns 1
+			TotalCurrency 82
+			WaitForAllSpawned "SIEGE 1D"
+			
+			 Squad
+			 {
+				TFBot
+				{
+				Template T_TFBot_Giant_Soldier
+				Name "Shogun Soldier"
+				Item "The Half-Zatoichi"
+				Item "Soldier Samurai Hat"
+				Item "The Menpo"
+				Item "The Concheror"
+				WeaponRestrictions MeleeOnly
+				Attributes SpawnWithFullCharge
+				CharacterAttributes
+					{
+					"melee range multiplier" 1.37 
+					}
+				}
+				TFBot
+				{
+				Template T_TFBot_Medic
+				Item "Medic Geisha Hair"
+				Health 200
+				}
+			 }
+		
+		} //WaveSpawn END		
+	} // WAVE END
+
+/////////////////////////////////////////
+
+Wave // Wave 2 //Currency 600 w/o Bonus
+	{
+		StartWaveOutput
+		{
+			Target wave_start_relay
+			Action Trigger
+		}
+		DoneOutput					
+		{
+			Target wave_finished_relay
+			Action trigger
+		}
+		WaitWhenDone 65
+		Description "Night of the Living Robot"
+		Checkpoint Yes
+
+		WaveSpawn // Wave 2
+		{
+			Name "SIEGE 2A"
+
+			Where spawnbot_invasion
+			TotalCount 45
+			MaxActive 18
+			SpawnCount 10
+			WaitBeforeStarting 0
+			WaitBetweenSpawns 7
+			TotalCurrency 180
+			
+				TFBot
+				{
+				Template T_TFbot_ZombiePyro
+
+				Health 225
+				Name "Conehead Pyro"
+				Item "Traffic Cone"
+				}
+		
+		} //WaveSpawn END
+
+		WaveSpawn // Wave 2
+		{
+			Name "SIEGE 2B"
+
+			Where spawnbot_invasion
+			TotalCount 45
+			MaxActive 15
+			SpawnCount 5
+			WaitBeforeStarting 0
+			WaitBetweenSpawns 7
+			TotalCurrency 300
+			WaitForAllSpawned "SIEGE 2A"
+			
+				TFBot
+				{
+				Template T_TFbot_ZombiePyro
+
+				Health 300
+				Name "Buckethead Pyro"
+				Item "Bucket Hat"
+				}
+		
+		} //WaveSpawn END
+
+		WaveSpawn // Wave 2
+		{
+			Name "SIEGE 2C"
+
+			Where spawnbot
+			TotalCount 15
+			MaxActive 3
+			SpawnCount 3
+			WaitBeforeStarting 15
+			WaitBetweenSpawns 7
+			TotalCurrency 120
+			WaitForAllSpawned "SIEGE 2A"
+			
+				TFBot
+				{
+				Template T_TFBot_Heavyweapons_Heavyweight_Champ_Fast
+
+				Name "Football Heavy"
+				Health 450
+				Skill Expert
+				Item "Football Helmet"
+				Tag nav_prefer_flank_middle
+				CharacterAttributes
+					{
+					"dmg from sentry reduced" 0.5
+					"fire rate bonus" 0.8
+					}
+				}
+		
+		} //WaveSpawn END
+
+		WaveSpawn // Wave 2
+		{
+			Name "SUPPORT 2A"
+
+			Where spawnbot_right
+			TotalCount 1
+			MaxActive 4
+			SpawnCount 4
+			WaitBeforeStarting 30
+			WaitBetweenSpawns 10
+			TotalCurrency 0
+			Support 1
+			
+				TFBot
+				{
+				Template T_TFBot_ButcherScout
+				Name "Milk Scout"
+				Item "The Marxman"
+				Item "Mad Milk"
+				CharacterAttributes
+					{
+					"applies snare effect" .65
+					"cannot pick up intelligence" 1
+					}
+				}
+		
+		} //WaveSpawn END
+	} // WAVE END
+
+
+/////////////////////////////////////////
+
+Wave // Wave 3 //Currency 900
+	{
+		StartWaveOutput
+		{
+			Target wave_start_relay
+			Action Trigger
+		}
+		DoneOutput					
+		{
+			Target wave_finished_relay
+			Action trigger
+		}
+		WaitWhenDone 65
+		Description "Urban Warfare"
+		Checkpoint Yes
+
+		WaveSpawn // Wave 3
+		{
+			Name "SIEGE 3A"
+
+			Where spawnbot_invasion
+			TotalCount 50
+			MaxActive 15
+			SpawnCount 6
+			WaitBeforeStarting 0
+			WaitBetweenSpawns 10
+			TotalCurrency 100
+			
+				TFBot
+				{
+				Class Demoman
+				Skill Hard
+				Item "The Loch-N-Load"
+				Item "Scotch Bonnet"
+				Attributes HoldFireUntilFullReload
+				}
+		
+		} //WaveSpawn END
+
+		WaveSpawn // Wave 3
+		{
+			Name "SIEGE 3B"
+
+			Where spawnbot_invasion
+			TotalCount 65
+			MaxActive 10
+			SpawnCount 5
+			WaitBeforeStarting 14
+			WaitBetweenSpawns 7
+			TotalCurrency 130
+			WaitForAllSpawned "SIEGE 3A"
+
+			 Squad
+			 {	
+				TFBot
+				{
+				Class Demoman
+				Skill Expert
+				Item "The Loch-N-Load"
+				Item "Scotch Bonnet"
+				Attributes HoldFireUntilFullReload
+				Tag nav_prefer_flank_middle
+				}
+				TFBot
+				{
+				Class Demoman
+				Skill Expert
+				Item "The Loch-N-Load"
+				Item "Scotch Bonnet"
+				Attributes HoldFireUntilFullReload
+				Tag nav_prefer_flank_middle
+				}		
+				TFBot
+				{
+				Template T_TFbot_GasJockey
+				Tag nav_prefer_flank_middle
+				}
+				TFBot
+				{
+				Template T_TFbot_GasJockey
+				Tag nav_prefer_flank_middle
+				}
+				TFBot
+				{
+				Template T_TFbot_GasJockey
+				Tag nav_prefer_flank_middle
+				}
+			 }
+		
+		} //WaveSpawn END
+
+		WaveSpawn // Wave 3 // MINI-BOSS 3A
+		{
+			Name "SIEGE 3C"
+
+			Where spawnbot_left
+			TotalCount 5
+			MaxActive 2
+			SpawnCount 1
+			WaitBeforeStarting 8
+			WaitBetweenSpawns 20
+			TotalCurrency 150
+			
+				TFBot
+				{
+				Template T_TFBot_Giant_Soldier
+
+				Name "Tank Buster"
+				Skill Expert
+				Item "The Grenadier's Softcap"
+				Item "The Black Box"
+				Item "The Battalion's Backup"
+				Attributes SpawnWithFullCharge
+				CharacterAttributes
+					{
+					"dmg from sentry reduced" 0.9
+					"heal on hit for slowfire" 75
+					}
+				}
+		
+		} //WaveSpawn END
+
+		WaveSpawn // Wave 3 // MINI-BOSS 3B
+		{
+			Name "SIEGE 3D"
+
+			Where spawnbot_left
+			TotalCount 3
+			MaxActive 2
+			SpawnCount 1
+			WaitBeforeStarting 20
+			WaitBetweenSpawns 20
+			TotalCurrency 150
+			WaitForAllSpawned "SIEGE 3C"
+			
+				TFBot
+				{
+				Template T_TFBot_Giant_Soldier_Spammer
+
+
+				Name "Rapid Fire Tank Buster"
+				Skill Expert
+				Item "The Grenadier's Softcap"
+				Item "The Black Box"
+				Item "The Battalion's Backup"
+				Attributes SpawnWithFullCharge
+				CharacterAttributes
+					{
+					"dmg from sentry reduced" 0.9
+					"heal on hit for slowfire" 75
+					}
+				}
+		
+		} //WaveSpawn END
+
+		WaveSpawn // Wave 3 // TANK!!!
+		{
+			Name "TANK 3A"
+
+			TotalCount 1
+			WaitBeforeStarting 10
+			TotalCurrency 370
+			WaitForAllSpawned "SIEGE 3A"
+			
+			Tank
+      		{
+        			Health 19000
+        			Speed 50
+        			Name "Ramirez"
+        			Skin 0        
+        			StartingPathTrackNode "boss_path_1"
+
+					OnKilledOutput
+						{
+          					Target tank_died_relay
+						Action Trigger                         
+ 					      }
+
+					OnBombDroppedOutput                             
+						{
+						Target boss_deploy_relay 
+						Action Trigger  	
+						}
+			}
+		} // WaveSpawn END
+	} // WAVE END
+
+/////////////////////////////////////////
+
+Wave // Wave 4 //Currency 400 w/o Bonus
+	{
+		StartWaveOutput
+		{
+			Target wave_start_relay
+			Action Trigger
+		}
+		DoneOutput					
+		{
+			Target wave_finished_relay
+			Action trigger
+		}
+		WaitWhenDone 65
+		Description "It Came From Outer Space"
+		Checkpoint Yes
+
+		WaveSpawn // Wave 4
+		{
+			Name "SIEGE 4A"
+
+			Where spawnbot_right
+			TotalCount 80
+			MaxActive 12
+			SpawnCount 6
+			WaitBeforeStarting 0
+			WaitBetweenSpawns 10
+			TotalCurrency 160
+			
+				TFBot
+				{
+				Class Soldier
+				Skill Hard
+				Name "Space Soldier"
+				Item "The Righteous Bison"
+				Item "The Bubble Pipe"
+				WeaponRestrictions SecondaryOnly
+				Tag nav_prefer_flank_right
+				//CharacterAttributes
+					//{
+					//"faster reload rate" -0.8
+					//}
+				}
+		
+		} //WaveSpawn END
+
+		WaveSpawn // Wave 4 // MID-BOSS
+		{
+			Name "SIEGE 4B"
+
+			Where spawnbot
+			TotalCount 20
+			MaxActive 1
+			SpawnCount 1
+			WaitBeforeStarting 20
+			WaitBetweenSpawns 0
+			TotalCurrency 240
+			FirstSpawnWarningSound "Weapon_BuffBanner.HornBlue"
+			 Squad
+			 {
+			
+				TFBot
+				{
+				Template T_TFBot_Giant_Soldier_Crit
+				Name "Lord Cockswain"
+				Item "The Cow Mangler 5000"
+				Item "Lord Cockswain's Pith Helmet"
+				Item "Lord Cockswain's Novelty Mutton Chops and Pipe"
+				Item "The Buff Banner"
+				Attributes SpawnWithFullCharge
+				CharacterAttributes
+					{
+					"Set DamageType Ignite" 10
+					"damage bonus" 1.13
+					"apply z velocity on damage" 100
+					"Blast radius increased" 1.5
+					"increase buff duration" 10
+					"dmg bonus vs buildings" 5 
+					}
+				}
+				TFBot
+				{
+				Template T_TFBot_Medic_BigHeal
+				Skill Hard
+				Item "Medi-Mask"
+				Item "The Bubble Pipe"
+				WeaponRestrictions SecondaryOnly
+				}
+				TFBot
+				{
+				Template T_TFBot_Medic_BigHeal
+				Skill Hard
+				Item "Medi-Mask"
+				Item "The Bubble Pipe"
+				WeaponRestrictions SecondaryOnly
+				}
+				TFBot
+				{
+				Template T_TFBot_Medic_BigHeal
+				Skill Hard
+				Item "Medi-Mask"
+				Item "The Bubble Pipe"
+				WeaponRestrictions SecondaryOnly
+				}
+			 }
+		
+		} //WaveSpawn END
+
+		WaveSpawn // Wave 4
+		{
+			Name "SUPPORT 4A"
+
+			Where spawnbot_invasion
+			TotalCount 3
+			MaxActive 6
+			SpawnCount 1
+			WaitBeforeStarting 0
+			WaitBetweenSpawns 5
+			TotalCurrency 0
+			Support 1
+			
+			 Squad
+			 {
+				TFBot
+				{
+				Template T_TFBot_Pyro_Flaregun
+				Skill Hard
+				Name "Grey"
+				Item "The ManMelter"
+				Item "Area 451"
+				Item "The Moonman Backpack"
+				BehaviorModifiers Mobber
+				}
+				TFBot
+				{
+				Class Pyro
+				Skill Hard
+				Name "Grey"
+				Item "The Phlogistinator"
+				Item "Area 451"
+				Item "The Moonman Backpack"
+				BehaviorModifiers Mobber
+				}
+				TFBot
+				{
+				Class Pyro
+				Skill Hard
+				Name "Grey"
+				Item "The Third Degree"
+				Item "Area 451"
+				Item "The Moonman Backpack"
+				WeaponRestrictions MeleeOnly
+				BehaviorModifiers Mobber
+				}
+			 }
+		} //WaveSpawn END
+	} // WAVE END
+
+/////////////////////////////////////////
+
+Wave // Wave 5 //Currency 400 w/o Bonus
+	{
+		StartWaveOutput
+		{
+			Target wave_start_relay
+			Action Trigger
+		}
+		DoneOutput					
+		{
+			Target wave_finished_relay
+			Action trigger
+		}
+		WaitWhenDone 65
+		Description "Fast-Paced Action"
+		Checkpoint Yes
+
+		WaveSpawn // Wave 5
+		{
+			Name "SIEGE 5A"
+
+			Where spawnbot_right
+			TotalCount 12
+			MaxActive 12
+			SpawnCount 4
+			WaitBeforeStarting 0
+			WaitBetweenSpawns 4
+			TotalCurrency 12
+			
+				TFBot
+				{
+				Template T_TFBot_Scout_Melee
+				}
+		
+		} //WaveSpawn END
+
+
+		WaveSpawn // Wave 5 
+		{
+			Name "SIEGE 5B"
+
+			Where spawnbot_left
+			TotalCount 12
+			MaxActive 12
+			SpawnCount 4
+			WaitBeforeStarting 0
+			WaitBetweenSpawns 12
+			TotalCurrency 12
+			
+				TFBot
+				{
+				Template T_TFBot_Scout_Fish
+				}
+		
+		} //WaveSpawn END
+
+		WaveSpawn // Wave 5 
+		{
+			Name "SIEGE 5C"
+
+			Where spawnbot_right
+			TotalCount 40
+			MaxActive 24
+			SpawnCount 4
+			WaitBeforeStarting 12
+			WaitBetweenSpawns 12
+			TotalCurrency 40
+			WaitForAllSpawned "SIEGE 5A"
+			
+				TFBot
+				{
+				Class Scout
+				Skill Normal
+				}
+		
+		} //WaveSpawn END
+
+		WaveSpawn // Wave 5 
+		{
+			Name "SIEGE 5D"
+
+			Where spawnbot_left
+			TotalCount 80
+			MaxActive 24
+			SpawnCount 4
+			WaitBeforeStarting 36
+			WaitBetweenSpawns 10
+			TotalCurrency 80
+			WaitForAllSpawned "SIEGE 5A"
+			
+				TFBot
+				{
+				Template T_TFbot_ButcherScout
+				}
+
+		
+		} //WaveSpawn END
+
+		WaveSpawn // Wave 5
+		{
+			Name "SIEGE 5E"
+
+			Where spawnbot_right
+			TotalCount 30
+			MaxActive 24
+			SpawnCount 4
+			WaitBeforeStarting 12
+			WaitBetweenSpawns 12
+			TotalCurrency 30
+			WaitForAllSpawned "SIEGE 5B"
+			
+				TFBot
+				{
+				Template T_TFBot_Scout_Sandman
+				}
+		
+		} //WaveSpawn END
+
+		WaveSpawn // Wave 5 // MINI-BOSS 5A
+		{
+			Name "SIEGE 5F"
+
+			Where spawnbot
+			TotalCount 5
+			MaxActive 2
+			SpawnCount 1
+			WaitBeforeStarting 60
+			WaitBetweenSpawns 50
+			TotalCurrency 100
+			WaitForAllSpawned "SIEGE 5B"
+			
+				TFBot
+				{
+				Template T_TFBot_Giant_Scout_Baseball
+				Tag nav_prefer_flank_middle
+				}
+		
+		} //WaveSpawn END
+
+		WaveSpawn // Wave 5
+		{
+			Name "SIEGE 5G"
+
+			Where spawnbot_right
+			TotalCount 15
+			MaxActive 8
+			SpawnCount 4
+			WaitBeforeStarting 0
+			WaitBetweenSpawns 25
+			TotalCurrency 15
+			WaitForAllSpawned "SIEGE 5C"
+			
+				TFBot
+				{
+				Template T_TFBot_Scout_Melee
+				Name "Boston Scout"
+				Item "The Boston Basher"
+				}
+		
+		} //WaveSpawn END
+
+		WaveSpawn // Wave 5 
+		{
+			Name "SIEGE 5H"
+
+			Where spawnbot_left
+			TotalCount 40
+			MaxActive 24
+			SpawnCount 4
+			WaitBeforeStarting 12
+			WaitBetweenSpawns 8
+			TotalCurrency 40
+			WaitForAllSpawned "SIEGE 5C"
+			
+				TFBot
+				{
+				Class Scout
+				Name "Baby Face Scout"
+				Skill Normal
+				Item "Baby Face's Blaster"
+				Item "Dillinger's Duffel"
+				}
+		
+		} //WaveSpawn END
+
+		WaveSpawn // Wave 5 
+		{
+			Name "SIEGE 5I"
+
+			Where spawnbot_invasion
+			TotalCount 42
+			MaxActive 24
+			SpawnCount 4
+			WaitBeforeStarting 12
+			WaitBetweenSpawns 4
+			TotalCurrency 40
+			WaitForAllSpawned "SIEGE 5G"
+			
+				TFBot
+				{
+				Template T_TFBot_Scout_Melee
+				Name "Crits-mas Scout"
+				Item "The Candy Cane"
+				Item "The Bootie Time"
+				Item "Crit-A-Cola"
+				CharacterAttributes
+					{
+					"increase buff duration" 10
+					}
+				}
+		
+		} //WaveSpawn END
+
+		WaveSpawn // Wave 5
+		{
+			Name "SIEGE 5J"
+
+			Where spawnbot_invasion
+			TotalCount 29
+			MaxActive 24
+			SpawnCount 2
+			WaitBeforeStarting 20
+			WaitBetweenSpawns 15
+			TotalCurrency 31
+			
+				TFBot
+				{
+				Template T_TFBot_Scout_Melee
+				Name "Fan Scout"
+				Item "The Fan O'War"
+				}
+		
+		} //WaveSpawn END
+
+		WaveSpawn // Wave 5 // MINI-BOSS 5B
+		{
+			Name "SUPPORT 5A"
+
+			Where spawnbot
+			TotalCount 1
+			MaxActive 2
+			SpawnCount 1
+			WaitBeforeStarting 60
+			WaitBetweenSpawns 30
+			TotalCurrency 0
+			Support 1
+			
+			TFBot
+				{
+				Template T_TFBot_Giant_Scout_Fast
+				Tag nav_prefer_flank_middle
+				}
+
+		} //WaveSpawn END
+
+		WaveSpawn // Wave 4
+		{
+			Name "SUPPORT 5B"
+
+			Where Ahead
+			TotalCount 1
+			MaxActive 1
+			SpawnCount 1
+			WaitBeforeStarting 60
+			WaitBetweenSpawns 80
+			TotalCurrency 0
+			WaitForAllSpawned "SIEGE 5A"
+			Support 1
+			RandomSpawn 1
+			
+			TFBot
+				{
+				Class Heavyweapons
+				ClassIcon scout_d
+				Name "Fat Scout"
+				WeaponRestrictions SecondaryOnly
+				}
+
+		} //WaveSpawn END
+	} // WAVE END
+
+
+/////////////////////////////////////////
+
+Wave // Wave 6 //Currency 400 w/o Bonus
+	{
+		StartWaveOutput
+		{
+			Target wave_start_relay
+			Action Trigger
+		}
+		DoneOutput					
+		{
+			Target wave_finished_relay
+			Action trigger
+		}
+		WaitWhenDone 65
+		Description "Fire Hazard"
+		Checkpoint Yes
+
+		WaveSpawn // Wave 6
+		{
+			Name "SIEGE 6A"
+
+			Where spawnbot_right
+			TotalCount 50
+			MaxActive 8
+			SpawnCount 3
+			WaitBeforeStarting 0
+			WaitBetweenSpawns 10
+			TotalCurrency 100
+			
+				TFBot
+				{
+				Template T_TFBot_Pyro_Flaregun
+				Skill Expert
+				Item "The Scorch Shot"
+				Tag nav_prefer_flank_right
+				}
+		
+		} //WaveSpawn END
+
+		WaveSpawn // Wave 6
+		{
+			Name "SIEGE 6B"
+
+			Where spawnbot_invasion
+			TotalCount 60
+			MaxActive 12
+			SpawnCount 6
+			WaitBeforeStarting 15
+			WaitBetweenSpawns 8
+			TotalCurrency 60
+			
+				TFBot
+				{
+				Template T_TFBot_Scout_Melee
+				Item "Scout MTG Hat"
+				Item "Sun-On-A-Stick"
+				}
+		
+		} //WaveSpawn END
+
+		WaveSpawn // Wave 6
+		{
+			Name "SIEGE 6C"
+
+			Where spawnbot_left
+			TotalCount 35
+			MaxActive 6
+			SpawnCount 3
+			WaitBeforeStarting 30
+			WaitBetweenSpawns 10
+			TotalCurrency 70
+			
+				TFBot
+				{
+				Class HeavyWeapons
+				Skill Easy
+				Item "The Huo Long Heatmaker"
+				}
+		
+		} //WaveSpawn END
+
+		WaveSpawn // Wave 6 // MINI-BOSS 6A
+		{
+			Name "SIEGE 6D"
+
+			Where spawnbot
+			TotalCount 10
+			MaxActive 2
+			SpawnCount 2
+			WaitBeforeStarting 40
+			WaitBetweenSpawns 21
+			TotalCurrency 170
+			
+				TFBot
+				{
+				Template T_TFBot_Giant_Pyro
+				Name "Giant Backburner Pyro"
+				Item "The Backburner"
+				Item "Spine-Chilling Skull"
+				}
+		
+		} //WaveSpawn END
+
+		WaveSpawn // Wave 6
+		{
+			Name "SIEGE ???"
+
+			Where Behind
+			TotalCount 1
+			MaxActive 1
+			SpawnCount 1
+			WaitBeforeStarting 120
+			WaitBetweenSpawns 900
+			TotalCurrency 0
+			RandomSpawn 1
+			Support 1
+			
+				TFBot
+				{
+				Class HeavyWeapons
+				Item "The Robo-Sandvich"
+				Item "The Huo Long Heatmaker"
+				Item "The Sandvich Safe"
+				WeaponRestrictions SecondaryOnly
+				Attributes SuppressFire
+				BehaviorModifiers Idler
+				CharacterAttributes
+					{
+					"move speed bonus" 0
+					"cannot pick up intelligence" 1
+					}
+				}
+		
+		} //WaveSpawn END
+	} // WAVE END
+
+
+/////////////////////////////////////////
+
+Wave // Wave 7 //Currency 800 w/o Bonus
+	{
+		StartWaveOutput
+		{
+			Target wave_start_relay
+			Action Trigger
+		}
+		DoneOutput					
+		{
+			Target wave_finished_relay
+			Action trigger
+		}
+		WaitWhenDone 65
+		Description "Triad Trial"
+		Checkpoint Yes
+
+		WaveSpawn // Wave 7
+		{
+			Name "PRELUDE 7"
+
+			Where spawnbot
+			TotalCount 1
+			MaxActive 1
+			SpawnCount 1
+			WaitBeforeStarting 0
+			WaitBetweenSpawns 0
+			TotalCurrency 1
+			
+				TFBot
+				{
+				Template T_TFBot_ZombiePyro
+				}
+		
+		} //WaveSpawn END
+
+		WaveSpawn // Wave 7
+		{
+			Name "SIEGE 7A"
+
+			Where spawnbot_invasion
+			TotalCount 39
+			MaxActive 12
+			SpawnCount 1
+			WaitBeforeStarting 5
+			WaitBetweenSpawns 1
+			TotalCurrency 39
+			WaitForAllSpawned "PRELUDE 7"
+			
+				TFBot
+				{
+				Template T_TFBot_ZombiePyro
+				}
+		
+		} //WaveSpawn END
+
+		WaveSpawn // Wave 7
+		{
+			Name "SIEGE 7B"
+
+			Where spawnbot_invasion
+			TotalCount 20
+			MaxActive 8
+			SpawnCount 4
+			WaitBeforeStarting 20
+			WaitBetweenSpawns 7 
+			TotalCurrency 20
+			WaitForAllSpawned "PRELUDE 7"
+			
+				TFBot
+				{
+				Template T_TFBot_ButcherScout
+				}
+		
+		} //WaveSpawn END
+
+		WaveSpawn // Wave 7 // MINI-BOSS 7A
+		{
+			Name "SIEGE 7B"
+
+			Where spawnbot
+			TotalCount 6
+			MaxActive 2
+			SpawnCount 2
+			WaitBeforeStarting 10
+			WaitBetweenSpawns 0
+			TotalCurrency 120
+			WaitForAllSpawned "SIEGE 7A"
+			
+				TFBot
+				{
+				Template T_TFBot_Giant_Demoman
+				Item "The Human Cannonball"
+				}
+		
+		} //WaveSpawn END
+
+		WaveSpawn // Wave 7
+		{
+			Name "SIEGE 7C"
+
+			Where spawnbot_right
+			TotalCount 14
+			MaxActive 6
+			SpawnCount 2
+			WaitBeforeStarting 15
+			WaitBetweenSpawns 10
+			TotalCurrency 14
+			WaitForAllSpawned "SIEGE 7A"
+			
+				TFBot
+				{
+				Class HeavyWeapons
+				Skill Easy
+				Item "The Huo Long Heatmaker"
+				}
+		
+		} //WaveSpawn END
+
+		WaveSpawn // Wave 7 // TANK!!!
+		{
+			Name "TANK 7A"
+
+			TotalCount 1
+			WaitBeforeStarting 10
+			TotalCurrency 200
+			WaitForAllSpawned "SIEGE 7C"
+			
+			Tank
+      		{
+        			Health 19000
+        			Speed 75 
+        			Name "Final Tank 1"
+        			Skin 0     
+        			StartingPathTrackNode "boss_path_1"
+
+					OnKilledOutput
+						{
+          					Target tank_died_relay
+						Action Trigger                         
+ 					      }
+
+					OnBombDroppedOutput                             
+						{
+						Target boss_deploy_relay 
+						Action Trigger  	
+						}
+			}
+		} // WaveSpawn END
+
+		WaveSpawn // Wave 7
+		{
+			Name "SIEGE 7D"
+
+			Where spawnbot_left
+			TotalCount 30
+			MaxActive 18
+			SpawnCount 6
+			WaitBeforeStarting 15
+			WaitBetweenSpawns 7
+			TotalCurrency 30
+			WaitForAllSpawned "SIEGE 7C"
+
+				TFBot
+				{
+				Template T_TFbot_GasJockey
+				}
+		
+		} //WaveSpawn END
+
+/////Brief Break/////
+
+		WaveSpawn // Wave 7
+		{
+			Name "INTERLUDE 7.5"
+
+			Where spawnbot
+			TotalCount 2
+			MaxActive 2
+			SpawnCount 2
+			WaitBeforeStarting 120
+			WaitBetweenSpawns 0
+			TotalCurrency 4
+			WaitForAllSpawned "TANK 7A"
+			FirstSpawnWarningSound Ambient.Siren
+			
+				TFBot
+				{
+				Template T_TFBot_ButcherScout
+				Name "Milk Scout"
+				Item "The Marxman"
+				Item "Mad Milk"
+				CharacterAttributes
+					{
+					"applies snare effect" .65
+					}
+				}
+		
+		} //WaveSpawn END
+
+		WaveSpawn // Wave 7
+		{
+			Name "SIEGE 7.5A"
+
+			Where spawnbot_left
+			TotalCount 30
+			MaxActive 9
+			SpawnCount 3
+			WaitBeforeStarting 10
+			WaitBetweenSpawns 7
+			TotalCurrency 30
+			WaitForAllSpawned "INTERLUDE 7.5"
+			
+				TFBot
+				{
+				Class HeavyWeapons
+				Skill Easy
+				Item "The Huo Long Heatmaker"
+				}
+		
+		} //WaveSpawn END
+
+		WaveSpawn // Wave 7
+		{
+			Name "SIEGE 7.5B"
+
+			Where spawnbot_right
+			TotalCount 56
+			MaxActive 12
+			SpawnCount 4
+			WaitBeforeStarting 23
+			WaitBetweenSpawns 7
+			TotalCurrency 56
+			WaitForAllSpawned "INTERLUDE 7.5"
+
+			 Squad
+			 {			
+				TFBot
+				{
+				Template T_TFBot_Soldier_Buff_Banner
+				ClassIcon soldier_d
+				Name "Samurai Soldier"
+				WeaponRestrictions MeleeOnly
+				Item "The Half-Zatoichi"
+				Item "The Concheror"
+				Item "Soldier Samurai Hat"
+				Item "The Menpo"
+				Tag nav_prefer_flank_middle
+				CharacterAttributes
+					{
+					"melee range multiplier" 1.37 
+					}
+				}
+				TFBot
+				{
+				Template T_TFBot_ZombiePyro
+				Tag nav_prefer_flank_middle
+				}
+				TFBot
+				{
+				Template T_TFBot_ZombiePyro
+				Tag nav_prefer_flank_middle
+				}
+				TFBot
+				{
+				Template T_TFBot_ZombiePyro
+				Tag nav_prefer_flank_middle
+				}
+			 }
+		
+		} //WaveSpawn END
+
+		WaveSpawn // Wave 7
+		{
+			Name "SIEGE 7.5C"
+
+			Where spawnbot
+			TotalCount 8
+			MaxActive 8
+			SpawnCount 4
+			WaitBeforeStarting 5
+			WaitBetweenSpawns 15
+			TotalCurrency 8
+			WaitForAllSpawned "SIEGE 7.5A"
+			
+				TFBot
+				{
+				Template T_TFBot_ButcherScout
+				Name "Milk Scout"
+				Item "The Marxman"
+				Item "Mad Milk"
+				Tag nav_prefer_flank_middle
+				CharacterAttributes
+					{
+					"applies snare effect" .65
+					}
+				}
+		
+		} //WaveSpawn END
+
+		WaveSpawn // Wave 7 // TANK!!!
+		{
+			Name "TANK 7B"
+
+			TotalCount 1
+			WaitBeforeStarting 49
+			TotalCurrency 200
+			WaitForAllSpawned "INTERLUDE 7.5"
+			
+			Tank
+      		{
+        			Health 25000
+        			Speed 50
+        			Name "Final Tank 2"
+        			Skin 1      
+        			StartingPathTrackNode "boss_path_1"
+
+					OnKilledOutput
+						{
+          					Target tank_died_relay
+						Action Trigger                         
+ 					      }
+
+					OnBombDroppedOutput                             
+						{
+						Target boss_deploy_relay 
+						Action Trigger  	
+						}
+			}
+		} // WaveSpawn END
+
+		WaveSpawn // Wave 7 // MINI-BOSS B
+		{
+			Name "SIEGE 7.5D"
+
+			Where spawnbot_left
+			TotalCount 6
+			MaxActive 6
+			SpawnCount 3
+			WaitBeforeStarting 0
+			WaitBetweenSpawns 20
+			TotalCurrency 78
+			WaitForAllSpawned "SIEGE 7.5C"
+			
+			 Squad
+			 {
+				TFBot
+				{
+				Template T_TFBot_Giant_Demoman
+				Item "The Human Cannonball"
+				Tag nav_prefer_flank_middle
+				}
+				TFBot
+				{
+				Template T_TFBot_Medic_BigHeal
+				Skill Hard
+				Item "The Surgeon's Stahlhelm"
+				Item "The Surgeon's Side Satchel"
+				}
+				TFBot
+				{
+				Template T_TFBot_Medic_BigHeal
+				Skill Hard
+				Item "The Surgeon's Stahlhelm"
+				Item "The Surgeon's Side Satchel"
+				}
+			 }	
+		
+		} //WaveSpawn END
+	} // WAVE END
+
+/////////////////////////////////////////
+
+Wave // Wave 8 //Currency 1800 w/o Bonus
+	{
+		StartWaveOutput
+		{
+			Target wave_start_relay
+			Action Trigger
+		}
+		DoneOutput					
+		{
+			Target wave_finished_relay
+			Action trigger
+		}
+		WaitWhenDone 65
+		Description "The Final Boss"
+		Checkpoint Yes
+
+		WaveSpawn // Wave 8
+		{
+			Name "FINAL BOSS A"
+
+			Where spawnbot_left
+			TotalCount 1
+			MaxActive 1
+			SpawnCount 1
+			WaitBeforeStarting 0
+			WaitBetweenSpawns 0
+			TotalCurrency 300
+		
+				TFBot
+				{
+				Template T_TFBot_Giant_Heavyweapons_Deflector
+				Name "Octo-Heavy X"
+				Health 8000
+				Item "The Brass Beast"
+				CharacterAttributes
+					{
+					"attach particle effect static" 17
+					"turn to gold" 1
+					"bombinomicon effect on death" 1
+					"move speed bonus"	0.4
+					"mod medic killed minicrit boost" 4
+					"projectile penetration heavy" 4
+					"ring of fire while aiming" 1
+					"critboost on kill" 5
+					"apply look velocity on damage" 200
+					"slow enemy on hit" 1
+					"minigun spinup time decreased" .7
+					"dmg bonus vs buildings" 1.5
+					"dmg from ranged reduced" 0.6
+					"dmg from melee increased" 2
+					"heal on hit for rapidfire" 30
+					"dmg taken from crit reduced" 0.75
+					}
+				}
+		} //WaveSpawn END
+
+		WaveSpawn // Wave 8 // UC
+		{
+			Name "SUPPORT 8A"
+
+			Where Anywhere
+			TotalCount 5
+			MaxActive 3
+			SpawnCount 1
+			WaitBeforeStarting 0
+			WaitBetweenSpawns 20
+			TotalCurrency 500
+			RandomSpawn 1
+			Support 1
+
+				TFBot
+				{
+				Template T_TFbot_Giant_UberMedic
+				Item "The Blutsauger"
+				MaxVisionRange 50
+				Attributes SpawnWithFullCharge
+				CharacterAttributes
+					{
+					"ubercharge rate bonus" 20
+					"uber duration bonus" -4
+					"dmg from sentry reduced" 0.5
+					"dmg taken from fire reduced" 0.5
+					}
+				}
+
+		} //WaveSpawn END
+
+		WaveSpawn // Wave 8 // KK 1
+		{
+			Name "SUPPORT 8B"
+
+			Where spawnbot_right
+			TotalCount 2
+			MaxActive 2
+			SpawnCount 1
+			WaitBeforeStarting 0
+			WaitBetweenSpawns 40
+			TotalCurrency 200
+			Support 1
+
+				TFBot
+				{
+				Template T_TFbot_Giant_UberMedic
+				Name "Kritz Medic X"
+                        ClassIcon medic_d
+				Item "The Kritzkrieg"
+				Item "Prussian Pickelhaube"
+				MaxVisionRange 50
+				Attributes SpawnWithFullCharge
+				CharacterAttributes
+					{
+					"ubercharge rate bonus" 30
+					"uber duration bonus" -4
+					"dmg taken from crit reduced" 0.5
+					}
+				}
+
+		} //WaveSpawn END
+
+		WaveSpawn // Wave 8 // KK 2
+		{
+			Name "SUPPORT 8C"
+
+			Where Anywhere
+			TotalCount 3
+			MaxActive 1
+			SpawnCount 1
+			WaitBeforeStarting 20
+			WaitBetweenSpawns 40
+			TotalCurrency 300
+			RandomSpawn 1
+			Support 1
+
+				TFBot
+				{
+				Template T_TFbot_Giant_UberMedic
+				Name "Kritz Medic X"
+                        ClassIcon medic_d
+				Item "The Kritzkrieg"
+				Item "Prussian Pickelhaube"
+				MaxVisionRange 50
+				Attributes SpawnWithFullCharge
+				CharacterAttributes
+					{
+					"ubercharge rate bonus" 30
+					"uber duration bonus" -4
+					"dmg taken from crit reduced" 0.5
+					}
+				}
+
+		} //WaveSpawn END
+
+		WaveSpawn // Wave 8 // QF
+		{
+			Name "SUPPORT 8D"
+
+			Where spawnbot
+			TotalCount 5
+			MaxActive 2
+			SpawnCount 1
+			WaitBeforeStarting 0
+			WaitBetweenSpawns 20
+			TotalCurrency 500
+			RandomSpawn 1
+			Support 1
+
+				TFBot
+				{
+				Template T_TFbot_Giant_UberMedic
+				Name "Quick-Fix Medic X"
+				ClassIcon medic_giant
+				Item "The Quick-Fix"
+				Item "The Overdose"
+				Item "Otolaryngologist's Mirror"
+				MaxVisionRange 50
+				CharacterAttributes
+					{
+					"move speed bonus"      7
+					"ubercharge rate bonus" 0.1
+					"heal rate bonus" 10
+					"airblast vulnerability multiplier" 5
+					"health regen" 150
+					}
+				}
+
+		} //WaveSpawn END
+	} // WAVE END
+	} // WAVE END
+
+/////////////////////////////////////////
+
+}

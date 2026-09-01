@@ -1,0 +1,821 @@
+///////////////////////////////////////////////////////////////////////////
+// GREEK FIRE
+///////////////////////////////////////////////////////////////////////////
+
+#base robot_giant.pop
+#base robot_standard.pop
+
+WaveSchedule													
+{
+
+	StartingCurrency 600
+	RespawnWaveTime 3
+	CanBotsAttackWhileInSpawnRoom no
+
+/////////////////
+//MISSIONS
+/////////////////
+
+
+///////////////////////////////////////////////////////////////////////////
+//SENTRY BUSTER MISSIONS
+///////////////////////////////////////////////////////////////////////////
+	
+	Mission	// Sentry Busters - all
+	{
+		Objective DestroySentries
+
+		InitialCooldown 30
+		Where spawnbot_mission_sentry_buster
+		BeginAtWave 1
+		RunForThisManyWaves 6
+		CooldownTime 35
+
+            TFBot
+			{
+				Template T_TFBot_SentryBuster
+            }
+	}
+///////////////////////////////////////////////////////////////////////////
+//SNIPER MISSIONS
+///////////////////////////////////////////////////////////////////////////
+	
+	Mission	// PissBot wave 4 
+	{
+		Objective Sniper
+
+		InitialCooldown 30
+		Where spawnbot_mission_sniper
+		BeginAtWave 4
+		RunForThisManyWaves 3
+		CooldownTime 30
+		DesiredCount 2
+
+		TFBot
+		{		
+			Template T_TFBot_Sniper
+			ClassIcon sniper_sydneysleeper
+			Skill Normal
+			Health 200
+			Item "The Sydney Sleeper"
+			Item "Soldered Sensei"
+			Scale "1.65"
+			ItemAttributes
+			{
+				ItemName "The Sydney Sleeper"
+			}
+			CharacterAttributes
+			{
+				"damage bonus"	0.4
+
+				"move speed bonus" 0.6
+				"damage force reduction" 0.5
+				"airblast vulnerability multiplier" 0.5
+				//"override footstep sound set" 4
+			}
+		}
+	}
+///////////////////////////////////////////////////////////////////////////
+//ENGINEER MISSIONS
+///////////////////////////////////////////////////////////////////////////
+
+	Mission //Engi teleport wave 3 and 4
+	{
+		Objective Engineer  
+
+		InitialCooldown 50
+		Where spawnbot
+		BeginAtWave 3
+		RunForThisManyWaves 4
+		CooldownTime 45
+		DesiredCount 1
+
+		TFBot
+		{
+			Template T_TFBot_Engineer_Sentry_Teleporter
+			TeleportWhere spawnbot
+			TeleportWhere flankers
+			Attributes TeleportToHint
+			Health 600
+		}
+	}
+/////////////////
+//WAVES
+//POPFILE PAYOUT
+//START $400
+/////////////////	
+
+//WAVE 1  /////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////
+
+	Wave
+	{
+		StartWaveOutput
+		{
+			Target wave_start_relay_classic
+			Action Trigger
+		}
+		DoneOutput
+		{
+			Target wave_finished_relay
+			Action trigger
+		}
+
+		Checkpoint Yes
+		
+	WaveSpawn		
+		{
+			Where spawnbot
+			Name "W1_01"
+			TotalCount 40			
+			MaxActive 15								
+			SpawnCount 6									
+			WaitBetweenSpawns 6					
+			TotalCurrency 200	
+
+			Squad
+			{
+				TFBot
+					{
+						Template T_TFBot_Pyro_Flaregun
+						Skill Normal
+					}
+				TFBot
+					{
+						Template T_TFBot_Medic_QuickFix
+						//Skill Normal
+					}
+			}
+		}
+		WaveSpawn		
+		{
+			WaitForAllSpawned "W1_01"
+			WaitBeforeStarting 15
+			Where spawnbot
+			Name "W1_03"
+			TotalCount 40			
+			MaxActive 15								
+			SpawnCount 6									
+			WaitBetweenSpawns 6					
+			TotalCurrency 200	
+
+			Squad
+			{
+				TFBot
+					{
+						Template T_TFBot_Pyro
+						Skill Normal
+					}
+				TFBot
+					{
+						Template T_TFBot_Medic_QuickFix
+					}
+			}
+		
+		}
+	WaveSpawn		
+		{
+			WaitBeforeStarting 4
+
+			Where flankers
+			Name "W1_02"
+			TotalCount 100			
+			MaxActive 10								
+			SpawnCount 4									
+			WaitBetweenSpawns 9						
+			TotalCurrency 200	
+
+			Support 1
+
+			TFBot
+				{
+					Template T_TFBot_Demoman_Knight
+					Skill Hard
+				}
+		}
+	}
+//WAVE 2  /////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////
+	Wave
+	{
+		StartWaveOutput
+		{
+			Target wave_start_relay_classic
+			Action Trigger
+		}
+		DoneOutput
+		{
+			Target wave_finished_relay
+			Action trigger
+		}
+
+		Checkpoint Yes
+		
+		WaveSpawn // Tank
+		{						
+			Name "W2_Tank1"
+			WaitBeforeStarting 10
+
+			TotalCount 1
+			TotalCurrency 300
+			FirstSpawnOutput 	
+			{
+				Target boss_spawn_relay                       
+				Action Trigger                         
+			}
+
+			Tank
+			{
+				Health 35000					
+				Speed 75								
+				Name "TankBossA"
+				StartingPathTrackNode "tank_path_a_10"
+				
+				OnKilledOutput                              
+				{
+					Target boss_dead_relay					
+					Action Trigger                
+				}
+					
+				OnBombDroppedOutput                       
+				{
+					Target boss_deploy_relay 	
+					Action Trigger                  
+				}
+			}
+		}
+
+		WaveSpawn		
+		{
+			WaitBeforeStarting 2
+			Where flankers
+			Name "W2_01"
+			TotalCount 100			
+			MaxActive 10								
+			SpawnCount 4									
+			WaitBetweenSpawns 4				
+			TotalCurrency 200	
+
+			Support 1
+
+			Squad
+			{
+				TFBot
+					{
+						Template T_TFBot_Pyro_Flaregun
+						Skill Hard
+					}
+				TFBot
+					{
+						Template T_TFBot_Pyro_Flaregun
+						Skill Hard
+					}
+				TFBot
+					{
+						Template T_TFBot_Pyro
+						Skill Hard
+					}
+				TFBot
+					{
+						Template T_TFBot_Pyro
+						Skill Hard
+					}
+			}
+		}
+		WaveSpawn		
+		{
+			WaitBeforeStarting 2
+			Where spawnbot
+			Name "W2_01"
+			TotalCount 100			
+			MaxActive 10								
+			SpawnCount 4									
+			WaitBetweenSpawns 4					
+			TotalCurrency 200	
+
+			Support 1
+
+			Squad
+			{
+				TFBot
+					{
+						Template T_TFBot_Pyro_Flaregun
+						Skill Hard
+					}
+				TFBot
+					{
+						Template T_TFBot_Pyro_Flaregun
+						Skill Hard
+					}
+				TFBot
+					{
+						Template T_TFBot_Pyro
+						Skill Hard
+					}
+				TFBot
+					{
+						Template T_TFBot_Pyro
+						Skill Hard
+					}
+			}
+		}
+
+	}
+//WAVE 3  /////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////
+	Wave
+	{
+		StartWaveOutput
+		{
+			Target wave_start_relay_classic
+			Action Trigger
+		}
+		DoneOutput
+		{
+			Target wave_finished_relay
+			Action trigger
+		}
+
+		WaveSpawn // Giant Pyro + MEDIC
+		{
+			//WaitBeforeStarting 2
+			Where spawnbot
+			Name "W3_01"
+			TotalCount 4			
+			MaxActive 4								
+			SpawnCount 2									
+			WaitBetweenSpawns 20					
+			TotalCurrency 200	
+
+			Squad
+			{
+				TFBot
+					{
+						Template T_TFBot_Giant_Pyro
+						Attributes AlwaysFireWeapon
+						Attributes AlwaysCrit
+						Skill Expert
+					}
+				TFBot
+					{
+						Template T_TFBot_Giant_Medic
+						Skill Expert
+					}
+			}
+		}
+		WaveSpawn		
+		{
+			WaitForAllDead "W3_01" // Wait for Giant pyros
+			Where spawnbot
+			Name "W3_02"
+			TotalCount 28		
+			MaxActive 10								
+			SpawnCount 4									
+			WaitBetweenSpawns 6					
+			TotalCurrency 150	
+
+			Squad
+			{
+				TFBot
+					{
+						Template T_TFBot_Sniper_Huntsman
+					}
+				TFBot
+					{
+						Template T_TFBot_Sniper_Huntsman
+					}
+				TFBot
+					{
+						Template T_TFBot_Pyro
+						Attributes AlwaysFireWeapon
+					}
+				TFBot
+					{
+						Template T_TFBot_Pyro
+						Attributes AlwaysFireWeapon
+					}
+			}
+		}
+		WaveSpawn		
+		{
+			WaitForAllDead "W3_01" // Wait for Giant pyros
+			Where flankers
+			Name "W3_02"
+			TotalCount 28			
+			MaxActive 10								
+			SpawnCount 4									
+			WaitBetweenSpawns 6					
+			TotalCurrency 150	
+
+			Squad
+			{
+				TFBot
+					{
+						Template T_TFBot_Sniper_Huntsman
+					}
+				TFBot
+					{
+						Template T_TFBot_Sniper_Huntsman
+					}
+				TFBot
+					{
+						Template T_TFBot_Pyro
+						Attributes AlwaysFireWeapon
+					}
+				TFBot
+					{
+						Template T_TFBot_Pyro
+						Attributes AlwaysFireWeapon
+					}
+			}
+		}
+
+		WaveSpawn // Giant Pyro + MEDIC
+		{
+			WaitForAllSpawned "W3_02" // Wait for huntsman + pyro
+			Where spawnbot
+			Name "W3_03"
+			TotalCount 2			
+			MaxActive 2							
+			SpawnCount 2													
+			TotalCurrency 100	
+
+			Squad
+			{
+				TFBot
+					{
+						Template T_TFBot_Giant_Pyro
+						Attributes AlwaysFireWeapon
+						Attributes AlwaysCrit
+						Skill Expert
+					}
+				TFBot
+					{
+						Template T_TFBot_Giant_Medic
+						Skill Expert
+					}
+			}
+		}
+	}
+//WAVE 4  /////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////
+	Wave
+	{
+		StartWaveOutput
+		{
+			Target wave_start_relay_classic
+			Action Trigger
+		}
+		DoneOutput
+		{
+			Target wave_finished_relay
+			Action trigger
+		}
+
+		WaveSpawn // flare pyros		
+		{
+			WaitBeforeStarting 40
+			Where spawnbot
+			Name "W4_01"
+			TotalCount 36			
+			MaxActive 8								
+			SpawnCount 3									
+			WaitBetweenSpawns 8				
+			TotalCurrency 150	
+
+			TFBot
+				{
+					Class Pyro
+					Name "Fast Detonator Pyro"
+					ClassIcon pyro_flare
+					Skill Expert
+					Item "The detonator"
+					WeaponRestrictions SecondaryOnly
+					ItemAttributes
+					{
+						ItemName "The detonator"
+						"fire rate bonus" 0.7
+						"Projectile speed increased" 1.3
+					}
+				}
+
+		}
+
+	WaveSpawn // demoknights
+		{
+			WaitBeforeStarting 40
+			Where flankers
+			Name "W4_02"
+			TotalCount 42			
+			MaxActive 7								
+			SpawnCount 3									
+			WaitBetweenSpawns 3						
+			TotalCurrency 150	
+				
+			TFBot
+				{
+					Template T_TFBot_Demoman_Knight
+					Skill Hard
+					Attributes AlwaysCrit
+
+					CharacterAttributes
+					{
+						"charge recharge rate increased" 6
+						//"move speed bonus"	1.2
+					}
+				}
+		}
+
+		WaveSpawn // Tank
+		{						
+			Name "W4_Tank1"
+			WaitBeforeStarting 3
+
+			TotalCount 1
+			TotalCurrency 200
+			FirstSpawnOutput 	
+			{
+				Target boss_spawn_relay                       
+				Action Trigger                         
+			}
+
+			Tank
+			{
+				Health 35000					
+				Speed 75								
+				Name "TankBossA"
+				StartingPathTrackNode "tank_path_a_10"
+				
+				OnKilledOutput                              
+				{
+					Target boss_dead_relay					
+					Action Trigger                
+				}
+					
+				OnBombDroppedOutput                       
+				{
+					Target boss_deploy_relay 	
+					Action Trigger                  
+				}
+			}
+		}
+		WaveSpawn // Tank
+		{						
+			Name "W4_Tank2"
+			WaitBeforeStarting 40
+
+			TotalCount 1
+			TotalCurrency 100
+			FirstSpawnOutput 	
+			{
+				Target boss_spawn_relay                       
+				Action Trigger                         
+			}
+
+			Tank
+			{
+				Health 35000					
+				Speed 75								
+				Name "TankBossA"
+				StartingPathTrackNode "tank_path_a_10"
+				
+				OnKilledOutput                              
+				{
+					Target boss_dead_relay					
+					Action Trigger                
+				}
+					
+				OnBombDroppedOutput                       
+				{
+					Target boss_deploy_relay 	
+					Action Trigger                  
+				}
+			}
+		}
+	}
+//WAVE 5  /////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////
+	Wave
+	{
+		StartWaveOutput
+		{
+			Target wave_start_relay_classic
+			Action Trigger
+		}
+		DoneOutput
+		{
+			Target wave_finished_relay
+			Action trigger
+		}
+		WaveSpawn // Giant flare
+		{
+			Where spawnbot
+			Name "W5_02"
+			TotalCount 12			
+			MaxActive 6							
+			SpawnCount 3									
+			WaitBetweenSpawns 18					
+			TotalCurrency 200	
+
+			Squad{
+
+				FormationSize 200
+
+				TFBot
+				{
+					Template T_TFBot_Giant_Pyro_Flare_Spammer
+					Attributes AlwaysCrit
+					Skill Expert
+				}
+				TFBot
+				{
+					Template T_TFBot_Heavyweapons_Heater
+					Scale 1.3
+				}
+				TFBot
+				{
+					Template T_TFBot_Heavyweapons_Heater
+					Scale 1.3
+				}
+			}
+		}
+		WaveSpawn
+		{
+			WaitBeforeStarting 20
+			Where flankers
+			Where spawnbot
+			Name "W5_02"
+			TotalCount 100			
+			MaxActive 15							
+			SpawnCount 4									
+			WaitBetweenSpawns 1						
+			TotalCurrency 200	
+
+			Support 1
+			RandomChoice
+			{
+				TFBot
+				{
+					Template T_TFBot_Scout_SunStick
+				}
+				TFBot
+				{
+					Class Pyro
+					Skill Hard
+					WeaponRestrictions MeleeOnly
+					Item "Sharpened Volcano Fragment"
+					ClassIcon pyro_volcano
+					CharacterAttributes
+					{
+						"move speed bonus"	1.33
+					}
+				}
+			}
+		}
+	}
+//WAVE 6  /////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////
+	Wave
+	{
+		StartWaveOutput
+		{
+			Target wave_start_relay_classic
+			Action Trigger
+		}
+		DoneOutput
+		{
+			Target wave_finished_relay
+			Action trigger
+		}
+		WaveSpawn // Tank
+		{						
+			Name "W6_Tank1"
+			WaitBeforeStarting 4
+			WaitBetweenSpawns 30	
+
+			TotalCount 2
+			TotalCurrency 400
+			FirstSpawnOutput 	
+			{
+				Target boss_spawn_relay                       
+				Action Trigger                         
+			}
+
+			Tank
+			{
+				Health 35000					
+				Speed 75								
+				Name "TankBossA"
+				StartingPathTrackNode "tank_path_a_10"
+				
+				OnKilledOutput                              
+				{
+					Target boss_dead_relay					
+					Action Trigger                
+				}
+					
+				OnBombDroppedOutput                       
+				{
+					Target boss_deploy_relay 	
+					Action Trigger                  
+				}
+			}
+		}
+		WaveSpawn // Tank
+		{						
+			Name "W6_Tank2"
+			WaitBeforeStarting 70
+
+			TotalCount 1
+			TotalCurrency 200
+			FirstSpawnOutput 	
+			{
+				Target boss_spawn_relay                       
+				Action Trigger                         
+			}
+
+			Tank
+			{
+				Health 40000					
+				Speed 75							
+				Name "TankBossA"
+				Skin 1	
+				StartingPathTrackNode "tank_path_a_10"
+				
+				OnKilledOutput                              
+				{
+					Target boss_dead_relay					
+					Action Trigger                
+				}
+					
+				OnBombDroppedOutput                       
+				{
+					Target boss_deploy_relay 	
+					Action Trigger                  
+				}
+			}
+		}
+		WaveSpawn		
+		{
+			WaitBeforeStarting 4
+			Where flankers
+			Where spawnbot
+			Name "W6_01"
+			TotalCount 100			
+			MaxActive 10								
+			SpawnCount 3									
+			WaitBetweenSpawns 4					
+			TotalCurrency 300	
+
+			Support 1
+
+			RandomChoice
+			{
+				TFBot
+					{
+						Template T_TFBot_Pyro_Flaregun
+						Attributes AlwaysCrit
+						Skill Normal
+					}
+				TFBot
+					{
+						Template T_TFBot_Pyro
+						Attributes AlwaysCrit
+						Skill Normal
+					}
+				TFBot
+					{
+						Template T_TFBot_Sniper_Huntsman
+						Attributes AlwaysCrit
+						Skill Normal
+					}
+			}
+		}
+		WaveSpawn		
+		{
+			WaitBeforeStarting 4
+			Where flankers
+			Where spawnbot
+			Name "W6_02"
+			TotalCount 100			
+			MaxActive 5								
+			SpawnCount 2									
+			WaitBetweenSpawns 4					
+			TotalCurrency 300	
+
+			Support 1
+
+			RandomChoice
+			{
+				TFBot
+					{
+						Template T_TFBot_Medic_BigHeal
+					}
+				TFBot
+					{
+						Template T_TFBot_Medic_QuickFix
+					}
+			}
+		}
+	}
+}
