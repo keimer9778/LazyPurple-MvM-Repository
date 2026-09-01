@@ -9,7 +9,7 @@ in mind.<br>
 
 
 
-**Master:** The highest possible difficulty for 6 veteran players. Click Expert missions
+**Master:** The highest difficulty for 6 players. Click Expert missions
 
 are of similar difficulty. Any missions beyond this difficulty are not intended to be
 
@@ -23,18 +23,18 @@ difficulty are intended to be beaten with anywhere between 14 and 18 casual play
 
 20-player teams can consider these missions to be on par with 6-player Advanced missions.
 
+DIFFMOD can be used to apply 2x HP for a more challenging experience.
+
 
 
 **Grandmaster:** Prefixed in the votemenu with gndmas_mission_name, missions labeled with
 
 Grandmaster difficulty are intended for 20 players with difficulty on par with 6-player
 
-Expert missions.
+Expert missions. DIFFMOD should not be used on these missions.
 
 
 
 **Ultimate:** Prefixed in the votemenu with ult_mission_name, these are the hardest missions
 
-on the server. 20-player casual teams should not expect to beat these missions the vast
-
-majority of the time.
+on the server. 20-player casual teams should not expect to consistently beat these missions.
