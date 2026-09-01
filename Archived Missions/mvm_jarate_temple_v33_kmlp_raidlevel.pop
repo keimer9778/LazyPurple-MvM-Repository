@@ -1,0 +1,302 @@
+///////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////
+
+//WAVE RELAYS
+//wave_start_relay (default bomb mode - Bomb resets after 3 seconds)
+//wave_start_relay_ironman (bomb resets after being untouched for 12; this is useful for servers without the bomb reset plugin)
+
+///////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////
+
+//SPAWNBOT NAMES
+//NOTE #1: Sniper, Spy, and Sentry Buster bots have NO dedicated spawnpoints. Engineers ARE Supported!
+//NOTE #2: You can identify a bot spawn room by the lighting: if you see a room that is almost pitch black, it is a bot spawn room.
+//left
+//right
+
+//superultramega
+
+
+//NOTE FOR "spawnbot":
+//-Intended for regular, medium, and giant bots
+
+//NOTE FOR "superultramega":
+//-Intended for bots with a scale of 15 and below.  If you attempt to spawn a bot with a scale higher than 15, they will likely get stuck.
+//-Do NOT spawn supersized bots in superultramega **while** the supersized Tank has not exited its spawning room; bots **will** teleport and get stuck in the walls.
+
+///////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////
+
+//TANK PATHS (spawns tanks 40% bigger)
+//The following paths spawn tanks at the small garages near the bot spawn.
+//tank_path_left_1
+//tank_path_right_1
+
+///////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////
+
+//SPECIAL TANK PATHS
+////tank_path_supertank_1 (spawns the supersized tank)
+
+///////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////
+
+////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////
+//---------------------Mission File-------------------------
+////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////
+#base robot_kmlp.pop
+#base robot_kmlp_nojump.pop
+#base medium_robot_kmlp.pop
+#base medium_standard_robot_kmlp.pop
+#base giant_robot_kmlp.pop
+#base leaders_kmlp.pop
+#base capital_kmlp.pop
+#base guardian_kmlp.pop
+#base super_ultra_mega_robot_kmlp.pop
+#base master_mundy_kmlp.pop
+
+WaveSchedule
+{
+
+	StartingCurrency 0
+	RespawnWaveTime 0
+	FixedRespawnWaveTime	1
+	CanBotsAttackWhileInSpawnRoom no
+	EventPopfile Halloween
+	Advanced	1
+
+	////////////////////////////////////////////////////////////////////
+	////////////////////////////////////////////////////////////////////
+	////////////////////////////////////////////////////////////////////
+	////////////////////////////////////////////////////////////////////
+	////////////////////////////////////////////////////////////////////
+	////////////////////////////////////////////////////////////////////
+	//WAVE 1
+
+	Wave
+	{
+		WaitWhenDone	65
+		Checkpoint	Yes
+
+		StartWaveOutput
+		{
+			Target	wave_start_relay
+			Action	Trigger
+		}
+		DoneOutput
+		{
+			Target	wave_complete_relay
+			Action	Trigger
+		}
+
+
+		/////////////////////////////////////////////PHASE1
+
+		WaveSpawn
+		{
+			Name	PHASE1
+
+			TotalCurrency	0
+			TotalCount	1
+
+			WaitBeforeStarting	30
+			WaitBetweenSpawns	1
+
+			SpawnCount	1
+
+			Where	superultramega
+
+			FirstSpawnWarningSound	"Sniper.MVM_LaughLong02"
+			DoneWarningSound	"Sniper.MVM_PainCrticialDeath03"
+
+			Squad
+			{
+				TFBot
+				{
+					Template	kmlp_mundy_bushwacka_boss
+					Name	"ULTIMATE MASTER MUNDY"
+					Scale	5
+
+					Health	500000
+
+					Attributes	IgnoreFlag
+					BehaviorModifiers	Push
+
+					Attributes	AutoJump
+					AutoJumpMin	3
+					AutoJumpMax	7
+
+					CharacterAttributes
+					{
+						"increased jump height"	5
+						"cancel falling damage"	1
+						"damage force reduction"	255
+						"airblast vulnerability multiplier"	255
+					}
+				}
+			}
+		}
+
+		/////////////////////////////////////////////Support
+		WaveSpawn
+		{
+			Support	1
+
+			Name	support
+
+			TotalCurrency	0
+			TotalCount	21
+			MaxActive	20
+
+			WaitBeforeStarting	0
+			WaitBetweenSpawns	1
+
+			SpawnCount	1
+
+			RandomSpawn	1
+			Where	left
+			Where	right
+
+			RandomChoice
+			{
+				TFBot
+				{
+					Template	kmlp_scout
+				}
+				TFBot
+				{
+					Template	kmlp_scout_crit
+				}
+				TFBot
+				{
+					Template	kmlp_scout_nojump
+				}
+				TFBot
+				{
+					Template	kmlp_scout_crit_nojump
+				}
+				TFBot
+				{
+					Template	kmlp_soldier
+				}
+				TFBot
+				{
+					Template	kmlp_soldier_crit
+				}
+				TFBot
+				{
+					Template	kmlp_soldier_nojump
+				}
+				TFBot
+				{
+					Template	kmlp_soldier_crit_nojump
+				}
+				TFBot
+				{
+					Template	kmlp_pyro_crit
+				}
+				TFBot
+				{
+					Template	kmlp_pyro_manmelter
+				}
+				TFBot
+				{
+					Template	kmlp_pyro_manmelter_fireworks
+				}
+				TFBot
+				{
+					Template	kmlp_carpet_bomber
+				}
+				TFBot
+				{
+					Template	kmlp_carpet_bomber_crit
+				}
+				TFBot
+				{
+					Template	kmlp_carpet_bomber_nojump
+				}
+				TFBot
+				{
+					Template	kmlp_carpet_bomber_crit_nojump
+				}
+				TFBot
+				{
+					Template	kmlp_heavy
+				}
+				TFBot
+				{
+					Template	kmlp_heavy_crit
+				}
+				TFBot
+				{
+					Template	kmlp_heavy_brassbeast
+				}
+				TFBot
+				{
+					Template	kmlp_heavy_brassbeast_crit
+				}
+				TFBot
+				{
+					Template	kmlp_demo_arrow_auto_crit
+				}
+			}
+		}
+
+		WaveSpawn
+		{
+			Support	1
+
+			Name	SUPPORTMM
+
+			TotalCurrency	0
+			TotalCount	3
+			MaxActive	3
+
+			WaitBeforeStarting	0
+			WaitBetweenSpawns	3
+
+			SpawnCount	1
+
+			RandomSpawn	1
+			Where	left
+			Where	right
+
+			RandomChoice
+			{
+				TFBot
+				{
+					Template	kmlp_mundy_jarate_prototype
+
+					CharacterAttributes
+					{
+						"increased jump height"	5
+						"cancel falling damage"	1
+						"damage force reduction"	1
+						"airblast vulnerability multiplier"	1
+					}
+				}
+				TFBot
+				{
+					Template	kmlp_mundy_medium
+
+					CharacterAttributes
+					{
+						"increased jump height"	5
+						"cancel falling damage"	1
+						"damage force reduction"	1
+						"airblast vulnerability multiplier"	1
+					}
+				}
+			}
+		}
+	}
+}

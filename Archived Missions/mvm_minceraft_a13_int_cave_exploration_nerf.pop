@@ -1,0 +1,3187 @@
+/////////////////////////////////////////////////////////////////////
+//
+// Example pop file for the map mvm_example.
+//
+// This pop file contains a sampling of wave types used in MVM and is commented.
+// 
+/////////////////////////////////////////////////////////////////////
+//
+// Helpful debug and console commands for developing MVM population scripts:
+//
+// sv_cheats 1 							// Allows cheat commands.
+// god 									// Enables god mode for players.
+// nb_stop 1							// Stops all bots in place.
+// nb_blind 1 							// Bots will not treat players as threats.
+// currency_give x						// Give player x amount of game currency to be used on upgrades.
+// tf_populator_health_multiplier x.x	// Multiplies health of enemy bots - example: tf_populator_health_multiplier 0.01 will set health of bots to 1% of normal.
+// tf_mvm_popfile abcd					// Will load the .pop file of the specified name - example tf_mvm_popfile mvm_mapname_challenge2 will load mvm_mapname_challenge2.pop in the tf/scripts/population directory.
+// tf_mvm_jump_to_wave x				// Will jump to the specified wave number of the current .pop file - example tf_mvm_jump_to_wave 6 will jump to wave 6.
+// tf_bot_flag_kill_on_touch 1			// When a bot picks up the flag, they die.
+//
+/////////////////////////////////////////////////////////////////////
+// BEGIN POP FILE
+/////////////////////////////////////////////////////////////////////
+
+
+#base robot_giant.pop                                         	// This pop file is marked to be included. These are other .pop files that contain templates for TFBots. In our WaveSpawns we can reference the templates in these pop files.
+#base robot_standard.pop		
+
+WaveSchedule													
+{
+
+	StartingCurrency		800                               // How much currency each player starts with. Normally 400 is a good starting point, but increased to 20k for the purpose of this test script.
+	
+	RespawnWaveTime 2                                        	// This is the maximum respawn time, in seconds for players when they die. Starting at 2 seconds, it grows 2 seconds per wave.
+																// In this case, wave 1 will have a respawn time of 2 seconds. Wave 2 - 4 seconds. Wave 3 - 6 seocnds, and so on until it hits the cap of 10 seconds for wave 5 and beyond.
+	
+	CanBotsAttackWhileInSpawnRoom no                          	// Sets the robots to not attack players while they are inside of their respawn room volume.
+	
+Templates
+{
+	Demoknight_Wooden
+		{
+			Name "Wooden Demoknight"
+			Class Demoman
+			Skill Easy
+			Item "The Claidheamohmor"
+			Item "The Chargin' Targe"
+			WeaponRestrictions MeleeOnly
+			ItemAttributes
+			{
+				ItemName "The Claidheamohmor"
+				
+				//"attach particle effect" 701
+				//"paintkit_proto_def_index" 201
+				//"custom_paintkit_seed_lo" 1963567984
+				//"custom_paintkit_seed_hi" 1
+				//"set_item_texture_wear" 0.6
+				"damage bonus" 0.88
+				"melee range multiplier" 0.9
+			}
+		}
+		Demoknight_Stone
+		{
+			Name "Stone Demoknight"
+			Class Demoman
+			Skill Normal
+			Health 225
+			Item "The Claidheamohmor"
+			Item "The Chargin' Targe"
+			Item "The Sub Zero Suit"
+			WeaponRestrictions MeleeOnly
+			ItemAttributes
+			{
+				ItemName "The Claidheamohmor"
+				"damage bonus" 1
+				"melee range multiplier" 1
+			}
+		}
+		Demoknight_Iron
+		{
+			Name "Iron Demoknight"
+			Class Demoman
+			Skill Hard
+			Health 350
+			Item "The Claidheamohmor"
+			Item "The Chargin' Targe"
+			Item "The Dark Age Defender"
+			WeaponRestrictions MeleeOnly
+			ItemAttributes
+			{
+				ItemName "The Claidheamohmor"
+				"damage bonus" 1.22
+				"melee range multiplier" 1
+			}
+		}
+		Demoknight_Gold
+		{
+			Name "Gold Demoknight"
+			Class Demoman
+			Skill Hard
+			Health 225
+			Item "The Eyelander"
+			Item "The Chargin' Targe"
+			Item "Bruce's Bonnet"
+			WeaponRestrictions MeleeOnly
+			ItemAttributes
+			{
+				ItemName "Bruce's Bonnet"
+				"set item tint RGB" 15185211
+			}
+			ItemAttributes
+			{
+				ItemName "The Eyelander"
+				"is australium item" 1
+				"damage bonus" 0.88
+				"melee range multiplier" 1.1
+				"fire rate bonus" 0.6
+			}
+		}
+		Demoknight_Diamond
+		{
+			Name "Diamond Demoknight"
+			Class Demoman
+			Skill Expert
+			Health 600
+			Item "The Eyelander"
+			Item "The Chargin' Targe"
+			Item "The Gaelic Garb"
+			WeaponRestrictions MeleeOnly
+			ItemAttributes
+			{
+				ItemName "The Gaelic Garb"
+				"set item tint RGB" 8626083
+			}
+			ItemAttributes
+			{
+				ItemName "The Eyelander"
+				"damage bonus" 1.75
+				"melee range multiplier" 1.1
+				"fire rate bonus" 1.2
+			}
+		}
+		ZombieLow
+		{
+			Name "Zombie"
+			Class Heavy
+			ClassIcon zombie
+			Health 260
+			Skill Hard
+			WeaponRestrictions MeleeOnly
+			Tag color_dark_green
+			Item "Cadaver's Cranium"
+			Item "The Killing Gloves of Boxing"
+			ItemAttributes
+			{
+				ItemName "The Killing Gloves of Boxing"
+				"critboost on kill" 0
+				"fire rate penalty" 1.1
+			}
+		}
+		Zombie
+		{
+			Name "Zombie"
+			Class Heavy
+			ClassIcon zombie
+			Skill Hard
+			WeaponRestrictions MeleeOnly
+			Tag color_dark_green
+			Item "Cadaver's Cranium"
+			Item "The Killing Gloves of Boxing"
+			ItemAttributes
+			{
+				ItemName "The Killing Gloves of Boxing"
+				"critboost on kill" 0
+				"fire rate penalty" 1
+			}
+		}
+		ZombieGiant
+		{
+			Name "Zombie"
+			Class Heavy
+			ClassIcon zombie_giant
+			Health 3600
+			Skill Hard
+			WeaponRestrictions MeleeOnly
+			Tag color_dark_green
+			Item "Cadaver's Cranium"
+			Item "The Killing Gloves of Boxing"
+			Attributes MiniBoss
+			Tag bot_giant
+			CharacterAttributes
+			{
+				"move speed bonus"	0.5
+				"damage force reduction" 0.3
+				"airblast vulnerability multiplier" 0.3
+				"override footstep sound set" 2
+			}
+			ItemAttributes
+			{
+				ItemName "The Killing Gloves of Boxing"
+				"damage bonus" 1.5
+				"melee range multiplier" 1.2
+				"damage causes airblast" 1
+				"fire rate penalty" 2
+				"critboost on kill" 0
+			}
+		}
+		IronGolem
+		{
+			Name "Iron Golem"
+			Class Heavy
+			Skill Expert
+			ClassIcon iron_golem
+			Health 1500
+			Scale 1.3
+			WeaponRestrictions MeleeOnly
+			Item "War Head"
+			Item "Fists of Steel"
+			ItemAttributes
+			{
+				ItemName "Fists of Steel"
+				"damage bonus" 1.36
+				"melee range multiplier" 1.25
+				"damage causes airblast" 1
+				"fire rate bonus" 2.1
+				"dmg from ranged reduced" 1
+			}
+		}
+		ZombieArmored
+		{
+			Name "Armored Zombie"
+			Class Heavy
+			Skill Expert
+			ClassIcon zombie_armored
+			Health 500
+			Scale 1.3
+			WeaponRestrictions MeleeOnly
+			Tag color_dark_green
+			Item "Prinny Machete"
+			Item "War Head"
+			
+			ItemAttributes
+			{
+				ItemName "Prinny Machete"
+				"damage bonus" 1.25
+				"melee range multiplier" 1.2
+				"fire rate bonus" 1.2
+			}
+		}
+		BabyZombie
+		{
+			Name "Baby Zombie"
+			Class Heavy
+			ClassIcon zombie
+			Health 250
+			Skill Hard
+			WeaponRestrictions MeleeOnly
+			Scale 0.65
+			Item "Cadaver's Cranium"
+			CharacterAttributes
+			{
+				"move speed bonus"	1.25	
+			}
+			Item "The Killing Gloves of Boxing"
+			ItemAttributes
+			{
+				ItemName "The Killing Gloves of Boxing"
+				"critboost on kill" 0
+				"fire rate penalty" 1
+			}
+		}
+		Skeleton
+		{
+			Name "Skeleton"
+			Class Sniper
+			Skill Normal
+			ClassIcon skeleton
+			WeaponRestrictions PrimaryOnly
+			Item "The Hitman's Heatmaker"
+			Item "Spooktacles"
+			Item "The Spooky Sleeves"
+			Attributes AlwaysFireWeapon
+			ItemAttributes
+			{
+				ItemName "The Hitman's Heatmaker"
+				"damage penalty on bodyshot" 1
+				"is_passive_weapon" 1
+				"override projectile type" 13
+				"damage bonus" 0.9
+				"projectile speed increased" 3
+
+			}
+			ItemAttributes
+			{
+				ItemName "TF_WEAPON_CLUB"
+				"damage bonus" 0.01
+			}
+		}
+		Pillager
+		{
+			Name "Pillager"
+			Class Medic
+			Skill Hard
+			ClassIcon pillager
+			Health 200
+			WeaponRestrictions PrimaryOnly
+			Item "The Crusader's Crossbow"
+
+			Tag color_light_gray
+			Attributes AlwaysFireWeapon
+			ItemAttributes
+			{
+				ItemName "The Crusader's Crossbow"
+				"is_passive_weapon" 1
+				"damage bonus" 1.25
+
+			}
+			ItemAttributes
+			{
+				ItemName "TF_WEAPON_BONESAW"
+				"damage bonus" 0.01
+			}
+		}
+		Vindicator
+		{
+			Name "Vindicator"
+			Class Demoman
+			Skill Hard
+			ClassIcon vindicator
+			Health 225
+			WeaponRestrictions MeleeOnly
+			Tag color_light_gray
+			Item "The Scotsman's Skullcutter"
+			Item "The Chargin' Targe"
+			ItemAttributes
+			{
+				ItemName "The Chargin' Targe"
+				"charge recharge rate increased" 3
+			}
+			ItemAttributes
+			{
+				ItemName "The Scotsman's Skullcutter"
+				"damage bonus" 1.4
+			}
+		}
+		VindicatorWeak
+		{
+			Name "Vindicator"
+			Class Demoman
+			Skill Normal
+			ClassIcon vindicator
+			Health 200
+			WeaponRestrictions MeleeOnly
+			Tag color_light_gray
+			Item "The Scotsman's Skullcutter"
+			Item "The Chargin' Targe"
+			ItemAttributes
+			{
+				ItemName "The Chargin' Targe"
+				"charge recharge rate increased" 2.6
+			}
+			ItemAttributes
+			{
+				ItemName "The Scotsman's Skullcutter"
+				"damage bonus" 1.26
+			}
+		}
+		VindicatorCommander
+		{
+			Name "Vindicator Captain"
+			Class Demoman
+			Skill Hard
+			ClassIcon vindicator
+			Health 225
+			Tag color_light_gray
+			Item "The Scotsman's Skullcutter"
+			Item "The Buff Banner"
+			Attributes SpawnWithFullCharge
+			ItemAttributes
+			{
+				ItemName "The Scotsman's Skullcutter"
+				"damage bonus" 1.4
+			}
+			ItemAttributes
+			{
+				ItemName "The Buff Banner"
+				"is_passive_weapon" 1
+			}
+			CharacterAttributes
+			{
+				"increase buff duration"	9.0
+				"deploy time increased" 0.5
+			}
+		}
+		SkeletonArmored
+		{
+			Name "Armored Skeleton"
+			Class Sniper
+			Skill Hard
+			Health 275
+			Scale 1.3
+			ClassIcon skeleton_armored
+			WeaponRestrictions PrimaryOnly
+			Item "The Hitman's Heatmaker"
+			Item "Spooktacles"
+			Item "The Spooky Sleeves"
+			Attributes AlwaysFireWeapon
+			ItemAttributes
+			{
+				ItemName "The Hitman's Heatmaker"
+				"damage penalty on bodyshot" 1
+				"is_passive_weapon" 1
+				"override projectile type" 13
+				"damage bonus" 1
+				"fire rate bonus" 0.75
+				"projectile speed increased" 3
+
+			}
+			ItemAttributes
+			{
+				ItemName "TF_WEAPON_CLUB"
+				"damage bonus" 0.01
+			}
+		}
+		SkeletonGiant
+		{
+			Name "Giant Skeleton"
+			Class Sniper
+			Skill Hard
+			Health 2500
+			ClassIcon skeleton_giant
+			WeaponRestrictions PrimaryOnly
+			Item "The Hitman's Heatmaker"
+			Item "Spooktacles"
+			Item "The Spooky Sleeves"
+			Tag bot_giant
+			Attributes AlwaysFireWeapon
+			Attributes MiniBoss
+			ItemAttributes
+			{
+				ItemName "The Hitman's Heatmaker"
+				"is_passive_weapon" 1
+				"override projectile type" 13
+				"damage bonus" 1
+				"fire rate bonus" 0.5
+				"projectile speed increased" 3
+
+			}
+			ItemAttributes
+			{
+				ItemName "TF_WEAPON_CLUB"
+				"damage bonus" 0.01
+			}
+			CharacterAttributes
+			{
+				"move speed bonus"	0.5
+				"damage force reduction" 0.6
+				"airblast vulnerability multiplier" 0.1
+			}
+		}
+		Silverfish
+		{
+			Name "Silverfish"
+			Class Scout
+			Skill Expert
+			Tag color_light_gray
+			ClassIcon Silverfish
+			WeaponRestrictions MeleeOnly
+			Health 80
+			Scale 0.6
+			ItemAttributes
+			{
+				Item "TF_WEAPON_BAT"
+				"damage bonus" 0.35
+			}
+			CharacterAttributes
+			{
+				"move speed bonus" 1.25
+			}
+		}
+		Wolf
+		{
+			Name "Wolf"
+			Class Scout
+			Skill Hard
+			Tag color_light_gray
+			ClassIcon wolf
+			WeaponRestrictions MeleeOnly
+			Health 100
+			Item "The Fan O'War"
+			CharacterAttributes
+			{
+				"move speed bonus" 1.4
+			}
+		}
+		Spider
+		{
+			Name "Spider"
+			Class Scout
+			Skill Hard
+			Tag color_gray
+			ClassIcon spider
+			WeaponRestrictions MeleeOnly
+			
+		}
+		WolfGiant
+		{
+			Name "Giant Wolf"
+			Class Scout
+			Skill Hard
+			Tag color_gray
+			Health 1300
+			ClassIcon wolf
+			Item "The Sandman"
+			Tag bot_giant
+			WeaponRestrictions MeleeOnly
+			Attributes MiniBoss
+			CharacterAttributes
+			{
+				"move speed bonus"	2
+				"effect bar recharge rate increased" 0.25
+				"mark for death" 1
+				"damage force reduction" 0.7
+				"airblast vulnerability multiplier" 0.4
+				"override footstep sound set" 5
+			}
+		}
+		WolfGiant_Nerf
+		{
+			Name "Giant Wolf"
+			Class Scout
+			Skill Hard
+			Tag color_gray
+			Health 1200
+			ClassIcon wolf
+			Item "The Sandman"
+			Tag bot_giant
+			WeaponRestrictions MeleeOnly
+			Attributes MiniBoss
+			CharacterAttributes
+			{
+				"move speed bonus"	1
+				"effect bar recharge rate increased" 0.25
+				"mark for death" 1
+				"damage force reduction" 0.7
+				"airblast vulnerability multiplier" 0.4
+				"override footstep sound set" 5
+			}
+		}
+		SpiderGiant
+		{
+			Name "Giant Spider"
+			Class Scout
+			Skill Hard
+			Tag color_gray
+			Health 1050
+			ClassIcon spider_giant
+			Tag bot_giant
+			WeaponRestrictions MeleeOnly
+			Attributes MiniBoss
+			CharacterAttributes
+			{
+				"move speed bonus"	2
+				"damage force reduction" 0.7
+				"airblast vulnerability multiplier" 0.4
+				"override footstep sound set" 5
+			}
+		}
+		SpiderPoison
+		{
+			Name "Cave Spider"
+			Class Scout
+			Skill Hard
+			ClassIcon cave_spider
+			Tag color_dark_blue
+			Item "Three-Rune Blade"
+			WeaponRestrictions MeleeOnly
+			ItemAttributes
+			{
+				ItemName "Three-Rune Blade"
+				"hit self on miss" 0
+			}
+		}
+		SpiderGatebot
+		{
+			Name "Spider"
+			Class Scout
+			ClassIcon spider
+			EventChangeAttributes
+			{
+				Default
+				{
+					Tag bot_gatebot 				// having these will cause bots to run towards gates
+					Tag nav_prefer_gate1_flank		// having these will cause bots to run towards gates
+					BehaviorModifiers push			// having these will cause bots to run towards gates
+					
+					Attributes IgnoreFlag 
+
+					Skill Hard
+					Tag color_gray
+					Item "The Bat Outta Hell"
+					WeaponRestrictions MeleeOnly
+				}
+				RevertGateBotsBehavior
+				{
+					Skill Hard
+					Tag color_gray
+					Item "The Bat Outta Hell"
+					WeaponRestrictions MeleeOnly
+					Item "MvM GateBot Light Scout"
+					ItemAttributes               // turn off light hat
+					{
+						ItemName "MvM GateBot Light Scout"
+						"item style override" 1
+					}
+				}
+			}
+		}
+		Creeper
+		{
+			Name "Creeper"
+			Class Demoman
+			Skill Expert
+			Item "The Ullapool Caber"
+			Tag color_green
+			ClassIcon creeper
+			WeaponRestrictions MeleeOnly
+			ItemAttributes
+			{
+				ItemName "The Ullapool Caber"
+				"damage bonus" 0.35
+				"hand scale" 0.1
+				"fire rate bonus" 2
+				"blast dmg to self increased" 10
+				"damage bonus vs burning" 2.75
+				"dmg penalty vs nonburning" 2.75
+				"cannot pick up intelligence" 1
+			}
+		}
+		CreeperCharged
+		{
+			Name "Charged Creeper"
+			Class Demoman
+			Skill Expert
+			Health 500
+			Item "The Ullapool Caber"
+			Tag color_green
+			ClassIcon creeper_charged
+			WeaponRestrictions MeleeOnly
+			Attributes AlwaysCrit
+			Scale 1.35
+			ItemAttributes
+			{
+				ItemName "The Ullapool Caber"
+				"damage bonus" 0.45
+				"hand scale" 0.1
+				"fire rate bonus" 2
+				"blast dmg to self increased" 25
+				"Blast radius increased" 1.5
+				"damage bonus vs burning" 2.15
+				"dmg penalty vs nonburning" 2.15
+				"cannot pick up intelligence" 1
+			}
+		}
+		Pigman
+		{
+			Name "Pigman Zombie"
+			Class Demoman
+			Skill Expert
+			Item "The Eyelander"
+			Tag color_pink
+			ClassIcon zombie_pigman
+			WeaponRestrictions MeleeOnly
+			Health 200
+			ItemAttributes
+			{
+				ItemName "The Eyelander"
+				"damage bonus" 1.17
+				"is australium item" 1
+			}
+		}
+		WitherSkeleton
+		{
+			Name "Wither Skeleton"
+			Class Demoman
+			Skill Expert
+			Item "The Eyelander"
+			ClassIcon wither_skeleton
+			WeaponRestrictions MeleeOnly
+			Health 250
+			Tag color_gray
+			Scale 1.3
+			CharacterAttributes
+			{
+				"move speed bonus" 1.2
+			}
+			ItemAttributes
+			{
+				ItemName "The Eyelander"
+				"damage bonus" 1.34
+				"bleeding duration" 5
+			}
+		}
+		WitherSkeletonGiant
+		{
+			Name "Wither Skeleton Giant"
+			Class Demoman
+			Skill Expert
+			Item "The Eyelander"
+			Item "The Chargin' Targe"
+			ClassIcon wither_skeleton_giant
+			WeaponRestrictions MeleeOnly
+			
+			Attributes MiniBoss
+			Tag bot_giant
+			Health 4400
+			Tag color_gray
+			ItemAttributes
+			{
+				ItemName "The Eyelander"
+				"damage bonus" 1.4
+				"melee range multiplier" 1.15
+				"fire rate bonus" 1.5
+				"bleeding duration" 5
+			}
+			ItemAttributes
+			{
+				ItemName "The Chargin' Targe"
+				"charge recharge rate increased" 2
+			}
+			CharacterAttributes
+			{
+				"move speed bonus" 0.5
+				"damage force reduction" 0.5
+				"airblast vulnerability multiplier" 0.2
+				"override footstep sound set" 4
+			}
+		}
+		SlimeGiant
+		{
+			Name "Giant Slime"
+			Class Scout
+			Health 1600
+			AutoJumpMin 1.2
+			AutoJumpMax 1.2
+			Scale 1.8
+			ClassIcon slime_giant
+			Tag bot_giant
+
+			WeaponRestrictions MeleeOnly
+			Skill Expert
+			Tag color_green
+			Tag spawn_on_death
+			Attributes MiniBoss
+
+			CharacterAttributes
+			{
+				"damage bonus"	1.5
+				"hand scale" 0.1
+				"head scale" 5
+				"torso scale" 0.1
+				"fire rate bonus" 1
+				"move speed bonus" 1
+				"damage force reduction" 0.4
+				"airblast vulnerability multiplier" 0.4
+				"override footstep sound set" 5
+			}
+			Attributes AutoJump
+		}
+		SlimeBig
+		{
+			Name "Slime"
+			Class Scout
+			Health 320
+			AutoJumpMin 1.2
+			AutoJumpMax 1.2
+			Scale 1.2
+			ClassIcon slime
+					WeaponRestrictions MeleeOnly
+					Skill Expert
+					Tag color_green
+					Tag spawn_on_death
+					CharacterAttributes
+					{
+						"damage bonus"	1.2
+						"hand scale" 0.1
+						"head scale" 5
+						"torso scale" 0.1
+						"fire rate bonus" 1
+						"move speed bonus" 1.35
+					}
+					Attributes AutoJump
+		}
+		Slime
+		{
+			Name "Slime"
+			Class Scout
+			Health 120
+			AutoJumpMin 1.2
+			AutoJumpMax 1.2
+			Scale 0.75
+			ClassIcon slime
+					WeaponRestrictions MeleeOnly
+					Skill Expert
+					Tag color_green
+					Tag spawn_on_death
+					CharacterAttributes
+					{
+						"damage bonus"	0.6
+						"hand scale" 0.01
+						"head scale" 10
+						"torso scale" 0.01
+						"fire rate bonus" 1
+						"move speed bonus" 1.35
+					}
+					Attributes AutoJump
+		}
+		SlimeSmall
+		{
+			Name "Slime"
+			Class Scout
+			Health 20
+			AutoJumpMin 1.2
+			AutoJumpMax 1.2
+			Scale 0.46
+			ClassIcon slime
+					WeaponRestrictions MeleeOnly
+					Skill Expert
+					Tag color_green
+					CharacterAttributes
+					{
+						"damage bonus"	0.1
+						"hand scale" 0.1
+						"head scale" 5
+						"torso scale" 0.1
+						"fire rate bonus" 1
+						"move speed bonus" 1.35
+					}
+					Attributes AutoJump
+		}
+		MagmaCubeGiant_Nerf
+		{
+			Name "Giant Magma Cube"
+			Class Pyro
+			Health 2250
+			AutoJumpMin 1.2
+			AutoJumpMax 1.2
+			
+			ClassIcon magma_cube_giant
+					WeaponRestrictions MeleeOnly
+					Skill Expert
+					Tag color_red
+					Tag spawn_on_death
+					Attributes MiniBoss
+					Tag bot_giant
+					CharacterAttributes
+					{
+						"damage bonus"	1
+						"hand scale" 0.1
+						"fire rate bonus" 0.75
+						"Set DamageType Ignite" 1
+						"move speed bonus" 1
+						"damage force reduction" 0.6
+						"airblast vulnerability multiplier" 0.3
+						"override footstep sound set" 6
+					}
+					Attributes AutoJump
+		}
+		MagmaCubeGiant
+		{
+			Name "Giant Magma Cube"
+			Class Pyro
+			Health 2500
+			AutoJumpMin 1.2
+			AutoJumpMax 1.2
+			
+			ClassIcon magma_cube_giant
+					WeaponRestrictions MeleeOnly
+					Skill Expert
+					Tag color_red
+					Tag spawn_on_death
+					Attributes MiniBoss
+					Tag bot_giant
+					CharacterAttributes
+					{
+						"damage bonus"	1.4
+						"hand scale" 0.1
+						"fire rate bonus" 0.75
+						"Set DamageType Ignite" 1
+						"move speed bonus" 1.2
+						"damage force reduction" 0.6
+						"airblast vulnerability multiplier" 0.3
+						"override footstep sound set" 6
+					}
+					Attributes AutoJump
+		}
+		MagmaCubeBig
+		{
+			Name "Magma Cube"
+			Class Pyro
+			Health 500
+			AutoJumpMin 1.2
+			AutoJumpMax 1.2
+			Scale 1.3
+			ClassIcon magma_cube
+					WeaponRestrictions MeleeOnly
+					Skill Expert
+					Tag color_red
+					Tag spawn_on_death
+					CharacterAttributes
+					{
+						"damage bonus"	1.1
+						"hand scale" 0.1
+						"fire rate bonus" 0.75
+						"Set DamageType Ignite" 1
+						"move speed bonus" 1.2
+					}
+					Attributes AutoJump
+		}
+		MagmaCube
+		{
+			Name "Magma Cube"
+			Class Pyro
+			Health 170
+			AutoJumpMin 1.2
+			AutoJumpMax 1.2
+			Scale 0.75
+			ClassIcon magma_cube
+					WeaponRestrictions MeleeOnly
+					Skill Expert
+					Tag color_red
+					Tag spawn_on_death
+					CharacterAttributes
+					{
+						"damage bonus"	0.8
+						"hand scale" 0.1
+						"fire rate bonus" 0.75
+						"Set DamageType Ignite" 1
+						"move speed bonus" 1.2
+					}
+					Attributes AutoJump
+		}
+		MagmaCubeSmall
+		{
+			Name "Magma Cube"
+			Class Pyro
+			Health 50
+			AutoJumpMin 1.2
+			AutoJumpMax 1.2
+			Scale 0.45
+			ClassIcon magma_cube
+					WeaponRestrictions MeleeOnly
+					Skill Expert
+					Tag color_red
+					CharacterAttributes
+					{
+						"damage bonus"	0.5
+						"hand scale" 0.1
+						"fire rate bonus" 0.75
+						"Set DamageType Ignite" 1
+						"move speed bonus" 1.2
+					}
+					Attributes AutoJump
+		}
+		Enderman
+		{
+			Name "Enderman"
+			Class Spy
+			Skill Expert
+			ClassIcon enderman
+			Health 420
+			Scale 1.4
+			Tag color_black
+			Attributes AlwaysFireWeapon
+			WeaponRestrictions MeleeOnly
+			CharacterAttributes
+			{
+				"damage bonus"	2.5
+				"move speed bonus"	1.6
+				"cannot disguise" 1
+				"disguise speed penalty" 60
+			}
+		}
+		Shulker
+		{
+			Name "Shulker"
+			Class Spy
+			Skill Expert
+			ClassIcon shulker
+			Health 300
+			Scale 1
+			Tag color_violet_light
+			Attributes AlwaysFireWeapon
+			WeaponRestrictions MeleeOnly
+			ItemAttributes
+			{
+				ItemName "TF_WEAPON_REVOLVER"
+				"is_passive_weapon" 1
+			}
+			CharacterAttributes
+			{
+				"damage bonus"	2.5
+				"move speed bonus"	0.1
+				"increased jump height from weapon" 0.1
+				"cannot disguise" 1
+				"disguise speed penalty" 60
+			}
+		}
+		Witch
+		{
+			Name "Witch"
+			Class Medic
+			Skill Expert
+			Health 225
+			ClassIcon witch
+			Tag bot_witch
+			Tag color_violet_light
+			Attributes AlwaysFireWeapon
+			Item "TF_WEAPON_SPELLBOOK"
+			Item "The Amputator"
+			ItemAttributes
+			{
+				ItemName "TF_WEAPON_SPELLBOOK"
+				"is_passive_weapon" 1
+			}
+			ItemAttributes
+			{
+				ItemName "The Amputator"
+				"damage bonus" 0.1
+			}
+		}
+		WitchGiant
+		{
+			Name "Giant Witch"
+			Class Medic
+			Skill Expert
+			Health 2250
+			ClassIcon witch_giant
+			Tag bot_witch_giant
+			Tag color_violet_light
+			Attributes MiniBoss
+			Attributes AlwaysFireWeapon
+			Item "TF_WEAPON_SPELLBOOK"
+			Item "The Amputator"
+			Tag bot_giant
+
+			ItemAttributes
+			{
+				ItemName "TF_WEAPON_SPELLBOOK"
+				"is_passive_weapon" 1
+			}
+			ItemAttributes
+			{
+				ItemName "The Amputator"
+				"damage bonus" 0.1
+			}
+			CharacterAttributes
+			{
+				"move speed bonus"	0.5
+				"damage force reduction" 0.6
+				"airblast vulnerability multiplier" 0.1
+			}
+		}
+		Blaze
+		{
+			Name "Blaze"
+			Class Pyro
+			Skill Expert
+			WeaponRestrictions SecondaryOnly
+			Item "The Detonator"
+			ClassIcon blaze
+			AutoJumpMin 2
+			AutoJumpMax 2
+			Tag color_orange
+			Tag low_gravity
+			Tag bot_fly
+			Tag bot_nobomb
+			Attributes AutoJump
+			Attributes AlwaysFireWeapon
+			ItemAttributes
+			{
+				ItemName "The Detonator"
+				"is_passive_weapon" 1
+				"fire rate bonus" 0.31
+				"damage bonus" 1.35
+				"projectile spread angle penalty" 5.5
+			}
+			CharacterAttributes
+			{
+				"cancel falling damage" 1
+				"increased jump height from weapon" 1.25
+				"increased air control" 10
+				"head scale" 1.5
+				"cannot pick up intelligence" 1
+			}	
+			ItemAttributes
+			{
+				ItemName "TF_WEAPON_FIREAXE"
+				"damage bonus" 0.6
+			}
+		}
+		BlazeFlag
+		{
+			Name "Blaze"
+			Class Pyro
+			AutoJumpMin 2
+			AutoJumpMax 2
+			ClassIcon blaze
+					WeaponRestrictions SecondaryOnly
+					Item "The Detonator"
+					Skill Expert
+					Tag color_orange
+					Tag low_gravity
+					Tag bot_fly
+					Attributes AlwaysFireWeapon
+					ItemAttributes
+					{
+						ItemName "The Detonator"
+						"is_passive_weapon" 1
+						"fire rate bonus" 0.31
+						"damage bonus" 1.35
+						"projectile spread angle penalty" 5.5
+					}
+					CharacterAttributes
+					{
+						"cancel falling damage" 1
+						"increased jump height from weapon" 1.25
+						"head scale" 1.5
+						"increased air control" 10
+					}	
+					ItemAttributes
+					{
+						ItemName "TF_WEAPON_FIREAXE"
+						"damage bonus" 0.6
+					}
+					Attributes AutoJump
+		}
+		BlazeGiant
+		{
+			Name "Giant Blaze"
+			Class Pyro
+			AutoJumpMin 9
+			AutoJumpMax 9
+			ClassIcon blaze_giant
+			Health 3400
+					WeaponRestrictions SecondaryOnly
+					Item "The Detonator"
+					Skill Expert
+					Tag color_orange
+					Tag low_gravity
+					Attributes AlwaysFireWeapon
+					Attributes MiniBoss
+					Tag bot_giant
+					Tag bot_fly
+					ItemAttributes
+					{
+						ItemName "The Detonator"
+						"is_passive_weapon" 1
+						"fire rate bonus" 0.16
+						"damage bonus" 1.5
+						"projectile spread angle penalty" 7.5
+					}
+					CharacterAttributes
+					{
+						"cancel falling damage" 1
+						"increased jump height from weapon" 2.1
+						"increased air control" 10
+						"head scale" 1.5
+						"move speed penalty" 0.8
+					}	
+					ItemAttributes
+					{
+						ItemName "TF_WEAPON_FIREAXE"
+						"damage bonus" 0.6
+					}
+			Attributes AutoJump
+		}
+		Ghast
+		{
+			Name "Ghast"
+			Class Soldier
+			Skill Expert
+			Health 100
+			ClassIcon ghast
+			Item "The Liberty Launcher"
+			AutoJumpMin 8
+			AutoJumpMax 8
+			BehaviorModifiers Push
+			Tag low_gravity
+			Tag bot_fly
+			Tag bot_nobomb
+			Attributes AutoJump
+			Attributes AlwaysFireWeapon
+			WeaponRestrictions PrimaryOnly
+			Scale 1
+			CharacterAttributes
+			{
+				"increased jump height from weapon" 4
+				"increased air control" 100
+				"head scale" 10
+				"torso scale" 0.1
+				"hand scale" 0.5
+				"cancel falling damage" 1
+				"cannot pick up intelligence" 1
+			}
+			ItemAttributes
+			{
+				ItemName "The Liberty Launcher"
+				"is_passive_weapon" 1
+				"reload time decreased" 0.1
+				"fire rate bonus" 1.7
+				"projectile speed increased" 1.7
+				"damage bonus" 1.1
+				"rocket specialist" 1
+				
+			}
+			ItemAttributes
+			{
+				ItemName "TF_WEAPON_SHOVEL"
+				"damage bonus" 0.3
+			}
+		}
+		GhastFlag
+		{
+			Name "Ghast"
+			Class Soldier
+			Health 100
+			ClassIcon ghast
+			
+			AutoJumpMin 8
+			AutoJumpMax 8
+					Item "The Liberty Launcher"
+					Skill Expert
+					BehaviorModifiers Push
+					Tag low_gravity
+					Tag bot_fly
+					Attributes AutoJump
+					Attributes AlwaysFireWeapon
+					WeaponRestrictions PrimaryOnly
+					CharacterAttributes
+					{
+						"increased jump height from weapon" 4
+						"increased air control" 100
+						"head scale" 10
+						"torso scale" 0.5
+						"hand scale" 0.5
+						"cancel falling damage" 1
+					}
+					ItemAttributes
+					{
+						ItemName "The Liberty Launcher"
+						"is_passive_weapon" 1
+						"reload time decreased" 0.1
+						"fire rate bonus" 1.7
+						"projectile speed increased" 1.7
+						"damage bonus" 1.1
+						"rocket specialist" 1
+						
+					}
+					ItemAttributes
+					{
+						ItemName "TF_WEAPON_SHOVEL"
+						"damage bonus" 0.3
+					}
+			
+		}
+		EnderDragon
+		{
+			Name "Ender Dragon"
+			Class Pyro
+			Skill Expert
+			Health 37500
+			Item "The Dragon's Fury"
+			ClassIcon ender_dragon
+			AutoJumpMin 10
+			AutoJumpMax 10
+			Tag low_gravity
+			Tag bot_fly
+			Attributes AutoJump
+			Attributes AlwaysFireWeapon
+			Attributes UseBossHealthBar
+			Attributes MiniBoss
+			Tag bot_giant
+			Tag bot_boss
+			WeaponRestrictions PrimaryOnly
+			Scale 1.9
+			CharacterAttributes
+			{
+				"increased jump height from weapon" 1.25
+				"cancel falling damage" 1
+				"move speed bonus"	0.425
+				"damage force reduction" 0.4
+				"airblast vulnerability multiplier" 0.1
+				"override footstep sound set" 3
+				"airblast vertical vulnerability multiplier" 0.1
+				"rage giving scale"	0.1
+			}
+			ItemAttributes
+			{
+				ItemName "The Dragon's Fury"
+				"is_passive_weapon" 1
+				"item_meter_charge_rate" 1.6
+				"damage bonus" 2.9
+				
+			}
+			ItemAttributes
+			{
+				ItemName "TF_WEAPON_FIREAXE"
+				"damage bonus" 0.75
+			}
+		}
+		Wither
+		{
+			Name "Wither"
+			Class Soldier
+			Skill Expert
+			Health 40000
+			Item "The Cow Mangler 5000"
+			AutoJumpMin 20
+			AutoJumpMax 20
+			ClassIcon wither
+			Item "The B.A.S.E. Jumper"
+			Attributes AutoJump
+			Attributes AlwaysFireWeapon
+			Attributes UseBossHealthBar
+			Attributes MiniBoss
+			Tag wither
+			Tag bot_giant
+			Tag bot_fly
+			Tag bot_boss
+			WeaponRestrictions PrimaryOnly
+			Scale 1.9
+			CharacterAttributes
+			{
+				"health regen" 110
+				"increased jump height from weapon" 5
+				"cancel falling damage" 1
+				"move speed bonus"	0.5
+				"damage force reduction" 0.4
+				"airblast vulnerability multiplier" 0.1
+				"override footstep sound set" 3
+				"airblast vertical vulnerability multiplier" 0.1
+				"rage giving scale"	0.1
+			}
+			ItemAttributes
+			{
+				ItemName "The Cow Mangler 5000"
+				"bleeding duration" 8
+				"rocket specialist" 1
+				"is_passive_weapon" 1
+				"projectile spread angle penalty" 3.5
+				"Reload time decreased" 0.01
+				"blast radius increased" 0.4
+				"projectile speed increased" 1.3
+				"Set DamageType Ignite" 1
+				"fire rate bonus" 1.5
+			}
+			ItemAttributes
+			{
+				ItemName "TF_WEAPON_SHOVEL"
+				"damage bonus" 1
+			}
+		}
+
+		WitherHead
+		{
+			Name "Wither Head"
+			Class Soldier
+			Skill Expert
+			Item "The Cow Mangler 5000"
+			AutoJumpMin 20
+			AutoJumpMax 20
+			ClassIcon wither
+			Item "The B.A.S.E. Jumper"
+			Attributes AutoJump
+			Attributes AlwaysFireWeapon
+			WeaponRestrictions PrimaryOnly
+			Scale 1
+			Tag wither_head
+			Tag bot_fly
+			CharacterAttributes
+			{
+				"increased jump height from weapon" 5
+				"cancel falling damage" 1
+				"move speed bonus"	0.5
+				"bleeding duration" 5
+				"damage force reduction" 0.4
+				"airblast vulnerability multiplier" 0.1
+				"override footstep sound set" 3
+				"airblast vertical vulnerability multiplier" 0.1
+				"dmg taken increased" 0
+			}
+			ItemAttributes
+			{
+				ItemName "The Cow Mangler 5000"
+				"rocket specialist" 1
+				"bleeding duration" 5
+				"is_passive_weapon" 1
+				"projectile spread angle penalty" 3.5
+				"Reload time decreased" 0.01
+				"blast radius increased" 0.4
+				"projectile speed increased" 1.35
+				"Set DamageType Ignite" 1
+				"fire rate bonus" 1.5
+			}
+			ItemAttributes
+			{
+				ItemName "TF_WEAPON_SHOVEL"
+				"damage bonus" 1
+			}
+		}
+}
+	
+/////////////////
+//MISSIONS
+/////////////////	
+	
+	Mission 													// This is a sentry buster mission. It creates sentry busters for any player sentries deemed too dangerous.
+	{
+		Objective DestroySentries
+
+		InitialCooldown 5										// Amount of time once a wave starts before the mission becomes active. 
+		Where spawnbot_mission_sentrybuster						// Entity at which to spawn.
+		BeginAtWave 1											// The mission becomes active on this wave.
+		RunForThisManyWaves 11									// It remains active for this many waves. Generally, this is the same as the total number of waves.
+		CooldownTime 35            								// This is the time, in seconds, between when Sentry Busters are allowed to spawn, should their spawning conditions be met.
+
+            TFBot
+			{
+				Template T_TFBot_SentryBuster					// This references a template to use for its TFBot.
+            }
+	}
+	Mission 													// This is a spy mission. This spawns spy(s) at periodic intervals, it will not spawn more spies unless its conditions are met, and all previous spies from this mission are dead.
+	{
+		Objective Spy  
+
+		InitialCooldown 15										// Amount of time once a wave starts before the mission becomes active.
+		Where spawnbot_mission_spy								// Entity at which to spawn.
+		BeginAtWave 4											// The mission becomes active on this wave.
+		RunForThisManyWaves 1									// It remains active for this many waves.
+		CooldownTime 60										// This is the time, in seconds, between when Sniper Missions are allowed to spawn, should their spawning conditions be met.
+		DesiredCount 1									// Number of spies to spawn each time this mission's criteria are met.
+
+		TFBot
+		{
+			Template Enderman
+		}
+	}	
+	Mission 													// This is a spy mission. This spawns spy(s) at periodic intervals, it will not spawn more spies unless its conditions are met, and all previous spies from this mission are dead.
+	{
+		Objective Spy  
+
+		InitialCooldown 15										// Amount of time once a wave starts before the mission becomes active.
+		Where spawnbot_mission_spy								// Entity at which to spawn.
+		BeginAtWave 5											// The mission becomes active on this wave.
+		RunForThisManyWaves 1									// It remains active for this many waves.
+		CooldownTime 60											// This is the time, in seconds, between when Sniper Missions are allowed to spawn, should their spawning conditions be met.
+		DesiredCount 1									// Number of spies to spawn each time this mission's criteria are met.
+
+		TFBot
+		{
+			Template Enderman
+		}
+	}	
+	
+/////////////////
+//WAVES
+/////////////////	
+	
+//WAVE 1 - 700 starting, 550 + 100
+	Wave
+	{
+		StartWaveOutput									// Output which occurs at moment the wave begins.
+		{
+			Target wave_start_relay								// Name of the entity in the map to target.
+			Action trigger										// Input to give the targeted entity.
+		}
+		InitWaveOutput											// Output which occurs at moment the wave begins.
+		{
+			Target wave_spell_relay								// Name of the entity in the map to target.
+			Action FireUser1									// Input to give the targeted entity.
+		}
+		
+		DoneOutput												// Output which occurrs at moment the wave is completed.
+		{
+			Target wave_finished_relay							// Name of the entity in the map to target.
+			Action trigger										// Input to give the targeted entity.
+		}
+
+		Checkpoint Yes											// Sets a checkpoint at the end of this wave.
+
+		WaveSpawn
+		{
+			Name wave1a
+			Where spawnbot									
+			TotalCount 20										
+			MaxActive 10										
+			SpawnCount 5
+			WaitBeforeStarting 0								
+			WaitBetweenSpawns 8					
+			
+			TotalCurrency 150									
+			
+			TFBot
+			{
+				Template ZombieLow
+				Health 220
+			}
+		}
+		WaveSpawn
+		{
+			Name wave1b
+			Where spawnbot									
+			TotalCount 24										
+			MaxActive 8										
+			SpawnCount 4
+			WaitBeforeStarting 0								
+			WaitBetweenSpawns 9
+			Support 1
+			
+			TotalCurrency 150									
+			
+			TFBot
+			{
+				Template Spider
+			}
+		}
+		WaveSpawn
+		{
+			Name wave2a
+			Where spawnbot_right								
+			TotalCount 1									
+			MaxActive 1										
+			SpawnCount 1
+			WaitBeforeStarting 0								
+			WaitBetweenSpawns 8
+			WaitForAllDead wave1a
+			TotalCurrency 100									
+			
+			TFBot
+			{
+				Template SlimeBig
+			}
+		}
+		WaveSpawn
+		{
+			Name wave2a-s
+			Where spawnbot_deathpos									
+			TotalCount 3									
+			MaxActive 3 										
+			SpawnCount 3
+			WaitBeforeStarting 0.1								
+			WaitBetweenSpawns 8
+			WaitForAllDead wave2a	
+			Support Limited								
+			
+			TFBot
+			{
+				Template Slime
+				ClassIcon slime_support
+			}
+		}
+		WaveSpawn
+		{
+			Name wave2b
+			Where spawnbot_right								
+			TotalCount 1									
+			MaxActive 1										
+			SpawnCount 1
+			WaitBeforeStarting 0								
+			WaitBetweenSpawns 8
+			WaitForAllDead wave1a
+			TotalCurrency 50									
+			
+			TFBot
+			{
+				Template Slime
+			}
+		}
+		WaveSpawn
+		{
+			Name wave2b-s
+			Where spawnbot_deathpos									
+			TotalCount 3									
+			MaxActive 3 										
+			SpawnCount 3
+			WaitBeforeStarting 0.1								
+			WaitBetweenSpawns 8
+			WaitForAllDead wave2b	
+			Support Limited								
+			
+			TFBot
+			{
+				Template SlimeSmall
+				ClassIcon slime_support
+			}
+		}
+		WaveSpawn
+		{
+			Name wave2c
+			Where spawnbot_right									
+			TotalCount 1									
+			MaxActive 1										
+			SpawnCount 1
+			WaitBeforeStarting 0								
+			WaitBetweenSpawns 8
+			WaitForAllDead wave1a
+			TotalCurrency 50									
+			
+			TFBot
+			{
+				Template Slime
+			}
+		}
+		WaveSpawn
+		{
+			Name wave2c-s
+			Where spawnbot_deathpos									
+			TotalCount 3									
+			MaxActive 3 										
+			SpawnCount 3
+			WaitBeforeStarting 0.1								
+			WaitBetweenSpawns 8
+			WaitForAllDead wave2c
+			Support Limited					
+			
+			TFBot
+			{
+				Template SlimeSmall
+				ClassIcon slime_support
+			}
+		}
+		WaveSpawn
+		{
+			Name wave2c
+			Where spawnbot_flank	
+			TotalCount 6										
+			MaxActive 4										
+			SpawnCount 2
+			WaitBeforeStarting 0								
+			WaitBetweenSpawns 10				
+			WaitForAllDead wave1a
+			TotalCurrency 50									
+			
+			TFBot
+			{
+				Template Creeper
+			}
+		}
+	}
+	//Wave 2 - 1250 starting, 650 + 100
+	Wave
+	{
+		StartWaveOutput											
+		{
+			Target wave_start_relay								
+			Action trigger										
+		}
+		InitWaveOutput											// Output which occurs at moment the wave begins.
+		{
+			Target wave_spell_relay								// Name of the entity in the map to target.
+			Action FireUser1									// Input to give the targeted entity.
+		}
+		DoneOutput												
+		{
+			Target wave_finished_relay							
+			Action trigger									
+		}
+
+		Checkpoint Yes		
+
+		WaveSpawn
+		{
+			Name wave1a
+			Where spawnbot									
+			TotalCount 21										
+			MaxActive 7										
+			SpawnCount 7
+			WaitBeforeStarting 0								
+			WaitBetweenSpawns 5						
+			
+			TotalCurrency 150									
+			
+			TFBot
+			{
+				Template Pigman
+			}
+		}
+		WaveSpawn
+		{
+			Name wave1b
+			Where spawnbot									
+			TotalCount 16										
+			MaxActive 8										
+			SpawnCount 4
+			WaitBeforeStarting 15								
+			WaitBetweenSpawns 10						
+			
+			TotalCurrency 150									
+			
+			TFBot
+			{
+				Template Skeleton
+			}
+		}
+		WaveSpawn
+		{
+			Name wave1c
+			Where spawnbot_portal									
+			TotalCount 4										
+			MaxActive 2										
+			SpawnCount 1
+			Support 1
+			WaitBeforeStarting 30								
+			WaitBetweenSpawns 15						
+			
+			TotalCurrency 100								
+			
+			TFBot
+			{
+				Template Ghast
+			}
+		}
+		WaveSpawn
+		{
+			Name wave2a
+			Where spawnbot								
+			TotalCount 10										
+			MaxActive 10								
+			SpawnCount 5
+			WaitBeforeStarting 4								
+			WaitBetweenSpawns 27						
+			WaitForAllDead wave1a
+			TotalCurrency 150									
+			
+			Squad
+			{
+				TFBot
+				{
+					Template ZombieGiant
+				}
+				TFBot
+				{
+					Template ZombieLow
+				}
+				TFBot
+				{
+					Template ZombieLow
+				}
+				TFBot
+				{
+					Template Zombie
+				}
+				TFBot
+				{
+					Template Zombie
+				}
+			}
+		}
+		WaveSpawn
+		{
+			Name wave2c
+			Where spawnbot									
+			TotalCount 7										
+			MaxActive 7										
+			SpawnCount 7
+			WaitBeforeStarting 18								
+			WaitBetweenSpawns 8						
+			WaitForAllDead wave1a
+			TotalCurrency 50									
+			
+			TFBot
+			{
+				Template Pigman
+			}
+		}
+		WaveSpawn
+		{
+			Name wave2b
+			Where spawnbot								
+			TotalCount 8										
+			MaxActive 4								
+			SpawnCount 4
+			WaitBeforeStarting 0								
+			WaitBetweenSpawns 1						
+			WaitForAllDead wave1b
+			TotalCurrency 50									
+			
+			Squad
+			{
+				TFBot
+				{
+					Template Wolf
+				}
+			}
+		}
+	}
+	//wave 3 - 2000 starting, 750 + 100
+	Wave
+	{
+		StartWaveOutput											
+		{
+			Target wave_start_relay								
+			Action trigger										
+		}
+		InitWaveOutput											// Output which occurs at moment the wave begins.
+		{
+			Target wave_spell_relay								// Name of the entity in the map to target.
+			Action FireUser2									// Input to give the targeted entity.
+		}
+		DoneOutput												
+		{
+			Target wave_finished_relay							
+			Action trigger									
+		}
+
+		Checkpoint Yes						
+
+		WaveSpawn
+		{
+			Name wave1a
+			Where spawnbot_right		
+			TotalCount 6									
+			MaxActive 2											
+			SpawnCount 2									
+			
+			WaitBeforeStarting 0								
+			WaitBetweenSpawns 20								
+			
+			TotalCurrency 100
+			TFBot
+			{
+				Template IronGolem	     		
+			}
+		}
+
+		WaveSpawn
+		{
+			Name wave1b
+			Where spawnbot_left				
+			TotalCount 42									
+			MaxActive 6											
+			SpawnCount 6									
+			
+			WaitBeforeStarting 12								
+			WaitBetweenSpawns 5								
+			
+			TotalCurrency 150
+
+			RandomChoice
+			{
+				TFBot
+				{
+					Template Spider
+					Attributes AlwaysCrit  		
+				}
+				TFBot
+				{
+					Template SpiderPoison   		
+				}
+				TFBot
+				{
+					Template SpiderPoison   		
+				}
+			}
+		}
+		WaveSpawn
+		{
+			Name wave1ca
+			Where spawnbot_right				
+			TotalCount 8									
+			MaxActive 4											
+			SpawnCount 4									
+			
+			WaitBeforeStarting 0								
+			WaitBetweenSpawns 10								
+			
+			TotalCurrency 100
+			Squad
+			{
+				TFBot
+				{
+					Template VindicatorWeak     		
+				}
+				TFBot
+				{
+					Template Pillager     		
+				}
+				TFBot
+				{
+					Template Pillager	     		
+				}
+				TFBot
+				{
+					Template Pillager	     		
+				}
+			}
+		}
+		WaveSpawn
+		{
+			Name wave1c
+			Where spawnbot_right				
+			TotalCount 8									
+			MaxActive 4											
+			SpawnCount 4									
+			
+			WaitForAllDead wave1ca
+			WaitBeforeStarting 0								
+			WaitBetweenSpawns 10								
+			
+			TotalCurrency 100
+			Squad
+			{
+				TFBot
+				{
+					Template VindicatorWeak     		
+				}
+				TFBot
+				{
+					Template Pillager     		
+				}
+				TFBot
+				{
+					Template Pillager	     		
+				}
+				TFBot
+				{
+					Template Pillager	     		
+				}
+			}
+		}
+		WaveSpawn
+		{
+			Name wave1e
+			Where spawnbot_left				
+			TotalCount 6									
+			MaxActive 2											
+			SpawnCount 2
+			WaitForAllDead wave1a							
+			
+			WaitBeforeStarting 4								
+			WaitBetweenSpawns 10								
+			
+			TotalCurrency 50
+			TFBot
+			{
+				Template Witch     		
+			}
+		}
+		WaveSpawn
+		{
+			Name wave1f
+			Where spawnbot_left				
+			TotalCount 1									
+			MaxActive 1											
+			SpawnCount 1									
+			
+			WaitBeforeStarting 18								
+			WaitBetweenSpawns 5	
+			WaitForAllSpawned wave1ca							
+			
+			TotalCurrency 100
+
+			TFBot
+			{
+				Template SlimeGiant
+			}
+		}
+		WaveSpawn
+		{
+			Name wave1f_S
+			Where spawnbot_deathpos			
+			TotalCount 3									
+			MaxActive 3											
+			SpawnCount 3									
+			
+			WaitBeforeStarting 0.1								
+			WaitBetweenSpawns 5
+			WaitForAllDead wave1f
+			Support Limited	
+
+			TFBot
+			{
+				Template SlimeBig
+				ClassIcon slime_support
+			}
+		}
+
+		WaveSpawn
+		{
+			Name wave1i
+			Where spawnbot_left				
+			TotalCount 1									
+			MaxActive 1											
+			SpawnCount 1									
+			
+			WaitBeforeStarting 23								
+			WaitBetweenSpawns 5	
+			WaitForAllSpawned wave1c							
+			
+			TotalCurrency 100
+
+			TFBot
+			{
+				Template SlimeGiant
+			}
+		}
+		WaveSpawn
+		{
+			Name wave1i_S
+			Where spawnbot_deathpos			
+			TotalCount 3									
+			MaxActive 3											
+			SpawnCount 3									
+			
+			WaitBeforeStarting 0.1								
+			WaitBetweenSpawns 5
+			WaitForAllDead wave1i
+			Support Limited	
+
+			TFBot
+			{
+				Template SlimeBig
+				ClassIcon slime_support
+			}
+		}
+
+		WaveSpawn
+		{
+			Name wave1g
+			Where spawnbot				
+			TotalCount 10									
+			MaxActive 2											
+			SpawnCount 2									
+			Support 1
+
+			WaitBeforeStarting 12								
+			WaitBetweenSpawns 18	
+			WaitForAllSpawned wave1c							
+			
+			TotalCurrency 50
+
+			TFBot
+			{
+				Template Creeper	
+			}
+		}
+		WaveSpawn
+		{
+			Name wave1h
+			Where spawnbot_right				
+			TotalCount 2									
+			MaxActive 2											
+			SpawnCount 1									
+			
+			WaitBeforeStarting 0								
+			WaitBetweenSpawns 23	
+			WaitForAllDead wave1f						
+			
+			TotalCurrency 100
+
+			TFBot
+			{
+				Template SkeletonGiant
+			}
+		}
+	}
+	//wave 4 - 2850 starting, 700 + 100
+	Wave
+	{
+		StartWaveOutput											// Output which occurs at moment the wave begins.
+		{
+			Target wave_start_relay								// Name of the entity in the map to target.
+			Action trigger										// Input to give the targeted entity.
+		}
+		InitWaveOutput											// Output which occurs at moment the wave begins.
+		{
+			Target wave_spell_relay								// Name of the entity in the map to target.
+			Action FireUser3									// Input to give the targeted entity.
+		}
+		DoneOutput												// Output which occurrs at moment the wave is completed.
+		{
+			Target wave_finished_relay							// Name of the entity in the map to target.
+			Action trigger										// Input to give the targeted entity.
+		}
+
+		Checkpoint Yes
+		WaveSpawn
+		{
+			Name wave1a
+			Where spawnbot_portal			
+			TotalCount 16									
+			MaxActive 4											
+			SpawnCount 4
+
+			WaitBeforeStarting 1								
+			WaitBetweenSpawns 10							
+			
+			TotalCurrency 125
+
+			TFBot
+			{
+				Template BlazeFlag	
+			}
+		}
+		WaveSpawn
+		{
+			Name wave1b
+			Where spawnbot_right
+			TotalCount 18									
+			MaxActive 9											
+			SpawnCount 9
+				
+			WaitBeforeStarting 0								
+			WaitBetweenSpawns 12						
+			
+			TotalCurrency 125
+
+			TFBot
+			{
+				Template BabyZombie
+			}
+		}
+		WaveSpawn
+		{
+			Name wave2cg
+			Where spawnbot		
+			TotalCount 1									
+			MaxActive 1											
+			SpawnCount 1	
+			WaitBeforeStarting 30								
+			WaitBetweenSpawns 15					
+			
+			TotalCurrency 10
+
+			TFBot
+			{
+				Template SpiderGiant
+			}
+		}
+		WaveSpawn
+		{
+			Name wave1c
+			Where spawnbot_left			
+			TotalCount 8									
+			MaxActive 4											
+			SpawnCount 2
+
+			WaitBeforeStarting 25								
+			WaitBetweenSpawns 10							
+			
+			TotalCurrency 85
+
+			TFBot
+			{
+				Template SkeletonArmored	
+			}
+		}
+		WaveSpawn
+		{
+			Name wave1d
+			Where spawnbot_right		
+			TotalCount 2									
+			MaxActive 2											
+			SpawnCount 1
+
+			WaitBeforeStarting 12								
+			WaitBetweenSpawns 14							
+			
+			TotalCurrency 35
+
+			TFBot
+			{
+				Template ZombieGiant	
+			}
+		}
+		WaveSpawn
+		{
+			Name wave1e
+			Where spawnbot_right		
+			TotalCount 1									
+			MaxActive 1											
+			SpawnCount 1
+
+			WaitBeforeStarting 8								
+			WaitBetweenSpawns 14							
+			WaitForAllDead wave1d
+			TotalCurrency 150
+
+			Tank
+			{
+				Health 13000
+				Speed 75
+				Name "boss"
+				StartingPathTrackNode "tank_path_a_1"
+
+				OnKilledOutput                                  
+				{
+					Target boss_dead_relay
+					Action Trigger                         
+				}
+				OnBombDroppedOutput                             
+				{
+					Target boss_deploy_relay 
+					Action Trigger                         
+				}
+			}
+		}
+		
+		WaveSpawn
+		{
+			Name wave2a
+			Where spawnbot_portal		
+			TotalCount 6									
+			MaxActive 6											
+			SpawnCount 6
+			WaitForAllDead wave1e
+			WaitBeforeStarting 1								
+			WaitBetweenSpawns 15							
+			
+			TotalCurrency 50
+
+			TFBot
+			{
+				Template GhastFlag	
+			}
+		}
+		WaveSpawn
+		{
+			Name wave2b
+			Where spawnbot		
+			TotalCount 11									
+			MaxActive 11											
+			SpawnCount 11
+			WaitForAllDead wave1e
+
+			WaitBeforeStarting 0
+
+			TotalCurrency 50
+
+			TFBot
+			{
+				Template Skeleton	
+			}
+		}
+		WaveSpawn
+		{
+			Name wave2c
+			Where spawnbot		
+			TotalCount 1									
+			MaxActive 1											
+			SpawnCount 1
+			WaitForAllDead wave1e	
+			WaitBeforeStarting 0								
+			WaitBetweenSpawns 15					
+			
+			TotalCurrency 15
+
+			TFBot
+			{
+				Template SpiderGiant
+			}
+		}
+		WaveSpawn
+		{
+			Name wave1e
+			Where spawnbot_right	
+			TotalCount 1									
+			MaxActive 1											
+			SpawnCount 1
+
+			WaitForAllSpawned wave1c
+			WaitBeforeStarting 12								
+			WaitBetweenSpawns 8							
+			
+			TotalCurrency 15
+
+			TFBot
+			{
+				Template MagmaCubeBig
+			}
+		}
+		WaveSpawn
+		{
+			Name wave1e_s
+			Where spawnbot_deathpos	
+			TotalCount 3									
+			MaxActive 3											
+			SpawnCount 3
+
+			WaitForAllDead wave1e
+			WaitBeforeStarting 0.1								
+			WaitBetweenSpawns 0.1
+			Support Limited	
+
+			TFBot
+			{
+				Template MagmaCube	
+				ClassIcon magma_cube_support
+			}
+		}
+		WaveSpawn
+		{
+			Name wave1f
+			Where spawnbot_right	
+			TotalCount 1									
+			MaxActive 1											
+			SpawnCount 1
+
+			WaitForAllSpawned wave1c
+			WaitBeforeStarting 16								
+			WaitBetweenSpawns 8							
+			
+			TotalCurrency 15
+
+			TFBot
+			{
+				Template MagmaCube	
+			}
+		}
+		WaveSpawn
+		{
+			Name wave1f_s
+			Where spawnbot_deathpos	
+			TotalCount 3									
+			MaxActive 3											
+			SpawnCount 3
+
+			WaitForAllDead wave1f
+			WaitBeforeStarting 0.1								
+			WaitBetweenSpawns 0.1
+			Support Limited	
+
+			TFBot
+			{
+				Template MagmaCubeSmall
+				ClassIcon magma_cube_support
+			}
+		}
+		WaveSpawn
+		{
+			Name wave1g
+			Where spawnbot_right	
+			TotalCount 1									
+			MaxActive 1											
+			SpawnCount 1
+
+			WaitForAllSpawned wave1c
+			WaitBeforeStarting 20								
+			WaitBetweenSpawns 8	
+									
+			
+			TotalCurrency 15
+
+			TFBot
+			{
+				Template MagmaCubeBig	
+			}
+		}
+		WaveSpawn
+		{
+			Name wave1g_s
+			Where spawnbot_deathpos	
+			TotalCount 3									
+			MaxActive 3											
+			SpawnCount 3
+
+			WaitForAllDead wave1g
+			WaitBeforeStarting 0.1								
+			WaitBetweenSpawns 0.1
+			Support Limited	
+
+			TFBot
+			{
+				Template MagmaCube	
+				ClassIcon magma_cube_support
+			}
+		}
+		WaveSpawn
+		{
+			Name wave1h
+			Where spawnbot_right	
+			TotalCount 1									
+			MaxActive 1											
+			SpawnCount 1
+
+			WaitForAllSpawned wave1c
+			WaitBeforeStarting 20								
+			WaitBetweenSpawns 8							
+			
+			TotalCurrency 10
+
+			TFBot
+			{
+				Template MagmaCubeBig	
+			}
+		}
+		WaveSpawn
+		{
+			Name wave1h_s
+			Where spawnbot_deathpos	
+			TotalCount 3									
+			MaxActive 3											
+			SpawnCount 3
+
+			WaitForAllDead wave1h
+			WaitBeforeStarting 0.1								
+			WaitBetweenSpawns 0.1
+			Support Limited	
+
+			TFBot
+			{
+				Template MagmaCube	
+				ClassIcon magma_cube_support
+			}
+		}
+	}
+	//wave 5 - 3550 starting, 600 + 100
+	Wave
+	{
+		StartWaveOutput											// Output which occurs at moment the wave begins.
+		{
+			Target wave_start_relay								// Name of the entity in the map to target.
+			Action trigger										// Input to give the targeted entity.
+		}
+		InitWaveOutput											// Output which occurs at moment the wave begins.
+		{
+			Target wave_spell_relay								// Name of the entity in the map to target.
+			Action FireUser4									// Input to give the targeted entity.
+		}
+		DoneOutput												// Output which occurrs at moment the wave is completed.
+		{
+			Target wave_finished_relay							// Name of the entity in the map to target.
+			Action trigger										// Input to give the targeted entity.
+		}
+
+		Checkpoint Yes
+		WaveSpawn
+		{
+			Name wave1a
+			Where spawnbot_right			
+			TotalCount 4									
+			MaxActive 2										
+			SpawnCount 2
+
+			WaitBeforeStarting 0								
+			WaitBetweenSpawns 30							
+			
+			TotalCurrency 70
+
+			Squad
+			{
+				TFBot
+				{
+					Template WitchGiant
+				}
+				TFBot
+				{
+					Template Witch
+				}
+			}
+		}
+		WaveSpawn
+		{
+			Name wave1a
+			Where spawnbot_right			
+			TotalCount 9									
+			MaxActive 3											
+			SpawnCount 3
+
+			WaitBeforeStarting 18								
+			WaitBetweenSpawns 20							
+			
+			TotalCurrency 30
+
+			Squad
+			{
+				TFBot
+				{
+					Template Witch
+				}
+				TFBot
+				{
+					Template Witch
+				}
+			}
+		}
+		WaveSpawn
+		{
+			Name wave1b
+			Where spawnbot_left			
+			TotalCount 2									
+			MaxActive 1											
+			SpawnCount 1
+
+			WaitBeforeStarting 8								
+			WaitBetweenSpawns 27							
+			
+			TotalCurrency 50
+
+			TFBot
+			{
+				Template BlazeGiant
+			}
+		}
+		WaveSpawn
+		{
+			Name wave1c
+			Where spawnbot_right		
+			TotalCount 28									
+			MaxActive 8											
+			SpawnCount 4
+
+			WaitBeforeStarting 12								
+			WaitBetweenSpawns 12							
+			
+			TotalCurrency 130
+
+			Squad
+			{
+				TFBot
+				{
+					Template VindicatorCommander
+				}
+				TFBot
+				{
+					Template Pillager
+				}
+				TFBot
+				{
+					Template Pillager
+				}
+				TFBot
+				{
+					Template Pillager
+				}
+			}
+		}
+		WaveSpawn
+		{
+			Name wave1c
+			Where spawnbot_right		
+			TotalCount 14									
+			MaxActive 4											
+			SpawnCount 2
+
+			WaitBeforeStarting 12								
+			WaitBetweenSpawns 12							
+			
+			TotalCurrency 70
+
+				TFBot
+				{
+					Template VindicatorWeak
+				}
+		}
+		
+		WaveSpawn
+		{
+			Name wave1d
+			Where spawnbot_left		
+			TotalCount 15									
+			MaxActive 6										
+			SpawnCount 3
+			WaitForAllDead wave1c
+
+			WaitBeforeStarting 0								
+			WaitBetweenSpawns 8
+			TotalCurrency 50
+
+			Squad
+			{
+				TFBot
+				{
+					Template WitherSkeleton
+				}
+				TFBot
+				{
+					Template WitherSkeleton
+				}
+				TFBot
+				{
+					Template Pigman
+				}
+				
+			}
+		}
+		WaveSpawn
+		{
+			Name wave1e
+			Where spawnbot_left		
+			TotalCount 8									
+			MaxActive 8										
+			SpawnCount 4
+
+			WaitBeforeStarting 3								
+			WaitBetweenSpawns 16							
+			WaitForAllDead wave1b
+			TotalCurrency 100
+
+			Squad
+			{
+				TFBot
+				{
+					Template Creeper
+				}
+				TFBot
+				{
+					Template Creeper
+				}
+				TFBot
+				{
+					Template Creeper
+				}
+				TFBot
+				{
+					Template SkeletonGiant
+				}
+			}
+		}
+		//Spawns last preferably
+		WaveSpawn
+		{
+			Name wave2g
+			Where spawnbot_right		
+			TotalCount 8									
+			MaxActive 8											
+			SpawnCount 8
+			WaitForAllDead wave1e
+			WaitBeforeStarting 0								
+			WaitBetweenSpawns 0							
+			
+			TotalCurrency 35
+
+			Squad
+			{
+				TFBot
+				{
+					Template VindicatorCommander
+				}
+				TFBot
+				{
+					Template Pillager
+				}
+				TFBot
+				{
+					Template Pillager
+				}
+				TFBot
+				{
+					Template Pillager
+				}
+			}
+		}
+		WaveSpawn
+		{
+			Name wave2g
+			Where spawnbot_right		
+			TotalCount 4									
+			MaxActive 4											
+			SpawnCount 4
+			WaitForAllDead wave1e
+			WaitBeforeStarting 0								
+			WaitBetweenSpawns 0							
+			
+			TotalCurrency 15
+
+			TFBot
+			{
+				Template Vindicator
+			}
+		}
+		WaveSpawn
+		{
+			Name wave1j
+			Where spawnbot_left		
+			TotalCount 4									
+			MaxActive 4										
+			SpawnCount 4
+
+			WaitBeforeStarting 10								
+			WaitBetweenSpawns 12							
+			WaitForAllSpawned wave1e
+			TotalCurrency 100
+
+			Squad
+			{
+				TFBot
+				{
+					Template Creeper
+				}
+				TFBot
+				{
+					Template Creeper
+				}
+				TFBot
+				{
+					Template Creeper
+				}
+				TFBot
+				{
+					Template SkeletonGiant
+				}
+			}
+		}
+		WaveSpawn
+		{
+			Name wave1f
+			Where spawnbot_left		
+			TotalCount 2									
+			MaxActive 2										
+			SpawnCount 2
+			WaitForAllDead wave1a
+			WaitBeforeStarting 20								
+			WaitBetweenSpawns 12							
+			
+			TotalCurrency 50
+
+			Squad
+			{
+				TFBot
+				{
+					Template WitchGiant
+					Health 2000
+				}
+				TFBot
+				{
+					Template WitchGiant
+					Health 2000
+				}
+			}
+		}
+	}
+	//wave 6 - 4250 starting, 400 + 100
+	Wave
+	{
+		InitWaveOutput											// Output which occurs at moment the wave begins.
+		{
+			Target wave_spell_relay								// Name of the entity in the map to target.
+			Action FireUser4									// Input to give the targeted entity.
+		}
+		StartWaveOutput									// Output which occurs at moment the wave begins.
+		{
+			Target wave_start_relay								// Name of the entity in the map to target.
+			Action trigger										// Input to give the targeted entity.
+		}
+		DoneOutput												// Output which occurrs at moment the wave is completed.
+		{
+			Target wave_finished_relay							// Name of the entity in the map to target.
+			Action trigger										// Input to give the targeted entity.
+		}
+
+		Checkpoint Yes
+
+		WaveSpawn
+		{
+			Name wave1a
+			Where spawnbot_left		
+			TotalCount 4									
+			MaxActive 2										
+			SpawnCount 2
+			WaitBeforeStarting 0								
+			WaitBetweenSpawns 25							
+			
+			TotalCurrency 50
+
+			Squad
+			{
+				TFBot
+				{
+					Template WitherSkeletonGiant
+					Health 4000
+				}
+				TFBot
+				{
+					Template WitherSkeletonGiant
+					Health 4000
+				}
+			}
+		}
+		WaveSpawn
+		{
+			Name wave1b
+			Where spawnbot_right	
+			TotalCount 6									
+			MaxActive 6										
+			SpawnCount 6
+			WaitBeforeStarting 1							
+			WaitBetweenSpawns 25							
+			
+			TotalCurrency 50
+			TFBot
+			{
+				Template GhastFlag
+			}
+		}
+		WaveSpawn
+		{
+			Name wave1b
+			Where spawnbot_right
+			TotalCount 16									
+			MaxActive 8										
+			SpawnCount 8
+			
+			WaitBeforeStarting 1							
+			WaitBetweenSpawns 6							
+			
+			TotalCurrency 25
+
+			TFBot
+			{
+				Template Zombie
+			}
+		}
+		WaveSpawn
+		{
+			Name wave1bb
+			Where spawnbot_left	
+			TotalCount 10									
+			MaxActive 5										
+			SpawnCount 5
+			WaitForAllDead wave1b
+			WaitBeforeStarting 0							
+			WaitBetweenSpawns 25							
+			
+			TotalCurrency 50
+
+			TFBot
+			{
+				Template WitherSkeleton
+			}
+		}
+		WaveSpawn
+		{
+			Name wave1c
+			Where spawnbot_left	
+			TotalCount 12									
+			MaxActive 8										
+			SpawnCount 8
+			WaitForAllDead wave1bb
+			WaitBeforeStarting 0							
+			WaitBetweenSpawns 25							
+			
+			TotalCurrency 50
+
+			TFBot
+			{
+				Template WitherSkeleton
+			}
+		}
+		WaveSpawn
+		{
+			Name wave1c
+			TotalCount 1									
+			MaxActive 1										
+			SpawnCount 1
+			WaitForAllDead wave1bb
+			WaitBeforeStarting 0							
+			WaitBetweenSpawns 25							
+			
+			TotalCurrency 50
+
+			Tank
+			{
+				Health 20000
+				Speed 75
+				Name "boss"
+				StartingPathTrackNode "tank_path_a_1"
+
+				OnKilledOutput                                  
+				{
+					Target boss_dead_relay
+					Action Trigger                         
+				}
+				OnBombDroppedOutput                             
+				{
+					Target boss_deploy_relay 
+					Action Trigger                         
+				}
+			}
+		}
+		WaveSpawn
+		{
+			Name wave1c
+			Where spawnbot_left	
+			TotalCount 5									
+			MaxActive 5										
+			SpawnCount 5
+			WaitForAllDead wave1bb
+			WaitBeforeStarting 30							
+			WaitBetweenSpawns 25							
+			
+			TotalCurrency 25
+
+			Squad
+			{
+				TFBot
+				{
+					Template SkeletonGiant
+				}
+				TFBot
+				{
+					Template SkeletonArmored
+				}
+				TFBot
+				{
+					Template SkeletonArmored
+				}
+				TFBot
+				{
+					Template SkeletonArmored
+				}
+				TFBot
+				{
+					Template SkeletonArmored
+				}
+			}
+		}
+		WaveSpawn
+		{
+			Name wave1d
+			Where spawnbot_left	
+			TotalCount 1									
+			MaxActive 1										
+			SpawnCount 1
+			WaitForAllDead wave1b
+			WaitBeforeStarting 0							
+			WaitBetweenSpawns 25							
+			
+			TotalCurrency 25
+
+			TFBot
+			{
+				Template MagmaCubeGiant
+			}
+		}
+		WaveSpawn
+		{
+			Name wave1d_s
+			Where spawnbot_deathpos
+			TotalCount 3									
+			MaxActive 3										
+			SpawnCount 3
+			WaitForAllDead wave1d
+			WaitBeforeStarting 0.1							
+			WaitBetweenSpawns 25
+			Support Limited	
+
+			TFBot
+			{
+				Template MagmaCubeBig
+				ClassIcon magma_cube_support
+			}
+		}
+		WaveSpawn
+		{
+			Name wave1e
+			Where spawnbot_left	
+			TotalCount 1									
+			MaxActive 1										
+			SpawnCount 1
+			WaitForAllDead wave1c
+			WaitBeforeStarting 0							
+			WaitBetweenSpawns 25							
+			
+			TotalCurrency 25
+
+			TFBot
+			{
+				Template MagmaCubeGiant_Nerf
+			}
+		}
+		WaveSpawn
+		{
+			Name wave1e_s
+			Where spawnbot_deathpos
+			TotalCount 3									
+			MaxActive 3										
+			SpawnCount 3
+			WaitForAllDead wave1e
+			WaitBeforeStarting 0.1							
+			WaitBetweenSpawns 25
+			Support Limited	
+
+			TFBot
+			{
+				Template MagmaCubeBig
+				ClassIcon magma_cube_support
+			}
+		}
+		WaveSpawn
+		{
+			Name wave1f
+			Where spawnbot_left	
+			TotalCount 3									
+			MaxActive 2										
+			SpawnCount 1
+			WaitForAllDead wave1c
+			WaitBeforeStarting 10							
+			WaitBetweenSpawns 25							
+			
+			TotalCurrency 50
+
+				TFBot
+				{
+					Template SkeletonGiant
+					Attributes AlwaysCrit
+				}
+		}
+		WaveSpawn
+		{
+			Name wave1f
+			Where spawnbot_left	
+			TotalCount 20									
+			MaxActive 8										
+			SpawnCount 4
+			WaitForAllDead wave1c
+			WaitBeforeStarting 10							
+			WaitBetweenSpawns 14							
+			
+			TotalCurrency 50
+
+			TFBot
+			{
+				Template SkeletonArmored
+			}
+		}
+		WaveSpawn
+		{
+			Name wave1g
+			Where spawnbot_right
+			TotalCount 3									
+			MaxActive 2										
+			SpawnCount 1
+			WaitForAllDead wave1c
+			WaitBeforeStarting 20							
+			WaitBetweenSpawns 20							
+			
+			TotalCurrency 25
+
+			TFBot
+			{
+				Template WolfGiant_Nerf
+			}
+		}
+		
+		WaveSpawn
+		{
+			Name wave1g
+			Where spawnbot_right	
+			TotalCount 15									
+			MaxActive 5										
+			SpawnCount 5
+			WaitBeforeStarting 6							
+			WaitBetweenSpawns 8							
+			WaitForAllDead wave1bb
+
+			TotalCurrency 50
+			TFBot
+			{
+				Template BlazeFlag
+			}
+		}
+		WaveSpawn
+		{
+			Name wave1g
+			Where spawnbot
+			TotalCount 8									
+			MaxActive 4										
+			SpawnCount 2
+			WaitForAllDead wave1c							
+			WaitBetweenSpawns 25							
+			Support 1
+			TotalCurrency 25
+
+			TFBot
+			{
+				Template CreeperCharged
+			}
+		}
+	}
+	//wave 7 - 4750 starting, 400 + 100
+	Wave
+	{
+		InitWaveOutput											// Output which occurs at moment the wave begins.
+		{
+			Target wave_spell_relay								// Name of the entity in the map to target.
+			Action FireUser4									// Input to give the targeted entity.
+		}
+		StartWaveOutput									// Output which occurs at moment the wave begins.
+		{
+			Target wave_start_relay								// Name of the entity in the map to target.
+			Action trigger										// Input to give the targeted entity.
+		}
+		DoneOutput												// Output which occurrs at moment the wave is completed.
+		{
+			Target wave_finished_relay							// Name of the entity in the map to target.
+			Action trigger										// Input to give the targeted entity.
+		}
+
+		Checkpoint Yes
+		WaveSpawn
+		{
+			Name wave1a
+			Where spawnbot_right
+			TotalCount 1								
+			MaxActive 1									
+			SpawnCount 1						
+			WaitBetweenSpawns 25
+			TotalCurrency 3221
+
+			TFBot
+			{
+				Template EnderDragon
+			}
+		}
+		WaveSpawn
+		{
+			Name wave1a
+			Where spawnbot
+			TotalCount 14								
+			MaxActive 8									
+			SpawnCount 4						
+			WaitBetweenSpawns 6
+			WaitBeforeStarting 1
+			TotalCurrency 200
+
+			Support Limited
+			TFBot
+			{
+				Template Enderman
+				ClassIcon enderman_giant
+			}
+		}
+		WaveSpawn
+		{
+			Name wavedisp
+			Where spawnbot
+			TotalCount 0								
+			MaxActive 0								
+			SpawnCount 0						
+			WaitBetweenSpawns 0
+			WaitBeforeStarting 5
+			TotalCurrency 0
+			Support Limited
+			StartWaveOutput
+			{
+				Target boss_dispenser_spawn
+				Action Trigger
+			}
+
+				TFBot
+				{
+					Class Scout
+					ClassIcon crystal
+				}
+		}
+		WaveSpawn
+		{
+			Name wave1a
+			Where spawnbot
+			TotalCount 49								
+			MaxActive 6									
+			SpawnCount 6						
+			WaitBetweenSpawns 35
+			WaitBeforeStarting 1
+			TotalCurrency 200
+			Support 1
+
+			Squad
+			{
+				TFBot
+				{
+					Template Enderman
+				}
+				TFBot
+				{
+					Template Enderman
+				}
+				TFBot
+				{
+					Template Enderman
+				}
+			}
+		}
+	}
+}

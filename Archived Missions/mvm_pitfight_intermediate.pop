@@ -1,0 +1,934 @@
+#base robot_giant.pop
+#base robot_standard.pop
+
+WaveSchedule
+{
+		
+	//Start with 400
+	StartingCurrency 400
+	RespawnWaveTime 0
+	CanBotsAttackWhileInSpawnRoom no
+	
+	Mission // sentry buster
+	{
+		Objective DestroySentries
+
+		InitialCooldown 30
+		Where spawnbot_main_right
+		BeginAtWave 1
+		RunForThisManyWaves 13
+
+		CooldownTime 40            
+
+        TFBot
+		{
+			Template T_TFBot_SentryBuster
+		}
+	}
+	
+	Mission //Wave 4/5 Snipers
+	{
+		InitialCooldown 30
+		Objective Sniper
+		Where spawnbot_top
+		BeginAtWave 4
+		RunForThisManyWaves 2
+		CooldownTime 30
+		DesiredCount 2
+		
+		TFBot
+		{
+			Class Sniper
+			Skill Expert
+			Name "Sniper"
+		}
+	}
+	
+	Mission //Wave 6 spies
+	{
+		InitialCooldown 60
+		Objective Spy
+		Where spawnbot_main_right
+		BeginAtWave 6
+		RunForThisManyWaves 1
+		CooldownTime 30
+		DesiredCount 2
+		
+		TFBot
+		{
+			Class Spy
+			Skill Expert
+			Name "Spy"
+		}
+	}
+	
+	Wave //WAVE 1 Money : 600 Total : 1000
+	{
+		StartWaveOutput
+		{
+			Target wave_start_relay
+			Action Trigger
+		}
+		DoneOutput
+		{
+			Target wave_finished_relay
+			Action trigger
+		}
+		WaitWhenDone 65
+		Checkpoint Yes
+		
+		WaveSpawn
+		{
+			Where spawnbot_main_left
+			Name "w1_scout"
+			TotalCount 20
+			MaxActive 8
+			SpawnCount 4
+			WaitBeforeStarting 0
+			WaitBetweenSpawns 5
+			TotalCurrency 200
+			
+			TFBot
+			{
+				Template T_TFBot_Scout_Melee
+				BehaviorModifiers push			// having these will cause bots to run towards gates
+				Attributes IgnoreFlag 			// having these will cause bots to run towards gates
+			}
+		}
+		
+		WaveSpawn
+		{
+			Where spawnbot_main_left
+			WaitForAllSpawned "w1_scout"
+			TotalCount 12
+			MaxActive 3
+			SpawnCount 3
+			WaitBeforeStarting 0
+			WaitBetweenSpawns 10
+			TotalCurrency 200
+			
+			TFBot
+			{
+				Class Soldier
+				Skill Normal
+				Name "Soldier"
+				BehaviorModifiers push			// having these will cause bots to run towards gates
+				Attributes IgnoreFlag 			// having these will cause bots to run towards gates
+			}
+		}
+		
+		WaveSpawn
+		{
+			Where spawnbot_main_right
+			WaitForAllDead "w1_scout"
+			TotalCount 12
+			MaxActive 3
+			SpawnCount 3
+			WaitBeforeStarting 0
+			WaitBetweenSpawns 10
+			TotalCurrency 200
+			
+			TFBot
+			{
+				Class Soldier
+				Skill Normal
+				Name "Soldier"
+				BehaviorModifiers push			// having these will cause bots to run towards gates
+				Attributes IgnoreFlag 			// having these will cause bots to run towards gates
+			}
+		}
+	}
+	
+	Wave //WAVE 2 Money : 600 Total : 1600
+	{
+		StartWaveOutput
+		{
+			Target wave_start_relay
+			Action Trigger
+		}
+		DoneOutput
+		{
+			Target wave_finished_relay
+			Action trigger
+		}
+		WaitWhenDone 65
+		Checkpoint Yes
+			
+		WaveSpawn
+		{
+			Where spawnbot_right_left
+			Name "w2_demoknights_pyro"
+			TotalCount 20
+			MaxActive 5
+			SpawnCount 5
+			WaitBeforeStarting 0
+			WaitBetweenSpawns 10
+			TotalCurrency 250
+			
+			TFBot
+			{
+				Template T_TFBot_Demoman_Knight
+				BehaviorModifiers push			// having these will cause bots to run towards gates
+				Attributes IgnoreFlag 			// having these will cause bots to run towards gates
+			}
+		}
+			
+		WaveSpawn
+		{
+			Where spawnbot_main_left
+			Name "w2_demoknights_pyro"
+			TotalCount 12
+			MaxActive 3
+			SpawnCount 3
+			WaitBeforeStarting 0
+			WaitBetweenSpawns 10
+			TotalCurrency 175
+			TFBot
+			{
+				Class Pyro
+				Skill Normal
+				Name "Pyro"
+				BehaviorModifiers push			// having these will cause bots to run towards gates
+				Attributes IgnoreFlag 			// having these will cause bots to run towards gates
+			}
+		}
+		
+		WaveSpawn
+		{
+			Where spawnbot_main_right
+			WaitForAllDead "w2_demoknights_pyro"
+			TotalCount 9
+			MaxActive 3
+			SpawnCount 3
+			WaitBeforeStarting 0
+			WaitBetweenSpawns 10
+			TotalCurrency 175
+			
+			Squad
+			{
+				TFBot
+				{
+					Class heavyweapons
+					Skill Normal
+					Name "HeavyWeapon"
+					BehaviorModifiers push			// having these will cause bots to run towards gates
+					Attributes IgnoreFlag 			// having these will cause bots to run towards gates
+				}
+				TFBot
+				{
+					Template T_TFBot_Soldier_Extended_Concheror
+					Skill Normal
+					BehaviorModifiers push			// having these will cause bots to run towards gates
+					Attributes IgnoreFlag 			// having these will cause bots to run towards gates
+				}
+				TFBot
+				{
+					Template T_TFBot_Soldier_Extended_Concheror
+					Skill Normal
+					BehaviorModifiers push			// having these will cause bots to run towards gates
+					Attributes IgnoreFlag 			// having these will cause bots to run towards gates
+				}
+			}
+		}
+	}
+	
+	Wave //WAVE 3 Money : 300 Total : 1900
+	{
+		StartWaveOutput
+		{
+			Target wave_start_relay
+			Action Trigger
+		}
+		DoneOutput
+		{
+			Target wave_finished_relay
+			Action trigger
+		}
+		WaitWhenDone 65
+		Checkpoint Yes
+			
+		WaveSpawn
+		{
+			Where spawnbot_main_left
+			TotalCount 30
+			MaxActive 3
+			SpawnCount 1
+			WaitBeforeStarting 0
+			WaitBetweenSpawns 5
+			TotalCurrency 50
+			
+			Support 1
+			
+			TFBot
+			{
+				Template T_TFBot_Scout_Melee
+				BehaviorModifiers push			// having these will cause bots to run towards gates
+				Attributes IgnoreFlag 			// having these will cause bots to run towards gates
+			}
+		}
+		
+		WaveSpawn
+		{
+			Where spawnbot_main_right
+			TotalCount 30
+			MaxActive 3
+			SpawnCount 1
+			WaitBeforeStarting 0
+			WaitBetweenSpawns 5
+			TotalCurrency 50
+			
+			Support 1
+			
+			TFBot
+			{
+				Template T_TFBot_Scout_Melee
+				BehaviorModifiers push			// having these will cause bots to run towards gates
+				Attributes IgnoreFlag 			// having these will cause bots to run towards gates
+			}
+		}
+		
+		WaveSpawn
+		{
+			Where spawnbot_right_left
+			TotalCount 30
+			MaxActive 3
+			SpawnCount 1
+			WaitBeforeStarting 0
+			WaitBetweenSpawns 5
+			TotalCurrency 50
+			
+			Support 1
+			
+			TFBot
+			{
+				Template T_TFBot_Scout_Melee
+				BehaviorModifiers push			// having these will cause bots to run towards gates
+				Attributes IgnoreFlag 			// having these will cause bots to run towards gates
+			}
+		}
+		
+		WaveSpawn
+		{
+			Where spawnbot_main_right
+			TotalCount 2
+			MaxActive 1
+			SpawnCount 1
+			WaitBeforeStarting 20
+			WaitBetweenSpawns 20
+			TotalCurrency 100
+			
+			TFBot
+			{
+				Template T_TFBot_Giant_Demo_Burst
+				BehaviorModifiers push			// having these will cause bots to run towards gates
+				Attributes IgnoreFlag 			// having these will cause bots to run towards gates
+			}
+		}
+		WaveSpawn
+		{
+			Where spawnbot_main_left
+			TotalCount 2
+			MaxActive 1
+			SpawnCount 1
+			WaitBeforeStarting 40
+			WaitBetweenSpawns 20
+			TotalCurrency 100
+			
+			TFBot
+			{
+				Template T_TFBot_Giant_Demo_Burst
+				BehaviorModifiers push			// having these will cause bots to run towards gates
+				Attributes IgnoreFlag 			// having these will cause bots to run towards gates
+			}
+		}	
+	}
+	
+	Wave //WAVE 4 Money : 800 Total : 2700
+	{
+		StartWaveOutput
+		{
+			Target wave_start_relay
+			Action Trigger
+		}
+		DoneOutput
+		{
+			Target wave_finished_relay
+			Action trigger
+		}
+		WaitWhenDone 65
+		Checkpoint Yes
+		
+		WaveSpawn
+		{
+			Name "w4_pyro"
+			Where spawnbot_main_right
+			TotalCount 16
+			MaxActive 8
+			SpawnCount 4
+			WaitBeforeStarting 0
+			WaitBetweenSpawns 10
+			TotalCurrency 225
+
+			TFBot
+			{
+				Class Pyro
+				Skill Normal
+				Name "Pyro"
+				BehaviorModifiers push			// having these will cause bots to run towards gates
+				Attributes IgnoreFlag 			// having these will cause bots to run towards gates
+			}
+		}
+			
+		WaveSpawn
+		{
+			Where spawnbot_left
+			TotalCount 10
+			MaxActive 2
+			SpawnCount 2
+			WaitBeforeStarting 0
+			WaitBetweenSpawns 15
+			TotalCurrency 200
+				
+			TFBot
+			{
+				Template T_TFBot_Heavyweapons_Fist
+				BehaviorModifiers push			// having these will cause bots to run towards gates
+				Attributes IgnoreFlag 			// having these will cause bots to run towards gates
+			}
+		}
+		
+		WaveSpawn
+		{
+			Where spawnbot_right_main_1
+			WaitForAllDead "w4_pyro"
+			TotalCount 3
+			MaxActive 2
+			SpawnCount 1
+			WaitBeforeStarting 0
+			WaitBetweenSpawns 15
+			TotalCurrency 200
+			
+			TFBot
+			{
+				Template T_TFBot_Giant_Soldier_Crit
+				BehaviorModifiers push			// having these will cause bots to run towards gates
+				Attributes IgnoreFlag 			// having these will cause bots to run towards gates
+			}
+		}
+		
+		WaveSpawn
+		{
+			Where spawnbot_right_right
+			WaitForAllDead "w4_pyro"
+			TotalCount 20
+			MaxActive 4
+			SpawnCount 2
+			WaitBeforeStarting 0
+			WaitBetweenSpawns 5
+			TotalCurrency 175
+			
+			Support 1
+			
+			TFBot
+			{
+				Class Demoman
+				Skill Normal
+				Name "Demoman"
+				BehaviorModifiers push			// having these will cause bots to run towards gates
+				Attributes IgnoreFlag 			// having these will cause bots to run towards gates
+			}
+
+		}
+	}
+	Wave //WAVE 5 Money : 1050 Total : 3750
+	{
+		StartWaveOutput
+		{
+			Target wave_start_relay
+			Action Trigger
+		}
+		DoneOutput
+		{
+			Target wave_finished_relay
+			Action trigger
+		}
+		WaitWhenDone 65
+		Checkpoint Yes
+		
+		WaveSpawn
+		{
+			Where spawnbot_right_right
+			TotalCount 20
+			MaxActive 4
+			SpawnCount 2
+			WaitBeforeStarting 0
+			WaitBetweenSpawns 10
+			TotalCurrency 150
+			
+			Support 1
+			
+			TFBot
+			{
+				Class Soldier
+				Skill Normal
+				Name "Soldier"
+				BehaviorModifiers push			// having these will cause bots to run towards gates
+				Attributes IgnoreFlag 			// having these will cause bots to run towards gates
+			}
+		}
+		
+		WaveSpawn
+		{
+			Where spawnbot_main_right
+			Name "w5_first"
+			TotalCount 6
+			MaxActive 2
+			SpawnCount 2
+			WaitBeforeStarting 10
+			WaitBetweenSpawns 20
+			TotalCurrency 300
+			
+			Squad
+			{
+				TFBot
+				{
+					Template T_TFBot_Giant_Pyro
+					BehaviorModifiers push			// having these will cause bots to run towards gates
+					Attributes IgnoreFlag 			// having these will cause bots to run towards gates
+				}
+				
+				TFBot
+				{
+					Template T_TFBot_Medic_SlowRecharge
+					BehaviorModifiers push			// having these will cause bots to run towards gates
+					Attributes IgnoreFlag 			// having these will cause bots to run towards gates
+				}
+			}
+		}
+		
+		WaveSpawn
+		{
+			Where spawnbot_main_left
+			WaitForAllDead "w5_first"
+			TotalCount 2
+			MaxActive 1
+			SpawnCount 1
+			WaitBeforeStarting 5
+			WaitBetweenSpawns 30
+			TotalCurrency 200
+			
+			TFBot
+			{
+				Template T_TFBot_Giant_Heavyweapons
+				BehaviorModifiers push			// having these will cause bots to run towards gates
+				Attributes IgnoreFlag 			// having these will cause bots to run towards gates
+			}
+
+		}
+
+		WaveSpawn
+		{
+			Where spawnbot_left
+			Name "w5_second"
+			WaitForAllSpawned "w5_first"
+			TotalCount 30
+			MaxActive 5
+			SpawnCount 5
+			WaitBeforeStarting 5
+			WaitBetweenSpawns 10
+			TotalCurrency 200
+			
+			TFBot
+			{
+				Template T_TFBot_Demoman_Knight
+				BehaviorModifiers push			// having these will cause bots to run towards gates
+				Attributes IgnoreFlag 			// having these will cause bots to run towards gates
+			}
+		}
+	}
+	Wave //WAVE 6 Money : 1050 Total : 3750
+	{
+		StartWaveOutput
+		{
+			Target wave_start_relay
+			Action Trigger
+		}
+		DoneOutput
+		{
+			Target wave_finished_relay
+			Action trigger
+		}
+		WaitWhenDone 65
+		Checkpoint Yes
+			
+		WaveSpawn
+		{
+			Where spawnbot_main_right
+			Name "w6_first"
+			TotalCount 30
+			MaxActive 6
+			SpawnCount 3
+			WaitBeforeStarting 0
+			WaitBetweenSpawns 5
+			TotalCurrency 200
+			
+			TFBot
+			{
+				Class Soldier
+				Skill Normal
+				Name "Soldier"
+				BehaviorModifiers push			// having these will cause bots to run towards gates
+				Attributes IgnoreFlag 			// having these will cause bots to run towards gates
+			}
+		}
+			
+		WaveSpawn
+		{
+			Where spawnbot_main_left
+			Name "w6_first"
+			TotalCount 30
+			MaxActive 6
+			SpawnCount 3
+			WaitBeforeStarting 0
+			WaitBetweenSpawns 5
+			TotalCurrency 200
+			
+			TFBot
+			{
+				Class Demoman
+				Skill Normal
+				Name "Demoman"
+				BehaviorModifiers push			// having these will cause bots to run towards gates
+				Attributes IgnoreFlag 			// having these will cause bots to run towards gates
+			}
+		}
+		
+		WaveSpawn
+		{
+			Where spawnbot_left
+			Name "w6_heavies"
+			WaitForAllSpawned "w6_first"
+			TotalCount 10
+			MaxActive 2
+			SpawnCount 2
+			WaitBeforeStarting 0
+			WaitBetweenSpawns 10
+			TotalCurrency 100
+			
+			TFBot
+			{
+				Template T_TFBot_Heavyweapons_Fist
+				BehaviorModifiers push			// having these will cause bots to run towards gates
+				Attributes IgnoreFlag 			// having these will cause bots to run towards gates
+			}
+		}
+		
+		WaveSpawn
+		{
+			Where spawnbot_right_main_1
+			WaitForAllDead "w6_heavies"
+			TotalCount 2
+			MaxActive 2
+			SpawnCount 1
+			WaitBeforeStarting 15
+			WaitBetweenSpawns 15
+			TotalCurrency 75
+			
+			TFBot
+			{
+				Template T_TFBot_Giant_Soldier_Crit
+				BehaviorModifiers push			// having these will cause bots to run towards gates
+				Attributes IgnoreFlag 			// having these will cause bots to run towards gates
+			}
+		}
+		
+		WaveSpawn
+		{
+			Where spawnbot_right_main_2
+			WaitForAllDead "w6_heavies"
+			TotalCount 2
+			MaxActive 2
+			SpawnCount 1
+			WaitBeforeStarting 15
+			WaitBetweenSpawns 15
+			TotalCurrency 75
+			
+			TFBot
+			{
+				Template T_TFBot_Giant_Soldier_Crit
+				BehaviorModifiers push			// having these will cause bots to run towards gates
+				Attributes IgnoreFlag 			// having these will cause bots to run towards gates
+			}
+		}
+		
+		WaveSpawn
+		{
+			Where spawnbot_right_left
+			WaitForAllDead "w6_heavies"
+			TotalCount 25
+			MaxActive 10
+			SpawnCount 5
+			WaitBeforeStarting 0
+			WaitBetweenSpawns 10
+			TotalCurrency 100
+			
+			TFBot
+			{
+				Class Scout
+				Skill Normal
+				Name "Scout"
+				BehaviorModifiers push			// having these will cause bots to run towards gates
+				Attributes IgnoreFlag 			// having these will cause bots to run towards gates
+			}
+		}
+		
+		WaveSpawn
+		{
+			Where spawnbot_right_right
+			WaitForAllDead "w6_heavies"
+			TotalCount 15
+			MaxActive 6
+			SpawnCount 3
+			WaitBeforeStarting 0
+			WaitBetweenSpawns 10
+			TotalCurrency 100
+			
+			TFBot
+			{
+				Class heavyweapons
+				Skill Normal
+				Name "HeavyWeapon"
+				BehaviorModifiers push			// having these will cause bots to run towards gates
+				Attributes IgnoreFlag 			// having these will cause bots to run towards gates
+			}
+		}
+	}
+	
+	Wave //WAVE 7 LAST WAVE
+	{
+		WaveSpawn
+		{
+			Name "w7_conch"
+			Where spawnbot_main_left
+			TotalCount 32
+			MaxActive 8
+			SpawnCount 4
+			WaitBeforeStarting 0
+			WaitBetweenSpawns 10
+			TotalCurrency 100
+			
+			Squad
+			{
+				TFBot
+				{
+					Template T_TFBot_Soldier_Extended_Concheror
+					BehaviorModifiers push			// having these will cause bots to run towards gates
+					Attributes IgnoreFlag 			// having these will cause bots to run towards gates
+				}
+				TFBot
+				{
+					Template T_TFBot_Heavyweapons_Fist
+					BehaviorModifiers push			// having these will cause bots to run towards gates
+					Attributes IgnoreFlag 			// having these will cause bots to run towards gates
+				}
+				TFBot
+				{
+					Template T_TFBot_Heavyweapons_Fist
+					BehaviorModifiers push			// having these will cause bots to run towards gates
+					Attributes IgnoreFlag 			// having these will cause bots to run towards gates
+				}
+				TFBot
+				{
+					Template T_TFBot_Heavyweapons_Fist
+					BehaviorModifiers push			// having these will cause bots to run towards gates
+					Attributes IgnoreFlag 			// having these will cause bots to run towards gates
+				}
+			}
+		}
+		
+		WaveSpawn
+		{
+			Name "w7_giant"
+			Where spawnbot_main_right
+			TotalCount 6
+			MaxActive 4
+			SpawnCount 2
+			WaitBeforeStarting 5
+			WaitBetweenSpawns 15
+			TotalCurrency 100
+			
+			Squad
+			{
+				TFBot
+				{
+					Template T_TFBot_Giant_Demo_Burst
+					BehaviorModifiers push			// having these will cause bots to run towards gates
+					Attributes IgnoreFlag 			// having these will cause bots to run towards gates
+				}
+				TFBot
+				{
+					Template T_TFBot_Medic_SlowRecharge
+					BehaviorModifiers push			// having these will cause bots to run towards gates
+					Attributes IgnoreFlag 			// having these will cause bots to run towards gates
+				}
+			}
+		}
+		
+		WaveSpawn
+		{
+			Name "w7_scout"
+			Where spawnbot_left
+			WaitForAllDead "w7_conch"
+			TotalCount 20
+			MaxActive 8
+			SpawnCount 4
+			WaitBeforeStarting 0
+			WaitBetweenSpawns 10
+			TotalCurrency 100
+
+			TFBot
+			{
+				Class Scout
+				Skill Normal
+				Name "Scout"
+				BehaviorModifiers push			// having these will cause bots to run towards gates
+				Attributes IgnoreFlag 			// having these will cause bots to run towards gates
+			}
+		}
+		
+		WaveSpawn
+		{
+			Name "w7_scout"
+			Where spawnbot_right_left
+			WaitForAllDead "w7_conch"
+			TotalCount 20
+			MaxActive 8
+			SpawnCount 4
+			WaitBeforeStarting 0
+			WaitBetweenSpawns 10
+			TotalCurrency 100
+
+			TFBot
+			{
+				Class Scout
+				Skill Normal
+				Name "Scout"
+				BehaviorModifiers push			// having these will cause bots to run towards gates
+				Attributes IgnoreFlag 			// having these will cause bots to run towards gates
+			}
+		}
+		
+		WaveSpawn
+		{
+			Name "w7_heavy"
+			Where spawnbot_right_right
+			WaitForAllDead "w7_giant"
+			TotalCount 12
+			MaxActive 2
+			SpawnCount 2
+			WaitBeforeStarting 5
+			WaitBetweenSpawns 10
+			TotalCurrency 100
+			
+			Squad
+			{
+				TFBot
+				{
+					Class heavyweapon
+					Skill Normal
+					Name "HeavyWeapon"
+					BehaviorModifiers push			// having these will cause bots to run towards gates
+					Attributes IgnoreFlag 			// having these will cause bots to run towards gates
+				}
+				TFBot
+				{
+					Template T_TFBot_Medic_SlowRecharge
+					BehaviorModifiers push			// having these will cause bots to run towards gates
+					Attributes IgnoreFlag 			// having these will cause bots to run towards gates
+				}
+			}
+		}
+		
+		WaveSpawn
+		{
+			Where spawnbot_main_right
+			WaitForAllDead "w7_heavy"
+			WaitForAllDead "w7_scout"
+			TotalCount 8
+			MaxActive 4
+			SpawnCount 4
+			WaitBeforeStarting 10
+			WaitBetweenSpawns 10
+			TotalCurrency 100
+			
+			Squad
+			{
+				TFBot
+				{
+					Template T_TFBot_Giant_Pyro
+					BehaviorModifiers push			// having these will cause bots to run towards gates
+					Attributes IgnoreFlag 			// having these will cause bots to run towards gates
+				}
+				TFBot
+				{
+					Template T_TFBot_Soldier_Extended_Concheror
+					BehaviorModifiers push			// having these will cause bots to run towards gates
+					Attributes IgnoreFlag 			// having these will cause bots to run towards gates
+				}
+				TFBot
+				{
+					Template T_TFBot_Soldier_Extended_Concheror
+					BehaviorModifiers push			// having these will cause bots to run towards gates
+					Attributes IgnoreFlag 			// having these will cause bots to run towards gates
+				}
+				TFBot
+				{
+					Template T_TFBot_Soldier_Extended_Concheror
+					BehaviorModifiers push			// having these will cause bots to run towards gates
+					Attributes IgnoreFlag 			// having these will cause bots to run towards gates
+				}
+			}
+		}
+		
+		WaveSpawn
+		{
+			Where spawnbot_main_left
+			WaitForAllDead "w7_heavy"
+			WaitForAllDead "w7_scout"
+			TotalCount 8
+			MaxActive 4
+			SpawnCount 4
+			WaitBeforeStarting 10
+			WaitBetweenSpawns 10
+			TotalCurrency 100
+			
+			Squad
+			{
+				TFBot
+				{
+					Template T_TFBot_Giant_Pyro
+					BehaviorModifiers push			// having these will cause bots to run towards gates
+					Attributes IgnoreFlag 			// having these will cause bots to run towards gates
+				}
+				TFBot
+				{
+					Template T_TFBot_Soldier_Extended_Concheror
+					BehaviorModifiers push			// having these will cause bots to run towards gates
+					Attributes IgnoreFlag 			// having these will cause bots to run towards gates
+				}
+				TFBot
+				{
+					Template T_TFBot_Soldier_Extended_Concheror
+					BehaviorModifiers push			// having these will cause bots to run towards gates
+					Attributes IgnoreFlag 			// having these will cause bots to run towards gates
+				}
+				TFBot
+				{
+					Template T_TFBot_Soldier_Extended_Concheror
+					BehaviorModifiers push			// having these will cause bots to run towards gates
+					Attributes IgnoreFlag 			// having these will cause bots to run towards gates
+				}
+			}
+		}
+	}
+}

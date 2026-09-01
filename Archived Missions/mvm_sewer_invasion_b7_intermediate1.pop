@@ -1,0 +1,1749 @@
+#base robot_giant.pop
+#base robot_standard.pop
+#base robot_sewer.pop
+
+WaveSchedule
+{
+
+	StartingCurrency		800
+	RespawnWaveTime 5
+	CanBotsAttackWhileInSpawnRoom no
+	//EventPopfile Halloween
+        Advanced 1
+
+
+	
+	// MISSION: Sentry Buster
+	Mission
+	{
+		Objective DestroySentries
+		Where spawnbot
+		CooldownTime 30
+		
+		TFBot
+		{
+			Template T_TFBot_SentryBuster
+		}
+	}
+
+
+	Mission // Sniper - wave 4
+	{
+		Objective Sniper
+
+		InitialCooldown 15
+		Where spawnbot_mission_sniper_upper
+		BeginAtWave 4
+		RunForThisManyWaves 6
+		CooldownTime 35
+		DesiredCount 2
+
+		TFBot
+		{
+			Class Sniper
+			Skill Expert
+			Name Sniper
+			Item "Sir Hootsalot"
+		}
+	}
+
+
+	Mission // Engineer - wave 1
+	{
+		Objective Sniper
+
+		InitialCooldown 15
+		Where spawnbot
+		BeginAtWave 1
+		RunForThisManyWaves 1
+		CooldownTime 35
+		DesiredCount 1
+
+		TFBot
+		{
+			Template T_TFBot_Combat_Engineer
+		}
+	}	
+
+	Mission // Engineer - wave 2
+	{
+		Objective Sniper
+
+		InitialCooldown 25
+		Where spawnbot
+		BeginAtWave 2
+		RunForThisManyWaves 3
+		CooldownTime 30
+		DesiredCount 2
+
+		TFBot
+		{
+			Template T_TFBot_Combat_Engineer
+		}
+	}	
+
+	Mission // Engineer - wave 6
+	{
+		Objective Sniper
+
+		InitialCooldown 25
+		Where spawnbot
+		BeginAtWave 6
+		RunForThisManyWaves 1
+		CooldownTime 30
+		DesiredCount 4
+
+		TFBot
+		{
+			Template T_TFBot_Combat_Engineer
+		}
+	}	
+
+	Mission // Spy - wave 3
+	{
+		Objective Spy  
+
+		InitialCooldown 20
+		Where spawnbot_mission_spy
+		BeginAtWave 5
+		RunForThisManyWaves 1
+		CooldownTime 35
+		DesiredCount 1
+
+		TFBot
+		{
+			Class Spy
+			Skill Expert
+			Name Spy
+		}
+	}	
+
+
+	Mission // Spy - wave 5
+	{
+		Objective Spy  
+
+		InitialCooldown 20
+		Where spawnbot_mission_spy
+		BeginAtWave 7
+		RunForThisManyWaves 1
+		CooldownTime 35
+		DesiredCount 1
+
+		TFBot
+		{
+			Class Spy
+			Skill Expert
+			Name Spy
+		}
+	}	
+
+
+// MISSION: Engineer 01
+			
+	Mission 													// This is a spy mission. This spawns spy(s) at periodic intervals, it will not spawn more spies unless its conditions are met, and all previous spies from this mission are dead.
+	{
+		Objective Engineer  
+
+		InitialCooldown 20							// Amount of time once a wave starts before the mission becomes active.
+		Where spawnbot_mission_engineer_upper					// Entity at which to spawn.
+		BeginAtWave 2								// The mission becomes active on this wave.
+		RunForThisManyWaves 2							// It remains active for this many waves.
+		CooldownTime 15								// This is the time, in seconds, between when Sniper Missions are allowed to spawn, should their spawning conditions be met.
+		DesiredCount 1								// Number of spies to spawn each time this mission's criteria are met.
+
+		TFBot
+		{
+			Template T_TFBot_Engineer_Sentry_Battle
+			Health 125
+			Item "Festive Frontier Justice"				
+			Item "TTG Max Pistol - Poker Night"
+			Item "Festive Wrench 2011"
+			Item "Industrial Festivizer"				
+			Item "Pet Robro"
+			CharacterAttributes
+			{
+				"engineer teleporter build rate multiplier" 0.3
+				"engineer sentry build rate multiplier" 0.3
+				"engy building health bonus" 0.5
+				"engy sentry radius increased" 1.2
+			}
+		}
+	}
+
+
+// MISSION: Engineer 02
+	Mission 													// This is a spy mission. This spawns spy(s) at periodic intervals, it will not spawn more spies unless its conditions are met, and all previous spies from this mission are dead.
+	{
+		Objective Engineer  
+
+		InitialCooldown 20							// Amount of time once a wave starts before the mission becomes active.
+		Where spawnbot_mission_engineer_upper					// Entity at which to spawn.
+		BeginAtWave 4								// The mission becomes active on this wave.
+		RunForThisManyWaves 3							// It remains active for this many waves.
+		CooldownTime 15								// This is the time, in seconds, between when Sniper Missions are allowed to spawn, should their spawning conditions be met.
+		DesiredCount 2								// Number of spies to spawn each time this mission's criteria are met.
+
+		TFBot
+		{
+			Template T_TFBot_Engineer_Sentry_Battle
+			Health 125
+			Item "Festive Frontier Justice"				
+			Item "TTG Max Pistol - Poker Night"
+			Item "Festive Wrench 2011"
+			Item "Industrial Festivizer"				
+			Item "Pet Robro"
+			CharacterAttributes
+			{
+				"engineer teleporter build rate multiplier" 0.3
+				"engineer sentry build rate multiplier" 0.3
+				"engy building health bonus" 0.5
+				"engy sentry radius increased" 1.2
+			}
+		}
+	}
+
+
+
+	//WAVE 1 
+	Wave
+	{
+		StartWaveOutput
+		{
+			Target wave_start_relay
+			Action Trigger
+		}
+		DoneOutput					
+		{
+			Target wave_finished_relay
+			Action trigger
+		}
+		WaitWhenDone 65
+		Description "Melee Heavy's and Scouts"
+		Checkpoint Yes
+
+		
+		WaveSpawn
+		{
+			Name "primarywave"
+			//WaitForAllDead "myheavy"
+			
+			Where spawnbot
+			TotalCount 50
+			MaxActive 24
+			SpawnCount 2
+			WaitBeforeStarting 0
+			WaitBetweenSpawns 2
+			TotalCurrency 400
+
+			RandomChoice
+			{
+				TFBot
+				{
+					Template T_TFBot_Demoman_Knight
+				}
+
+				TFBot
+				{
+					Template T_TFBot_Heavyweapons_Heavyweight_Champ
+					CharacterAttributes
+					{
+						"dmg taken from fire increased" 1.5 
+						"dmg taken from crit increased" 1.5 
+						"dmg taken from blast increased" 1.5 
+					}
+
+
+				}
+
+				TFBot
+				{
+					Template T_TFBot_Heavyweapons_Heavyweight_Champ
+					CharacterAttributes
+					{
+						"dmg taken from fire increased" 1.5 
+						"dmg taken from crit increased" 1.5 
+						"dmg taken from blast increased" 1.5 
+					}
+				}
+
+				TFBot
+				{
+					Template T_TFBot_Heavyweapons_Heavyweight_Champ
+					CharacterAttributes
+					{
+						"dmg taken from fire increased" 1.5 
+						"dmg taken from crit increased" 1.5 
+						"dmg taken from blast increased" 1.5 
+					}
+				}
+
+				TFBot
+				{
+					Template T_TFBot_Heavyweapons_Gnome
+				}
+
+				TFBot
+				{
+					Template T_TFBot_Heavyweapons_Heavyweight_Champ
+					CharacterAttributes
+					{
+						"dmg taken from fire increased" 1.5 
+						"dmg taken from crit increased" 1.5 
+						"dmg taken from blast increased" 1.5 
+					}
+				}
+
+				TFBot
+				{
+					Template T_TFBot_Heavyweapons_Heavyweight_Champ_Fast
+				}
+			}
+		}
+
+		
+		WaveSpawn
+		{
+			WaitForAllSpawned "primarywave"
+			
+			Where spawnbot
+			TotalCount 20
+			MaxActive 20
+			SpawnCount 10
+			WaitBeforeStarting 5
+			WaitBetweenSpawns 2
+			TotalCurrency 400	
+
+			RandomChoice
+			{
+				TFBot
+				{
+					Class Scout
+					Skill Easy
+					WeaponRestrictions MeleeOnly
+					CharacterAttributes
+					{
+						"dmg taken from bullets increased" 1.5
+					}
+
+				}
+
+				TFBot
+				{
+					Class Scout
+					Skill Easy
+					WeaponRestrictions MeleeOnly
+					Health 50
+					Item "The Holy Mackerel"
+					CharacterAttributes
+					{
+						"dmg taken from bullets increased" 1.5
+					}
+				}
+
+				TFBot
+				{
+					Class Scout
+					Skill Easy
+					WeaponRestrictions MeleeOnly
+					Health 50
+					Item "The Atomizer"
+					CharacterAttributes
+					{
+						"dmg taken from bullets increased" 1.5
+					}
+				}
+
+				TFBot
+				{
+					Class Scout
+					Skill Easy
+					ClassIcon sunstick_scout
+					WeaponRestrictions MeleeOnly
+					Item "Sun-on-a-Stick"
+					CharacterAttributes
+					{
+						"dmg taken from bullets increased" 1.5
+					}
+				}
+
+				TFBot
+				{
+					Class Scout
+					Skill Easy
+					ClassIcon firemack_scout
+					Name "Fried Mackerel Scout"
+					WeaponRestrictions MeleeOnly
+					Item "The Holy Mackerel"
+					CharacterAttributes
+					{
+						"dmg taken from bullets increased" 1.5
+						"dmg from melee increased" 1.5						
+						"dmg taken from fire increased" 0.5 
+						"set damagetype ignite" 1
+						"damage bonus" 2
+						"attach particle effect static" 1
+					}
+				}
+
+				TFBot
+				{
+					Class Scout
+					Skill Easy
+					ClassIcon fanwar_scout
+					//Attributes AlwaysCrit
+					Attributes Aggressive
+					WeaponRestrictions MeleeOnly
+					Item "The Fan O'War"
+					Item "The Merc's Muffler"
+					CharacterAttributes
+					{
+						//"crit forces victim to laugh" 1
+						"dmg taken from bullets increased" 1.5
+					}
+				}
+
+				TFBot
+				{
+					Class Scout
+					Skill Easy
+					ClassIcon ignite_scout
+					WeaponRestrictions MeleeOnly
+					Item "Three-Rune Blade"
+					CharacterAttributes
+					{
+						"set damagetype ignite" 1
+						"ragdolls become ash" 1
+						"attach particle effect static" 1
+						"health regen" 10
+						"dmg taken from bullets increased" 1.5
+						"dmg taken from fire increased" 0 
+						"dmg taken from crit increased" 1.5 
+						"dmg taken from blast increased" 1.5 
+					}
+				}
+			}
+		}	
+	}	
+
+	//WAVE 2 
+	Wave
+	{
+		StartWaveOutput
+		{
+			Target wave_start_relay
+			Action Trigger
+		}
+		DoneOutput					
+		{
+			Target wave_finished_relay
+			Action trigger
+		}
+		WaitWhenDone 65
+		Description "Melee Demo's and Scouts"
+		Checkpoint Yes
+
+
+		WaveSpawn
+		{
+			TotalCurrency 0
+						
+			Where spawnbot_mission_sniper
+			TotalCount 10
+			MaxActive 3
+			SpawnCount 1
+			WaitBetweenSpawns 10
+			WaitBeforeStarting 5
+			TotalCurrency 0
+			RandomSpawn 1	//randomize distribution
+
+			Support Limited
+
+			
+			RandomChoice
+			{
+				TFBot
+				{
+					Template T_TFBot_Pyro
+					Skill Hard
+				}
+				TFBot
+				{
+					Template T_TFBot_Heavyweapons_Z_Level_1	
+				}
+
+				TFBot
+				{
+					Template T_TFBot_Soldier_Lucky_Level_1	
+				}
+
+				TFBot
+				{
+					Template T_TFBot_Soldier_AcesEight_Level_1	
+				}
+
+				TFBot
+				{
+					Template T_TFBot_Buccaneer_Demoman_Level_1	
+				}
+			}
+		}
+
+
+
+		WaveSpawn
+		{
+			Name "primarywave"
+			
+			Where spawnbot
+			TotalCount 60
+			MaxActive 20
+			SpawnCount 5
+			WaitBeforeStarting 0
+			WaitBetweenSpawns 5
+			TotalCurrency 400
+
+			RandomChoice
+			{
+				TFBot
+				{
+					Template T_TFBot_Demoman_Knight
+				}
+
+				TFBot
+				{
+					Template T_TFBot_Demoman_Knight
+				}
+
+				TFBot
+				{
+					Template T_TFBot_Demoman_Knight
+				}
+
+				TFBot
+				{
+					Template T_TFBot_TavishWoods_Demoman
+				}
+
+				TFBot
+				{
+					Template T_TFBot_AxeKnight_Demoman
+				}
+
+				TFBot
+				{
+					Template T_TFBot_PirateKnight_Demoman
+
+				}
+			}
+		}
+
+		WaveSpawn
+		{
+			WaitForAllSpawned "primarywave"
+			
+			Where spawnbot
+			TotalCount 30
+			MaxActive 15
+			SpawnCount 5
+			WaitBeforeStarting 5
+			WaitBetweenSpawns 3
+			TotalCurrency 400	
+
+			RandomChoice
+			{
+				TFBot
+				{
+					Class Scout
+					Skill Easy
+					WeaponRestrictions MeleeOnly
+					CharacterAttributes
+					{
+						"dmg taken from bullets increased" 1.2
+					}
+
+				}
+
+				TFBot
+				{
+					Class Scout
+					Skill Easy
+					WeaponRestrictions MeleeOnly
+					Health 50
+					Item "The Holy Mackerel"
+					CharacterAttributes
+					{
+						"dmg taken from bullets increased" 1.2
+					}
+				}
+
+				TFBot
+				{
+					Class Scout
+					Skill Easy
+					WeaponRestrictions MeleeOnly
+					Health 50
+					Item "The Atomizer"
+					CharacterAttributes
+					{
+						"dmg taken from bullets increased" 1.2
+					}
+				}
+
+				TFBot
+				{
+					Class Scout
+					Skill Easy
+					ClassIcon firemack_scout
+					Name "Fried Mackerel Scout"
+					WeaponRestrictions MeleeOnly
+					Item "The Holy Mackerel"
+					CharacterAttributes
+					{
+						"dmg taken from bullets increased" 1.5
+						"dmg from melee increased" 1.5						
+						"dmg taken from fire increased" 0.5 
+						"set damagetype ignite" 1
+						"damage bonus" 2
+						"attach particle effect static" 1
+					}
+				}
+
+				TFBot
+				{
+					Class Scout
+					Skill Easy
+					ClassIcon sunstick_scout
+					WeaponRestrictions MeleeOnly
+					Item "Sun-on-a-Stick"
+					CharacterAttributes
+					{
+						"dmg taken from bullets increased" 1.2
+					}
+				}
+
+				TFBot
+				{
+					Class Scout
+					Skill Easy
+					ClassIcon fanwar_scout
+					Attributes AlwaysCrit
+					Attributes Aggressive
+					WeaponRestrictions MeleeOnly
+					Item "The Fan O'War"
+					Item "The Merc's Muffler"
+					CharacterAttributes
+					{
+						//"crit forces victim to laugh" 1
+						"dmg taken from bullets increased" 1.2
+					}
+				}
+
+				TFBot
+				{
+					Class Scout
+					Skill Easy
+					ClassIcon ignite_scout
+					WeaponRestrictions MeleeOnly
+					Item "Three-Rune Blade"
+					CharacterAttributes
+					{
+						"set damagetype ignite" 1
+						"ragdolls become ash" 1
+						"attach particle effect static" 1
+						"health regen" 10
+						//"dmg from melee increased" 0						
+						"dmg taken from bullets increased" 1.5
+						"dmg taken from fire increased" 0 
+						"dmg taken from crit increased" 1.5 
+						"dmg taken from blast increased" 1.5 
+					}
+				}
+			}
+		}	
+
+	}
+
+	//WAVE 3 
+	Wave
+	{
+		StartWaveOutput
+		{
+			Target wave_start_relay
+			Action Trigger
+		}
+		DoneOutput					
+		{
+			Target wave_finished_relay
+			Action trigger
+		}
+		WaitWhenDone 65
+		Description "Melee Heavies and Scouts"
+		Checkpoint Yes
+
+		
+		WaveSpawn
+		{
+			TotalCurrency 0
+						
+			Where spawnbot_mission_sniper
+			TotalCount 20
+			MaxActive 8
+			SpawnCount 1
+			WaitBetweenSpawns 10
+			WaitBeforeStarting 60
+			TotalCurrency 0
+
+			RandomSpawn 1	//randomize distribution
+			Support Limited
+
+			
+			RandomChoice
+			{
+				TFBot
+				{
+					Template T_TFBot_Pyro
+					Skill Hard
+				}
+				TFBot
+				{
+					Template T_TFBot_Heavyweapons_Z_Level_1	
+				}
+
+				TFBot
+				{
+					Template T_TFBot_Soldier_Lucky_Level_1	
+				}
+
+				TFBot
+				{
+					Template T_TFBot_Soldier_AcesEight_Level_1	
+				}
+
+				TFBot
+				{
+					Template T_TFBot_Buccaneer_Demoman_Level_1	
+				}
+			}
+		}
+
+		WaveSpawn //WAVE
+		{
+			TotalCount 1
+			WaitBeforeStarting 1
+			TotalCurrency 600
+			
+
+			Tank
+			{
+				Health 8000
+				Speed 75
+				Name "tankboss"
+				StartingPathTrackNode "tank_path_a_1"
+
+				
+				OnBombDroppedOutput                             
+				{
+					Target boss_deploy_relay 
+					Action Trigger                         
+				}
+			}			
+		}
+
+
+		WaveSpawn
+		{
+			Name "primarywave"			
+			//WaitForAllDead "myheavy"
+			Where spawnbot
+			TotalCount 20
+			MaxActive 20
+			SpawnCount 10
+			WaitBeforeStarting 40
+			WaitBetweenSpawns 2
+			TotalCurrency 100
+
+			RandomChoice
+			{
+				TFBot
+				{
+					Template T_TFBot_Heavyweapons_Heavyweight_Champ
+				}
+
+				TFBot
+				{
+					Template T_TFBot_Heavyweapons_Heavyweight_Champ
+				}
+
+				TFBot
+				{
+					Template T_TFBot_Heavyweapons_Heavyweight_Champ
+				}
+
+				TFBot
+				{
+					Template T_TFBot_Heavyweapons_Gnome
+				}
+
+				TFBot
+				{
+					Template T_TFBot_Heavyweapons_Heavyweight_Champ
+				}
+
+				TFBot
+				{
+					Template T_TFBot_Heavyweapons_Heavyweight_Champ_Fast
+				}
+
+				TFBot
+				{
+					Template T_TFBot_Demoman_Knight
+				}
+			}
+		}
+
+		WaveSpawn 
+		{
+			Where spawnbot_mission_sniper_lower
+			TotalCount 8 
+			MaxActive 1
+			SpawnCount 1 
+			WaitBeforeStarting 10
+			WaitBetweenSpawns 10
+			TotalCurrency 0
+			RandomSpawn 1	//randomize distribution
+
+			Support Limited
+		
+			RandomChoice
+			{
+				TFBot
+				{
+					Template T_TFBot_DeathKnight_Demoman_Level_1
+				}
+
+				TFBot
+				{
+					Template T_TFBot_FlameKnight_Demoman
+				}
+
+				TFBot
+				{
+					Template T_TFBot_ClaidheamohmorFlameKnight_Demoman
+				}
+
+				TFBot
+				{
+					Template T_TFBot_ZatoichiFlameKnight_Demoman
+				}
+
+				TFBot
+				{
+					Template T_TFBot_SkullcutterFlameKnight_Demoman
+				}
+
+				TFBot
+				{
+					Template T_TFBot_NormalFlameKnight_Demoman
+				}
+			}
+		}
+
+		
+		WaveSpawn
+		{
+			WaitForAllSpawned "primarywave"
+			
+			Where spawnbot
+			TotalCount 20
+			MaxActive 12
+			SpawnCount 4
+			WaitBeforeStarting 0
+			WaitBetweenSpawns 2
+			TotalCurrency 100
+			
+			Squad
+			{
+				TFBot
+				{
+					Template T_TFBot_Heavyweapons_Heavyweight_Champ
+				}
+				
+				TFBot
+				{
+					Class Scout
+					Skill Easy
+					ClassIcon fanwar_scout
+					Attributes AlwaysCrit
+					Attributes Aggressive
+					WeaponRestrictions MeleeOnly
+					Item "The Fan O'War"
+					Item "The Stereoscopic Shades"
+					Item "The Merc's Muffler"
+					CharacterAttributes
+					{
+						"crit forces victim to laugh" 1
+					}
+				}
+				
+				TFBot
+				{
+					Class Scout
+					Skill Easy
+					WeaponRestrictions MeleeOnly
+				}
+				
+				TFBot
+				{
+					Class Scout
+					Skill Easy
+					WeaponRestrictions MeleeOnly
+					Item "Three-Rune Blade"
+				}
+			}
+		}	
+
+		WaveSpawn
+		{
+			WaitForAllSpawned "primarywave"
+			
+			Where spawnbot
+			TotalCount 2
+			MaxActive 1
+			SpawnCount 1
+			WaitBeforeStarting 0
+			WaitBetweenSpawns 1
+			TotalCurrency 0
+
+			Support Limited
+
+			TFBot
+			{
+				Class Scout
+				Skill Easy
+				ClassIcon fanwar_scout
+				Attributes AlwaysCrit
+				Attributes Aggressive
+				WeaponRestrictions MeleeOnly
+				Item "The Fan O'War"
+				Item "The Stereoscopic Shades"
+				Item "The Merc's Muffler"
+				CharacterAttributes
+				{
+					"crit forces victim to laugh" 1
+					"cannot pick up intelligence" 1
+				}
+			}
+		}	
+
+		WaveSpawn
+		{
+			WaitForAllSpawned "primarywave"
+			
+			Where spawnbot
+			TotalCount 10
+			MaxActive 5
+			SpawnCount 5
+			WaitBeforeStarting 0
+			WaitBetweenSpawns 1
+			TotalCurrency 100	
+
+			RandomChoice
+			{
+				TFBot
+				{
+					Class Scout
+					Skill Easy
+					WeaponRestrictions MeleeOnly
+				}
+
+				TFBot
+				{
+					Class Scout
+					Skill Easy
+					WeaponRestrictions MeleeOnly
+					Item "The Holy Mackerel"
+				}
+
+				TFBot
+				{
+					Class Scout
+					Skill Easy
+					ClassIcon sunstick_scout
+					WeaponRestrictions MeleeOnly
+					Item "Sun-on-a-Stick"
+				}
+
+				TFBot
+				{
+					Class Scout
+					Skill Easy
+					WeaponRestrictions MeleeOnly
+					Item "Three-Rune Blade"
+				}
+			}
+		}	
+		WaveSpawn
+		{
+			WaitForAllSpawned "primarywave"
+			
+			Where spawnbot
+			TotalCount 30
+			MaxActive 20
+			SpawnCount 10
+			WaitBeforeStarting 0
+			WaitBetweenSpawns 2
+			TotalCurrency 100
+			
+			RandomChoice
+			{
+				TFBot
+				{
+					Template T_TFBot_Heavyweapons_Heavyweight_Champ
+				}
+
+				TFBot
+				{
+					Template T_TFBot_Heavyweapons_Heavyweight_Champ_Fast
+				}
+
+				TFBot
+				{
+					Template T_TFBot_Heavyweapons_Gnome
+				}
+
+				TFBot
+				{
+					Template T_TFBot_Heavyweapons_Heavyweight_Champ
+				}
+
+				TFBot
+				{
+					Template T_TFBot_Heavyweapons_Heavyweight_Champ
+				}
+
+				TFBot
+				{
+					Template T_TFBot_Heavyweapons_Heavyweight_Champ
+				}
+
+				TFBot
+				{
+					Template T_TFBot_Demoman_Knight
+				}
+			}
+		}
+	}	
+
+
+	//WAVE 4 
+	Wave
+	{
+		StartWaveOutput
+		{
+			Target wave_start_relay
+			Action Trigger
+		}
+		DoneOutput					
+		{
+			Target wave_finished_relay
+			Action trigger
+		}
+		WaitWhenDone 65
+		Checkpoint Yes
+		
+		
+		WaveSpawn
+		{
+			TotalCurrency 0
+						
+			Where spawnbot_mission_sniper
+			TotalCount 12
+			MaxActive 10
+			SpawnCount 2
+			WaitBetweenSpawns 20
+			WaitBeforeStarting 5
+			TotalCurrency 0
+			RandomSpawn 1	//randomize distribution
+
+			Support Limited
+
+			
+			RandomChoice
+			{
+				TFBot
+				{
+					Template T_TFBot_Pyro
+					Skill Hard
+				}
+
+				TFBot
+				{
+					Template T_TFBot_Heavyweapons_Z_Level_1	
+				}
+
+				TFBot
+				{
+					Template T_TFBot_Soldier_Lucky_Level_1	
+				}
+
+				TFBot
+				{
+					Template T_TFBot_Soldier_AcesEight_Level_1	
+				}
+
+				TFBot
+				{
+					Template T_TFBot_Buccaneer_Demoman_Level_1	
+				}
+
+				TFBot
+				{
+					Template T_TFBot_Heavyweapons_RoboCop_Level_1
+				}
+			}
+		}
+
+		WaveSpawn 
+		{
+			
+			Name wave2primarywave
+			
+			Where spawnbot
+			TotalCount 21
+			MaxActive 15
+			SpawnCount 3
+			WaitBetweenSpawns 3
+			WaitBeforeStarting 0
+			TotalCurrency 200		
+			
+			Squad
+			{
+				TFBot
+				{
+					Template T_TFBot_Heavyweapons_Z_Level_1
+
+				}
+
+				TFBot
+				{
+					Class Pyro
+					Skill Easy
+					Item "The Flamboyant Flamenco"
+				}
+
+				TFBot
+				{
+					Class Pyro
+					Skill Easy
+					Item "The Flamboyant Flamenco"
+				}
+			}
+			
+		}
+
+		WaveSpawn
+		{
+			WaitForAllSpawned "primarywave"
+			
+			Where spawnbot
+			TotalCount 10
+			MaxActive 5
+			SpawnCount 5
+			WaitBeforeStarting 0
+			WaitBetweenSpawns 7
+			TotalCurrency 200
+			
+			RandomChoice
+			{
+				TFBot
+				{
+					Template T_TFBot_Heavyweapons_Heavyweight_Champ_Fast
+				}
+				TFBot
+				{
+					Template T_TFBot_Heavyweapons_Heavyweight_Champ
+				}
+			}
+		}
+
+
+		WaveSpawn
+		{
+			WaitForAllSpawned "wave2primarywave"
+			
+			Where spawnbot
+			TotalCount 10
+			MaxActive 10
+			SpawnCount 5
+			WaitBeforeStarting 0
+			WaitBetweenSpawns 10
+			TotalCurrency 400
+			
+			Squad
+			{
+				TFBot
+				{
+					Template T_TFBot_Giant_Pyro
+					Item "Old Guadalajara"
+					Item "Blood Botkiller Flame Thrower Mk.I"
+					CharacterAttributes
+					{
+						"attach particle effect static" 35
+					}
+				}
+
+				TFBot
+				{
+					Class Pyro
+					Skill Easy
+					Item "The Flamboyant Flamenco"
+				}
+
+				TFBot
+				{
+					Class Pyro
+					Skill Easy
+					Item "The Flamboyant Flamenco"
+				}
+
+				TFBot
+				{
+					Template T_TFBot_Heavyweapons_Heavyweight_Champ
+				}
+
+				TFBot
+				{
+					Class HeavyWeapons
+					Skill Easy
+				}
+			}
+		}
+	}
+
+	//WAVE 5 //Tank Boss 28k, Scout melee support, Spy Mission//Currency 900 ///////////////////////////////////////////////////////////////////////////////////////////////////////
+	Wave
+	{
+		StartWaveOutput
+		{
+			Target wave_start_relay
+			Action Trigger
+		}
+		DoneOutput					
+		{
+			Target wave_finished_relay
+			Action trigger
+		}
+		WaitWhenDone 65
+		Checkpoint Yes
+		
+		// Spy mission - 1 active
+
+		WaveSpawn
+		{
+			TotalCurrency 0
+						
+			Where spawnbot_mission_sniper
+			TotalCount 12
+			MaxActive 10
+			SpawnCount 2
+			WaitBetweenSpawns 10
+			WaitBeforeStarting 5
+			TotalCurrency 0
+			RandomSpawn 1	//randomize distribution
+
+			Support Limited
+
+			
+			RandomChoice
+			{
+				TFBot
+				{
+					Template T_TFBot_Pyro
+					Skill Hard
+				}
+				TFBot
+				{
+					Template T_TFBot_Heavyweapons_Z_Level_1	
+				}
+
+				TFBot
+				{
+					Template T_TFBot_Soldier_Lucky_Level_1	
+				}
+
+				TFBot
+				{
+					Template T_TFBot_Soldier_AcesEight_Level_1	
+				}
+
+				TFBot
+				{
+					Template T_TFBot_Buccaneer_Demoman_Level_1	
+				}
+
+				TFBot
+				{
+					Template T_TFBot_Heavyweapons_RoboCop_Level_1
+				}
+			}
+		}
+
+
+		WaveSpawn 
+		{				
+			
+			Where spawnbot_mission_engineer_lower_left
+			WaitForAllSpawned "stage1"
+			TotalCount 12
+			MaxActive 12
+			SpawnCount 4
+			WaitBeforeStarting 0
+			WaitBetweenSpawns 15
+			TotalCurrency 0
+			
+			Support Limited
+			
+			Squad 
+			{
+				TFBot
+				{
+					Template T_TFBot_Engineer_Sentry_Battle
+					ClassIcon short_engineer
+					Health 125
+					MaxVisionRange 1200
+					Item "Festive Frontier Justice"				
+					Item "The Wrangler"
+					Item "Festive Wrench 2011"
+					Item "Industrial Festivizer"				
+					Item "Pet Robro"
+					CharacterAttributes
+					{
+						"engineer teleporter build rate multiplier" 0.3
+						"engineer sentry build rate multiplier" 0.3
+					}
+				}
+
+				TFBot
+				{
+					Template T_TFBot_Medic_QuickUber
+				}
+
+				TFBot
+				{
+					Template T_TFBot_Heavyweapons_Deflector
+				}
+
+				TFBot
+				{
+					Template T_TFBot_Engineer_Sentry_Battle
+					Name "Short Circuit Engineer"
+					ClassIcon short_engineer
+					Health 500
+					MaxVisionRange 3200
+					Skill Expert
+					WeaponRestrictions SecondaryOnly
+					Attributes AlwaysFireWeapon
+					Attributes Aggressive
+					Item "Festive Frontier Justice"
+					Item "The Short Circuit"
+					Item "Festive Wrench 2011"
+					Item "Spine-Chilling Skull"
+					Item "The Stocking Stuffer"
+					CharacterAttributes
+					{
+						"attack projectiles" 1
+						"apply look velocity on damage" 100
+						"apply z velocity on damage" 100
+						"engineer teleporter build rate multiplier" 0.3
+						"engineer sentry build rate multiplier" 0.3
+						"mark for death" 1
+						"maxammo metal increased" 1.5
+						"metal regen" 1.5
+						"damage bonus" 5
+						"fire rate bonus" 0.5
+						"energy weapon no drain" 1
+					}
+				}
+			}
+		}
+		
+		
+		WaveSpawn //WAVE
+		{
+			TotalCount 1
+			WaitBeforeStarting 1
+			TotalCurrency 800
+			
+
+			Tank
+			{
+				Health 34000
+				Speed 75
+				Name "tankboss"
+				StartingPathTrackNode "tank_path_a_1"
+
+				
+				OnBombDroppedOutput                             
+				{
+					Target boss_deploy_relay 
+					Action Trigger                         
+				}
+
+			}			
+		}
+
+		WaveSpawn
+		{			
+			Where spawnbot
+			TotalCount 16
+			MaxActive 8
+			SpawnCount 8
+			WaitBeforeStarting 15
+			WaitBetweenSpawns 0
+			
+			Support 1
+			
+			TotalCurrency 200
+
+			RandomChoice
+			{
+				TFBot
+				{
+					Class Scout
+					Skill Easy
+					WeaponRestrictions MeleeOnly
+				}
+				TFBot
+				{
+					Class Scout
+					Skill Easy
+					WeaponRestrictions MeleeOnly
+				}
+				TFBot
+				{
+					Class Scout
+					Skill Easy
+					WeaponRestrictions MeleeOnly
+				}
+				TFBot
+				{
+					Class Scout
+					Skill Easy
+					WeaponRestrictions MeleeOnly
+					Item "The Holy Mackerel"
+				}
+				TFBot
+				{
+					Class Scout
+					Skill Easy
+					ClassIcon fanwar_scout
+					WeaponRestrictions MeleeOnly
+					Item "The Fan O'War"
+				}
+				TFBot
+				{
+					Class Scout
+					Skill Easy
+					ClassIcon sunstick_scout
+					WeaponRestrictions MeleeOnly
+					Item "Sun-on-a-Stick"
+				}
+				TFBot
+				{
+					Class Scout
+					Skill Easy
+					WeaponRestrictions MeleeOnly
+					Item "Three-Rune Blade"
+				}
+			}
+		}
+
+		WaveSpawn
+		{			
+			Where spawnbot_giant_lower
+			TotalCount 36
+			MaxActive 18
+			SpawnCount 18
+			WaitBeforeStarting 15
+			WaitBetweenSpawns 0
+			
+			Support 1
+			
+			TotalCurrency 0
+			
+			RandomChoice
+			{
+				TFBot
+				{
+					Class Scout
+					Skill Easy
+					WeaponRestrictions MeleeOnly
+				}
+				TFBot
+				{
+					Class Scout
+					Skill Easy
+					WeaponRestrictions MeleeOnly
+				}
+				TFBot
+				{
+					Class Scout
+					Skill Easy
+					WeaponRestrictions MeleeOnly
+				}
+				TFBot
+				{
+					Class Scout
+					Skill Easy
+					WeaponRestrictions MeleeOnly
+					Item "The Holy Mackerel"
+				}
+				TFBot
+				{
+					Class Scout
+					Skill Easy
+					WeaponRestrictions MeleeOnly
+					Item "The Atomizer"
+				}
+				TFBot
+				{
+					Class Scout
+					Skill Easy
+					ClassIcon sunstick_scout
+					WeaponRestrictions MeleeOnly
+					Item "Sun-on-a-Stick"
+				}
+
+			}
+		}		
+	}
+
+
+	//WAVE 6 //Demos, Scout melees, Soldiers, Giant Demos, Sniper Mission MB //Currency 500 ///////////////////////////////////////////////////////////////////////////////////////////////////////
+	Wave
+	{
+		StartWaveOutput
+		{
+			Target wave_start_relay
+			Action Trigger
+		}
+		DoneOutput					
+		{
+			Target wave_finished_relay
+			Action trigger
+		}
+		WaitWhenDone 65
+		Checkpoint Yes
+		
+		// Sniper mission - 2 active		
+
+		
+		WaveSpawn 
+		{
+			
+			Name "wave4primarywave"
+			
+			Where spawnbot
+			TotalCount 20
+			MaxActive 10
+			SpawnCount 2
+			WaitBetweenSpawns 3
+			WaitBeforeStarting 0
+			TotalCurrency 200		
+			
+			
+			RandomChoice
+			{
+				TFBot
+				{
+					Template T_TFBot_Conjurer_Demoman_Level_1
+				}
+
+				TFBot
+				{
+					Template T_TFBot_LochLoad_Demoman_Level_1
+				}
+
+				TFBot
+				{
+					Template T_TFBot_Buccaneer_Demoman_Level_1
+				}
+			}
+		}
+
+		WaveSpawn 
+		{
+			
+			Where spawnbot
+			TotalCount 12
+			MaxActive 6
+			SpawnCount 2
+			WaitBetweenSpawns 6
+			WaitBeforeStarting 0
+			TotalCurrency 100		
+			
+			RandomChoice
+			{
+				TFBot
+				{
+					Class Scout
+					Skill Easy
+					WeaponRestrictions MeleeOnly
+				}
+				TFBot
+				{
+					Class Scout
+					Skill Easy
+					WeaponRestrictions MeleeOnly
+					Item "The Holy Mackerel"
+				}
+				TFBot
+				{
+					Class Scout
+					Skill Easy
+					WeaponRestrictions MeleeOnly
+					Item "The Atomizer"
+				}
+				TFBot
+				{
+					Class Scout
+					Skill Easy
+					ClassIcon sunstick_scout
+					WeaponRestrictions MeleeOnly
+					Item "Sun-on-a-Stick"
+				}
+
+			}
+		}
+
+		WaveSpawn 
+		{
+			
+			Where spawnbot
+			TotalCount 20
+			MaxActive 6
+			SpawnCount 2
+			WaitBetweenSpawns 3
+			WaitBeforeStarting 0
+			TotalCurrency 0		
+
+			Support Limited
+
+			RandomChoice
+			{
+			
+				TFBot
+				{
+					Template T_TFBot_FlameKnight_Demoman
+				}
+				TFBot
+				{
+					Template T_TFBot_ClaidheamohmorFlameKnight_Demoman
+				}
+				TFBot
+				{
+					Template T_TFBot_SkullcutterFlameKnight_Demoman
+				}
+
+				TFBot
+				{
+					Template T_TFBot_ZatoichiFlameKnight_Demoman
+				}
+				TFBot
+				{
+					Template T_TFBot_NormalFlameKnight_Demoman
+				}
+			}
+		}
+		WaveSpawn 
+		{
+			
+			Where spawnbot
+			TotalCount 20
+			MaxActive 4
+			SpawnCount 2
+			WaitBetweenSpawns 5
+			WaitBeforeStarting 0
+			TotalCurrency 300		
+			
+			RandomChoice
+			{
+				TFBot
+				{
+					Template T_TFBot_Soldier_Buff_Banner
+					Item "The Mantreads"
+				}
+		
+				TFBot
+				{
+					Template T_TFBot_Soldier_Normal_Level_1
+				}
+				
+				TFBot
+				{
+					Template T_TFBot_Soldier_Normal_Level_1
+				}
+
+				TFBot
+				{
+					Template T_TFBot_Soldier_Normal_Level_1
+				}
+
+				TFBot
+				{
+					Template T_TFBot_Soldier_AcesEight_Level_1
+				}
+			
+				TFBot
+				{
+					Template T_TFBot_Soldier_Lucky_Level_1
+				}
+
+				TFBot
+				{
+					Template T_TFBot_Soldier_SpaceMarine_Level_1
+				}
+			}
+		}
+		
+		WaveSpawn //WAVE 01b: 
+		{
+			Where spawnbot_mission_sniper_lower
+			TotalCount 8 
+			MaxActive 2
+			SpawnCount 1 
+			WaitBeforeStarting 10
+			WaitBetweenSpawns 10
+			TotalCurrency 0
+
+			support 1
+		
+			TFBot
+			{
+				Template T_TFBot_DeathKnight_Demoman_Level_2			
+			}
+
+		}
+
+		WaveSpawn 
+		{
+			
+			WaitForAllSpawned "wave4primarywave"
+			
+			Where spawnbot
+			TotalCount 4
+			MaxActive 2
+			SpawnCount 2
+			WaitBetweenSpawns 15
+			WaitBeforeStarting 0
+			TotalCurrency 300		
+			
+			TFBot
+			{
+				Template T_TFBot_Giant_Demoman
+				Item "The Bird-Man of Aberdeen"
+			}
+		}
+	}
+}

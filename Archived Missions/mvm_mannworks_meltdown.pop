@@ -1,0 +1,1054 @@
+
+#base robot_giant.pop 
+#base robot_standard.pop
+
+WaveSchedule
+{
+
+	StartingCurrency		1800
+	RespawnWaveTime 		5
+	CanBotsAttackWhileInSpawnRoom no
+	Advanced 1
+	
+  Templates
+  {
+//Heavy
+     T_TFBot_Patriot
+    {
+      		Class Heavy
+		Name "Motorized Patriot"
+		Item "The Brass Beast"
+		Item "The Pounding Father"
+		Item "The Dapper Disguise"
+		Skill Hard
+		Health 10500
+		ClassIcon heavy_giant
+		Attributes MiniBoss
+		CharacterAttributes
+			{
+			"damage bonus" 1.75
+			"move speed bonus" 0.65
+			"fire rate bonus" 0.65
+			"airblast vertical vulnerability multiplier" 0.001
+			}
+    }
+T_TFBot_Hooskshot
+	{
+	Class Medic
+			Name "Hookshooter"
+			MaxVisionRange 3000
+			Health 350
+			Skill Expert
+			Item "The Crusader's Crossbow"
+			WeaponRestrictions PrimaryOnly
+			CharacterAttributes
+			{
+			"damage bonus" 0.5
+			"apply z velocity on damage" 120
+			"apply look velocity on damage" -9000
+			"Reload time increased" 2
+			"Projectile speed increased" 50
+			}
+	}
+ T_TFBot_Destroyer
+    {
+      Class Heavy
+		Name "Destroyer 3"
+		Health 12500
+		Item "The Fists of Steel"
+		Item "The Person in the Iron Mask"
+		Skill Expert
+		ClassIcon heavy_steelfist
+		Attributes MiniBoss
+		WeaponRestrictions MeleeOnly
+		CharacterAttributes
+			{
+			"bleeding duration" 10
+			"damage bonus" 1.8
+			"move speed bonus" 0.65
+			"head scale" 8
+			"cannot be backstabbed" 1
+			}
+    }
+T_TFBot_Doomer
+	{
+	Class Heavy
+		Name "Doomer"
+		Health 480
+		Scale 1.5
+		Item "The Winter Wonderland Wrap"
+		Item "The Chief Constable"
+		Attributes AlwaysCrit
+		CharacterAttributes
+			{
+			"fire rate bonus" 2
+			"spread penalty" 5
+			"bullets per shot bonus" 10
+			"Set DamageType Ignite" 1
+			}
+	}
+T_TFBot_Melter
+	{
+	Class Pyro
+	ClassIcon pyro_flare
+	Name "Man Melter"
+	Item "The Manmelter"
+	Health 800
+	Attributes AlwaysCrit
+		CharacterAttributes
+			{
+			"damage bonus" 5
+			}
+	}
+T_TFBot_Melter_Boss
+	{
+	Class Pyro
+	ClassIcon pyro_giant
+	Name "The  Incinerationator"
+	Item "The Backburner"
+	Item "Pyromancer's Mask"
+	Health 165000
+	Attributes MiniBoss
+	Attributes UseBossHealthBar
+	Skill Expert
+	CharacterAttributes
+		{
+		"damage bonus" 6
+		"health regen" 400
+		"attack projectiles" 1
+		"crits vs burning players" 1
+		"heal on hit for rapidfire" 5
+		"health on kill" 200
+		"move speed bonus" 0.45
+		"ragdolls turn to ash" 1
+		}
+	}
+T_TFBot_Giant_Hobo
+	{
+	Class Soldier
+		Name "Giant Dumpster Diver"
+		Item "The Beggar's Bazooka"
+		Item "The Helmet Without a Home"
+		Item "The Captain's Cocktails"
+		Item "The Mantreads"
+		Item "The Buff Banner"
+		Item "Hard Counter"
+		Health 6850
+		Skill Hard
+		ClassIcon soldier_spammer
+		Attributes AlwaysCrit
+		Attributes MiniBoss
+		CharacterAttributes
+			{
+			"auto fires full clip all at once" 1
+			"can overload" 0
+			"move speed bonus" 0.65
+			}
+	}
+T_TFBot_Hobo
+	{
+	Class Soldier
+		Name "Dumpster Diver"
+		Item "The Beggar's Bazooka"
+		Item "The Helmet Without a Home"
+		Item "The Captain's Cocktails"
+		Item "The Mantreads"
+		Item "The Buff Banner"
+		Item "Hard Counter"
+		Health 850
+		Skill Hard
+		ClassIcon soldier_spammer
+		Attributes MiniBoss
+		CharacterAttributes
+			{
+			"auto fires full clip all at once" 1
+			"can overload" 0
+			}
+	}
+  }
+
+	Mission 
+	{
+		Objective Sniper
+
+		InitialCooldown 15
+		Where spawnbot_mission_sniper
+		CooldownTime 30
+		BeginAtWave 1
+                RunForThisManyWaves 3
+		DesiredCount 2
+
+		TFBot
+		{
+			Class Sniper
+			MaxVisionRange 3000
+			Health 500
+			Skill Expert
+			Name "Cripple Sniper"
+			Item "The Machina"
+			Item "The Anger"
+			WeaponRestrictions PrimaryOnly
+			CharacterAttributes
+			{
+			"jarate duration" 5
+			"damage bonus"  0.8
+			"applies snare effect" 0.8
+			"apply z velocity on damage" 120
+			"apply look velocity on damage" -9000
+			}
+		}
+	}   
+	Mission 
+	{
+		Objective Spy
+		InitialCooldown 15
+		Where spawnbot
+		CooldownTime 30
+		BeginAtWave 1
+                RunForThisManyWaves 3
+		DesiredCount 1
+
+		TFBot
+		{
+			Class Spy
+			Skill Expert
+		}
+	}   
+//WAVE 1 //Currency 600 ///////////////////////////////////////////////////////////////////////////////////////////////////////
+
+Wave
+{
+	StartWaveOutput
+		{
+			Target bombpath_arrows_clear_relay_ironman
+	
+			Action Trigger
+		}
+	DoneOutput					
+		{
+			Target wave_finished_relay
+			Action trigger
+		}
+	WaitWhenDone 65
+	Checkpoint Yes
+
+	
+		
+	WaveSpawn //WAVE 7a: 150 total, 16 active, scout 
+	{
+		Where spawnbot
+		TotalCount 50
+		MaxActive 30
+		SpawnCount 5
+		WaitBeforeStarting 0
+		WaitBetweenSpawns 6
+		TotalCurrency 100
+
+		TFBot
+		{
+		Template T_TFBot_Hobo
+		}
+
+	}
+	WaveSpawn //WAVE 7a: 150 total, 16 active, scout 
+	{
+		Where spawnbot
+		TotalCount 10
+		MaxActive 5
+		SpawnCount 5
+		WaitBeforeStarting 0
+		WaitBetweenSpawns 6
+		TotalCurrency 200
+
+		TFBot
+		{
+		Template T_TFBot_Giant_Hobo
+		}
+
+	}
+	WaveSpawn //WAVE 7a: 150 total, 16 active, scout 
+	{
+		Where spawnbot
+		TotalCount 5
+		MaxActive 30
+		SpawnCount 1
+		WaitBeforeStarting 40
+		WaitBetweenSpawns 30
+		TotalCurrency 500
+
+		TFBot
+		{
+		Name "Minor Bomber"
+		Class Demoman
+		Health 5000
+		Attributes MiniBoss
+		Attributes HoldFireUntilFullReload
+		ClassIcon demo_giant
+			CharacterAttributes
+				{
+				"fire rate bonus" 0.25
+				"clip size bonus" 3.5
+				"faster reload rate" 0.85
+				}
+		}
+
+}
+		WaveSpawn //WAVE 7a: 150 total, 16 active, scout 
+	{
+		Where spawnbot
+		TotalCount 25
+		MaxActive 30
+		SpawnCount 4
+		WaitBeforeStarting 45
+		WaitBetweenSpawns 10
+		TotalCurrency 50
+
+		TFBot
+		{
+		Template T_TFBot_Hobo
+		Item "The Batallion's Backup"
+		Attributes SpawnWithFullCharge
+		}
+
+	}
+	WaveSpawn //WAVE 7a: 150 total, 16 active, scout 
+	{
+		Where spawnbot
+		TotalCount 80
+		MaxActive 20
+		SpawnCount 4
+		WaitBeforeStarting 50
+		WaitBetweenSpawns 6
+		TotalCurrency 800
+
+		TFBot
+		{
+		Template T_TFBot_Melter
+		}
+
+	}
+	WaveSpawn //WAVE 7a: 150 total, 16 active, scout 
+	{
+		Where spawnbot
+		TotalCount 35
+		MaxActive 20
+		SpawnCount 3
+		WaitBeforeStarting 65
+		WaitBetweenSpawns 8
+		TotalCurrency 350
+
+		TFBot
+		{
+		Template T_TFBot_Doomer
+		}
+
+	}
+	WaveSpawn //WAVE 7a: 150 total, 16 active, scout 
+	{
+		Where spawnbot
+		TotalCount 4
+		MaxActive 20
+		SpawnCount 2
+		WaitBeforeStarting 75
+		WaitBetweenSpawns 20
+		TotalCurrency 200
+
+		TFBot
+		{
+		Template T_TFBot_Destroyer
+		}
+
+	}
+	WaveSpawn //WAVE 7a: 150 total, 16 active, scout 
+	{
+		Where spawnbot
+		TotalCount 15
+		MaxActive 15
+		SpawnCount 4
+		WaitBeforeStarting 80
+		WaitBetweenSpawns 6
+		TotalCurrency 400
+
+		TFBot
+		{
+		Template T_TFBot_Giant_Hobo
+		}
+
+	}
+	WaveSpawn //WAVE 7a: 150 total, 16 active, scout 
+	{
+		Where spawnbot
+		TotalCount 10
+		MaxActive 20
+		SpawnCount 5
+		WaitBeforeStarting 80
+		WaitBetweenSpawns 20
+		TotalCurrency 500
+
+		TFBot
+		{
+		Template T_TFBot_Patriot
+		}
+
+	}
+	WaveSpawn //WAVE 7a: 150 total, 16 active, scout 
+	{
+		Where spawnbot
+		TotalCount 12
+		MaxActive 4
+		SpawnCount 2
+		WaitBeforeStarting 120
+		WaitBetweenSpawns 30
+		TotalCurrency 120
+
+		TFBot
+		{
+		Template T_TFBot_Giant_Scout_Baseball
+		Attributes AlwaysCrit
+		}
+
+	}
+	WaveSpawn //WAVE 7a: 150 total, 16 active, scout 
+	{
+		Where spawnbot
+		TotalCount 50
+		MaxActive 10
+		SpawnCount 5
+		WaitBeforeStarting 120
+		WaitBetweenSpawns 10
+		TotalCurrency 800
+
+		TFBot
+		{
+		Template T_TFBot_Giant_Heavyweapons_Deflector
+		}
+
+	}
+	WaveSpawn //WAVE 7a: 150 total, 16 active, scout 
+	{
+		Where spawnbot
+		TotalCount 15
+		MaxActive 10
+		SpawnCount 2
+		WaitBeforeStarting 130
+		WaitBetweenSpawns 25
+		TotalCurrency 150
+
+		TFBot
+		{
+		Template T_TFBot_Giant_Pyro
+		Health 5000
+		}
+
+	}
+	WaveSpawn //WAVE 7a: 150 total, 16 active, scout 
+	{
+		Where spawnbot
+		TotalCount 20
+		MaxActive 10
+		SpawnCount 5
+		WaitBeforeStarting 130
+		WaitBetweenSpawns 35
+		TotalCurrency 200
+
+		TFBot
+		{
+		Template T_TFBot_Heavyweapons_Heater
+			CharacterAttributes
+				{
+				"override projectile type" 6
+				}
+		}
+
+	}
+	WaveSpawn //WAVE 7a: 150 total, 16 active, scout 
+	{
+		Where spawnbot
+		TotalCount 5
+		MaxActive 5
+		SpawnCount 5
+		WaitBeforeStarting 190
+		WaitBetweenSpawns 0
+		TotalCurrency 250
+
+		TFBot
+		{
+		Template T_TFBot_Giant_Medic
+		Health 1200
+		}
+
+	}
+	WaveSpawn //WAVE 7a: 150 total, 16 active, scout 
+	{
+		Where spawnbot
+		TotalCount 10
+		MaxActive 10
+		SpawnCount 10
+		WaitBeforeStarting 180
+		WaitBetweenSpawns 0
+		TotalCurrency 500
+
+		TFBot
+		{
+		Template T_TFBot_Patriot
+		}
+
+	}
+	WaveSpawn //WAVE 7a: 150 total, 16 active, scout 
+	{
+		Where spawnbot
+		TotalCount 18
+		MaxActive 20
+		SpawnCount 3
+		WaitBeforeStarting 220
+		WaitBetweenSpawns 20
+		TotalCurrency 900
+
+		TFBot
+		{
+		Template T_TFBot_Giant_Demoman_PrinceTavish
+		}
+
+	}
+	WaveSpawn //WAVE 7a: 150 total, 16 active, scout 
+	{
+		Where spawnbot
+		TotalCount 60
+		MaxActive 20
+		SpawnCount 6
+		WaitBeforeStarting 220
+		WaitBetweenSpawns 15
+		TotalCurrency 200
+
+		TFBot
+		{
+		Template T_TFBot_Sniper_Huntsman
+		Health 850
+		Skill Expert
+		CharacterAttributes
+			{
+			"Set DamageType Ignite" 1
+			}
+		}
+
+	}
+	WaveSpawn //WAVE 7a: 150 total, 16 active, scout 
+	{
+		Where spawnbot
+		TotalCount 60
+		MaxActive 20
+		SpawnCount 6
+		WaitBeforeStarting 220
+		WaitBetweenSpawns 15
+		TotalCurrency 200
+
+		TFBot
+		{
+		Template T_TFBot_Sniper_Huntsman
+		Health 450
+		Skill Expert
+		CharacterAttributes
+			{
+			"bleeding duration" 12
+			}
+		}
+
+	}
+}
+Wave
+{
+	StartWaveOutput
+		{
+			Target bombpath_arrows_clear_relay_ironman
+	
+			Action Trigger
+		}
+	DoneOutput					
+		{
+			Target wave_finished_relay
+			Action trigger
+		}
+	WaitWhenDone 65
+	Checkpoint Yes
+
+	
+		
+	WaveSpawn //WAVE 7a: 150 total, 16 active, scout 
+	{
+		Where spawnbot
+		TotalCount 4
+		MaxActive 2
+		SpawnCount 2
+		WaitBeforeStarting 0
+		WaitBetweenSpawns 0
+		TotalCurrency 1600
+
+		TFBot
+		{
+		Template T_TFBot_Patriot
+		Health 12500
+		}
+
+	}
+	WaveSpawn //WAVE 7a: 150 total, 16 active, scout 
+	{
+		Where spawnbot
+		TotalCount 20
+		MaxActive 5
+		SpawnCount 5
+		WaitBeforeStarting 0
+		WaitBetweenSpawns 0
+		TotalCurrency 400
+
+		TFBot
+		{
+		Template T_TFBot_Destroyer
+		}
+
+}
+		WaveSpawn //WAVE 7a: 150 total, 16 active, scout 
+	{
+		Where spawnbot
+		TotalCount 60
+		MaxActive 6
+		SpawnCount 3
+		WaitBeforeStarting 60
+		WaitBetweenSpawns 0
+		TotalCurrency 200
+
+		TFBot
+		{
+		Template T_TFBot_ScorchShot
+		Health 750
+		Skill Expert
+		MaxVisionRange 5000
+		}
+
+	}
+	WaveSpawn //WAVE 7a: 150 total, 16 active, scout 
+	{
+		Where spawnbot
+		TotalCount 20
+		MaxActive 10
+		SpawnCount 5
+		WaitBeforeStarting 80
+		WaitBetweenSpawns 10
+		TotalCurrency 400
+
+		TFBot
+		{
+		T_TFBot_Soldier_BurstFire
+		Health 8500
+		}
+
+	}
+	WaveSpawn //WAVE 7a: 150 total, 16 active, scout 
+	{
+		Where spawnbot
+		TotalCount 20
+		MaxActive 20
+		SpawnCount 5
+		WaitBeforeStarting 95
+		WaitBetweenSpawns 6
+		TotalCurrency 400
+
+		TFBot
+		{
+		Template T_TFBot_Giant_Hobo
+		}
+
+	}
+	WaveSpawn //WAVE 7a: 150 total, 16 active, scout 
+	{
+		Where spawnbot
+		TotalCount 85
+		MaxActive 20
+		SpawnCount 4
+		WaitBeforeStarting 110
+		WaitBetweenSpawns 10
+		TotalCurrency 800
+
+		TFBot
+		{
+		Template T_TFBot_Hobo
+		Health 1250
+		}
+
+	}
+	WaveSpawn //WAVE 7a: 150 total, 16 active, scout 
+	{
+		Where spawnbot
+		TotalCount 80
+		MaxActive 20
+		SpawnCount 4
+		WaitBeforeStarting 180
+		WaitBetweenSpawns 6
+		TotalCurrency 120
+
+		TFBot
+		{
+		Class Sniper
+		Health 800
+		Name "Assaulter"
+		Item "The Cleaner's Carbine"
+		WeaponRestrictions SecondaryOnly
+		CharacterAttributes
+			{
+			"damage bonus" 1.6
+			"fire rate bonus" 0.40
+			"dmg from ranged reduced" 0.7
+			}
+		}
+
+	}
+	WaveSpawn //WAVE 7a: 150 total, 16 active, scout 
+	{
+		Where spawnbot
+		TotalCount 120
+		MaxActive 20
+		SpawnCount 4
+		WaitBeforeStarting 180
+		WaitBetweenSpawns 3
+		TotalCurrency 240
+
+		TFBot
+		{
+		Class Sniper
+		Health 225
+		Name "Robo-Merc"
+		WeaponRestrictions SecondaryOnly
+		CharacterAttributes
+			{
+			"damage bonus" 1.5
+			"spread penalty" 3
+			"fire rate bonus" 0.001
+			"bullets per shot bonus" 1.5
+			"dmg from ranged reduced" 0.7
+			}
+		}
+
+	}
+	WaveSpawn //WAVE 7a: 150 total, 16 active, scout 
+	{
+		Where spawnbot
+		TotalCount 20
+		MaxActive 10
+		SpawnCount 5
+		WaitBeforeStarting 240
+		WaitBetweenSpawns 20
+		TotalCurrency 400
+
+		TFBot
+		{
+		Template T_TFBot_Giant_Boxing_Heavy
+		Health 9200
+		}
+
+	}
+	WaveSpawn //WAVE 7a: 150 total, 16 active, scout 
+	{
+		Where spawnbot
+		TotalCount 10
+		MaxActive 10
+		SpawnCount 3
+		WaitBeforeStarting 265
+		WaitBetweenSpawns 20
+		TotalCurrency 500
+
+		TFBot
+		{
+		Template T_TFBot_Patriot
+		}
+
+	}
+	WaveSpawn //WAVE 7a: 150 total, 16 active, scout 
+	{
+		Where spawnbot
+		TotalCount 1
+		MaxActive 10
+		SpawnCount 1
+		WaitBeforeStarting 300
+		WaitBetweenSpawns 15
+		TotalCurrency 200
+
+		TFBot
+		{
+		Template T_TFBot_Chief_Pyro
+		Item "The Scorch Shot"
+		Health 65000
+		Skill Expert
+		WeaponRestrictions SecondaryOnly
+		Name "Major Carnage v2.0"
+		Attributes AlwaysCrit
+		CharacterAttributes
+			{
+			"damage bonus" 3
+			"fire rate bonus" 0.001
+			"faster reload rate" 0.001
+			"bleeding duration" 10
+			"crits vs burning players" 1
+			}
+		}
+
+	}
+	WaveSpawn //WAVE 7a: 150 total, 16 active, scout 
+	{
+		Where spawnbot
+		TotalCount 40
+		MaxActive 10
+		SpawnCount 2
+		WaitBeforeStarting 385
+		WaitBetweenSpawns 0
+		TotalCurrency 400
+
+		TFBot
+		{
+		Template T_TFBot_Giant_Demo_Rapidfire
+		Health 6000
+		Attributes AlwaysCrit
+		}
+
+	}
+	WaveSpawn //WAVE 7a: 150 total, 16 active, scout 
+	{
+		Where spawnbot
+		TotalCount 60
+		MaxActive 20
+		SpawnCount 5
+		WaitBeforeStarting 420
+		WaitBetweenSpawns 10
+		TotalCurrency 200
+
+		TFBot
+		{
+		Template T_TFBot_Soldier_Extended_Conch
+		Item "The Black Box"
+		Health 850
+		}
+
+	}
+	WaveSpawn //WAVE 7a: 150 total, 16 active, scout 
+	{
+		Where spawnbot
+		TotalCount 10
+		MaxActive 10
+		SpawnCount 5
+		WaitBeforeStarting 450
+		WaitBetweenSpawns 40
+		TotalCurrency 500
+
+		TFBot
+		{
+		Template T_TFBot_Giant_Heavyweapons_Deflector
+		}
+
+	}
+	WaveSpawn
+		{
+			TotalCurrency 1800
+			WaitBeforeStarting 600
+			Where spawnbot
+			TotalCount 33
+			MaxActive 11
+			SpawnCount 11
+			
+			Squad
+			{
+				TFBot
+				{
+					Template T_TFBot_Patriot
+					Name "Super Motorized Patriot"
+					Attributes AlwaysCrit
+					Attributes UseBossHealthBar
+					Skill Expert
+					Health 24500
+						CharacterAttributes
+							{
+							"damage bonus" 2.75
+							"fire rate bonus" 0.25
+							}
+				}
+				TFBot
+				{
+					Template T_TFBot_Patriot
+				}
+				TFBot
+				{
+					Template T_TFBot_Patriot
+				}
+				TFBot
+				{
+					Template T_TFBot_Giant_Medic
+				}
+				TFBot
+				{
+					Template T_TFBot_Giant_Medic
+				}
+				TFBot
+				{
+					Template T_TFBot_Medic_QuickUber
+				}
+				TFBot
+				{
+					Template T_TFBot_Medic_QuickUber
+				}
+				TFBot
+				{
+					Template T_TFBot_Medic_QuickUber
+				}
+				TFBot
+				{
+					Template T_TFBot_Medic_QuickUber
+				}
+				TFBot
+				{
+					Template T_TFBot_Medic_Bigheal
+				}
+				TFBot
+				{
+					Template T_TFBot_Medic_Bigheal
+				}
+			}
+		}
+	WaveSpawn //WAVE 7a: 150 total, 16 active, scout 
+	{
+		Where spawnbot
+		TotalCount 45
+		MaxActive 45
+		SpawnCount 1
+		WaitBeforeStarting 700
+		WaitBetweenSpawns 0
+		TotalCurrency 450
+
+		TFBot
+		{
+		Template T_TFBot_Melter
+		}
+
+	}
+}
+Wave
+{
+	StartWaveOutput
+		{
+			Target bombpath_arrows_clear_relay_ironman
+	
+			Action Trigger
+		}
+	DoneOutput					
+		{
+			Target wave_finished_relay
+			Action trigger
+		}
+	WaitWhenDone 65
+	Checkpoint Yes
+
+	
+		
+	WaveSpawn //WAVE 7a: 150 total, 16 active, scout 
+	{
+		Where spawnbot
+		TotalCount 120
+		MaxActive 15
+		SpawnCount 5
+		WaitBeforeStarting 0
+		WaitBetweenSpawns 6
+		TotalCurrency 400
+
+		TFBot
+		{
+		Template T_TFBot_Melter
+		Health 920
+		}
+
+	}
+	WaveSpawn //WAVE 7a: 150 total, 16 active, scout 
+	{
+		Where spawnbot
+		TotalCount 85
+		MaxActive 15
+		SpawnCount 5
+		WaitBeforeStarting 0
+		WaitBetweenSpawns 6
+		TotalCurrency 400
+
+		TFBot
+		{
+		Template T_TFBot_Doomer
+		Health 1250
+		}
+
+	}
+	WaveSpawn //WAVE 7a: 150 total, 16 active, scout 
+	{
+		Where spawnbot
+		TotalCount 2
+		MaxActive 4
+		SpawnCount 2
+		WaitBeforeStarting 0
+		WaitBetweenSpawns 10
+		TotalCurrency 400
+
+		TFBot
+		{
+		Name "General Doomer "
+		Health 185750
+		Class Heavy
+		Item "The Brass Beast"
+		Item "Pyro Helm"
+		Skill Expert
+		Attributes MiniBoss
+		Attributes AlwaysCrit
+		Attributes UseBossHealthBar
+		CharacterAttributes
+			{
+			"fire rate bonus" 3
+			"damage bonus" 1.8
+			"health regen" 200
+			"cannot pick up intelligence" 1
+			"sniper penetrate players when charged" 1
+			"bullets per shot bonus" 5
+			"Set DamageType Ignite" 1
+			"attack projectiles" 1
+			"move speed bonus" 0.45
+			"airblast vulnerability multiplier" 0.35
+				"airblast vertical vulnerability multiplier" 0.5
+			}
+		}
+
+	}
+	WaveSpawn //WAVE 7a: 150 total, 16 active, scout 
+	{
+		Where spawnbot
+		TotalCount 1
+		MaxActive 4
+		SpawnCount 1
+		WaitBeforeStarting 180
+		WaitBetweenSpawns 10
+		TotalCurrency 0
+
+		TFBot
+		{
+		Template T_TFBot_Melter_Boss
+		}
+
+	}
+	WaveSpawn //WAVE 7a: 150 total, 16 active, scout 
+	{
+		Where spawnbot
+		TotalCount 20
+		MaxActive 20
+		SpawnCount 5
+		WaitBeforeStarting 180
+		WaitBetweenSpawns 10
+		TotalCurrency 200
+
+		Support 1
+		TFBot
+		{
+		Template T_TFBot_Hookshot
+		}
+
+	}
+}
+}

@@ -1,0 +1,1763 @@
+///////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////
+
+//WAVE RELAYS
+//wave_start_relay (default bomb mode - Bomb resets after 3 seconds)
+//wave_start_relay_ironman (bomb resets after being untouched for 12; this is useful for servers without the bomb reset plugin)
+
+///////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////
+
+//SPAWNBOT NAMES
+//NOTE #1: Engineer, Sniper, Spy, and Sentry Buster bots have NO dedicated spawnpoints.
+//NOTE #2: You can identify a bot spawn room by the lighting: if you see a room that is almost pitch black, it is a bot spawn room.
+//left
+//right
+
+//superultramega
+
+
+//NOTE FOR "spawnbot":
+//-Intended for regular, medium, and giant bots
+
+//NOTE FOR "superultramega":
+//-Intended for bots with a scale of 15 and below.  If you attempt to spawn a bot with a scale higher than 15, they will likely get stuck.
+//-Do NOT spawn supersized bots in superultramega **while** the supersized Tank has not exited its spawning room; bots **will** teleport and get stuck in the walls.
+
+///////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////
+
+//TANK PATHS (spawns tanks 40% bigger)
+//The following paths spawn tanks at the small garages near the bot spawn.
+//tank_path_left_1
+//tank_path_right_1
+
+///////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////
+
+//SPECIAL TANK PATHS
+////tank_path_supertank_1 (spawns the supersized tank)
+
+///////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////
+
+////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////
+//---------------------Mission File-------------------------
+////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////
+#base tiny_robot_kmlp.pop
+#base expert_robot_kmlp.pop
+#base expert_robot_kmlp_nojump.pop
+#base expert_medium_robot_kmlp.pop
+#base expert_medium_standard_robot_kmlp.pop
+#base expert_giant_robot_kmlp.pop
+#base expert_leaders_kmlp.pop
+#base expert_masters_kmlp.pop
+#base capital_kmlp.pop
+#base guardian_kmlp.pop
+#base super_ultra_mega_robot_kmlp.pop
+#base master_mundy_kmlp.pop
+
+#base survivor_robot_kmlp.pop
+#base survivor_medium_robot_kmlp.pop
+#base survivor_medium_standard_robot_kmlp.pop
+#base survivor_giant_robot_kmlp.pop
+
+WaveSchedule
+{
+
+	StartingCurrency 0
+	RespawnWaveTime 0
+	FixedRespawnWaveTime	1
+	CanBotsAttackWhileInSpawnRoom no
+	Advanced	1
+
+	////////////////////////////////////////////////////////////////////
+	////////////////////////////////////////////////////////////////////
+	////////////////////////////////////////////////////////////////////
+	////////////////////////////////////////////////////////////////////
+	////////////////////////////////////////////////////////////////////
+	////////////////////////////////////////////////////////////////////
+	//WAVE 1
+
+	Wave
+	{
+		WaitWhenDone	65
+		Checkpoint	Yes
+
+		StartWaveOutput
+		{
+			Target	wave_start_relay
+			Action	Trigger
+		}
+		DoneOutput
+		{
+			Target	wave_complete_relay
+			Action	Trigger
+		}
+
+		/////////////////////////////////////////////BRANCH 1
+		WaveSpawn
+		{
+			Name	B1.0
+
+			TotalCurrency	0
+			TotalCount	2
+
+			WaitBeforeStarting	60
+			WaitBetweenSpawns	120
+
+			SpawnCount	1
+
+			Where	superultramega
+
+			DoneWarningSound	"Announcer.MVM_Manned_Up"
+
+			Squad
+			{
+				TFBot
+				{
+					Template	kmlp_soldier_guardian
+				}
+			}
+		}
+
+		WaveSpawn
+		{
+			Name	B1.1
+
+			TotalCurrency	0
+			TotalCount	1
+			MaxActive	1
+			
+			WaitForAllDead	B1.0
+			WaitBeforeStarting	25
+			WaitBetweenSpawns	10
+
+			SpawnCount	1
+
+			Where	superultramega
+
+			Squad
+			{
+				TFBot
+				{
+					Template	kmlp_soldier_superultramega
+				}
+			}
+		}
+
+		WaveSpawn
+		{
+			Name	B1.2
+
+			TotalCurrency	0
+			TotalCount	1
+			MaxActive	1
+			
+			WaitForAllDead	B1.1
+			WaitBeforeStarting	25
+			WaitBetweenSpawns	25
+
+			SpawnCount	1
+
+			Where	superultramega
+
+			Squad
+			{
+				TFBot
+				{
+					Template	kmlp_heavy_superultramega
+				}
+			}
+		}
+
+		WaveSpawn
+		{
+			Name	B1.3
+
+			TotalCurrency	0
+			TotalCount	2
+			MaxActive	1
+			
+			WaitForAllDead	B1.2
+			WaitBeforeStarting	25
+			WaitBetweenSpawns	10
+
+			SpawnCount	1
+
+			Where	superultramega
+
+			Squad
+			{
+				TFBot
+				{
+					Template	kmlp_scout_superultramega
+				}
+			}
+		}
+
+		/////////////////////////////////////////////BRANCH 2
+		WaveSpawn
+		{
+			Name	B2.0
+
+			TotalCurrency	0
+			TotalCount	12
+			MaxActive	10
+
+			WaitBeforeStarting	0
+			WaitBetweenSpawns	1
+
+			SpawnCount	1
+
+			RandomSpawn	1
+			Where	left
+			Where	right
+
+			Squad
+			{
+				TFBot
+				{
+					Template	kmlp_heavy_warriors_spirit_crit
+				}
+			}
+		}
+
+		WaveSpawn
+		{
+			Name	B2.1
+
+			TotalCurrency	0
+			TotalCount	12
+			MaxActive	7
+
+			WaitForAllDead	B2.0
+			WaitBeforeStarting	0
+			WaitBetweenSpawns	1
+
+			SpawnCount	1
+
+			RandomSpawn	1
+			Where	left
+			Where	right
+
+			Squad
+			{
+				TFBot
+				{
+					Template	kmlp_heavy_yeetmaster
+				}
+			}
+		}
+
+		WaveSpawn
+		{
+			Name	B2.2
+
+			TotalCurrency	0
+			TotalCount	24
+			MaxActive	7
+
+			WaitForAllSpawned	B2.1
+			WaitBeforeStarting	0
+			WaitBetweenSpawns	1
+
+			SpawnCount	1
+
+			RandomSpawn	1
+			Where	left
+			Where	right
+
+			Squad
+			{
+				TFBot
+				{
+					Template	kmlp_scout_bat_giant_crit
+				}
+			}
+		}
+
+		WaveSpawn
+		{
+			Name	B2.3
+
+			TotalCurrency	0
+			TotalCount	24
+			MaxActive	10
+
+			WaitForAllSpawned	B2.2
+			WaitBeforeStarting	0
+			WaitBetweenSpawns	1
+
+			SpawnCount	1
+
+			RandomSpawn	1
+			Where	left
+			Where	right
+
+			Squad
+			{
+				TFBot
+				{
+					Template	kmlp_carpet_bomber_survivor_crit
+				}
+			}
+		}
+
+		WaveSpawn
+		{
+			Support	1
+
+			Name	B2.4
+
+			TotalCurrency	0
+			TotalCount	24
+			MaxActive	7
+
+			WaitForAllSpawned	B2.3
+			WaitBeforeStarting	0
+			WaitBetweenSpawns	1
+
+			SpawnCount	1
+
+			RandomSpawn	1
+			Where	left
+			Where	right
+
+			Squad
+			{
+				TFBot
+				{
+					Template	kmlp_mundy_prototype
+				}
+			}
+		}
+
+		/////////////////////////////////////////////BRANCH 3
+		WaveSpawn
+		{
+			Name	B3.0
+
+			TotalCurrency	0
+			TotalCount	16
+			MaxActive	10
+
+			WaitBeforeStarting	0
+			WaitBetweenSpawns	1
+
+			SpawnCount	1
+
+			RandomSpawn	1
+			Where	left
+			Where	right
+
+			Squad
+			{
+				TFBot
+				{
+					Template	kmlp_soldier_direct_hit_crit
+				}
+			}
+		}
+
+		WaveSpawn
+		{
+			Name	B3.1
+
+			TotalCurrency	0
+			TotalCount	16
+			MaxActive	10
+
+			WaitForAllDead	B3.0
+			WaitBeforeStarting	0
+			WaitBetweenSpawns	1
+
+			SpawnCount	1
+
+			RandomSpawn	1
+			Where	left
+			Where	right
+
+			Squad
+			{
+				TFBot
+				{
+					Template	kmlp_carpet_bomber
+				}
+			}
+		}
+		WaveSpawn
+		{
+			Name	B3.1
+
+			TotalCurrency	0
+			TotalCount	5
+			MaxActive	5
+
+			WaitForAllDead	B3.0
+			WaitBeforeStarting	0
+			WaitBetweenSpawns	1
+
+			SpawnCount	1
+
+			RandomSpawn	1
+			Where	left
+			Where	right
+
+			Squad
+			{
+				TFBot
+				{
+					Template	kmlp_carpet_bomber_capital
+				}
+			}
+		}
+
+		WaveSpawn
+		{
+			Name	B3.2
+
+			TotalCurrency	0
+			TotalCount	16
+			MaxActive	10
+
+			WaitForAllDead	B3.1
+			WaitBeforeStarting	0
+			WaitBetweenSpawns	1
+
+			SpawnCount	1
+
+			RandomSpawn	1
+			Where	left
+			Where	right
+
+			Squad
+			{
+				TFBot
+				{
+					Template	kmlp_scout_crit
+				}
+			}
+		}
+
+		WaveSpawn
+		{
+			Name	B3.3
+
+			TotalCurrency	0
+			TotalCount	16
+			MaxActive	10
+
+			WaitForAllDead	B3.2
+			WaitBeforeStarting	0
+			WaitBetweenSpawns	3
+
+			SpawnCount	3
+
+			RandomSpawn	1
+			Where	left
+			Where	right
+
+			Squad
+			{
+				TFBot
+				{
+					Template	kmlp_demo_samurai
+				}
+			}
+		}
+
+		WaveSpawn
+		{
+			Support	1
+
+			Name	B3.4
+
+			TotalCurrency	0
+			TotalCount	3
+			MaxActive	3
+
+			WaitForAllDead	B3.3
+			WaitBeforeStarting	0
+			WaitBetweenSpawns	1
+
+			SpawnCount	1
+
+			RandomSpawn	1
+			Where	left
+			Where	right
+
+			Squad
+			{
+				TFBot
+				{
+					Template	kmlp_mundy_big
+				}
+			}
+		}
+		WaveSpawn
+		{
+			Support	1
+
+			Name	B3.4
+
+			TotalCurrency	0
+			TotalCount	8
+			MaxActive	8
+
+			WaitForAllSpawned	B3.3
+			WaitBeforeStarting	0
+			WaitBetweenSpawns	1
+
+			SpawnCount	1
+
+			RandomSpawn	1
+			Where	left
+			Where	right
+
+			Squad
+			{
+				TFBot
+				{
+					Template	kmlp_soldier_original_crit
+				}
+			}
+		}
+	}
+
+	////////////////////////////////////////////////////////////////////
+	////////////////////////////////////////////////////////////////////
+	////////////////////////////////////////////////////////////////////
+	////////////////////////////////////////////////////////////////////
+	////////////////////////////////////////////////////////////////////
+	////////////////////////////////////////////////////////////////////
+	//WAVE 2
+
+	Wave
+	{
+		WaitWhenDone	65
+		Checkpoint	Yes
+
+		StartWaveOutput
+		{
+			Target	wave_start_relay
+			Action	Trigger
+		}
+		DoneOutput
+		{
+			Target	wave_complete_relay
+			Action	Trigger
+		}
+
+		/////////////////////////////////////////////BRANCH 1
+		WaveSpawn
+		{
+			Name	B1.0
+
+			TotalCurrency	0
+			TotalCount	2
+			MaxActive	1
+
+			WaitBeforeStarting	3
+			WaitBetweenSpawns	0
+
+			SpawnCount	1
+
+			RandomSpawn	1
+			Where	left
+			Where	right
+
+			DoneWarningSound	"Announcer.MVM_Manned_Up"
+
+			Squad
+			{
+				TFBot
+				{
+					Template	kmlp_heavy_boss
+				}
+			}
+		}
+
+		WaveSpawn
+		{
+			Name	B1.1
+
+			TotalCurrency	0
+			TotalCount	1
+
+			WaitForAllDead	B1.0
+			WaitBeforeStarting	10
+			WaitBetweenSpawns	1
+
+			Tank
+			{
+				Name	supertank
+
+				Health	100000
+				Speed	15
+
+				StartingPathTrackNode	tank_path_supertank_1
+
+				OnBombDroppedOutput
+				{
+					Target	boss_deploy_relay
+					Action	Trigger
+				}
+			}
+		}
+
+		WaveSpawn
+		{
+			Name	B1.2
+
+			TotalCurrency	0
+			TotalCount	1
+			MaxActive	1
+
+			WaitForAllSpawned	B1.1
+			WaitBeforeStarting	30
+			WaitBetweenSpawns	15
+
+			SpawnCount	1
+
+			Where	superultramega
+
+			Squad
+			{
+				TFBot
+				{
+					Template	kmlp_pyro_superultramega
+				}
+			}
+		}
+
+		WaveSpawn
+		{
+			Name	B1.3
+
+			TotalCurrency	0
+			TotalCount	2
+			MaxActive	2
+
+			WaitForAllDead	B1.2
+			WaitBeforeStarting	0
+			WaitBetweenSpawns	15
+
+			SpawnCount	1
+
+			Where	superultramega
+
+			Squad
+			{
+				TFBot
+				{
+					Template	kmlp_scout_guardian
+				}
+			}
+		}
+
+		/////////////////////////////////////////////BRANCH 2
+		WaveSpawn
+		{
+			Name	B2.0
+
+			TotalCurrency	0
+			TotalCount	9
+			MaxActive	5
+
+			WaitBeforeStarting	0
+			WaitBetweenSpawns	1
+
+			SpawnCount	1
+
+			RandomSpawn	1
+			Where	left
+			Where	right
+
+			Squad
+			{
+				TFBot
+				{
+					Template	kmlp_heavy_medium
+				}
+			}
+		}
+		WaveSpawn
+		{
+			Name	B2.0
+
+			TotalCurrency	0
+			TotalCount	9
+			MaxActive	5
+
+			WaitBeforeStarting	0
+			WaitBetweenSpawns	1
+
+			SpawnCount	1
+
+			RandomSpawn	1
+			Where	left
+			Where	right
+
+			Squad
+			{
+				TFBot
+				{
+					Template	kmlp_medic
+				}
+			}
+		}
+
+		WaveSpawn
+		{
+			Name	B2.1
+
+			TotalCurrency	0
+			TotalCount	18
+			MaxActive	10
+
+			WaitForAllDead	B2.0
+			WaitBeforeStarting	0
+			WaitBetweenSpawns	1
+
+			SpawnCount	1
+
+			RandomSpawn	1
+			Where	left
+			Where	right
+
+			Squad
+			{
+				TFBot
+				{
+					Template	kmlp_scout_nojump
+				}
+			}
+		}
+
+		WaveSpawn
+		{
+			Name	B2.2
+
+			TotalCurrency	0
+			TotalCount	18
+			MaxActive	10
+
+			WaitForAllSpawned	B2.1
+			WaitBeforeStarting	0
+			WaitBetweenSpawns	1
+
+			SpawnCount	1
+
+			RandomSpawn	1
+			Where	left
+			Where	right
+
+			Squad
+			{
+				TFBot
+				{
+					Template	kmlp_heavy_medium
+				}
+			}
+		}
+
+		WaveSpawn
+		{
+			Name	B2.3
+
+			TotalCurrency	0
+			TotalCount	18
+			MaxActive	10
+
+			WaitForAllSpawned	B2.2
+			WaitBeforeStarting	0
+			WaitBetweenSpawns	1
+
+			SpawnCount	1
+
+			RandomSpawn	1
+			Where	left
+			Where	right
+
+			Squad
+			{
+				TFBot
+				{
+					Template	kmlp_scout_phalanx
+				}
+			}
+		}
+
+		WaveSpawn
+		{
+			Name	B2.3
+
+			TotalCurrency	0
+			TotalCount	18
+			MaxActive	10
+
+			WaitForAllSpawned	B2.2
+			WaitBeforeStarting	0
+			WaitBetweenSpawns	1
+
+			SpawnCount	1
+
+			RandomSpawn	1
+			Where	left
+			Where	right
+
+			Squad
+			{
+				TFBot
+				{
+					Template	kmlp_scout_phalanx
+				}
+			}
+		}
+
+		WaveSpawn
+		{
+			Support	1
+
+			Name	B2.4
+
+			TotalCurrency	0
+			TotalCount	10
+			MaxActive	10
+
+			WaitForAllSpawned	B2.3
+			WaitBeforeStarting	0
+			WaitBetweenSpawns	1
+
+			SpawnCount	1
+
+			RandomSpawn	1
+			Where	left
+			Where	right
+
+			RandomChoice
+			{
+				TFBot
+				{
+					Template	kmlp_soldier_survivor
+				}
+				TFBot
+				{
+					Template	kmlp_soldier_survivor_crit
+				}
+			}
+		}
+
+		/////////////////////////////////////////////BRANCH 3
+		WaveSpawn
+		{
+			Name	B3.0
+
+			TotalCurrency	0
+			TotalCount	2
+
+			WaitBeforeStarting	0
+			WaitBetweenSpawns	1
+
+			SpawnCount	1
+
+			RandomSpawn	1
+			Where	left
+			Where	right
+
+			Squad
+			{
+				TFBot
+				{
+					Template	kmlp_demo_cluster_bomb_boss
+				}
+			}
+		}
+
+		WaveSpawn
+		{
+			Name	B3.1
+
+			TotalCurrency	0
+			TotalCount	16
+			MaxActive	10
+
+			WaitForAllDead	B3.0
+			WaitBeforeStarting	0
+			WaitBetweenSpawns	1
+
+			SpawnCount	1
+
+			RandomSpawn	1
+			Where	left
+			Where	right
+
+			Squad
+			{
+				TFBot
+				{
+					Template	kmlp_pyro_phlog
+				}
+			}
+		}
+
+		WaveSpawn
+		{
+			Name	B3.2
+
+			TotalCurrency	0
+			TotalCount	16
+			MaxActive	10
+
+			WaitForAllSpawned	B3.1
+			WaitBeforeStarting	0
+			WaitBetweenSpawns	1
+
+			SpawnCount	1
+
+			RandomSpawn	1
+			Where	left
+			Where	right
+
+			Squad
+			{
+				TFBot
+				{
+					Template	kmlp_pyro_crit
+				}
+			}
+		}
+
+		WaveSpawn
+		{
+			Name	B3.3
+
+			TotalCurrency	0
+			TotalCount	16
+			MaxActive	10
+
+			WaitForAllDead	B3.2
+			WaitBeforeStarting	0
+			WaitBetweenSpawns	1
+
+			SpawnCount	1
+
+			RandomSpawn	1
+			Where	left
+			Where	right
+
+			RandomChoice
+			{
+				TFBot
+				{
+					Template	kmlp_pyro_phlog
+				}
+				TFBot
+				{
+					Template	kmlp_pyro_phlog_giant
+				}
+			}
+		}
+
+		WaveSpawn
+		{
+			Support	1
+
+			Name	B3.4
+
+			TotalCurrency	0
+			TotalCount	10
+			MaxActive	10
+
+			WaitForAllSpawned	B3.3
+			WaitBeforeStarting	0
+			WaitBetweenSpawns	1
+
+			SpawnCount	1
+
+			RandomSpawn	1
+			Where	left
+			Where	right
+
+			Squad
+			{
+				TFBot
+				{
+					Template	kmlp_demo_samurai
+				}
+			}
+		}
+	}
+
+	////////////////////////////////////////////////////////////////////
+	////////////////////////////////////////////////////////////////////
+	////////////////////////////////////////////////////////////////////
+	////////////////////////////////////////////////////////////////////
+	////////////////////////////////////////////////////////////////////
+	////////////////////////////////////////////////////////////////////
+	//WAVE 3
+
+	Wave
+	{
+		WaitWhenDone	65
+		Checkpoint	Yes
+
+		StartWaveOutput
+		{
+			Target	wave_start_relay
+			Action	Trigger
+		}
+		DoneOutput
+		{
+			Target	wave_complete_relay
+			Action	Trigger
+		}
+
+		/////////////////////////////////////////////BRANCH 1
+		WaveSpawn
+		{
+			Name	B1.0
+
+			TotalCurrency	0
+			TotalCount	2
+
+			WaitBeforeStarting	0
+			WaitBetweenSpawns	1
+
+			SpawnCount	1
+
+			RandomSpawn	1
+			Where	left
+			Where	right
+
+			FirstSpawnWarningSound	"Announcer.MVM_Sentry_Buster_Alert"
+			DoneWarningSound	"Announcer.MVM_Manned_Up"
+
+			Squad
+			{
+				TFBot
+				{
+					Template	kmlp_sentry_buster_boss
+				}
+			}
+		}
+		WaveSpawn
+		{
+			Name	B1.0
+
+			TotalCurrency	0
+			TotalCount	20
+			MaxActive	10
+
+			WaitBeforeStarting	0
+			WaitBetweenSpawns	1
+
+			SpawnCount	1
+
+			RandomSpawn	1
+			Where	left
+			Where	right
+
+			FirstSpawnWarningSound	"Announcer.MVM_Sentry_Buster_Alert"
+
+			Squad
+			{
+				TFBot
+				{
+					Template	kmlp_sentry_buster
+				}
+			}
+		}
+
+		WaveSpawn
+		{
+			Name	B1.1
+
+			TotalCurrency	0
+			TotalCount	18
+			MaxActive	10
+
+			WaitForAllDead	B1.0
+			WaitBeforeStarting	0
+			WaitBetweenSpawns	1
+
+			SpawnCount	1
+
+			RandomSpawn	1
+			Where	left
+			Where	right
+
+			Squad
+			{
+				TFBot
+				{
+					Template	kmlp_demo_loch_crit_nojump
+				}
+			}
+		}
+
+		WaveSpawn
+		{
+			Name	B1.2
+
+			TotalCurrency	0
+			TotalCount	1
+			MaxActive	1
+
+			WaitForAllDead	B1.1
+			WaitBeforeStarting	0
+			WaitBetweenSpawns	0
+
+			SpawnCount	1
+
+			Where	superultramega
+
+			Squad
+			{
+				TFBot
+				{
+					Template	kmlp_heavy_superultramega
+				}
+			}
+		}
+
+		WaveSpawn
+		{
+			Name	B1.3
+
+			TotalCurrency	0
+			TotalCount	1
+			MaxActive	1
+
+			WaitForAllDead	B1.2
+			WaitBeforeStarting	0
+			WaitBetweenSpawns	30
+
+			SpawnCount	1
+
+			Where	superultramega
+
+			Squad
+			{
+				TFBot
+				{
+					Template	kmlp_medic_superultramega
+				}
+			}
+		}
+
+		WaveSpawn
+		{
+			Support	1
+
+			Name	B1.4
+
+			TotalCurrency	0
+			TotalCount	2
+			MaxActive	2
+
+			WaitForAllDead	B1.3
+			WaitBeforeStarting	0
+			WaitBetweenSpawns	90
+
+			SpawnCount	1
+
+			Where	superultramega
+
+			Squad
+			{
+				TFBot
+				{
+					Template	kmlp_scout_guardian
+				}
+			}
+		}
+
+		/////////////////////////////////////////////BRANCH 2
+		WaveSpawn
+		{
+			Name	B2.0
+
+			TotalCurrency	0
+			TotalCount	18
+			MaxActive	10
+
+			WaitBeforeStarting	0
+			WaitBetweenSpawns	1
+
+			SpawnCount	1
+
+			RandomSpawn	1
+			Where	left
+			Where	right
+
+			Squad
+			{
+				TFBot
+				{
+					Template	kmlp_heavy
+				}
+			}
+		}
+
+		WaveSpawn
+		{
+			Name	B2.1
+
+			TotalCurrency	0
+			TotalCount	18
+			MaxActive	10
+
+			WaitForAllDead	B2.0
+			WaitBeforeStarting	0
+			WaitBetweenSpawns	1
+
+			SpawnCount	1
+
+			RandomSpawn	1
+			Where	left
+			Where	right
+
+			Squad
+			{
+				TFBot
+				{
+					Template	kmlp_demo_flak
+				}
+			}
+		}
+
+		WaveSpawn
+		{
+			Name	B2.2
+
+			TotalCurrency	0
+			TotalCount	18
+			MaxActive	10
+
+			WaitForAllSpawned	B2.1
+			WaitBeforeStarting	0
+			WaitBetweenSpawns	1
+
+			SpawnCount	1
+
+			RandomSpawn	1
+			Where	left
+			Where	right
+
+			Squad
+			{
+				TFBot
+				{
+					Template	kmlp_soldier_scatter_medium_crit
+				}
+			}
+		}
+
+		WaveSpawn
+		{
+			Name	B2.3
+
+			TotalCurrency	0
+			TotalCount	18
+			MaxActive	10
+
+			WaitForAllSpawned	B2.2
+			WaitBeforeStarting	0
+			WaitBetweenSpawns	1
+
+			SpawnCount	1
+
+			RandomSpawn	1
+			Where	left
+			Where	right
+
+			Squad
+			{
+				TFBot
+				{
+					Template	kmlp_heavy_tomislav_crit
+				}
+			}
+		}
+
+		WaveSpawn
+		{
+			Support	1
+
+			Name	B2.4
+
+			TotalCurrency	0
+			TotalCount	12
+			MaxActive	10
+
+			WaitForAllSpawned	B2.3
+			WaitBeforeStarting	0
+			WaitBetweenSpawns	1
+
+			SpawnCount	1
+
+			RandomSpawn	1
+			Where	left
+			Where	right
+
+			RandomChoice
+			{
+				TFBot
+				{
+					Template	kmlp_scout_pistol
+				}
+				TFBot
+				{
+					Template	kmlp_scout_cleaver
+				}
+			}
+		}
+
+		/////////////////////////////////////////////BRANCH 3
+		WaveSpawn
+		{
+			Name	B3.0
+
+			TotalCurrency	0
+			TotalCount	2
+
+			WaitBeforeStarting	0
+			WaitBetweenSpawns	1
+
+			SpawnCount	1
+
+			RandomSpawn	1
+			Where	left
+			Where	right
+
+			Squad
+			{
+				TFBot
+				{
+					Template	kmlp_medic_boss
+				}
+			}
+		}
+
+		WaveSpawn
+		{
+			Name	B3.1
+
+			TotalCurrency	0
+			TotalCount	10
+			MaxActive	10
+
+			WaitForAllDead	B3.0
+			WaitBeforeStarting	0
+			WaitBetweenSpawns	1
+
+			SpawnCount	1
+
+			RandomSpawn	1
+			Where	left
+			Where	right
+
+			Squad
+			{
+				TFBot
+				{
+					Template	kmlp_scout_capital
+				}
+			}
+		}
+		WaveSpawn
+		{
+			Name	B3.1
+
+			TotalCurrency	0
+			TotalCount	10
+			MaxActive	10
+
+			WaitForAllDead	B3.0
+			WaitBeforeStarting	0
+			WaitBetweenSpawns	1
+
+			SpawnCount	1
+
+			RandomSpawn	1
+			Where	left
+			Where	right
+
+			Squad
+			{
+				TFBot
+				{
+					Template	kmlp_soldier_batt_medium
+				}
+			}
+		}
+
+		WaveSpawn
+		{
+			Name	B3.2
+
+			TotalCurrency	0
+			TotalCount	18
+			MaxActive	10
+
+			WaitForAllDead	B3.1
+			WaitBeforeStarting	0
+			WaitBetweenSpawns	1
+
+			SpawnCount	1
+
+			RandomSpawn	1
+			Where	left
+			Where	right
+
+			Squad
+			{
+				TFBot
+				{
+					Template	kmlp_soldier_original
+				}
+			}
+		}
+
+		WaveSpawn
+		{
+			Name	B3.3
+
+			TotalCurrency	0
+			TotalCount	2
+
+			WaitForAllDead	B3.2
+			WaitBeforeStarting	0
+			WaitBetweenSpawns	1
+
+			SpawnCount	1
+
+			RandomSpawn	1
+			Where	left
+			Where	right
+
+			Squad
+			{
+				TFBot
+				{
+					Template	kmlp_soldier_master
+				}
+			}
+		}
+
+		WaveSpawn
+		{
+			Support	1
+
+			Name	B3.4
+
+			TotalCurrency	0
+			TotalCount	10
+			MaxActive	10
+
+			WaitForAllSpawned	B3.3
+			WaitBeforeStarting	0
+			WaitBetweenSpawns	1
+
+			SpawnCount	1
+
+			RandomSpawn	1
+			Where	left
+			Where	right
+
+			Squad
+			{
+				TFBot
+				{
+					Template	kmlp_soldier_airstrike
+				}
+			}
+		}
+	}
+
+	////////////////////////////////////////////////////////////////////
+	////////////////////////////////////////////////////////////////////
+	////////////////////////////////////////////////////////////////////
+	////////////////////////////////////////////////////////////////////
+	////////////////////////////////////////////////////////////////////
+	////////////////////////////////////////////////////////////////////
+	//WAVE 4
+
+	Wave
+	{
+		WaitWhenDone	65
+		Checkpoint	Yes
+
+		StartWaveOutput
+		{
+			Target	wave_start_relay
+			Action	Trigger
+		}
+		DoneOutput
+		{
+			Target	wave_complete_relay
+			Action	Trigger
+		}
+
+		/////////////////////////////////////////////PHASE 1
+		WaveSpawn
+		{
+			Name	PHASE1
+
+			TotalCurrency	0
+			TotalCount	1
+			MaxActive	1
+
+			WaitBeforeStarting	30
+			WaitBetweenSpawns	1
+
+			SpawnCount	1
+
+			Where	superultramega
+
+			FirstSpawnWarningSound	"Announcer.MVM_Manned_Up"
+
+			Squad
+			{
+				TFBot
+				{
+					Template	kmlp_soldier_superultramega_chadd
+					Attributes	IgnoreFlag
+					BehaviorModifiers	Push
+				}
+			}
+		}
+
+		WaveSpawn
+		{
+			Name	PHASE1
+
+			TotalCurrency	0
+			TotalCount	54
+			MaxActive	8
+
+			WaitBeforeStarting	0
+			WaitBetweenSpawns	0
+
+			SpawnCount	8
+
+			Where	right
+
+			Squad
+			{
+				TFBot
+				{
+					Template	kmlp_scout_bat_giant_crit
+				}
+			}
+		}
+
+		WaveSpawn
+		{
+			Name	PHASE1
+
+			TotalCurrency	0
+			TotalCount	100
+			MaxActive	10
+
+			WaitBeforeStarting	0
+			WaitBetweenSpawns	0
+
+			SpawnCount	10
+
+			Where	right
+
+			Squad
+			{
+				TFBot
+				{
+					Template	kmlp_scout_crit_nojump
+				}
+			}
+		}
+
+		/////////////////////////////////////////////PHASE 2
+		WaveSpawn
+		{
+			Name	PHASE2
+
+			TotalCurrency	0
+			TotalCount	2
+
+			WaitForAllDead	PHASE1
+			WaitBeforeStarting	30
+			WaitBetweenSpawns	30
+
+			SpawnCount	1
+
+			Where	superultramega
+
+			Squad
+			{
+				TFBot
+				{
+					Template	kmlp_mundy_bushwacka_boss
+					Attributes	IgnoreFlag
+					BehaviorModifiers	Push
+					Scale	12
+				}
+			}
+		}
+
+		WaveSpawn
+		{
+			Support	1
+
+			Name	PHASE2S
+
+			TotalCurrency	0
+			TotalCount	5
+			MaxActive	5
+
+			WaitForAllDead	PHASE1
+			WaitBeforeStarting	40
+			WaitBetweenSpawns	1
+
+			SpawnCount	1
+
+			RandomSpawn	1
+			Where	left
+			Where	right
+
+			RandomChoice
+			{
+				TFBot
+				{
+					Template	kmlp_mundy_mini
+				}
+				TFBot
+				{
+					Template	kmlp_mundy_prototype
+				}
+				TFBot
+				{
+					Template	kmlp_mundy_medium
+				}
+			}
+		}
+		WaveSpawn
+		{
+			Support	1
+
+			Name	PHASE2S
+
+			TotalCurrency	0
+			TotalCount	5
+			MaxActive	5
+
+			WaitForAllDead	PHASE1
+			WaitBeforeStarting	40
+			WaitBetweenSpawns	1
+
+			SpawnCount	1
+
+			RandomSpawn	1
+			Where	left
+			Where	right
+
+			RandomChoice
+			{
+				TFBot
+				{
+					Template	kmlp_mundy_mini_flying
+				}
+				TFBot
+				{
+					Template	kmlp_mundy_prototype_flying
+				}
+				TFBot
+				{
+					Template	kmlp_mundy_medium_flying
+				}
+			}
+		}
+		WaveSpawn
+		{
+			Support	1
+
+			Name	PHASE2S
+
+			TotalCurrency	0
+			TotalCount	5
+			MaxActive	5
+
+			WaitForAllDead	PHASE1
+			WaitBeforeStarting	40
+			WaitBetweenSpawns	1
+
+			SpawnCount	1
+
+			RandomSpawn	1
+			Where	left
+			Where	right
+
+			RandomChoice
+			{
+				TFBot
+				{
+					Template	kmlp_mundy_jarate_mini
+				}
+				TFBot
+				{
+					Template	kmlp_mundy_jarate_prototype
+				}
+				TFBot
+				{
+					Template	kmlp_mundy_jarate_medium
+				}
+			}
+		}
+		WaveSpawn
+		{
+			Support	1
+
+			Name	PHASE2S
+
+			TotalCurrency	0
+			TotalCount	5
+			MaxActive	5
+
+			WaitForAllDead	PHASE1
+			WaitBeforeStarting	40
+			WaitBetweenSpawns	1
+
+			SpawnCount	1
+
+			RandomSpawn	1
+			Where	left
+			Where	right
+
+			RandomChoice
+			{
+				TFBot
+				{
+					Template	kmlp_mundy_jarate_mini_flying
+				}
+				TFBot
+				{
+					Template	kmlp_mundy_jarate_prototype_flying
+				}
+				TFBot
+				{
+					Template	kmlp_mundy_jarate_medium_flying
+				}
+			}
+		}
+	}
+}

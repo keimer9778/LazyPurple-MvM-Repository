@@ -1,0 +1,1125 @@
+///////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////
+
+//WAVE RELAYS
+//wave_start_relay (default bomb mode - Bomb resets after 3 seconds)
+//wave_start_relay_ironman (bomb resets after being untouched for 12; this is useful for servers without the bomb reset plugin)
+
+///////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////
+
+//SPAWNBOT NAMES
+//NOTE #1: Sniper, Spy, and Sentry Buster bots have NO dedicated spawnpoints. Engineers ARE Supported!
+//NOTE #2: You can identify a bot spawn room by the lighting: if you see a room that is almost pitch black, it is a bot spawn room.
+//left
+//right
+
+//superultramega
+
+
+//NOTE FOR "spawnbot":
+//-Intended for regular, medium, and giant bots
+
+//NOTE FOR "superultramega":
+//-Intended for bots with a scale of 15 and below.  If you attempt to spawn a bot with a scale higher than 15, they will likely get stuck.
+//-Do NOT spawn supersized bots in superultramega **while** the supersized Tank has not exited its spawning room; bots **will** teleport and get stuck in the walls.
+
+///////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////
+
+//TANK PATHS (spawns tanks 40% bigger)
+//The following paths spawn tanks at the small garages near the bot spawn.
+//tank_path_left_1
+//tank_path_right_1
+
+///////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////
+
+//SPECIAL TANK PATHS
+////tank_path_supertank_1 (spawns the supersized tank)
+
+///////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////
+
+////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////
+//---------------------Mission File-------------------------
+////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////
+#base robot_kmlp.pop
+#base robot_kmlp_nojump.pop
+#base medium_robot_kmlp.pop
+#base medium_standard_robot_kmlp.pop
+#base giant_robot_kmlp.pop
+#base leaders_kmlp.pop
+#base capital_kmlp.pop
+#base guardian_kmlp.pop
+#base super_ultra_mega_robot_kmlp.pop
+#base master_mundy_kmlp.pop
+
+WaveSchedule
+{
+
+	StartingCurrency 0
+	RespawnWaveTime 0
+	FixedRespawnWaveTime	1
+	CanBotsAttackWhileInSpawnRoom no
+	Advanced	1
+
+	////////////////////////////////////////////////////////////////////
+	////////////////////////////////////////////////////////////////////
+	////////////////////////////////////////////////////////////////////
+	////////////////////////////////////////////////////////////////////
+	////////////////////////////////////////////////////////////////////
+	////////////////////////////////////////////////////////////////////
+	//WAVE 1
+
+	Wave
+	{
+		WaitWhenDone	65
+		Checkpoint	Yes
+
+		StartWaveOutput
+		{
+			Target	wave_start_relay
+			Action	Trigger
+		}
+		DoneOutput
+		{
+			Target	wave_complete_relay
+			Action	Trigger
+		}
+
+		/////////////////////////////////////////////PHASE 1
+		WaveSpawn
+		{
+			Name	PHASE1
+
+			TotalCurrency	0
+			TotalCount	2
+			MaxActive	2
+
+			WaitBeforeStarting	10
+			WaitBetweenSpawns	1
+
+			SpawnCount	1
+
+			Where	superultramega
+
+			Squad
+			{
+				TFBot
+				{
+					Template	kmlp_scout_guardian
+				}
+			}
+		}
+
+		WaveSpawn
+		{
+			Name	PHASE1
+
+			TotalCurrency	0
+			TotalCount	24
+			MaxActive	8
+
+			WaitBeforeStarting	0
+			WaitBetweenSpawns	5
+
+			SpawnCount	5
+
+			RandomSpawn	1
+			Where	left
+			Where	right
+
+			RandomChoice
+			{
+				TFBot
+				{
+					Template	kmlp_soldier_medium
+				}
+			}
+		}
+
+		WaveSpawn
+		{
+			Name	PHASE1
+
+			TotalCurrency	0
+			TotalCount	28
+			MaxActive	7
+
+			WaitBeforeStarting	0
+			WaitBetweenSpawns	5
+
+			SpawnCount	5
+
+			RandomSpawn	1
+			Where	left
+			Where	right
+
+			RandomChoice
+			{
+				TFBot
+				{
+					Template	kmlp_heavy_pomson
+				}
+			}
+		}
+
+		/////////////////////////////////////////////PHASE 2
+		WaveSpawn
+		{
+			Name	PHASE2
+
+			TotalCurrency	0
+			TotalCount	18
+			MaxActive	6
+
+			WaitForAllDead	PHASE1
+			WaitBeforeStarting	0
+			WaitBetweenSpawns	5
+
+			SpawnCount	5
+
+			RandomSpawn	1
+			Where	left
+			Where	right
+
+			Squad
+			{
+				TFBot
+				{
+					Template	kmlp_scout_shortstop_giant
+				}
+			}
+		}
+
+		WaveSpawn
+		{
+			Name	PHASE2
+
+			TotalCurrency	0
+			TotalCount	6
+			MaxActive	2
+
+			WaitForAllDead	PHASE1
+			WaitBeforeStarting	0
+			WaitBetweenSpawns	5
+
+			SpawnCount	1
+
+			RandomSpawn	1
+			Where	left
+			Where	right
+
+			Squad
+			{
+				TFBot
+				{
+					Template	kmlp_soldier_conch_capital
+				}
+			}
+		}
+
+		WaveSpawn
+		{
+			Name	PHASE2
+
+			TotalCurrency	0
+			TotalCount	36
+			MaxActive	14
+
+			WaitForAllDead	PHASE1
+			WaitBeforeStarting	10
+			WaitBetweenSpawns	6
+
+			SpawnCount	6
+
+			RandomSpawn	1
+			Where	left
+			Where	right
+
+			Squad
+			{
+				TFBot
+				{
+					Template	kmlp_heavy_brassbeast_medium
+				}
+			}
+		}
+
+		/////////////////////////////////////////////PHASE 3
+		WaveSpawn
+		{
+			Name	PHASE3
+
+			TotalCurrency	0
+			TotalCount	1
+
+			WaitForAllSpawned	PHASE2
+			WaitBeforeStarting	20
+			WaitBetweenSpawns	1
+
+			SpawnCount	1
+
+			Where	superultramega
+
+			Squad
+			{
+				TFBot
+				{
+					Template	kmlp_soldier_superultramega
+				}
+			}
+		}
+
+		WaveSpawn
+		{
+			Name	PHASE3
+
+			TotalCurrency	0
+			TotalCount	12
+			MaxActive	12
+
+			WaitForAllSpawned	PHASE2
+			WaitBeforeStarting	0
+			WaitBetweenSpawns	4
+
+			SpawnCount	4
+
+			RandomSpawn	1
+			Where	left
+			Where	right
+
+			Squad
+			{
+				TFBot
+				{
+					Template	kmlp_soldier_scatter_giant_crit
+				}
+			}
+		}
+
+		WaveSpawn
+		{
+			Name	PHASE3
+
+			TotalCurrency	0
+			TotalCount	32
+
+			WaitForAllSpawned	PHASE2
+			WaitBeforeStarting	0
+			WaitBetweenSpawns	6
+
+			SpawnCount	6
+
+			RandomSpawn	1
+			Where	left
+			Where	right
+
+			Squad
+			{
+				TFBot
+				{
+					Template	kmlp_heavy_shotgun
+				}
+			}
+		}
+	}
+
+	////////////////////////////////////////////////////////////////////
+	////////////////////////////////////////////////////////////////////
+	////////////////////////////////////////////////////////////////////
+	////////////////////////////////////////////////////////////////////
+	////////////////////////////////////////////////////////////////////
+	////////////////////////////////////////////////////////////////////
+	//WAVE 2
+
+	Wave
+	{
+		WaitWhenDone	65
+		Checkpoint	Yes
+
+		StartWaveOutput
+		{
+			Target	wave_start_relay
+			Action	Trigger
+		}
+		DoneOutput
+		{
+			Target	wave_complete_relay
+			Action	Trigger
+		}
+
+		/////////////////////////////////////////////PHASE 1
+		WaveSpawn
+		{
+			Name	PHASE1
+
+			TotalCurrency	0
+			TotalCount	1
+			MaxActive	1
+
+			WaitBeforeStarting	0
+			WaitBetweenSpawns	1
+
+			Tank
+			{
+				Name	tank_superultramega
+
+				Health	60000
+				Speed	15
+
+				StartingPathTrackNode	tank_path_supertank_1
+
+				OnBombDroppedOutput
+				{
+					Target	boss_deploy_relay
+					Action	Trigger
+				}
+			}
+		}
+
+		WaveSpawn
+		{
+			Name	PHASE1
+
+			TotalCurrency	0
+			TotalCount	28
+			MaxActive	20
+
+			WaitBeforeStarting	10
+			WaitBetweenSpawns	5
+
+			SpawnCount	4
+
+			RandomSpawn	1
+			Where	left
+			Where	right
+
+			Squad
+			{
+				TFBot
+				{
+					Template	kmlp_heavy_tomislav_giant
+				}
+			}
+		}
+
+		/////////////////////////////////////////////PHASE 2
+		WaveSpawn
+		{
+			Name	PHASE2
+
+			TotalCurrency	0
+			TotalCount	1
+			MaxActive	1
+
+			WaitForAllDead	PHASE1
+			WaitBeforeStarting	0
+			WaitBetweenSpawns	1
+
+			SpawnCount	1
+
+			Where	superultramega
+
+			Squad
+			{
+				TFBot
+				{
+					Template	kmlp_heavy_superultramega
+				}
+			}
+		}
+
+		WaveSpawn
+		{
+			Name	PHASE2
+
+			TotalCurrency	0
+			TotalCount	24
+			MaxActive	10
+
+			WaitForAllDead	PHASE1
+			WaitBeforeStarting	0
+			WaitBetweenSpawns	6
+
+			SpawnCount	6
+
+			RandomSpawn	1
+			Where	left
+			Where	right
+
+			Squad
+			{
+				TFBot
+				{
+					Template	kmlp_pyro_scorch_shot
+				}
+			}
+		}
+
+		WaveSpawn
+		{
+			Name	PHASE2
+
+			TotalCurrency	0
+			TotalCount	32
+			MaxActive	10
+
+			WaitForAllDead	PHASE1
+			WaitBeforeStarting	10
+			WaitBetweenSpawns	6
+
+			SpawnCount	6
+
+			RandomSpawn	1
+			Where	left
+			Where	right
+
+			Squad
+			{
+				TFBot
+				{
+					Template	kmlp_sniper_smg
+				}
+			}
+		}
+
+		/////////////////////////////////////////////PHASE 3
+		WaveSpawn
+		{
+			Name	PHASE3
+
+			TotalCurrency	0
+			TotalCount	1
+
+			WaitForAllDead	PHASE2
+			WaitBeforeStarting	20
+			WaitBetweenSpawns	1
+
+			SpawnCount	1
+
+			Where	superultramega
+
+			Squad
+			{
+				TFBot
+				{
+					Template	kmlp_demo_flak_boss
+				}
+			}
+		}
+
+		WaveSpawn
+		{
+			Name	PHASE3
+
+			TotalCurrency	0
+			TotalCount	28
+			MaxActive	21
+
+			WaitForAllDead	PHASE2
+			WaitBeforeStarting	25
+			WaitBetweenSpawns	3
+
+			SpawnCount	3
+
+			RandomSpawn	1
+			Where	left
+			Where	right
+
+			Squad
+			{
+				TFBot
+				{
+					Template	kmlp_carpet_bomber_crit_nojump
+				}
+			}
+		}
+
+		/////////////////////////////////////////////PHASE 4
+		WaveSpawn
+		{
+			Name	PHASE4
+
+			TotalCurrency	0
+			TotalCount	10
+
+			WaitForAllDead	PHASE3
+			WaitBeforeStarting	0
+			WaitBetweenSpawns	0.5
+
+			Tank
+			{
+				Name	tank_minion
+
+				Health	500
+				Speed	750
+
+				StartingPathTrackNode	tank_path_left_1
+
+				OnBombDroppedOutput
+				{
+					Target	boss_deploy_relay
+					Action	Trigger
+				}
+			}
+		}
+
+		WaveSpawn
+		{
+			Name	PHASE4
+
+			TotalCurrency	0
+			TotalCount	10
+
+			WaitForAllDead	PHASE3
+			WaitBeforeStarting	0
+			WaitBetweenSpawns	0.5
+
+			Tank
+			{
+				Name	tank_minion
+
+				Health	500
+				Speed	750
+
+				StartingPathTrackNode	tank_path_right_1
+
+				OnBombDroppedOutput
+				{
+					Target	boss_deploy_relay
+					Action	Trigger
+				}
+			}
+		}
+
+		WaveSpawn
+		{
+			Name	PHASE4
+
+			TotalCurrency	0
+			TotalCount	21
+
+			WaitForAllDead	PHASE3
+			WaitBeforeStarting	21
+			WaitBetweenSpawns	7
+
+			SpawnCount	7
+
+			Where	superultramega
+
+			Squad
+			{
+				TFBot
+				{
+					Template	kmlp_demo_samurai_giant
+				}
+			}
+		}
+	}
+
+	////////////////////////////////////////////////////////////////////
+	////////////////////////////////////////////////////////////////////
+	////////////////////////////////////////////////////////////////////
+	////////////////////////////////////////////////////////////////////
+	////////////////////////////////////////////////////////////////////
+	////////////////////////////////////////////////////////////////////
+	//WAVE 3
+
+	Wave
+	{
+		WaitWhenDone	65
+		Checkpoint	Yes
+
+		StartWaveOutput
+		{
+			Target	wave_start_relay
+			Action	Trigger
+		}
+		DoneOutput
+		{
+			Target	wave_complete_relay
+			Action	Trigger
+		}
+
+		/////////////////////////////////////////////PHASE 1
+		WaveSpawn
+		{
+			Name	PHASE1
+
+			TotalCurrency	0
+			TotalCount	2
+
+			WaitBeforeStarting	0
+			WaitBetweenSpawns	30
+
+			SpawnCount	1
+
+			Where	superultramega
+
+			Squad
+			{
+				TFBot
+				{
+					Template	kmlp_soldier_superultramega
+				}
+			}
+		}
+
+		WaveSpawn
+		{
+			Name	PHASE1
+
+			TotalCurrency	0
+			TotalCount	54
+			MaxActive	20
+
+			WaitBeforeStarting	0
+			WaitBetweenSpawns	5
+
+			SpawnCount	5
+
+			RandomSpawn	1
+			Where	left
+			Where	right
+
+			Squad
+			{
+				TFBot
+				{
+					Template	kmlp_heavy_medium
+				}
+			}
+		}
+
+		/////////////////////////////////////////////PHASE 2
+		WaveSpawn
+		{
+			Name	PHASE2
+
+			TotalCurrency	0
+			TotalCount	6
+			MaxActive	2
+
+			WaitForAllDead	PHASE1
+			WaitBeforeStarting	0
+			WaitBetweenSpawns	1
+
+			SpawnCount	1
+
+			RandomSpawn	1
+			Where	left
+			Where	right
+
+			Squad
+			{
+				TFBot
+				{
+					Template	kmlp_scout_public_boss
+				}
+			}
+		}
+
+		WaveSpawn
+		{
+			Name	PHASE2
+
+			TotalCurrency	0
+			TotalCount	28
+			MaxActive	11
+
+			WaitForAllDead	PHASE1
+			WaitBeforeStarting	0
+			WaitBetweenSpawns	4
+
+			SpawnCount	4
+
+			RandomSpawn	1
+			Where	left
+			Where	right
+
+			Squad
+			{
+				TFBot
+				{
+					Template	kmlp_sniper_smg
+				}
+			}
+		}
+
+		WaveSpawn
+		{
+			Name	PHASE2
+
+			TotalCurrency	0
+			TotalCount	28
+			MaxActive	11
+
+			WaitForAllDead	PHASE1
+			WaitBeforeStarting	0
+			WaitBetweenSpawns	4
+
+			SpawnCount	4
+
+			RandomSpawn	1
+			Where	left
+			Where	right
+
+			Squad
+			{
+				TFBot
+				{
+					Template	kmlp_soldier_crit_nojump
+				}
+			}
+		}
+
+		/////////////////////////////////////////////PHASE 3
+		WaveSpawn
+		{
+			Name	PHASE3
+
+			TotalCurrency	0
+			TotalCount	2
+			MaxActive	2
+
+			WaitForAllDead	PHASE2
+			WaitBeforeStarting	10
+			WaitBetweenSpawns	30
+
+			SpawnCount	1
+
+			Where	superultramega
+
+			Squad
+			{
+				TFBot
+				{
+					Template	kmlp_heavy_superultramega_stock
+				}
+			}
+		}
+
+		WaveSpawn
+		{
+			Name	PHASE3
+
+			TotalCurrency	0
+			TotalCount	64
+			MaxActive	20
+
+			WaitForAllDead	PHASE2
+			WaitBeforeStarting	0
+			WaitBetweenSpawns	5
+
+			SpawnCount	5
+
+			RandomSpawn	1
+			Where	left
+			Where	right
+
+			Squad
+			{
+				TFBot
+				{
+					Template	kmlp_soldier_conch_nojump
+				}
+			}
+		}
+
+		/////////////////////////////////////////////PHASE 4
+		WaveSpawn
+		{
+			Name	PHASE4
+
+			TotalCurrency	0
+			TotalCount	30
+
+			WaitForAllDead	PHASE3
+			WaitBeforeStarting	0
+			WaitBetweenSpawns	0.5
+
+			Tank
+			{
+				Name	tank_minion
+
+				Health	500
+				Speed	750
+
+				StartingPathTrackNode	tank_path_left_1
+
+				OnBombDroppedOutput
+				{
+					Target	boss_deploy_relay
+					Action	Trigger
+				}
+			}
+		}
+
+		WaveSpawn
+		{
+			Name	PHASE4
+
+			TotalCurrency	0
+			TotalCount	30
+
+			WaitForAllDead	PHASE3
+			WaitBeforeStarting	0
+			WaitBetweenSpawns	0.5
+
+			Tank
+			{
+				Name	tank_minion
+
+				Health	500
+				Speed	750
+
+				StartingPathTrackNode	tank_path_right_1
+
+				OnBombDroppedOutput
+				{
+					Target	boss_deploy_relay
+					Action	Trigger
+				}
+			}
+		}
+	}
+
+	////////////////////////////////////////////////////////////////////
+	////////////////////////////////////////////////////////////////////
+	////////////////////////////////////////////////////////////////////
+	////////////////////////////////////////////////////////////////////
+	////////////////////////////////////////////////////////////////////
+	////////////////////////////////////////////////////////////////////
+	//WAVE 4
+
+	Wave
+	{
+		WaitWhenDone	65
+		Checkpoint	Yes
+
+		StartWaveOutput
+		{
+			Target	wave_start_relay
+			Action	Trigger
+		}
+		DoneOutput
+		{
+			Target	wave_complete_relay
+			Action	Trigger
+		}
+
+		/////////////////////////////////////////////PHASE 1
+		WaveSpawn
+		{
+			Name	PHASE1
+
+			TotalCurrency	0
+			TotalCount	5
+
+			WaitBeforeStarting	30
+			WaitBetweenSpawns	1
+
+			SpawnCount	5
+
+			Where	superultramega
+
+			Squad
+			{
+				TFBot
+				{
+					Template	kmlp_mundy_bushwacka_boss
+					Health	30000
+					Scale	12
+
+					BehaviorModifiers	Push
+					Attributes	IgnoreFlag
+				}
+			}
+		}
+
+		/////////////////////////////////////////////PHASE 2
+		WaveSpawn
+		{
+			Name	PHASE2
+
+			TotalCurrency	0
+			TotalCount	1
+
+			WaitForAllDead	PHASE1
+			WaitBeforeStarting	0
+			WaitBetweenSpawns	1
+
+			Tank
+			{
+				Name	superultramega_tank
+
+				Health	60000
+				Speed	55
+
+				StartingPathTrackNode	tank_path_supertank_1
+
+				OnBombDroppedOutput
+				{
+					Target	boss_deploy_relay
+					Action	Trigger
+				}
+			}
+		}
+
+		WaveSpawn
+		{
+			Support	1
+
+			Name	PHASE2S
+
+			TotalCurrency	0
+			TotalCount	5
+			MaxActive	5
+
+			WaitForAllDead	PHASE1
+			WaitBeforeStarting	40
+			WaitBetweenSpawns	5
+
+			SpawnCount	5
+
+			RandomSpawn	1
+			Where	left
+			Where	right
+
+			RandomChoice
+			{
+				TFBot
+				{
+					Template	kmlp_mundy_mini
+				}
+				TFBot
+				{
+					Template	kmlp_mundy_prototype
+				}
+				TFBot
+				{
+					Template	kmlp_mundy_medium
+				}
+			}
+		}
+		WaveSpawn
+		{
+			Support	1
+
+			Name	PHASE2S
+
+			TotalCurrency	0
+			TotalCount	5
+			MaxActive	5
+
+			WaitForAllDead	PHASE1
+			WaitBeforeStarting	40
+			WaitBetweenSpawns	5
+
+			SpawnCount	5
+
+			RandomSpawn	1
+			Where	left
+			Where	right
+
+			RandomChoice
+			{
+				TFBot
+				{
+					Template	kmlp_mundy_mini_flying
+				}
+				TFBot
+				{
+					Template	kmlp_mundy_prototype_flying
+				}
+				TFBot
+				{
+					Template	kmlp_mundy_medium_flying
+				}
+			}
+		}
+		WaveSpawn
+		{
+			Support	1
+
+			Name	PHASE2S
+
+			TotalCurrency	0
+			TotalCount	5
+			MaxActive	5
+
+			WaitForAllDead	PHASE1
+			WaitBeforeStarting	40
+			WaitBetweenSpawns	5
+
+			SpawnCount	5
+
+			RandomSpawn	1
+			Where	left
+			Where	right
+
+			RandomChoice
+			{
+				TFBot
+				{
+					Template	kmlp_mundy_jarate_mini
+				}
+				TFBot
+				{
+					Template	kmlp_mundy_jarate_prototype
+				}
+				TFBot
+				{
+					Template	kmlp_mundy_jarate_medium
+				}
+			}
+		}
+		WaveSpawn
+		{
+			Support	1
+
+			Name	PHASE2S
+
+			TotalCurrency	0
+			TotalCount	5
+			MaxActive	5
+
+			WaitForAllDead	PHASE1
+			WaitBeforeStarting	40
+			WaitBetweenSpawns	5
+
+			SpawnCount	5
+
+			RandomSpawn	1
+			Where	left
+			Where	right
+
+			RandomChoice
+			{
+				TFBot
+				{
+					Template	kmlp_mundy_jarate_mini_flying
+				}
+				TFBot
+				{
+					Template	kmlp_mundy_jarate_prototype_flying
+				}
+				TFBot
+				{
+					Template	kmlp_mundy_jarate_medium_flying
+				}
+			}
+		}
+	}
+}

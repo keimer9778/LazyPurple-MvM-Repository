@@ -1,0 +1,1111 @@
+/////////////////////////////////////////////////////////////////////
+//
+// Example pop file for the map mvm_example.
+//
+// This pop file contains a sampling of wave types used in MVM and is commented.
+// 
+/////////////////////////////////////////////////////////////////////
+//
+// Helpful debug and console commands for developing MVM population scripts:
+//
+// sv_cheats 1 							// Allows cheat commands.
+// god 									// Enables god mode for players.
+// nb_stop 1							// Stops all bots in place.
+// nb_blind 1 							// Bots will not treat players as threats.
+// currency_give x						// Give player x amount of game currency to be used on upgrades.
+// tf_populator_health_multiplier x.x	// Multiplies health of enemy bots - example: tf_populator_health_multiplier 0.01 will set health of bots to 1% of normal.
+// tf_mvm_popfile abcd					// Will load the .pop file of the specified name - example tf_mvm_popfile mvm_mapname_challenge2 will load mvm_mapname_challenge2.pop in the tf/scripts/population directory.
+// tf_mvm_jump_to_wave x				// Will jump to the specified wave number of the current .pop file - example tf_mvm_jump_to_wave 6 will jump to wave 6.
+// tf_bot_flag_kill_on_touch 1			// When a bot picks up the flag, they die.
+//
+
+#base robot_giant.pop 
+#base robot_standard.pop
+
+WaveSchedule
+{
+
+	StartingCurrency		500
+	RespawnWaveTime 		6
+	CanBotsAttackWhileInSpawnRoom no
+
+/////////////////
+//MISSIONS
+/////////////////
+	Mission // sentry buster
+	{
+		Objective DestroySentries
+
+		InitialCooldown 10
+		Where spawnbot_mission_sentrybuster
+		BeginAtWave 1
+		RunForThisManyWaves 7
+		RandomSpawn 1
+		
+		CooldownTime 35            
+
+        TFBot
+		{
+			Class Demoman
+			Name "Sentry Buster"
+			Skill Expert
+			Health 2500
+			Item "The Ullapool Caber"
+			WeaponRestrictions MeleeOnly
+			ClassIcon sentry_buster
+
+			CharacterAttributes
+			{
+				"move speed bonus" 1.75
+				"damage force reduction" 0.5
+				"airblast vulnerability multiplier" 0.5
+				"override footstep sound set" 7
+				"cannot be backstabbed" 1
+			}
+			scale 1.5
+		}
+	}
+	
+	// Mission // sentry buster
+	// {
+		// Objective DestroySentries
+
+		// InitialCooldown 10
+		// Where spawnbot_mission_sentrybuster
+		// BeginAtWave 1
+		// RunForThisManyWaves 7
+		// RandomSpawn 1
+		
+		// CooldownTime 45            
+
+        // TFBot
+		// {
+			// Template T_TFBot_SentryBuster
+		// }
+	// }
+	Mission // Sniper - wave 2-3
+	{
+		Objective Sniper
+
+		InitialCooldown 10
+		Where spawnbot_mission_sniper
+		BeginAtWave 2
+		RunForThisManyWaves 2
+		CooldownTime 6
+		DesiredCount 2
+
+		TFBot
+		{
+			Class Sniper
+			Skill Normal
+			Name Sniper
+			MaxVisionRange 1920
+		}
+	}	
+	Mission // Sniper - wave 4-7
+	{
+		Objective Sniper
+
+		InitialCooldown 10
+		Where spawnbot_mission_sniper
+		BeginAtWave 4
+		RunForThisManyWaves 4
+		CooldownTime 6
+		DesiredCount 4
+
+		TFBot
+		{
+			Class Sniper
+			MaxVisionRange 1920
+			Name "Bowman"
+			Skill Normal
+			ClassIcon sniper_bow
+			WeaponRestrictions PrimaryOnly
+			Item "The Huntsman"
+			
+			CharacterAttributes 
+			{
+				"damage bonus" 0.5	
+			}
+		}
+	}	
+	Mission // Spy - wave 3
+	{
+		Objective Spy  
+
+		InitialCooldown 15
+		Where spawnbot_mission_spy
+		BeginAtWave 3
+		RunForThisManyWaves 1
+		CooldownTime 15
+		DesiredCount 3
+
+		TFBot
+		{
+			Class Spy
+			Skill Expert
+			Name "Spybot"
+		}
+	}	
+	Mission // Spy - wave 6
+	{
+		Objective Spy  
+
+		InitialCooldown 30
+		Where spawnbot_mission_spy
+		BeginAtWave 6
+		RunForThisManyWaves 1
+		CooldownTime 30
+		DesiredCount 6
+
+		TFBot
+		{
+			Class Spy
+			Skill Expert
+			Name "Spybot"
+		}
+	}	
+//WAVE 1 //Currency 600 ///////////////////////////////////////////////////////////////////////////////////////////////////////
+Wave
+{
+	StartWaveOutput
+		{
+			Target wave_start_relay
+			Action Trigger
+		}
+	DoneOutput					
+		{
+			Target wave_finished_relay
+			Action trigger
+		}
+	WaitWhenDone 65
+	Checkpoint Yes
+	
+	WaveSpawn //WAVE 01a: 48 total, 12 active, scout 
+	{
+			Where spawnbot_left
+			TotalCount 48
+			MaxActive 12
+			SpawnCount 6
+			WaitBetweenSpawns 8
+			WaitBeforeStarting 0
+			TotalCurrency 400		
+			
+		TFBot
+		{
+			Class Scout
+			Name "Lil League Scout"
+			Skill Easy
+			ClassIcon scout_stun
+			WeaponRestrictions MeleeOnly
+			Health 75
+			
+			BehaviorModifiers Mobber
+			
+			Item "The Sandman"
+			Item "MNC Mascot Outfit"
+			Item "Batter's Helmet"
+			CharacterAttributes				
+			{
+				"effect bar recharge rate increased" 0.1
+				"airblast vulnerability multiplier" 2.5
+				"damage force reduction" 2.5
+			}
+		}
+	}
+	WaveSpawn //WAVE 01b: 8 total, 3 active, pyro
+	{
+		Where spawnbot_left
+		TotalCount 8
+		MaxActive 3
+		SpawnCount 3
+		WaitBetweenSpawns 6
+		WaitBeforeStarting 10
+		TotalCurrency 100
+		
+		TFBot
+			{
+				Class Pyro
+				Skill Easy
+				Tag nav_bots_from_left
+			}
+	}	
+	WaveSpawn //WAVE 01c: 18 total, 6 active, demoman
+	{
+		Where spawnbot_left
+		TotalCount 18
+		MaxActive 6
+		SpawnCount 2
+		WaitBetweenSpawns 4
+		WaitBeforeStarting 10
+		TotalCurrency 100
+		
+		TFBot
+			{
+				//Template T_TFBot_Demoman_Knight
+				Class Demoman
+				Skill Normal
+				Tag nav_bots_from_left
+			}
+	}	
+}	
+//WAVE 2 //Currency 600 ///////////////////////////////////////////////////////////////////////////////////////////////////////
+Wave
+{
+	StartWaveOutput
+		{
+			Target wave_start_relay
+			Action Trigger
+		}
+	DoneOutput					
+		{
+			Target wave_finished_relay_pre_boss
+			Action trigger
+		}
+	WaitWhenDone 65
+	Checkpoint Yes
+	
+	// Sniper mission - 2 active	
+	// WaveSpawn //WAVE 02a: 8 total, 12 active, scout
+	// {
+		// Where spawnbot_invasion
+		// TotalCount 96
+		// MaxActive 8
+		// SpawnCount 4
+		// WaitBeforeStarting 7
+		// WaitBetweenSpawns 6
+		// TotalCurrency 200
+		// RandomSpawn 1
+		
+		// Support 1
+				
+		// TFBot
+		// {
+			// Class Scout
+			// Name "Lil League Scout"
+			// Skill Easy
+			// ClassIcon scout_stun
+			// WeaponRestrictions MeleeOnly
+			// Health 75
+			
+			// BehaviorModifiers Mobber
+			
+			// Item "The Sandman"
+			// Item "MNC Mascot Outfit"
+			// Item "Batter's Helmet"
+			// CharacterAttributes				
+			// {
+				// "effect bar recharge rate increased" 0.1
+				// "airblast vulnerability multiplier" 2.5
+				// "damage force reduction" 2.5
+			// }
+		// }
+	// }	
+	WaveSpawn //WAVE 02b: 24 total, 4 active, KGB heavy
+	{
+		Where spawnbot_right
+		TotalCount 24
+		MaxActive 4
+		SpawnCount 4
+		WaitBeforeStarting 10
+		WaitBetweenSpawns 10
+		TotalCurrency 200
+		
+			TFBot
+			{
+			Class Heavyweapons
+			Name "Lightweight Mini-Champ"
+			Skill Easy
+			Scale 0.75
+			Health 225
+			ClassIcon heavy_champ
+			WeaponRestrictions MeleeOnly
+			Item "the killing gloves of boxing"
+			Item "Pugilist's Protector"
+			
+			CharacterAttributes 
+			{
+				"move speed bonus"	1.2
+				"airblast vulnerability multiplier" 0.75
+				"damage force reduction" 0.75
+			}
+			Tag nav_bots_from_right
+			}
+	}
+	WaveSpawn //WAVE 02c: 28 total, 4 active, soldier 
+	{
+		Where spawnbot_left
+		TotalCount 28
+		MaxActive 4
+		SpawnCount 4
+		WaitBeforeStarting 5
+		WaitBetweenSpawns 10
+		TotalCurrency 200
+
+			TFBot
+			{
+				Class Soldier
+				Name "Tin Soldier"
+				Skill Normal
+				Tag nav_bots_from_left
+			}
+	}
+}
+//WAVE 3 //Currency 600 ///////////////////////////////////////////////////////////////////////////////////////////////////////
+Wave
+{
+	DoneOutput					
+		{
+			Target wave_finished_relay
+			Action trigger
+		}
+	WaitWhenDone 65
+	Checkpoint Yes
+	
+	// Sniper mission - 2 active
+	
+	WaveSpawn //WAVE 03a: [TANK1]
+	{
+		TotalCount 1
+		WaitBeforeStarting 0
+		TotalCurrency 600
+
+        FirstSpawnOutput                                                                                                                                                            
+		{
+             Target boss_spawn_relay                                            
+             Action Trigger                         
+        }
+
+	Tank
+		{
+			Health 27500
+			Speed 70
+			Name "boss"
+			StartingPathTrackNode "tank_path_b_1"
+
+			OnKilledOutput                                  
+			{
+				Target boss_dead_relay
+				Action Trigger                         
+			}
+			OnBombDroppedOutput                             
+			{
+				Target boss_deploy_relay 
+				Action Trigger                         
+			}
+		}			
+	}
+}
+//WAVE 4 //Currency 800 ///////////////////////////////////////////////////////////////////////////////////////////////////////
+Wave
+{
+	StartWaveOutput
+		{
+			Target wave_start_relay
+			Action Trigger
+		}
+	DoneOutput					
+		{
+			Target wave_finished_relay_pre_boss
+			Action trigger
+		}
+	WaitWhenDone 65
+	Checkpoint Yes
+	
+	// Huntsman mission - 4 active	
+	
+	WaveSpawn //WAVE 04b: 32 total, 3 active, soldier
+	{
+		Where spawnbot_left
+		TotalCount 32
+		MaxActive 3
+		SpawnCount 3
+		WaitBeforeStarting 0
+		WaitBetweenSpawns 16
+		TotalCurrency 200
+		
+			TFBot
+			{
+				Class Soldier
+				Name "Tin Soldier"
+				Skill Easy
+				Tag nav_bots_from_left
+			}
+	}
+	WaveSpawn //WAVE 04c: 32 total, 3 active, demoman
+	{
+		Where spawnbot_right
+		TotalCount 32
+		MaxActive 3
+		SpawnCount 3
+		WaitBeforeStarting 0
+		WaitBetweenSpawns 16
+		TotalCurrency 200
+		
+			TFBot
+			{
+				Class Demoman
+				Skill Easy
+				Tag nav_bots_from_right
+			}
+	}
+	WaveSpawn //WAVE 04d: [GIANT] 2 total, 1 active, Soldier 
+	{
+		Where spawnbot_left
+		TotalCount 2
+		MaxActive 1
+		SpawnCount 1
+		WaitBeforeStarting 10
+		WaitBetweenSpawns 60
+		TotalCurrency 200
+				
+		TFBot
+		{
+			Template T_TFBot_Giant_Soldier
+			Tag nav_bots_from_left
+		}
+	}	
+	WaveSpawn //WAVE 04e: [GIANT] 2 total, 1 active, Demoman 
+	{
+		Where spawnbot_right
+		TotalCount 2
+		MaxActive 1
+		SpawnCount 1
+		WaitBeforeStarting 10
+		WaitBetweenSpawns 60
+		TotalCurrency 200
+				
+		TFBot
+		{
+			Template T_TFBot_Giant_Demoman
+			Tag nav_bots_from_right
+		}
+	}
+	WaveSpawn //WAVE 04f: 15 total, 3 active, heavy
+	{
+		Where spawnbot_heavyshotgun1
+		TotalCount 15
+		MaxActive 3
+		SpawnCount 1
+		WaitBeforeStarting 12
+		WaitBetweenSpawns 12
+		TotalCurrency 0
+		
+		support 1
+		
+			TFBot
+			{
+				Class Heavy
+                            Name "Fat-Fat-Fatty-Fat-Fat Scout"
+                            Skill Hard
+							Health 150
+							Attributes HoldFireUntilFullReload
+							WeaponRestrictions SecondaryOnly
+							Item "The Bolt Action Blitzer"
+							CharacterAttributes
+                            {
+									"faster reload rate" 1.5
+                            }
+							
+			}
+	}	
+	WaveSpawn //WAVE 04g: 15 total, 3 active, heavy
+	{
+		Where spawnbot_heavyshotgun2
+		TotalCount 15
+		MaxActive 3
+		SpawnCount 1
+		WaitBeforeStarting 18
+		WaitBetweenSpawns 12
+		TotalCurrency 0
+		
+		support 1
+		
+			TFBot
+			{
+				Class Heavy
+                            Name "Fat-Fat-Fatty-Fat-Fat Scout"
+                            Skill Hard
+							Health 150
+							Attributes HoldFireUntilFullReload
+							WeaponRestrictions SecondaryOnly
+							Item "The Bolt Action Blitzer"
+							CharacterAttributes
+                            {
+									"faster reload rate" 1.5
+                            }
+							
+			}
+	}	
+}
+//WAVE 5 //Currency 1100 ///////////////////////////////////////////////////////////////////////////////////////////////////////
+Wave
+{
+	StartWaveOutput
+		{
+			Target wave_start_relay
+			Action Trigger
+		}
+	DoneOutput					
+		{
+			Target wave_finished_relay
+			Action trigger
+		}
+	WaitWhenDone 65
+	Checkpoint Yes
+	
+	// Huntsman mission - 4 active	
+	
+	WaveSpawn //WAVE 05a: [TANK2]
+	{
+		TotalCount 1
+		WaitBeforeStarting 0
+		TotalCurrency 600
+
+        FirstSpawnOutput                                                                                                                                                            
+		{
+             Target boss_spawn_relay                                            
+             Action Trigger                         
+        }
+
+	Tank
+		{
+			Health 30000
+			Speed 65
+			Name "boss"
+			StartingPathTrackNode "tank_path_b_1"
+
+			OnKilledOutput                                  
+			{
+				Target boss_dead_relay
+				Action Trigger                         
+			}
+			OnBombDroppedOutput                             
+			{
+				Target boss_deploy_relay 
+				Action Trigger                         
+			}
+		}			
+	}
+	WaveSpawn //WAVE 05b: 1 total, 1 active, giant soldier with escort
+		{			
+			Where spawnbot_left
+			TotalCount 1										
+			MaxActive 1										
+			SpawnCount 1										
+			WaitBetweenSpawns 5
+			WaitBeforeStarting 12
+			TotalCurrency 250		
+			
+			Squad 
+			{
+				TFBot
+				{
+					Template T_TFBot_Giant_Soldier
+
+				}
+				TFBot
+				{
+					Template T_TFBot_Medic_BigHeal
+
+				}
+				TFBot
+				{
+					Template T_TFBot_Medic_BigHeal
+
+				}
+			}
+		}	
+	WaveSpawn //WAVE 05c: 1 total, 1 active, giant soldier with escort
+		{			
+			Where spawnbot_right
+			TotalCount 1										
+			MaxActive 1										
+			SpawnCount 1										
+			WaitBetweenSpawns 5
+			WaitBeforeStarting 12
+			TotalCurrency 250		
+			
+			Squad 
+			{
+				TFBot
+				{
+					Template T_TFBot_Giant_Soldier
+
+				}
+				TFBot
+				{
+					Template T_TFBot_Medic_BigHeal
+
+				}
+				TFBot
+				{
+					Template T_TFBot_Medic_BigHeal
+
+				}
+			}
+		}
+}
+//WAVE 6 //Currency 1200 ///////////////////////////////////////////////////////////////////////////////////////////////////////
+Wave
+{
+	StartWaveOutput
+		{
+			Target wave_start_relay
+			Action Trigger
+		}
+	DoneOutput					
+		{
+			Target wave_finished_relay_pre_boss
+			Action trigger
+		}
+	WaitWhenDone 65
+	Checkpoint Yes
+	
+	// Huntsman mission - 4 active		
+	// Spy mission - 6 active	
+
+	WaveSpawn //WAVE 06a: 64 total, 8 active, mini heavys  
+	{			
+		Where spawnbot_heavyshotgun1
+		TotalCount 64										
+		MaxActive 4										
+		SpawnCount 4										
+		WaitBetweenSpawns 8
+		WaitBeforeStarting 18
+		TotalCurrency 150		
+
+		support 1
+		
+			TFBot
+			{
+				Class Heavyweapons
+				Name "Holiday Gnome Punch"
+				Skill Hard
+				ClassIcon heavy_mittens
+				Scale 0.65
+				WeaponRestrictions MeleeOnly
+				Health 60
+				Attributes AlwaysCrit
+				
+				BehaviorModifiers Mobber
+				
+				Item "The All-Father"
+				Item "Point and Shoot"
+				Item "The Holiday Punch"
+				
+				CharacterAttributes 
+				{
+					"move speed bonus"	0.8
+					"damage bonus" 0.2	
+					"airblast vulnerability multiplier" 4.5
+					"damage force reduction" 3.5
+				}	
+			}
+	}
+	WaveSpawn //WAVE 06b: 64 total, 8 active, mini heavys  
+	{			
+		Where spawnbot_heavyshotgun2
+		TotalCount 64										
+		MaxActive 4										
+		SpawnCount 4										
+		WaitBetweenSpawns 8
+		WaitBeforeStarting 18
+		TotalCurrency 150		
+
+		support 1
+		
+			TFBot
+			{
+				Class Heavyweapons
+				Name "Holiday Gnome Punch"
+				Skill Hard
+				ClassIcon heavy_mittens
+				Scale 0.65
+				WeaponRestrictions MeleeOnly
+				Health 60
+				Attributes AlwaysCrit
+				
+				BehaviorModifiers Mobber
+				
+				Item "The All-Father"
+				Item "Point and Shoot"
+				Item "The Holiday Punch"
+				
+				CharacterAttributes 
+				{
+					"move speed bonus"	0.8
+					"damage bonus" 0.2	
+					"airblast vulnerability multiplier" 4.5
+					"damage force reduction" 3.5
+				}	
+			}
+	}
+	WaveSpawn //WAVE 06a: 36 total, 4 active, soldiers  
+	{			
+		Where spawnbot_left
+		TotalCount 36
+		MaxActive 8
+		SpawnCount 6
+		WaitBetweenSpawns 8
+		WaitBeforeStarting 8
+		TotalCurrency 100		
+
+			TFBot
+			{
+				Class Soldier
+				Name "Tin Soldier"
+				Skill Normal
+				
+				Tag nav_bots_from_left	
+			}
+	}		
+	WaveSpawn //WAVE 06b: 1 total, 1 active, giant demoknight  
+	{			
+		Where spawnbot_right
+		TotalCount 1										
+		MaxActive 1										
+		SpawnCount 1										
+		WaitBetweenSpawns 10
+		WaitBeforeStarting 0
+		TotalCurrency 200		
+
+		TFBot
+		{
+			Class Demoman
+			ClassIcon demoknight
+			Name "Prince Tavish"
+			Skill Expert
+			Health 3800
+			Item "Prince Tavish's Crown"
+			Item "The Chargin' Targe"
+			Item "The Eyelander"
+			Item "Ali Baba's Wee Booties"	
+			WeaponRestrictions MeleeOnly
+			
+			Attributes AlwaysCrit			
+			
+			CharacterAttributes 
+			{
+				"move speed bonus" 0.5
+				"critboost on kill" 3
+				"damage force reduction" 0.5
+				"airblast vulnerability multiplier" 0.5
+				"override footstep sound set" 4
+			}
+			Tag nav_bots_from_right					
+		}
+	}	
+	WaveSpawn //WAVE 06c: 36 total, 8 active, demoknight
+	{
+		Where spawnbot_right
+		TotalCount 36
+		MaxActive 8
+		SpawnCount 6
+		WaitBetweenSpawns 8
+		WaitBeforeStarting 0
+		TotalCurrency 100
+		
+		TFBot
+			{
+				Class Demoman
+				Name "Slow Demoknight"
+				ClassIcon demoknight
+				Skill Hard
+				Health 225
+				Item "The Chargin' Targe"
+				Item "The Eyelander"
+				WeaponRestrictions MeleeOnly
+				CharacterAttributes
+				{
+					"critboost on kill" 3
+				}
+				Tag nav_bots_from_right
+			}
+	}		
+
+}
+//WAVE 7 //Currency 1400 ///////////////////////////////////////////////////////////////////////////////////////////////////////
+Wave
+{
+	StartWaveOutput
+		{
+			Target wave_start_relay
+			Action Trigger
+		}
+	DoneOutput					
+		{
+			Target wave_finished_relay
+			Action trigger
+		}
+	WaitWhenDone 65
+	Checkpoint Yes
+	
+	// Huntsman mission - 4 active	
+		
+	WaveSpawn //WAVE 7a: 150 total, 16 active, pyro 
+	{
+		Where spawnbot_invasion
+		TotalCount 150
+		MaxActive 32
+		SpawnCount 16
+		WaitBeforeStarting 16
+		WaitBetweenSpawns 1
+		TotalCurrency 600 
+		RandomSpawn 1
+		
+		//Support 1
+		
+		RandomChoice
+		{
+			TFBot
+			{
+				Class Pyro
+				Name "Flaromancer"
+				Skill Normal 
+				Scale 1.2
+				Item "The Flare Gun"
+				WeaponRestrictions SecondaryOnly
+				Item "Pyromancer's Mask"
+				CharacterAttributes 
+				{
+					"move speed bonus" 1.2
+				}
+			}
+			TFBot
+			{
+			    Name "Pyromancer"
+				Class Pyro
+				Skill Normal
+				Health 200
+				Scale 1.2
+				WeaponRestrictions PrimaryOnly
+				Item "Pyromancer's Mask"
+				CharacterAttributes 
+				{
+					"move speed bonus" 1.2
+				}
+			}
+			TFBot
+			{
+				Class Pyro
+				Name "Meleemancer"
+				Skill Normal
+				Health 225
+				Scale 1.2
+				WeaponRestrictions MeleeOnly
+				BehaviorModifiers Mobber
+				Item "Sharpened Volcano Fragment"
+				Item "Pyromancer's Mask"
+				CharacterAttributes 
+				{
+					"move speed bonus" 1.2
+				}
+			}
+		}
+	}
+		WaveSpawn //WAVE 07b: [TANK3]
+	{
+		TotalCount 1
+		WaitBeforeStarting 0
+		TotalCurrency 800
+
+        FirstSpawnOutput                                                                                                                                                            
+		{
+             Target boss_spawn_relay                                            
+             Action Trigger                         
+        }
+
+	Tank
+		{
+			Health 45000	//75% stronger
+			Speed 52.25		//25% slower
+			Name "boss"
+			StartingPathTrackNode "tank_path_b_1"
+
+			OnKilledOutput                                  
+			{
+				Target boss_dead_relay
+				Action Trigger                         
+			}
+			OnBombDroppedOutput                             
+			{
+				Target boss_deploy_relay 
+				Action Trigger                         
+			}
+		}			
+	}
+}
+//WAVE 8 //Currency 250 ///////////////////////////////////////////////////////////////////////////////////////////////////////
+Wave
+{
+	StartWaveOutput
+		{
+			Target wave_start_finale_relay
+			Action Trigger
+		}
+	DoneOutput					
+		{
+			Target wave_finished_relay
+			Action trigger
+		}
+	WaitWhenDone 65
+	Checkpoint Yes
+	
+	// Huntsman mission - 4 active	
+		
+	WaveSpawn //WAVE 8a: 1 total, 1 active, flare pyro 
+	{
+		Where spawnbot_mission_finalboss
+		TotalCount 1
+		MaxActive 1
+		SpawnCount 1
+		WaitBeforeStarting 35
+		WaitBetweenSpawns 0
+		TotalCurrency 250 
+		//RandomSpawn 1
+		
+		//Support 1
+		
+
+		TFBot
+		{
+			Class Pyro
+			Name "Lord Fyromancer"
+			Skill Expert
+			Health 10000 
+			Scale 1.5
+			Item "The Flare Gun"
+			WeaponRestrictions SecondaryOnly
+			Item "Pyromancer's Mask"
+			CharacterAttributes 
+			{
+				"move speed bonus" 0.65
+				"critboost on kill" 3
+				"damage force reduction" 0.5
+				"airblast vulnerability multiplier" 0.5
+				"override footstep sound set" 6
+				"Projectile speed increased" 2.0
+				"fire rate bonus" 0.1
+				"damage bonus" 0.55	
+			}
+		}
+	
+	}
+	WaveSpawn //WAVE 8b: 1 total, 1 active, mini demoknight 
+	{
+		Where spawnbot_mission_finalboss
+		TotalCount 1
+		MaxActive 1
+		SpawnCount 1
+		WaitBeforeStarting 36
+		WaitBetweenSpawns 0
+		TotalCurrency 0 
+		//RandomSpawn 1
+		
+		Support 1
+		
+		TFBot
+		{
+			Class Demoman
+			ClassIcon demoknight
+			Name "King Wee Wee"
+			Skill Expert
+			Health 6125
+			scale 0.45
+			Item "Prince Tavish's Crown"
+			Item "The Chargin' Targe"
+			Item "The Eyelander"
+			Item "Ali Baba's Wee Booties"
+			WeaponRestrictions MeleeOnly
+			
+			BehaviorModifiers Mobber
+			
+			CharacterAttributes 
+			{
+				"move speed bonus" 1.3 //0.75
+				"critboost on kill" 3
+				"damage force reduction" 3.5
+				"airblast vulnerability multiplier" 4.5
+				//"override footstep sound set" 4
+			}
+		}
+
+	}
+	WaveSpawn //WAVE 8c: 1 total, 1 active, mini heavy 
+	{
+		Where spawnbot_mission_finalboss
+		TotalCount 1
+		MaxActive 1
+		SpawnCount 1
+		WaitBeforeStarting 36
+		WaitBetweenSpawns 0
+		TotalCurrency 0 
+		//RandomSpawn 1
+		
+		Support 1
+
+		TFBot
+		{
+			Class Heavyweapons
+			Name "Super Gnome"
+			Skill Expert
+			ClassIcon heavy_mittens
+			Scale 0.65
+			WeaponRestrictions MeleeOnly
+			Health 6500
+			Attributes AlwaysCrit
+			
+			BehaviorModifiers Mobber
+			
+			Item "The All-Father"
+			Item "Point and Shoot"
+			Item "The Holiday Punch"
+			
+			CharacterAttributes 
+			{
+				"move speed bonus"	1.3
+				"damage bonus" 0.65	
+				"damage force reduction" 0.5
+				"airblast vulnerability multiplier" 4.5
+				"damage force reduction" 3.5
+				//"fire rate bonus" 0.5
+				//"override footstep sound set" 4
+			}
+		}
+
+	}
+		WaveSpawn //WAVE 08d: [TANK3]
+	{
+		TotalCount 1
+		WaitBeforeStarting 0
+		TotalCurrency 800
+
+        FirstSpawnOutput                                                                                                                                                            
+		{
+             Target boss_spawn_relay                                            
+             Action Trigger                         
+        }
+
+	Tank
+		{
+			Health 40000	//75% stronger
+			Speed 56.25		//25% slower
+			Name "boss"
+			StartingPathTrackNode "tank_path_b_1"
+
+			OnKilledOutput                                  
+			{
+				Target boss_dead_relay
+				Action Trigger                         
+			}
+			OnBombDroppedOutput                             
+			{
+				Target boss_deploy_relay 
+				Action Trigger                         
+			}
+		}			
+	}	
+	
+}
+}

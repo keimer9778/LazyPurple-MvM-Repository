@@ -1,0 +1,1329 @@
+#base robot_giant.pop 
+#base robot_standard.pop
+#base robot_airdrop.pop
+
+WaveSchedule
+{
+
+	StartingCurrency		800
+	RespawnWaveTime 		5
+	CanBotsAttackWhileInSpawnRoom no
+
+	Mission // sentry buster
+	{
+		Objective DestroySentries
+
+		InitialCooldown 30
+		Where spawnbot_mission_sentrybuster
+		BeginAtWave 1
+		RunForThisManyWaves 13
+
+		CooldownTime 40            
+
+        TFBot
+		{
+			Template T_TFBot_SentryBuster
+			Tag giant
+		}
+	}
+	
+	Mission // Snipers wave 5
+	{
+		Objective Sniper
+
+		InitialCooldown 2
+		Where spawnbot_mission_sniper
+		BeginAtWave 5
+		RunForThisManyWaves 1
+		DesiredCount 2
+
+		CooldownTime 10            
+
+        TFBot
+		{
+			Template T_TFBot_Sniper
+		}
+	}
+	
+	Mission // Engineers wave 4
+{
+	Objective Engineer
+	
+	Where spawnbot_mission_sniper1
+	InitialCooldown 0
+	BeginAtWave 4
+	RunForThisManyWaves 1
+	DesiredCount 2
+	CooldownTime 15
+	RandomChoice
+	{
+		TFBot
+		{
+			Template T_TFBot_Engineer_Sentry_Tele_Battle
+			TeleportWhere spawnbot1
+			TeleportWhere spawnbot_main
+		}
+		TFBot
+		{
+			Template T_TFBot_Engineer_Sentry_Teleporter
+			TeleportWhere spawnbot1
+			TeleportWhere spawnbot_main
+		}
+	}
+}
+	Mission // Engineers wave 4 (Random choice in previous mission doesn't notify players of engineer's presence in mission, so I needed to add this "empty" mission on same wave so bot counter will show engineer icon once they spawn. STRANGE, ISN'T IT?!)
+{
+	Objective Engineer
+	
+	Where spawnbot_mission_sniper1
+	InitialCooldown 0
+	BeginAtWave 4
+	RunForThisManyWaves 1
+	DesiredCount 0
+	CooldownTime 5
+		TFBot
+		{
+			Template T_TFBot_Engineer_Sentry_Battle
+		}
+}
+
+
+Wave // 1- Weird 2 part wave. Muneh: 700
+{
+	StartWaveOutput
+	{
+		Target wave_start_relay
+		Action Trigger
+	}
+	DoneOutput					
+	{
+		Target wave_finished_relay
+		Action trigger
+	}
+	WaitWhenDone 65
+
+
+	WaveSpawn
+	{
+		Name "wave01a"
+		Where spawnbot
+		TotalCount 24
+		MaxActive 12
+		SpawnCount 6
+		WaitBetweenSpawns 8
+		WaitBeforeStarting 0
+		TotalCurrency 200		
+		RandomChoice
+		{
+			TFBot
+			{
+				Class Demoman
+				Skill Easy
+				ClassIcon demoknight
+				Item "The Chargin' Targe"
+				Item "The Pain Train"
+				Item "Demoman Tricorne"
+				WeaponRestrictions MeleeOnly
+				Name "Demoknight Crutch"
+				Tag nav_prefer_flank_left
+				BehaviorModifiers push
+			}
+			TFBot
+			{
+				Class Demoman
+				Skill Easy
+				ClassIcon demoknight
+				Item "The Chargin' Targe"
+				Item "The Pain Train"
+				Item "Demoman Tricorne"
+				WeaponRestrictions MeleeOnly
+				Name "Demoknight Crutch"
+				Tag nav_prefer_flank_right
+				BehaviorModifiers push
+			}
+			TFBot
+			{
+				Class Demoman
+				Skill Easy
+				ClassIcon demoknight
+				Item "The Chargin' Targe"
+				Item "The Pain Train"
+				Item "Demoman Tricorne"
+				WeaponRestrictions MeleeOnly
+				Name "Demoknight Crutch"
+				Tag nav_prefer_flank_middle
+				BehaviorModifiers push
+			}
+			TFBot
+			{
+				Class Demoman
+				Skill Easy
+				ClassIcon demoknight
+				Item "The Chargin' Targe"
+				Item "The Pain Train"
+				Item "Demoman Tricorne"
+				WeaponRestrictions MeleeOnly
+				Name "Demoknight Crutch"
+			}
+		}
+	}
+	
+	WaveSpawn
+	{
+		Name "wave01a"
+		Where spawnbot_main
+		TotalCount 24
+		MaxActive 12
+		SpawnCount 6
+		WaitBetweenSpawns 8
+		WaitBeforeStarting 0
+		TotalCurrency 100	
+		
+		TFBot
+		{
+			Class Scout
+			Skill Hard
+			Item "The Back Scatter"
+		}
+	}
+	WaveSpawn
+	{
+		WaitForAllSpawned "wave01a"
+		Where spawnbot_main
+		TotalCount 12
+		MaxActive 6
+		SpawnCount 3
+		WaitBetweenSpawns 8
+		WaitBeforeStarting 0
+		TotalCurrency 100	
+		
+		TFBot
+		{
+			Class Scout
+			Skill Hard
+			Item "The Back Scatter"
+		}
+	}
+
+	WaveSpawn
+	{
+			WaitForAllSpawned "wave01a"
+			Where spawnbot
+			TotalCount 45
+			MaxActive 15
+			SpawnCount 5
+			WaitBetweenSpawns 9
+			WaitBeforeStarting 0
+			TotalCurrency 300	
+			Squad
+			{
+				TFBot
+				{
+					Template T_TFBot_Soldier_Extended_Concheror
+				}
+				TFBot
+				{
+					Class Heavy
+					Skill Normal
+					Item "Loyalty Reward"
+				}
+				TFBot
+				{
+					Class Heavy
+					Skill Normal
+					Item "Loyalty Reward"
+				}
+				TFBot
+				{
+					Class Heavy
+					Skill Normal
+					Item "Loyalty Reward"
+				}
+				TFBot
+				{
+					Template T_TFBot_Medic_QuickFix
+					Item "The Surgeon's Stahlhelm"
+				}
+			}
+	}
+}
+Wave //2 - oh god help us (Spies and Snipers. Then airstrike. Don't question my sanity. There's none.) Could have used template for bots in this wave... Muneh: 600
+{
+	StartWaveOutput
+	{
+		Target wave_start_relay
+		Action Trigger
+	}
+	DoneOutput
+	{
+		Target wave_finished_relay
+		Action Trigger
+	}
+	WaitWhenDone 60
+	
+	WaveSpawn
+	{
+		Name "subwave"
+		TotalCurrency 50
+		Where spawnbot
+		TotalCount 20
+		SpawnCount 5
+		MaxActive 5
+		WaitBetweenSpawns 6
+		WaitBeforeStarting 0
+		TFBot
+		{
+			Template T_SMG_Fodder
+		}
+	}
+	WaveSpawn
+	{
+		Name "subwave"
+		TotalCurrency 50
+		Where spawnbot1
+		TotalCount 20
+		SpawnCount 5
+		MaxActive 5
+		WaitBetweenSpawns 4
+		WaitBeforeStarting 1
+		TFBot
+		{
+			Template T_SMG_Fodder
+		}
+	}
+	WaveSpawn
+	{
+		TotalCurrency 50
+		FirstSpawnOutput
+		{
+			Target airdrop_relay
+			Action Trigger
+		}
+		Name "airdrop"
+		Where spawnbot_airdrop0
+		TotalCount 4
+		SpawnCount 4
+		MaxActive 4
+		WaitBetweenSpawns 0
+		WaitBeforeStarting 0
+		TFBot
+		{
+			Template T_SMG_Fodder_Air
+		}
+	}
+	WaveSpawn
+	{
+		TotalCurrency 50
+		FirstSpawnOutput
+		{
+			Target airdropinst_relay
+			Action Trigger
+		}
+		Where spawnbot_airdrop1
+		Name "subwave"
+		WaitForAllSpawned "airdrop"
+		WaitForAllDead "airdrop"
+		TotalCount 4
+		SpawnCount 4
+		MaxActive 4
+		WaitBetweenSpawns 0
+		WaitBeforeStarting 0
+		Squad
+		{
+			TFBot
+			{
+				Template T_SMG_Fodder_Air
+			}
+			TFBot
+			{
+				Template T_Revolver_Spy_Air
+			}
+			TFBot
+			{
+				Template T_Revolver_Spy_Air
+			}
+			TFBot
+			{
+				Template T_Revolver_Spy_Air
+			}
+		}
+	}
+	WaveSpawn
+	{
+		Name "subwave"
+		TotalCurrency 50
+		Where spawnbot1
+		TotalCount 12
+		SpawnCount 4
+		MaxActive 4
+		WaitBetweenSpawns 4
+		WaitBeforeStarting 1
+		Squad
+		{
+			TFBot
+			{
+				Template T_SMG_Fodder
+			}
+			TFBot
+			{
+				Template T_Revolver_Spy
+			}
+			TFBot
+			{
+				Template T_Revolver_Spy
+			}
+			TFBot
+			{
+				Template T_Revolver_Spy
+			}
+		}
+	}
+		WaveSpawn
+	{
+		Name "subwave"
+		TotalCurrency 50
+		Where spawnbot_main
+		TotalCount 12
+		SpawnCount 4
+		MaxActive 4
+		WaitBetweenSpawns 6
+		WaitBeforeStarting 0
+		Squad
+		{
+			TFBot
+			{
+				Template T_SMG_Fodder
+			}
+			TFBot
+			{
+				Template T_Revolver_Spy
+			}
+			TFBot
+			{
+				Template T_Revolver_Spy
+			}
+			TFBot
+			{
+				Template T_Revolver_Spy
+			}
+		}
+	}
+	// Serious subwave starts here
+	WaveSpawn
+	{
+		WaitForAllDead "subwave"
+		Where spawnbot
+		Where spawnbot1
+		RandomSpawn 1
+		TotalCurrency 60
+		TotalCount 45
+		MaxActive 10
+		SpawnCount 5
+		WaitBetweenSpawns 4
+		WaitBeforeStarting 2
+		RandomChoice
+		{
+			TFBot
+			{
+				Class Soldier
+				Skill Hard
+				Item "The Liberty Launcher"
+				Name "Liberator Soldier"
+			}
+			TFBot
+			{
+				Class Soldier
+				Skill Normal
+				Name "Plain Annoying Soldier"
+				WeaponRestrictions SecondaryOnly
+				ClassIcon heavy_shotgun
+			}
+		}
+	}
+	WaveSpawn
+	{
+		FirstSpawnOutput
+		{
+			Target airdrop_relay
+			Action Trigger
+		}
+		WaitForAllDead "subwave"
+		Name "aircrap"
+		TotalCount 3
+		MaxActive 3
+		SpawnCount 3
+		TotalCurrency 60
+		Where spawnbot_airdrop0
+		TFBot
+		{
+			Template T_Air_Striker
+		}
+	}
+	WaveSpawn
+	{
+		WaitForAllDead "subwave"
+		Name "aircrap"
+		TotalCount 3
+		MaxActive 3
+		SpawnCount 3
+		TotalCurrency 60
+		Where spawnbot_airdrop1
+		TFBot
+		{
+			Template T_Air_Striker
+		}
+	}
+	WaveSpawn
+	{
+		FirstSpawnOutput
+		{
+			Target airdropinst_relay
+			Action Trigger
+		}
+		WaitForAllDead "aircrap"
+		TotalCount 5
+		MaxActive 5
+		SpawnCount 5
+		TotalCurrency 60
+		Where spawnbot_airdrop0
+		TFBot
+		{
+			Template T_Air_Striker
+		}
+	}
+	WaveSpawn
+	{
+		WaitForAllDead "aircrap"
+		TotalCount 5
+		MaxActive 5
+		SpawnCount 5
+		TotalCurrency 60
+		Where spawnbot_airdrop1
+		TFBot
+		{
+			Template T_Air_Striker
+		}
+	}
+}
+
+Wave // 3- tank and crit squads Muneh: 800
+{
+	StartWaveOutput
+	{
+		Target wave_start_relay
+		Action Trigger
+	}
+	DoneOutput
+	{
+		Target wave_finished_relay
+		Action Trigger
+	}
+	WaitWhenDone 60
+	
+	WaveSpawn
+	{
+		Name "tonk"
+		TotalCurrency 350
+		TotalCount 1
+		Tank
+		{
+			Health 30000
+			Speed 75
+			Name "Tank" //Map refers to tanks by this name. Just in case.
+			Skin 0			
+			StartingPathTrackNode "path_tank_a"	
+			OnKilledOutput							
+			{
+				Target tank_died_relay
+				Action Trigger                         
+			}
+				
+			OnBombDroppedOutput					
+			{
+				Target bomb_dropped_relay
+				Action Trigger                         
+			}
+		}
+	}
+		
+	WaveSpawn
+	{
+		TotalCurrency 200
+		TotalCount 54
+		MaxActive 12
+		SpawnCount 3
+		WaitBetweenSpawns 3
+		WaitBeforeStarting 15
+		Where spawnbot
+		RandomChoice
+		{
+			TFBot
+			{
+				Template T_TFBot_Pyro_Flaregun
+				Attributes AlwaysCrit
+				Item "Loyalty Reward"
+			}
+			TFBot
+			{
+				Name "Heavy Artillery"
+				Class Heavy
+				Skill Normal
+				Item "The Heavy Artillery Officer's Cap"
+				Item "The Brass Beast"
+				ItemAttributes
+				{
+				ItemName "The Brass Beast"
+				"aiming movespeed decreased" 1
+				}
+			}
+			TFBot
+			{
+				Template T_TFBot_Pyro_Flaregun
+				Attributes AlwaysCrit
+				Item "Loyalty Reward"
+			}
+		}
+	}
+	WaveSpawn
+	{
+		TotalCurrency 150
+		TotalCount 28
+		MaxActive 4
+		SpawnCount 1
+		Support 1
+		Where spawnbot
+		Where spawnbot1
+		RandomSpawn 1
+		WaitBetweenSpawns 0.5
+		WaitBeforeStarting 16
+		RandomChoice
+		{
+			TFBot
+			{
+				Class Scout
+				Skill Normal
+				Attributes AlwaysCrit
+				WeaponRestrictions MeleeOnly
+			}
+			TFBot
+			{
+				Class Scout
+				Skill Normal
+				Attributes AlwaysCrit
+				Tag nav_prefer_flank_left
+				BehaviorModifiers push
+				WeaponRestrictions MeleeOnly
+			}
+			TFBot
+			{
+				Class Scout
+				Skill Normal
+				Attributes AlwaysCrit
+				Tag nav_prefer_flank_right
+				BehaviorModifiers push
+				WeaponRestrictions MeleeOnly
+			}
+			TFBot
+			{
+				Class Scout
+				Skill Normal
+				Attributes AlwaysCrit
+				Tag nav_prefer_flank_middle
+				BehaviorModifiers push
+				WeaponRestrictions MeleeOnly
+			}
+		}
+	}
+	WaveSpawn
+	{
+		FirstSpawnOutput
+		{
+			Target airdrop_relay
+			Action Trigger
+		}
+		Where spawnbot_airdrop0
+		TotalCount 6
+		MaxActive 6
+		SpawnCount 6
+		WaitForAllDead "tonk"
+		TotalCurrency 100
+		Squad
+		{
+			TFBot
+			{
+				Template T_Big_Air_Striker
+			}
+			TFBot
+			{
+				Template T_TFBot_Medic
+				Item "The B.A.S.E. Jumper"
+			}
+			TFBot
+			{
+				Template T_TFBot_Medic
+				ClassIcon medic_kritz
+				Item "The Kritzkrieg"
+				ItemAttributes
+				{
+					ItemName "The Kritzkrieg"
+					"ubercharge rate bonus" 5
+					"uber duration bonus" 7
+				}
+				Item "The B.A.S.E. Jumper"
+				Name "Kritzkrieg Medic"
+				CharacterAttributes
+				{
+				 "bot medic uber health threshold" 155
+				}
+			}
+		}
+	}
+}
+
+Wave // 4 Melee Heavy (Steel Gauntlet&KGB&GRU) spam + engineer mission Muneh: 600
+{
+	StartWaveOutput
+	{
+		Target wave_start_relay
+		Action Trigger
+	}
+	DoneOutput
+	{
+		Target wave_finished_relay
+		Action Trigger
+	}
+	WaitWhenDone 60
+	
+	WaveSpawn //Not So random Shotgunner giant wavespawn
+	{
+	TotalCurrency 300
+	TotalCount 4
+	MaxActive 2
+	SpawnCount 1
+	WaitBetweenSpawns 20
+	Where spawnbot_main
+	TFBot
+	{
+		Template T_TFBot_Giant_Heavyweapons_Shotgun
+		Tag giant
+	}
+	}
+	
+	WaveSpawn
+	{
+		TotalCurrency 150
+		TotalCount 60
+		MaxActive 10
+		SpawnCount 5
+		WaitBetweenSpawns 5
+		WaitBeforeStarting 3
+		Where spawnbot_main
+		RandomChoice //Steel gauntlets heavies got a little bit less chance to get in the wave, while GRU variants got 3/4 chance to be flanker.
+		{
+			TFBot
+			{
+				Template T_TFBot_Heavyweapons_Fist
+				Tag giant
+			}
+			TFBot
+			{
+				Template T_TFBot_Heavyweapons_Fist
+				Tag giant
+			}
+			TFBot
+			{
+				Template T_TFBot_Heavyweapons_Fist
+				Tag giant
+			}
+			TFBot
+			{
+				Template T_TFBot_Heavyweapons_Heavyweight_Champ
+			}
+			TFBot
+			{
+				Template T_TFBot_Heavyweapons_Heavyweight_Champ
+			}
+			TFBot
+			{
+				Template T_TFBot_Heavyweapons_Heavyweight_Champ
+			}
+			TFBot
+			{
+				Template T_TFBot_Heavyweapons_Heavyweight_Champ
+			}
+			TFBot
+			{
+				Template T_TFBot_Heavyweapons_Heavyweight_Champ_Fast
+			}
+			TFBot
+			{
+				Template T_TFBot_Heavyweapons_Heavyweight_Champ_Fast
+				Tag nav_prefer_flank_left
+				BehaviorModifiers push
+			}
+			TFBot
+			{
+				Template T_TFBot_Heavyweapons_Heavyweight_Champ_Fast
+				Tag nav_prefer_flank_right
+				BehaviorModifiers push
+			}
+			TFBot
+			{
+				Template T_TFBot_Heavyweapons_Heavyweight_Champ_Fast
+				Tag nav_prefer_flank_middle
+				BehaviorModifiers push
+			}
+		}
+	}
+	WaveSpawn
+	{
+		TotalCurrency 150
+		TotalCount 40
+		MaxActive 8
+		SpawnCount 4
+		WaitBetweenSpawns 5
+		WaitBeforeStarting 3
+		Where spawnbot1
+		RandomChoice
+		{
+			TFBot
+			{
+				Template T_TFBot_Heavyweapons_Fist
+				Tag giant
+			}
+			TFBot
+			{
+				Template T_TFBot_Heavyweapons_Fist
+				Tag giant
+			}
+			TFBot
+			{
+				Template T_TFBot_Heavyweapons_Fist
+				Tag giant
+			}
+			TFBot
+			{
+				Template T_TFBot_Heavyweapons_Heavyweight_Champ
+			}
+			TFBot
+			{
+				Template T_TFBot_Heavyweapons_Heavyweight_Champ
+			}
+			TFBot
+			{
+				Template T_TFBot_Heavyweapons_Heavyweight_Champ
+			}
+			TFBot
+			{
+				Template T_TFBot_Heavyweapons_Heavyweight_Champ
+			}
+			TFBot
+			{
+				Template T_TFBot_Heavyweapons_Heavyweight_Champ_Fast
+			}
+			TFBot
+			{
+				Template T_TFBot_Heavyweapons_Heavyweight_Champ_Fast
+				Tag nav_prefer_flank_left
+				BehaviorModifiers push
+			}
+			TFBot
+			{
+				Template T_TFBot_Heavyweapons_Heavyweight_Champ_Fast
+				Tag nav_prefer_flank_right
+				BehaviorModifiers push
+			}
+			TFBot
+			{
+				Template T_TFBot_Heavyweapons_Heavyweight_Champ_Fast
+				Tag nav_prefer_flank_middle
+				BehaviorModifiers push
+			}
+		}
+	}
+}
+
+Wave // 5 -Boss Pistol Scout with supports Muneh: 800
+{
+	StartWaveOutput
+	{
+		Target wave_start_relay
+		Action Trigger
+	}
+	DoneOutput
+	{
+		Target wave_finished_relay
+		Action Trigger
+	}
+	WaitWhenDone 60
+	WaveSpawn
+	{
+		Name "first"
+		Where spawnbot
+		Where spawnbot1
+		RandomSpawn 1
+		TotalCurrency 50
+		TotalCount 48
+		MaxActive 12
+		SpawnCount 4
+		WaitBetweenSpawns 4
+		WaitBeforeStarting 1
+		TFBot
+		{
+			Template T_TFBot_Demo_Burst
+		}
+	}
+	WaveSpawn
+	{
+		Name "first"
+		Where spawnbot_main
+		TotalCount 6
+		MaxActive 4
+		SpawnCount 2
+		WaitBetweenSpawns 15
+		TotalCurrency 100
+		RandomChoice
+		{
+			TFBot
+			{
+				Template T_TFBot_Giant_Demo_Burst
+				Tag giant
+			}
+			TFBot
+			{
+				Template T_TFBot_Giant_Demo_Burst
+				Tag giant
+			}
+			TFBot
+			{
+				Template T_TFBot_Giant_Soldier_Extended_Buff_Banner
+				Tag giant
+			}
+			TFBot
+			{
+				Template T_TFBot_Giant_Soldier_Extended_Concheror
+				Tag giant
+			}
+
+		}
+	}
+	WaveSpawn
+	{
+		FirstSpawnOutput
+		{
+			Target airdrop_relay
+			Action Trigger
+		}
+		WaitForAllDead "first"
+		Name "last"
+		Where spawnbot_airdrop0
+		TotalCurrency 75
+		TotalCount 2
+		MaxActive 2
+		SpawnCount 2
+		TFBot
+			{
+				Template T_Big_Air_Striker
+			}
+	}
+	WaveSpawn
+	{
+		WaitForAllDead "first"
+		Name "last"
+		Where spawnbot_airdrop1
+		TotalCurrency 75
+		TotalCount 2
+		MaxActive 2
+		SpawnCount 2
+		TFBot
+			{
+				Template T_Big_Air_Striker
+			}
+	}
+	WaveSpawn
+	{
+		WaitForAllDead "first"
+		Name "last"
+		Where spawnbot_airdrop1
+		TotalCurrency 50
+		TotalCount 6
+		MaxActive 6
+		SpawnCount 6
+		TFBot
+		{
+			Template T_Air_Striker
+		}
+	}
+	WaveSpawn
+	{
+		WaitForAllDead "first"
+		Name "last"
+		Where spawnbot_airdrop0
+		TotalCurrency 50
+		TotalCount 6
+		MaxActive 6
+		SpawnCount 6
+		TFBot
+		{
+			Template T_Air_Striker
+		}
+	}
+	// Boss&supports
+	WaveSpawn
+	{
+		FirstSpawnOutput
+		{
+			Target airdrop_relay
+			Action Trigger
+		}
+		WaitForAllDead "last"
+		Where spawnbot_airdrop0
+		TotalCount 1
+		MaxActive 1
+		SpawnCount 1
+		WaitBetweenSpawns 7
+		WaitBeforeStarting 1
+		TotalCurrency 400		
+		TFBot
+		{
+			Template T_TFBot_Giant_Scout
+			Class Scout
+			Skill Expert
+			Item "The C.A.P.P.E.R"
+			Item "Death Racer's Helmet"
+			ItemAttributes
+			{
+				ItemName "The C.A.P.P.E.R"
+				"override projectile type" 13
+				"Projectile speed increased" 0.1
+			}
+			Name "A. C. E. 3500"
+			WeaponRestrictions SecondaryOnly
+			Attributes MiniBoss
+			Attributes UseBossHealthBar
+			Health 32000
+			Tag giant
+			CharacterAttributes
+			{
+				"damage force reduction" 0.3
+				"airblast vulnerability multiplier" 0.3
+				"cancel falling damage" 1
+				"boots falling stomp" 1
+				"move speed bonus"	0.25
+			}
+		}
+	}
+			WaveSpawn //Support
+	{
+			WaitForAllDead "last"
+			Where spawnbot
+			MaxActive 9
+			SpawnCount 2
+			WaitBetweenSpawns 4
+			WaitBeforeStarting 17	
+			Support 1
+			TFBot
+			{
+				Class Scout
+				Skill Easy
+				WeaponRestrictions SecondaryOnly
+				Item "The C.A.P.P.E.R"
+				Item "Bonk Leadwear"
+			}
+	}
+}
+Wave // final wave - 2 tanks, airdrop overuse, 3 "stages" Muneh: 900
+{
+	StartWaveOutput
+	{
+		Target wave_start_relay
+		Action Trigger
+	}
+	DoneOutput					
+	{
+		Target wave_finished_relay
+		Action trigger
+	}
+	WaitWhenDone 65
+
+	WaveSpawn
+	{
+		Name "tank"
+		TotalCurrency 250
+		TotalCount 1
+
+		Tank
+		{
+			Health 20000
+			Speed 75
+			Name "Tank"
+			Skin 0									
+			StartingPathTrackNode "path_tank_a"		
+	
+			OnKilledOutput							
+			{
+				Target tank_died_relay
+				Action Trigger                         
+			}
+
+			OnBombDroppedOutput					
+			{
+				Target bomb_dropped_relay
+				Action Trigger                         
+			}
+		}
+	}
+	WaveSpawn
+	{
+		Name "tank"
+		TotalCurrency 250
+		TotalCount 1
+		WaitBeforeStarting 10
+		Tank
+		{
+			Health 20000
+			Speed 75
+			Name "Tank"
+			Skin 1							
+			StartingPathTrackNode "path_tank_b"		
+
+			OnKilledOutput							
+			{
+				Target tank_died_relay
+				Action Trigger                         
+			}
+				
+			OnBombDroppedOutput					
+			{
+				Target bomb_dropped_relay
+				Action Trigger                         
+			}
+		}
+	}
+	WaveSpawn
+	{
+		Name "subwave"
+		TotalCurrency 100
+		TotalCount 24
+		MaxActive 6
+		SpawnCount 6
+		WaitBetweenSpawns 8
+		WaitBeforeStarting 0
+		Where spawnbot_main
+		TFBot
+		{
+			Class Soldier
+			Skill Normal
+		}
+	}
+	WaveSpawn
+	{
+		Name "subwave"
+		TotalCurrency 100
+		TotalCount 18
+		MaxActive 6
+		SpawnCount 6
+		WaitBetweenSpawns 8
+		WaitBeforeStarting 0
+		Where spawnbot
+		TFBot
+		{
+			Class Demoman
+			Skill Expert
+			Item "Loyalty Reward"
+		}
+	}
+	WaveSpawn
+	{
+		FirstSpawnOutput
+		{
+			Target airdrop_relay
+			Action Trigger
+		}
+		Name "giant"
+		WaitForAllDead "tank"
+		TotalCurrency 100
+		TotalCount 4
+		MaxActive 4
+		SpawnCount 4
+		WaitBetweenSpawns 0
+		WaitBeforeStarting 0
+		Where spawnbot_airdrop0
+		Squad
+		{
+			TFBot
+			{
+				Template T_TFBot_Giant_Soldier_Spammer
+				Item "The B.A.S.E. Jumper"
+				WeaponRestrictions PrimaryOnly
+				Attributes AlwaysCrit
+				CharacterAttributes
+				{
+					"cancel falling damage" 1
+				}
+				Tag giant
+			}
+			TFBot
+			{
+				Template T_TFBot_Medic
+				Item "The B.A.S.E. Jumper"
+			}
+			TFBot
+			{
+				Template T_TFBot_Medic
+				Item "The B.A.S.E. Jumper"
+			}
+			TFBot
+			{
+				Template T_TFBot_Medic
+				Item "The B.A.S.E. Jumper"
+			}
+		}
+	}
+	WaveSpawn
+	{
+		WaitForAllDead "subwave"
+		TotalCurrency 75		
+		TotalCount 30
+		MaxActive 6
+		SpawnCount 2
+		WaitBetweenSpawns 4
+		WaitBeforeStarting 0
+		Where spawnbot_main
+		RandomChoice
+		{
+			TFBot
+			{
+				Class Scout
+				Skill Expert
+			}
+			TFBot
+			{
+				Class Scout
+				Skill Expert
+				Tag nav_prefer_flank_left
+			}
+			TFBot
+			{
+				Class Scout
+				Skill Expert
+				Tag nav_prefer_flank_right
+			}
+			TFBot
+			{
+				Class Scout
+				Skill Expert
+				Tag nav_prefer_flank_middle
+			}
+		}
+	}
+	WaveSpawn
+	{
+		WaitForAllDead "subwave"
+		TotalCurrency 25		
+		TotalCount 30
+		MaxActive 6
+		SpawnCount 2
+		WaitBetweenSpawns 3
+		WaitBeforeStarting 0
+		Where spawnbot_main
+	TFBot
+		{
+			Template T_TFBot_Soldier_Extended_Buff_Banner
+			Skill Hard
+		}
+	}
+	WaveSpawn
+	{
+		Support 1
+		WaitForAllDead "giant"
+		TotalCount 2
+		MaxActive 2
+		SpawnCount 2
+		WaitBetweenSpawns 7
+		WaitBeforeStarting 0
+		Where spawnbot_airdrop1
+		Support 1
+		TFBot
+		{
+			Class Engineer
+			Skill Expert
+			Item "The B.A.S.E. Jumper"
+			CharacterAttributes
+			{
+				"cannot pick up intelligence" 1
+			}
+		}
+	}
+	WaveSpawn
+	{
+		FirstSpawnOutput
+		{
+			Target airdrop_relay
+			Action Trigger
+		}
+		WaitForAllDead "giant"
+		Where spawnbot_airdrop1
+		TotalCount 2
+		MaxActive 2
+		SpawnCount 2
+		Squad
+		{
+			TFBot
+			{
+				Template T_TFBot_Giant_Soldier_Crit
+				Item "The B.A.S.E. Jumper"
+				CharacterAttributes
+					{
+						"cancel falling damage" 1
+					}
+				Tag giant
+			}
+			TFBot
+			{
+				Template T_TFBot_Giant_Medic_Regen
+				Item "The B.A.S.E. Jumper"
+				CharacterAttributes
+					{
+						"cancel falling damage" 1
+					}
+				Tag giant
+				Item "The Gentleman's Ushanka"
+			}
+		}
+	}
+	WaveSpawn
+	{
+		WaitForAllDead "giant"
+		Where spawnbot_airdrop1
+		TotalCount 2
+		MaxActive 2
+		SpawnCount 2
+		Squad
+		{
+			TFBot
+			{
+				Template T_TFBot_Giant_Heavyweapons_BrassBeast
+				Item "The B.A.S.E. Jumper"
+				CharacterAttributes
+					{
+						"cancel falling damage" 1
+					}
+				Tag giant
+				Item "Pilotka"
+			}
+			TFBot
+			{
+				Template T_TFBot_Giant_Medic_Regen
+				Item "The B.A.S.E. Jumper"
+				CharacterAttributes
+					{
+						"cancel falling damage" 1
+					}
+				Tag giant
+				Item "The Gentleman's Ushanka"
+			}
+		}
+	}
+}
+}

@@ -1,0 +1,624 @@
+/////////////////////////////////////////////////////////////////////
+//
+// Example pop file for the map mvm_example.
+//
+// This pop file contains a sampling of wave types used in MVM and is commented.
+// 
+/////////////////////////////////////////////////////////////////////
+//
+// Helpful debug and console commands for developing MVM population scripts:
+//
+// sv_cheats 1 							// Allows cheat commands.
+// god 									// Enables god mode for players.
+// nb_stop 1							// Stops all bots in place.
+// nb_blind 1 							// Bots will not treat players as threats.
+// currency_give x						// Give player x amount of game currency to be used on upgrades.
+// tf_populator_health_multiplier x.x	// Multiplies health of enemy bots - example: tf_populator_health_multiplier 0.01 will set health of bots to 1% of normal.
+// tf_mvm_popfile abcd					// Will load the .pop file of the specified name - example tf_mvm_popfile mvm_mapname_challenge2 will load mvm_mapname_challenge2.pop in the tf/scripts/population directory.
+// tf_mvm_jump_to_wave x				// Will jump to the specified wave number of the current .pop file - example tf_mvm_jump_to_wave 6 will jump to wave 6.
+// tf_bot_flag_kill_on_touch 1			// When a bot picks up the flag, they die.
+//
+/////////////////////////////////////////////////////////////////////
+// BEGIN POP FILE
+/////////////////////////////////////////////////////////////////////
+
+
+#base robot_giant.pop                                         	// This pop file is marked to be included. These are other .pop files that contain templates for TFBots. In our WaveSpawns we can reference the templates in these pop files.
+#base robot_standard.pop									  	// This pop file is marked to be included. These are other .pop files that contain templates for TFBots. In our WaveSpawns we can reference the templates in these pop files.
+
+
+WaveSchedule													
+{
+
+	StartingCurrency		600                               // How much currency each player starts with. Normally 400 is a good starting point, but increased to 20k for the purpose of this test script.
+	
+	RespawnWaveTime 10                                        	// This is the maximum respawn time, in seconds for players when they die. Starting at 2 seconds, it grows 2 seconds per wave.
+																// In this case, wave 1 will have a respawn time of 2 seconds. Wave 2 - 4 seconds. Wave 3 - 6 seocnds, and so on until it hits the cap of 10 seconds for wave 5 and beyond.
+	
+	CanBotsAttackWhileInSpawnRoom no                          	// Sets the robots to not attack players while they are inside of their respawn room volume.
+	
+/////////////////
+//MISSIONS
+/////////////////	
+	
+	Mission 													// This is a sentry buster mission. It creates sentry busters for any player sentries deemed too dangerous.
+	{
+		Objective DestroySentries
+
+		InitialCooldown 5										// Amount of time once a wave starts before the mission becomes active. 
+		Where spawnbot_mission_sentrybuster						// Entity at which to spawn.
+		BeginAtWave 2											// The mission becomes active on this wave.
+		RunForThisManyWaves 6									// It remains active for this many waves. Generally, this is the same as the total number of waves.
+		CooldownTime 35            								// This is the time, in seconds, between when Sentry Busters are allowed to spawn, should their spawning conditions be met.
+
+            TFBot
+			{
+				Template T_TFBot_SentryBuster					// This references a template to use for its TFBot.
+            }
+	}
+	Mission 													// This is a sniper mission. This spawns sniper(s) at periodic intervals, it will not spawn more snipers unless its conditions are met, and all previous snipers from this mission are dead.
+	{
+		Objective Sniper
+
+		InitialCooldown 10										// Amount of time once a wave starts before the mission becomes active.
+		Where spawnbot_mission_sniper							// Entity at which to spawn.
+		BeginAtWave 3											// The mission becomes active on this wave.
+		RunForThisManyWaves 3									// It remains active for this many waves.
+		CooldownTime 35											// This is the time, in seconds, between when Sniper Missions are allowed to spawn, should their spawning conditions be met.
+		DesiredCount 2											// Number of snipers to spawn each time this mission's criteria are met.
+
+		TFBot
+		{
+			Class Sniper
+			Skill Expert
+			Name "Sniper"
+		}
+	}	
+	Mission 													// This is a spy mission. This spawns spy(s) at periodic intervals, it will not spawn more spies unless its conditions are met, and all previous spies from this mission are dead.
+	{
+		Objective Spy  
+
+		InitialCooldown 20										// Amount of time once a wave starts before the mission becomes active.
+		Where spawnbot_mission_spy								// Entity at which to spawn.
+		BeginAtWave 4											// The mission becomes active on this wave.
+		RunForThisManyWaves 2									// It remains active for this many waves.
+		CooldownTime 15											// This is the time, in seconds, between when Sniper Missions are allowed to spawn, should their spawning conditions be met.
+		DesiredCount 4											// Number of spies to spawn each time this mission's criteria are met.
+
+		TFBot
+		{
+			Class Spy
+			Skill Expert
+			Name "Buttseckser"
+		}
+	}	
+	
+/////////////////
+//WAVES
+/////////////////	
+	
+//WAVE 1  /////////////////////////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// This wave consists of 15 scouts, with 400 currency divided between them.
+// At the start of the wave scouts are spawned in groups of 5, 5 seconds apart, until there are 10 bots are in the world.
+// They spawn at the spawnpoint named spawnbot, and if multiple spawnbot spawn points exist, they choose a random spawnbot each time a group of 2 spawn.
+// As bots are eliminated, new bots spawn in groups of 5 as long as there are enough slots in the max active count.
+// The wave is over when all 15 bot scouts have been eliminated.
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	Wave
+	{
+		StartWaveOutput											// Output which occurs at moment the wave begins.
+		{
+			Target wave_start_relay								// Name of the entity in the map to target.
+			Action Trigger										// Input to give the targeted entity.
+		}
+		DoneOutput												// Output which occurrs at moment the wave is completed.
+		{
+			Target wave_finished_relay							// Name of the entity in the map to target.
+			Action trigger										// Input to give the targeted entity.
+		}
+
+		Checkpoint Yes											// Sets a checkpoint at the end of this wave.
+
+		WaveSpawn
+		{
+			Name "wavelolya"
+			Where spawnbot										// Entity at which to spawn.
+			TotalCount 15										// The total number of individual bots that will spawn.
+			MaxActive 10										// The maximum number of bots, from this WaveSpawn, that can be alive in the world at any moment.
+			SpawnCount 5										// Defines the number of bots to spawn at a time as a group. 
+	
+			WaitBeforeStarting 0								// Amount of time to wait before spawning the first bot.
+			WaitBetweenSpawns 5									// Amount of time to wait between spawning each group (defined by the spawncount) of bots.
+			
+			TotalCurrency 400									// Amount of money dropped by all of the bots in the WaveSpawn. Money is divided equally between each bot.
+				
+				TFBot
+				{
+					Class Scout									// Type of bot to spawn.
+					Skill Normal 								// Skill level of bot. options are Easy, Normal, Hard, Expert in ascending difficulty.
+					Name "Scout"
+				}
+		}
+		WaveSpawn 
+		{			
+			WaitForAllSpawned "wavelolya"					// This WaveSpawn containing the Tank will wait until all the bots in "wavenamefortank1" have spawned before it will become active.
+			
+			TotalCount 1
+			WaitBeforeStarting 15								
+			TotalCurrency 100
+
+			FirstSpawnOutput                                    // Output which occurs at moment the first enemy is spawned.                                                                                                                       
+			{
+				Target boss_spawn_relay                         // Name of the entity in the map to target.                  
+				Action Trigger                         			// Input to give the targeted entity.
+			}
+
+			Tank
+			{
+				Health 5000						 				// Amount of health the enemy has. Good starting values for Tanks outside of testing are generally in the 25k to 35k range.
+				Speed 150										// Speed of Tank in world units per seconds.
+				Name "Mobile Stripcub"
+				StartingPathTrackNode "tank_path_a_1"			// The path_track node in the level at which the Tank will spawn on the path the tank will follow.
+
+				OnKilledOutput                                	// Output which occurs at moment the enemy is destroyed.   
+				{
+					Target boss_dead_relay						// Name of the entity in the map to target.
+					Action Trigger                         		// Input to give the targeted entity.
+				}
+				
+				OnBombDroppedOutput                           	// Output which occurs at moment the tank drops its bomb. 
+				{
+					Target boss_deploy_relay 					// Name of the entity in the map to target.
+					Action Trigger                         		// Input to give the targeted entity.
+				}
+
+			}			
+		}
+	}		
+//WAVE 2  /////////////////////////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// This wave is identical to wave 1 except that the bot scouts are using a template located in one of the included pop files.
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	Wave
+	{
+		StartWaveOutput											
+		{
+			Target wave_start_relay								
+			Action Trigger										
+		}
+		DoneOutput												
+		{
+			Target wave_finished_relay							
+			Action trigger									
+		}
+
+		Checkpoint Yes						
+
+		WaveSpawn
+		{
+			Name "wavelolya"
+			Where spawnbot										// Entity at which to spawn.
+			TotalCount 45										// The total number of individual bots that will spawn.
+			MaxActive 15										// The maximum number of bots, from this WaveSpawn, that can be alive in the world at any moment.
+			SpawnCount 3										// Defines the number of bots to spawn at a time as a group. 
+	
+			WaitBeforeStarting 0								// Amount of time to wait before spawning the first bot.
+			WaitBetweenSpawns 5									// Amount of time to wait between spawning each group (defined by the spawncount) of bots.
+			
+			TotalCurrency 600									// Amount of money dropped by all of the bots in the WaveSpawn. Money is divided equally between each bot.
+				
+				TFBot
+				{
+					Class Heavyweapons
+					Name "Faster Heavy"								// Name of the bot used in the obituaries. If not specified, standard class name is used.
+					Skill Normal
+					Health 450
+					WeaponRestrictions MeleeOnly
+					CharacterAttributes
+					{
+						"move speed bonus"	1.5						// Multiplies the movement speed of this bot by the specified amount.
+					}
+				}
+		}
+	}
+//WAVE 3  /////////////////////////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// This wave is similar to wave 2 but with a TANK added that spawns 15 seconds AFTER all the scouts have been spawned.
+// Additionally, each individual scout, not the SpawnCount group as a whole, will spawn at a random spawn point of the specified name.
+// **SPY MISSION** is active for this wave, as defined at the top of the pop file.
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	Wave
+	{
+		StartWaveOutput											
+		{
+			Target wave_start_relay								
+			Action Trigger										
+		}
+		DoneOutput												
+		{
+			Target wave_finished_relay							
+			Action trigger									
+		}
+
+		Checkpoint Yes						
+
+		WaveSpawn
+		{
+			Name "wave1here"									// This is the name of this individual WaveSpawn within this wave.
+																// Other WaveSpawns in this wave can reference this name to control when they begin.
+			
+			Where spawnbot							
+			TotalCount 8									
+			MaxActive 8											
+			SpawnCount 2									
+	
+			WaitBeforeStarting 0								
+			WaitBetweenSpawns 5		
+
+			RandomSpawn 1										// Each individual bot, not the SpawnCount group as a whole, will spawn at a random spawnpoint of the specified name.
+			
+			TotalCurrency 300								
+				
+				TFBot
+				{
+					Class Scout
+					Name "Slow Scout"								// Name of the bot used in the obituaries. If not specified, standard class name is used.
+					Skill Expert
+					CharacterAttributes
+					{
+						"move speed bonus"	0.6						// Multiplies the movement speed of this bot by the specified amount.
+					}
+				}
+		}
+		WaveSpawn 
+		{			
+			WaitForAllSpawned "wave1here"					// This WaveSpawn containing the Tank will wait until all the bots in "wavenamefortank1" have spawned before it will become active.
+			WaitBeforeStarting 5	
+			Where spawnbot									
+			TotalCount 3									
+			MaxActive 3										
+			SpawnCount 1									
+	
+			WaitBeforeStarting 0							
+			WaitBetweenSpawns 1								
+			
+			TotalCurrency 500								
+				
+				TFBot
+				{
+					Class Scout
+					Name "Crazy Scout"								// Name of the bot used in the obituaries. If not specified, standard class name is used.
+					ClassIcon scout_giant							// Icon to use in the wave telegraph. If not specified, standard icon is used.
+					Skill Expert
+					Health 1100
+					WeaponRestrictions PrimaryOnly
+					MaxVisionRange 1200								// Sets the distance at which this bot will attempt to engage and attack players.
+					CharacterAttributes
+					{
+						"move speed bonus"	1.2						// Multiplies the movement speed of this bot by the specified amount.
+						"damage bonus"	2.0							// Multiplies the damage output of this bot by the specified amount.
+						"damage force reduction" 0.3				// Multiplies the damage forces applied to this bot by the specified amount.
+						"airblast vulnerability multiplier" 0.3		// Multiplies airblast forces applied to this bot by the specified amount.
+						"override footstep sound set" 2				// Sets the footstep sounds to that of a giant.
+					}
+				}
+		}
+
+	}
+
+//WAVE 4  /////////////////////////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// This wave consists of 18 bots, with 400 currency divided between them.
+// At the start of the wave bots are spawned in groups of 3, 1 second apart, until there are 9 bots are in the world.
+// For each bot spawned, a random TFBot from those listed inside the RandomChoice is picked.
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	Wave
+	{
+		StartWaveOutput											
+		{
+			Target wave_start_relay								
+			Action Trigger										
+		}
+		DoneOutput												
+		{
+			Target wave_finished_relay							
+			Action trigger										
+		}
+
+		Checkpoint Yes											
+
+		WaveSpawn
+		{
+			Name "wavenamefortank0"
+			Where spawnbot										
+			TotalCount 18										
+			MaxActive 9											
+			SpawnCount 3										
+	
+			WaitBeforeStarting 0								
+			WaitBetweenSpawns 1									
+			
+			TotalCurrency 500									
+				
+			RandomChoice										// Contains a set of spawners and invokes one at random.
+			{
+				TFBot
+				{
+					Class Scout
+					Skill Easy
+					Name "Easy Scout"
+				}
+				TFBot
+				{
+					Class Pyro
+					Skill Easy
+					Name "Easy Pyro"
+				}
+				TFBot
+				{
+					Class Soldier
+					Skill Easy
+					Name "Easy Soldier"
+				}
+			}
+		}
+		WaveSpawn 
+		{			
+			WaitForAllSpawned "wavenamefortank0"					// This WaveSpawn containing the Tank will wait until all the bots in "wavenamefortank1" have spawned before it will become active.
+			
+			TotalCount 1
+			WaitBeforeStarting 10								
+			TotalCurrency 350
+
+			FirstSpawnOutput                                    // Output which occurs at moment the first enemy is spawned.                                                                                                                       
+			{
+				Target boss_spawn_relay                         // Name of the entity in the map to target.                  
+				Action Trigger                         			// Input to give the targeted entity.
+			}
+
+			Tank
+			{
+				Health 15000						 				// Amount of health the enemy has. Good starting values for Tanks outside of testing are generally in the 25k to 35k range.
+				Speed 125										// Speed of Tank in world units per seconds.
+				Name "Mobile Stripcub"
+				StartingPathTrackNode "tank_path_a_1"			// The path_track node in the level at which the Tank will spawn on the path the tank will follow.
+
+				OnKilledOutput                                	// Output which occurs at moment the enemy is destroyed.   
+				{
+					Target boss_dead_relay						// Name of the entity in the map to target.
+					Action Trigger                         		// Input to give the targeted entity.
+				}
+				
+				OnBombDroppedOutput                           	// Output which occurs at moment the tank drops its bomb. 
+				{
+					Target boss_deploy_relay 					// Name of the entity in the map to target.
+					Action Trigger                         		// Input to give the targeted entity.
+				}
+
+			}			
+		}
+	}
+
+//WAVE 5  ////////////////////////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// This wave also demonstrates of a squad of robots - this time with medics as the minions supporting a squad leader.
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	Wave
+	{
+		StartWaveOutput										
+		{
+			Target wave_start_relay							
+			Action Trigger									
+		}
+		DoneOutput											
+		{
+			Target wave_finished_relay						
+			Action trigger									
+		}
+
+		Checkpoint Yes										
+
+		WaveSpawn  
+		{			
+			Where spawnbot
+			TotalCount 8										
+			MaxActive 8										
+			SpawnCount 4									
+			WaitBetweenSpawns 5
+			WaitBeforeStarting 0
+			TotalCurrency 600	
+			
+			Squad 
+			{
+				TFBot
+				{
+					Template T_TFBot_Giant_Demoman			
+				}
+				TFBot
+				{
+					Template T_TFBot_Medic_QuickUber   			// When a medic is supporting a squad leader, they do not take the standard formation. Instead, they attempt to hang back behind the squad leader while healing.
+				}
+				TFBot
+				{
+					Template T_TFBot_Medic_QuickUber    		// When a medic is supporting a squad leader, they do not take the standard formation. Instead, they attempt to hang back behind the squad leader while healing.	                                  
+				}
+				TFBot
+				{
+					Template T_TFBot_Medic_QuickUber    		// When a medic is supporting a squad leader, they do not take the standard formation. Instead, they attempt to hang back behind the squad leader while healing.	                                       
+				}
+			}
+		}
+		WaveSpawn												// This is the support WaveSpawn.								
+		{
+			Where spawnbot							
+			TotalCount 4										// For a support WaveSpawn, this number is used to divide the currency. In this case, only the first 4 support bots will drop currency, yet an infinite number of bots may be spawned.					
+			MaxActive 4											
+			SpawnCount 4									
+	
+			WaitBeforeStarting 2								
+			WaitBetweenSpawns 5							
+			
+			TotalCurrency 100	
+
+			Support 1											// Sets this WaveSpawn as support.
+				
+				TFBot
+				{
+					Class Demoman
+					Name "Support Demo"
+					Skill Easy
+				}
+		}
+	}
+//WAVE 6  ////////////////////////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// This wave demonstrates a support WaveSpawn.
+// Support WaveSpawns continue to run and output an infinite number of bots until the other non-support
+// WaveSpawns have been eliminated.
+// Currency in support WaveSpawns will be distributed amongst the first bots spawned until the TotalCount is reached.
+// After the total count, support bots will no longer drop currency.
+// If the wave ends and not all of the support currency has been dropped, that remaining currency will dropped by
+// the last support bot killed.
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	Wave
+	{
+		StartWaveOutput											
+		{
+			Target wave_start_relay								
+			Action Trigger										
+		}
+		DoneOutput												
+		{
+			Target wave_finished_relay							
+			Action trigger									
+		}
+
+		Checkpoint Yes						
+
+
+
+
+		WaveSpawn
+		{
+			Where spawnbot									
+			TotalCount 2									
+			MaxActive 2										
+			SpawnCount 1									
+	
+			WaitBeforeStarting 0							
+			WaitBetweenSpawns 1								
+			
+			TotalCurrency 400								
+				
+				TFBot
+				{
+					Class Heavyweapons
+					Name "Humongous heavy"								// Name of the bot used in the obituaries. If not specified, standard class name is used.
+					ClassIcon heavy_giant							// Icon to use in the wave telegraph. If not specified, standard icon is used.
+					Skill Expert
+					Health 9001
+					WeaponRestrictions PrimaryOnly
+					MaxVisionRange 1200								// Sets the distance at which this bot will attempt to engage and attack players.
+					CharacterAttributes
+					{
+						"move speed bonus"	0.3						// Multiplies the movement speed of this bot by the specified amount.
+						"damage bonus"	1.5							// Multiplies the damage output of this bot by the specified amount.
+						"damage force reduction" 0.3				// Multiplies the damage forces applied to this bot by the specified amount.
+						"airblast vulnerability multiplier" 0.3		// Multiplies airblast forces applied to this bot by the specified amount.
+						"override footstep sound set" 2				// Sets the footstep sounds to that of a giant.
+					}
+				}
+		}
+		WaveSpawn
+		{
+			Name "wavenamefortank1"
+			Where spawnbot							
+			TotalCount 15									
+			MaxActive 10											
+			SpawnCount 5									
+	
+			WaitBeforeStarting 0								
+			WaitBetweenSpawns 8								
+			
+			TotalCurrency 200								
+				
+				TFBot
+				{
+					Class Soldier
+					Skill Expert
+					Name "Easy Soldier"
+					CharacterAttributes
+					{
+						"move speed bonus"	0.5						// Multiplies the movement speed of this bot by the specified amount.
+						"damage bonus"	0.5							// Multiplies the damage output of this bot by the specified amount.
+
+					}
+				}
+		}
+		WaveSpawn												// This is the support WaveSpawn.								
+		{
+			Where spawnbot							
+			TotalCount 4										// For a support WaveSpawn, this number is used to divide the currency. In this case, only the first 4 support bots will drop currency, yet an infinite number of bots may be spawned.					
+			MaxActive 4											
+			SpawnCount 4									
+	
+			WaitBeforeStarting 2								
+			WaitBetweenSpawns 5							
+			
+			TotalCurrency 200	
+
+			Support 1											// Sets this WaveSpawn as support.
+				
+				TFBot
+				{
+					Class Pyro
+					Name "Speedy Pyro"
+					Skill Easy
+					CharacterAttributes
+					{
+						"move speed bonus"	2.9						// Multiplies the movement speed of this bot by the specified amount.
+						"damage bonus"	0.2							// Multiplies the damage output of this bot by the specified amount.
+						"damage force reduction" 3.0				// Multiplies the damage forces applied to this bot by the specified amount.
+						"airblast vulnerability multiplier" 3.0		// Multiplies airblast forces applied to this bot by the specified amount.
+					}
+
+				}
+		}
+		WaveSpawn 
+		{			
+			WaitForAllSpawned "wavenamefortank1"					// This WaveSpawn containing the Tank will wait until all the bots in "wavenamefortank1" have spawned before it will become active.
+			
+			TotalCount 1
+			WaitBeforeStarting 5								
+			TotalCurrency 900
+
+			FirstSpawnOutput                                    // Output which occurs at moment the first enemy is spawned.                                                                                                                       
+			{
+				Target boss_spawn_relay                         // Name of the entity in the map to target.                  
+				Action Trigger                         			// Input to give the targeted entity.
+			}
+
+			Tank
+			{
+				Health 35000						 				// Amount of health the enemy has. Good starting values for Tanks outside of testing are generally in the 25k to 35k range.
+				Speed 100										// Speed of Tank in world units per seconds.
+				Name "Mobile Stripcub"
+				StartingPathTrackNode "tank_path_a_1"			// The path_track node in the level at which the Tank will spawn on the path the tank will follow.
+
+				OnKilledOutput                                	// Output which occurs at moment the enemy is destroyed.   
+				{
+					Target boss_dead_relay						// Name of the entity in the map to target.
+					Action Trigger                         		// Input to give the targeted entity.
+				}
+				
+				OnBombDroppedOutput                           	// Output which occurs at moment the tank drops its bomb. 
+				{
+					Target boss_deploy_relay 					// Name of the entity in the map to target.
+					Action Trigger                         		// Input to give the targeted entity.
+				}
+
+			}			
+		}
+	}
+}

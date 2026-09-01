@@ -1,0 +1,1829 @@
+/////////////////////////////////////////////////////////////////////
+//
+// Example pop file for the map mvm_example.
+//
+// This pop file contains a sampling of wave types used in MVM and is commented.
+// 
+/////////////////////////////////////////////////////////////////////
+//
+// Helpful debug and console commands for developing MVM population scripts:
+//
+// sv_cheats 1 							// Allows cheat commands.
+// god 									// Enables god mode for players.
+// nb_stop 1							// Stops all bots in place.
+// nb_blind 1 							// Bots will not treat players as threats.
+// currency_give x						// Give player x amount of game currency to be used on upgrades.
+// tf_populator_health_multiplier x.x	// Multiplies health of enemy bots - example: tf_populator_health_multiplier 0.01 will set health of bots to 1% of normal.
+// tf_mvm_popfile abcd					// Will load the .pop file of the specified name - example tf_mvm_popfile mvm_mapname_challenge2 will load mvm_mapname_challenge2.pop in the tf/scripts/population directory.
+// tf_mvm_jump_to_wave x				// Will jump to the specified wave number of the current .pop file - example tf_mvm_jump_to_wave 6 will jump to wave 6.
+// tf_bot_flag_kill_on_touch 1			// When a bot picks up the flag, they die.
+//
+/////////////////////////////////////////////////////////////////////
+// BEGIN POP FILE
+/////////////////////////////////////////////////////////////////////
+
+
+#base robot_giant.pop                                         	// This pop file is marked to be included. These are other .pop files that contain templates for TFBots. In our WaveSpawns we can reference the templates in these pop files.
+#base robot_standard.pop									  	// This pop file is marked to be included. These are other .pop files that contain templates for TFBots. In our WaveSpawns we can reference the templates in these pop files.
+#base robot_minecraft.pop
+
+WaveSchedule													
+{
+
+	StartingCurrency		700                               // How much currency each player starts with. Normally 400 is a good starting point, but increased to 20k for the purpose of this test script.
+	
+	RespawnWaveTime 6                                        	// This is the maximum respawn time, in seconds for players when they die. Starting at 2 seconds, it grows 2 seconds per wave.
+																// In this case, wave 1 will have a respawn time of 2 seconds. Wave 2 - 4 seconds. Wave 3 - 6 seocnds, and so on until it hits the cap of 10 seconds for wave 5 and beyond.
+	
+	CanBotsAttackWhileInSpawnRoom no                          	// Sets the robots to not attack players while they are inside of their respawn room volume.
+	
+/////////////////
+//MISSIONS
+/////////////////	
+	
+	Mission 													// This is a sentry buster mission. It creates sentry busters for any player sentries deemed too dangerous.
+	{
+		Objective DestroySentries
+
+		InitialCooldown 5										// Amount of time once a wave starts before the mission becomes active. 
+		Where spawnbot_mission_sentrybuster						// Entity at which to spawn.
+		BeginAtWave 1											// The mission becomes active on this wave.
+		RunForThisManyWaves 11									// It remains active for this many waves. Generally, this is the same as the total number of waves.
+		CooldownTime 35            								// This is the time, in seconds, between when Sentry Busters are allowed to spawn, should their spawning conditions be met.
+
+            TFBot
+			{
+				Template T_TFBot_SentryBuster					// This references a template to use for its TFBot.
+            }
+	}
+	Mission 													// This is a spy mission. This spawns spy(s) at periodic intervals, it will not spawn more spies unless its conditions are met, and all previous spies from this mission are dead.
+	{
+		Objective Spy  
+
+		InitialCooldown 15										// Amount of time once a wave starts before the mission becomes active.
+		Where spawnbot_mission_spy								// Entity at which to spawn.
+		BeginAtWave 4											// The mission becomes active on this wave.
+		RunForThisManyWaves 1									// It remains active for this many waves.
+		CooldownTime 30										// This is the time, in seconds, between when Sniper Missions are allowed to spawn, should their spawning conditions be met.
+		DesiredCount 1									// Number of spies to spawn each time this mission's criteria are met.
+
+		TFBot
+		{
+			Template Enderman
+		}
+	}	
+	Mission 													// This is a spy mission. This spawns spy(s) at periodic intervals, it will not spawn more spies unless its conditions are met, and all previous spies from this mission are dead.
+	{
+		Objective Spy  
+
+		InitialCooldown 15										// Amount of time once a wave starts before the mission becomes active.
+		Where spawnbot_mission_spy								// Entity at which to spawn.
+		BeginAtWave 5											// The mission becomes active on this wave.
+		RunForThisManyWaves 1									// It remains active for this many waves.
+		CooldownTime 25											// This is the time, in seconds, between when Sniper Missions are allowed to spawn, should their spawning conditions be met.
+		DesiredCount 1									// Number of spies to spawn each time this mission's criteria are met.
+
+		TFBot
+		{
+			Template Enderman
+		}
+	}	
+	
+/////////////////
+//WAVES
+/////////////////	
+	
+//WAVE 1 - 700 starting, 550 + 100
+	Wave
+	{
+		StartWaveOutput									// Output which occurs at moment the wave begins.
+		{
+			Target wave_start_relay								// Name of the entity in the map to target.
+			Action trigger										// Input to give the targeted entity.
+		}
+		InitWaveOutput											// Output which occurs at moment the wave begins.
+		{
+			Target wave_spell_relay								// Name of the entity in the map to target.
+			Action FireUser1									// Input to give the targeted entity.
+		}
+		
+		DoneOutput												// Output which occurrs at moment the wave is completed.
+		{
+			Target wave_finished_relay							// Name of the entity in the map to target.
+			Action trigger										// Input to give the targeted entity.
+		}
+
+		Checkpoint Yes											// Sets a checkpoint at the end of this wave.
+
+		WaveSpawn
+		{
+			Name wave1a
+			Where spawnbot									
+			TotalCount 20										
+			MaxActive 10										
+			SpawnCount 5
+			WaitBeforeStarting 0								
+			WaitBetweenSpawns 8					
+			
+			TotalCurrency 150									
+			
+			TFBot
+			{
+				Template ZombieLow
+				Health 220
+			}
+		}
+		WaveSpawn
+		{
+			Name wave1b
+			Where spawnbot									
+			TotalCount 24										
+			MaxActive 8										
+			SpawnCount 4
+			WaitBeforeStarting 0								
+			WaitBetweenSpawns 9
+			Support 1
+			
+			TotalCurrency 150									
+			
+			TFBot
+			{
+				Template Spider
+			}
+		}
+		WaveSpawn
+		{
+			Name wave2a
+			Where spawnbot_right								
+			TotalCount 1									
+			MaxActive 1										
+			SpawnCount 1
+			WaitBeforeStarting 0								
+			WaitBetweenSpawns 8
+			WaitForAllDead wave1a
+			TotalCurrency 100									
+			
+			TFBot
+			{
+				Template SlimeBig
+			}
+		}
+		WaveSpawn
+		{
+			Name wave2a-s
+			Where spawnbot_deathpos									
+			TotalCount 3									
+			MaxActive 3 										
+			SpawnCount 3
+			WaitBeforeStarting 0.1								
+			WaitBetweenSpawns 8
+			WaitForAllDead wave2a	
+			Support Limited								
+			
+			TFBot
+			{
+				Template Slime
+				ClassIcon slime_support
+			}
+		}
+		WaveSpawn
+		{
+			Name wave2b
+			Where spawnbot_right								
+			TotalCount 1									
+			MaxActive 1										
+			SpawnCount 1
+			WaitBeforeStarting 0								
+			WaitBetweenSpawns 8
+			WaitForAllDead wave1a
+			TotalCurrency 50									
+			
+			TFBot
+			{
+				Template Slime
+			}
+		}
+		WaveSpawn
+		{
+			Name wave2b-s
+			Where spawnbot_deathpos									
+			TotalCount 3									
+			MaxActive 3 										
+			SpawnCount 3
+			WaitBeforeStarting 0.1								
+			WaitBetweenSpawns 8
+			WaitForAllDead wave2b	
+			Support Limited								
+			
+			TFBot
+			{
+				Template SlimeSmall
+				ClassIcon slime_support
+			}
+		}
+		WaveSpawn
+		{
+			Name wave2c
+			Where spawnbot_right									
+			TotalCount 1									
+			MaxActive 1										
+			SpawnCount 1
+			WaitBeforeStarting 0								
+			WaitBetweenSpawns 8
+			WaitForAllDead wave1a
+			TotalCurrency 50									
+			
+			TFBot
+			{
+				Template Slime
+			}
+		}
+		WaveSpawn
+		{
+			Name wave2c-s
+			Where spawnbot_deathpos									
+			TotalCount 3									
+			MaxActive 3 										
+			SpawnCount 3
+			WaitBeforeStarting 0.1								
+			WaitBetweenSpawns 8
+			WaitForAllDead wave2c
+			Support Limited					
+			
+			TFBot
+			{
+				Template SlimeSmall
+				ClassIcon slime_support
+			}
+		}
+		WaveSpawn
+		{
+			Name wave2c
+			Where spawnbot_flank	
+			TotalCount 6										
+			MaxActive 4										
+			SpawnCount 2
+			WaitBeforeStarting 0								
+			WaitBetweenSpawns 10				
+			WaitForAllDead wave1a
+			TotalCurrency 50									
+			
+			TFBot
+			{
+				Template Creeper
+			}
+		}
+	}
+	//Wave 2 - 1250 starting, 650 + 100
+	Wave
+	{
+		StartWaveOutput											
+		{
+			Target wave_start_relay								
+			Action trigger										
+		}
+		InitWaveOutput											// Output which occurs at moment the wave begins.
+		{
+			Target wave_spell_relay								// Name of the entity in the map to target.
+			Action FireUser1									// Input to give the targeted entity.
+		}
+		DoneOutput												
+		{
+			Target wave_finished_relay							
+			Action trigger									
+		}
+
+		Checkpoint Yes		
+
+		WaveSpawn
+		{
+			Name wave1a
+			Where spawnbot									
+			TotalCount 21										
+			MaxActive 7										
+			SpawnCount 7
+			WaitBeforeStarting 0								
+			WaitBetweenSpawns 5						
+			
+			TotalCurrency 150									
+			
+			TFBot
+			{
+				Template Pigman
+			}
+		}
+		WaveSpawn
+		{
+			Name wave1b
+			Where spawnbot									
+			TotalCount 16										
+			MaxActive 8										
+			SpawnCount 4
+			WaitBeforeStarting 15								
+			WaitBetweenSpawns 10						
+			
+			TotalCurrency 150									
+			
+			TFBot
+			{
+				Template Skeleton
+			}
+		}
+		WaveSpawn
+		{
+			Name wave1c
+			Where spawnbot_portal									
+			TotalCount 4										
+			MaxActive 2										
+			SpawnCount 1
+			Support 1
+			WaitBeforeStarting 30								
+			WaitBetweenSpawns 15						
+			
+			TotalCurrency 100								
+			
+			TFBot
+			{
+				Template Ghast
+			}
+		}
+		WaveSpawn
+		{
+			Name wave2a
+			Where spawnbot								
+			TotalCount 10										
+			MaxActive 10								
+			SpawnCount 5
+			WaitBeforeStarting 4								
+			WaitBetweenSpawns 27						
+			WaitForAllDead wave1a
+			TotalCurrency 150									
+			
+			Squad
+			{
+				TFBot
+				{
+					Template ZombieGiant
+				}
+				TFBot
+				{
+					Template ZombieLow
+				}
+				TFBot
+				{
+					Template ZombieLow
+				}
+				TFBot
+				{
+					Template Zombie
+				}
+				TFBot
+				{
+					Template Zombie
+				}
+			}
+		}
+		WaveSpawn
+		{
+			Name wave2c
+			Where spawnbot									
+			TotalCount 7										
+			MaxActive 7										
+			SpawnCount 7
+			WaitBeforeStarting 18								
+			WaitBetweenSpawns 8						
+			WaitForAllDead wave1a
+			TotalCurrency 50									
+			
+			TFBot
+			{
+				Template Pigman
+			}
+		}
+		WaveSpawn
+		{
+			Name wave2b
+			Where spawnbot								
+			TotalCount 8										
+			MaxActive 4								
+			SpawnCount 4
+			WaitBeforeStarting 0								
+			WaitBetweenSpawns 1						
+			WaitForAllDead wave1b
+			TotalCurrency 50									
+			
+			Squad
+			{
+				TFBot
+				{
+					Template Wolf
+				}
+			}
+		}
+	}
+	//wave 3 - 2000 starting, 750 + 100
+	Wave
+	{
+		StartWaveOutput											
+		{
+			Target wave_start_relay								
+			Action trigger										
+		}
+		InitWaveOutput											// Output which occurs at moment the wave begins.
+		{
+			Target wave_spell_relay								// Name of the entity in the map to target.
+			Action FireUser2									// Input to give the targeted entity.
+		}
+		DoneOutput												
+		{
+			Target wave_finished_relay							
+			Action trigger									
+		}
+
+		Checkpoint Yes						
+
+		WaveSpawn
+		{
+			Name wave1a
+			Where spawnbot_right		
+			TotalCount 6									
+			MaxActive 2											
+			SpawnCount 2									
+			
+			WaitBeforeStarting 0								
+			WaitBetweenSpawns 20								
+			
+			TotalCurrency 100
+			TFBot
+			{
+				Template IronGolem	     		
+			}
+		}
+
+		WaveSpawn
+		{
+			Name wave1b
+			Where spawnbot_left				
+			TotalCount 42									
+			MaxActive 6											
+			SpawnCount 6									
+			
+			WaitBeforeStarting 12								
+			WaitBetweenSpawns 5								
+			
+			TotalCurrency 150
+
+			RandomChoice
+			{
+				TFBot
+				{
+					Template Spider
+					Attributes AlwaysCrit  		
+				}
+				TFBot
+				{
+					Template SpiderPoison   		
+				}
+				TFBot
+				{
+					Template SpiderPoison   		
+				}
+			}
+		}
+		WaveSpawn
+		{
+			Name wave1ca
+			Where spawnbot_right				
+			TotalCount 8									
+			MaxActive 4											
+			SpawnCount 4									
+			
+			WaitBeforeStarting 0								
+			WaitBetweenSpawns 10								
+			
+			TotalCurrency 100
+			Squad
+			{
+				TFBot
+				{
+					Template VindicatorWeak     		
+				}
+				TFBot
+				{
+					Template Pillager     		
+				}
+				TFBot
+				{
+					Template Pillager	     		
+				}
+				TFBot
+				{
+					Template Pillager	     		
+				}
+			}
+		}
+		WaveSpawn
+		{
+			Name wave1c
+			Where spawnbot_right				
+			TotalCount 8									
+			MaxActive 4											
+			SpawnCount 4									
+			
+			WaitForAllDead wave1ca
+			WaitBeforeStarting 0								
+			WaitBetweenSpawns 10								
+			
+			TotalCurrency 100
+			Squad
+			{
+				TFBot
+				{
+					Template VindicatorWeak     		
+				}
+				TFBot
+				{
+					Template Pillager     		
+				}
+				TFBot
+				{
+					Template Pillager	     		
+				}
+				TFBot
+				{
+					Template Pillager	     		
+				}
+			}
+		}
+		WaveSpawn
+		{
+			Name wave1e
+			Where spawnbot_left				
+			TotalCount 6									
+			MaxActive 2											
+			SpawnCount 2
+			WaitForAllDead wave1a							
+			
+			WaitBeforeStarting 4								
+			WaitBetweenSpawns 10								
+			
+			TotalCurrency 50
+			TFBot
+			{
+				Template Witch     		
+			}
+		}
+		WaveSpawn
+		{
+			Name wave1f
+			Where spawnbot_left				
+			TotalCount 1									
+			MaxActive 1											
+			SpawnCount 1									
+			
+			WaitBeforeStarting 18								
+			WaitBetweenSpawns 5	
+			WaitForAllSpawned wave1ca							
+			
+			TotalCurrency 100
+
+			TFBot
+			{
+				Template SlimeGiant
+			}
+		}
+		WaveSpawn
+		{
+			Name wave1f_S
+			Where spawnbot_deathpos			
+			TotalCount 3									
+			MaxActive 3											
+			SpawnCount 3									
+			
+			WaitBeforeStarting 0.1								
+			WaitBetweenSpawns 5
+			WaitForAllDead wave1f
+			Support Limited	
+
+			TFBot
+			{
+				Template SlimeBig
+				ClassIcon slime_support
+			}
+		}
+
+		WaveSpawn
+		{
+			Name wave1i
+			Where spawnbot_left				
+			TotalCount 1									
+			MaxActive 1											
+			SpawnCount 1									
+			
+			WaitBeforeStarting 23								
+			WaitBetweenSpawns 5	
+			WaitForAllSpawned wave1c							
+			
+			TotalCurrency 100
+
+			TFBot
+			{
+				Template SlimeGiant
+			}
+		}
+		WaveSpawn
+		{
+			Name wave1i_S
+			Where spawnbot_deathpos			
+			TotalCount 3									
+			MaxActive 3											
+			SpawnCount 3									
+			
+			WaitBeforeStarting 0.1								
+			WaitBetweenSpawns 5
+			WaitForAllDead wave1i
+			Support Limited	
+
+			TFBot
+			{
+				Template SlimeBig
+				ClassIcon slime_support
+			}
+		}
+
+		WaveSpawn
+		{
+			Name wave1g
+			Where spawnbot				
+			TotalCount 10									
+			MaxActive 2											
+			SpawnCount 2									
+			Support 1
+
+			WaitBeforeStarting 12								
+			WaitBetweenSpawns 18	
+			WaitForAllSpawned wave1c							
+			
+			TotalCurrency 50
+
+			TFBot
+			{
+				Template Creeper	
+			}
+		}
+		WaveSpawn
+		{
+			Name wave1h
+			Where spawnbot_right				
+			TotalCount 2									
+			MaxActive 2											
+			SpawnCount 1									
+			
+			WaitBeforeStarting 0								
+			WaitBetweenSpawns 23	
+			WaitForAllDead wave1f						
+			
+			TotalCurrency 100
+
+			TFBot
+			{
+				Template SkeletonGiant
+			}
+		}
+	}
+	//wave 4 - 2850 starting, 700 + 100
+	Wave
+	{
+		StartWaveOutput											// Output which occurs at moment the wave begins.
+		{
+			Target wave_start_relay								// Name of the entity in the map to target.
+			Action trigger										// Input to give the targeted entity.
+		}
+		InitWaveOutput											// Output which occurs at moment the wave begins.
+		{
+			Target wave_spell_relay								// Name of the entity in the map to target.
+			Action FireUser3									// Input to give the targeted entity.
+		}
+		DoneOutput												// Output which occurrs at moment the wave is completed.
+		{
+			Target wave_finished_relay							// Name of the entity in the map to target.
+			Action trigger										// Input to give the targeted entity.
+		}
+
+		Checkpoint Yes
+		WaveSpawn
+		{
+			Name wave1a
+			Where spawnbot_portal			
+			TotalCount 16									
+			MaxActive 4											
+			SpawnCount 4
+
+			WaitBeforeStarting 1								
+			WaitBetweenSpawns 10							
+			
+			TotalCurrency 125
+
+			TFBot
+			{
+				Template BlazeFlag	
+			}
+		}
+		WaveSpawn
+		{
+			Name wave1b
+			Where spawnbot_right
+			TotalCount 18									
+			MaxActive 9											
+			SpawnCount 9
+				
+			WaitBeforeStarting 0								
+			WaitBetweenSpawns 12						
+			
+			TotalCurrency 125
+
+			TFBot
+			{
+				Template BabyZombie
+			}
+		}
+		WaveSpawn
+		{
+			Name wave2cg
+			Where spawnbot		
+			TotalCount 1									
+			MaxActive 1											
+			SpawnCount 1	
+			WaitBeforeStarting 30								
+			WaitBetweenSpawns 15					
+			
+			TotalCurrency 10
+
+			TFBot
+			{
+				Template SpiderGiant
+			}
+		}
+		WaveSpawn
+		{
+			Name wave1c
+			Where spawnbot_left			
+			TotalCount 8									
+			MaxActive 4											
+			SpawnCount 2
+
+			WaitBeforeStarting 25								
+			WaitBetweenSpawns 10							
+			
+			TotalCurrency 85
+
+			TFBot
+			{
+				Template SkeletonArmored	
+			}
+		}
+		WaveSpawn
+		{
+			Name wave1d
+			Where spawnbot_right		
+			TotalCount 2									
+			MaxActive 2											
+			SpawnCount 1
+
+			WaitBeforeStarting 12								
+			WaitBetweenSpawns 14							
+			
+			TotalCurrency 35
+
+			TFBot
+			{
+				Template ZombieGiant	
+			}
+		}
+		WaveSpawn
+		{
+			Name wave1e
+			Where spawnbot_right		
+			TotalCount 1									
+			MaxActive 1											
+			SpawnCount 1
+
+			WaitBeforeStarting 8								
+			WaitBetweenSpawns 14							
+			WaitForAllDead wave1d
+			TotalCurrency 150
+
+			Tank
+			{
+				Health 13000
+				Speed 75
+				Name "boss"
+				StartingPathTrackNode "tank_path_a_1"
+
+				OnKilledOutput                                  
+				{
+					Target boss_dead_relay
+					Action Trigger                         
+				}
+				OnBombDroppedOutput                             
+				{
+					Target boss_deploy_relay 
+					Action Trigger                         
+				}
+			}
+		}
+		
+		WaveSpawn
+		{
+			Name wave2a
+			Where spawnbot_portal		
+			TotalCount 6									
+			MaxActive 6											
+			SpawnCount 6
+			WaitForAllDead wave1e
+			WaitBeforeStarting 1								
+			WaitBetweenSpawns 15							
+			
+			TotalCurrency 50
+
+			TFBot
+			{
+				Template GhastFlag	
+			}
+		}
+		WaveSpawn
+		{
+			Name wave2b
+			Where spawnbot		
+			TotalCount 11									
+			MaxActive 11											
+			SpawnCount 11
+			WaitForAllDead wave1e
+
+			WaitBeforeStarting 3								
+			WaitBetweenSpawns 8
+
+			TotalCurrency 50
+
+			TFBot
+			{
+				Template Skeleton	
+			}
+		}
+		WaveSpawn
+		{
+			Name wave2c
+			Where spawnbot		
+			TotalCount 1									
+			MaxActive 1											
+			SpawnCount 1
+			WaitForAllDead wave1e	
+			WaitBeforeStarting 0								
+			WaitBetweenSpawns 15					
+			
+			TotalCurrency 15
+
+			TFBot
+			{
+				Template SpiderGiant
+			}
+		}
+		WaveSpawn
+		{
+			Name wave1e
+			Where spawnbot_right	
+			TotalCount 1									
+			MaxActive 1											
+			SpawnCount 1
+
+			WaitForAllSpawned wave1c
+			WaitBeforeStarting 12								
+			WaitBetweenSpawns 8							
+			
+			TotalCurrency 15
+
+			TFBot
+			{
+				Template MagmaCubeBig	
+			}
+		}
+		WaveSpawn
+		{
+			Name wave1e_s
+			Where spawnbot_deathpos	
+			TotalCount 3									
+			MaxActive 3											
+			SpawnCount 3
+
+			WaitForAllDead wave1e
+			WaitBeforeStarting 0.1								
+			WaitBetweenSpawns 0.1
+			Support Limited	
+
+			TFBot
+			{
+				Template MagmaCube	
+				ClassIcon magma_cube_support
+			}
+		}
+		WaveSpawn
+		{
+			Name wave1f
+			Where spawnbot_right	
+			TotalCount 1									
+			MaxActive 1											
+			SpawnCount 1
+
+			WaitForAllSpawned wave1c
+			WaitBeforeStarting 16								
+			WaitBetweenSpawns 8							
+			
+			TotalCurrency 15
+
+			TFBot
+			{
+				Template MagmaCube	
+			}
+		}
+		WaveSpawn
+		{
+			Name wave1f_s
+			Where spawnbot_deathpos	
+			TotalCount 3									
+			MaxActive 3											
+			SpawnCount 3
+
+			WaitForAllDead wave1f
+			WaitBeforeStarting 0.1								
+			WaitBetweenSpawns 0.1
+			Support Limited	
+
+			TFBot
+			{
+				Template MagmaCubeSmall
+				ClassIcon magma_cube_support
+			}
+		}
+		WaveSpawn
+		{
+			Name wave1g
+			Where spawnbot_right	
+			TotalCount 1									
+			MaxActive 1											
+			SpawnCount 1
+
+			WaitForAllSpawned wave1c
+			WaitBeforeStarting 20								
+			WaitBetweenSpawns 8	
+									
+			
+			TotalCurrency 15
+
+			TFBot
+			{
+				Template MagmaCubeBig	
+			}
+		}
+		WaveSpawn
+		{
+			Name wave1g_s
+			Where spawnbot_deathpos	
+			TotalCount 3									
+			MaxActive 3											
+			SpawnCount 3
+
+			WaitForAllDead wave1g
+			WaitBeforeStarting 0.1								
+			WaitBetweenSpawns 0.1
+			Support Limited	
+
+			TFBot
+			{
+				Template MagmaCube	
+				ClassIcon magma_cube_support
+			}
+		}
+		WaveSpawn
+		{
+			Name wave1h
+			Where spawnbot_right	
+			TotalCount 1									
+			MaxActive 1											
+			SpawnCount 1
+
+			WaitForAllSpawned wave1c
+			WaitBeforeStarting 20								
+			WaitBetweenSpawns 8							
+			
+			TotalCurrency 10
+
+			TFBot
+			{
+				Template MagmaCubeBig	
+			}
+		}
+		WaveSpawn
+		{
+			Name wave1h_s
+			Where spawnbot_deathpos	
+			TotalCount 3									
+			MaxActive 3											
+			SpawnCount 3
+
+			WaitForAllDead wave1h
+			WaitBeforeStarting 0.1								
+			WaitBetweenSpawns 0.1
+			Support Limited	
+
+			TFBot
+			{
+				Template MagmaCube	
+				ClassIcon magma_cube_support
+			}
+		}
+	}
+	//wave 5 - 3550 starting, 600 + 100
+	Wave
+	{
+		StartWaveOutput											// Output which occurs at moment the wave begins.
+		{
+			Target wave_start_relay								// Name of the entity in the map to target.
+			Action trigger										// Input to give the targeted entity.
+		}
+		InitWaveOutput											// Output which occurs at moment the wave begins.
+		{
+			Target wave_spell_relay								// Name of the entity in the map to target.
+			Action FireUser4									// Input to give the targeted entity.
+		}
+		DoneOutput												// Output which occurrs at moment the wave is completed.
+		{
+			Target wave_finished_relay							// Name of the entity in the map to target.
+			Action trigger										// Input to give the targeted entity.
+		}
+
+		Checkpoint Yes
+		WaveSpawn
+		{
+			Name wave1a
+			Where spawnbot_right			
+			TotalCount 4									
+			MaxActive 2										
+			SpawnCount 2
+
+			WaitBeforeStarting 0								
+			WaitBetweenSpawns 30							
+			
+			TotalCurrency 70
+
+			Squad
+			{
+				TFBot
+				{
+					Template WitchGiant
+				}
+				TFBot
+				{
+					Template Witch
+				}
+			}
+		}
+		WaveSpawn
+		{
+			Name wave1a
+			Where spawnbot_right			
+			TotalCount 9									
+			MaxActive 3											
+			SpawnCount 3
+
+			WaitBeforeStarting 18								
+			WaitBetweenSpawns 20							
+			
+			TotalCurrency 30
+
+			Squad
+			{
+				TFBot
+				{
+					Template Witch
+				}
+				TFBot
+				{
+					Template Witch
+				}
+			}
+		}
+		WaveSpawn
+		{
+			Name wave1b
+			Where spawnbot_left			
+			TotalCount 2									
+			MaxActive 1											
+			SpawnCount 1
+
+			WaitBeforeStarting 8								
+			WaitBetweenSpawns 27							
+			
+			TotalCurrency 50
+
+			TFBot
+			{
+				Template BlazeGiant
+			}
+		}
+		WaveSpawn
+		{
+			Name wave1c
+			Where spawnbot_right		
+			TotalCount 28									
+			MaxActive 8											
+			SpawnCount 4
+
+			WaitBeforeStarting 12								
+			WaitBetweenSpawns 12							
+			
+			TotalCurrency 130
+
+			Squad
+			{
+				TFBot
+				{
+					Template VindicatorCommander
+				}
+				TFBot
+				{
+					Template Pillager
+				}
+				TFBot
+				{
+					Template Pillager
+				}
+				TFBot
+				{
+					Template Pillager
+				}
+			}
+		}
+		WaveSpawn
+		{
+			Name wave1c
+			Where spawnbot_right		
+			TotalCount 14									
+			MaxActive 4											
+			SpawnCount 2
+
+			WaitBeforeStarting 12								
+			WaitBetweenSpawns 12							
+			
+			TotalCurrency 70
+
+				TFBot
+				{
+					Template VindicatorWeak
+				}
+		}
+		
+		WaveSpawn
+		{
+			Name wave1d
+			Where spawnbot_left		
+			TotalCount 15									
+			MaxActive 6										
+			SpawnCount 3
+			WaitForAllDead wave1c
+
+			WaitBeforeStarting 0								
+			WaitBetweenSpawns 8
+			TotalCurrency 50
+
+			Squad
+			{
+				TFBot
+				{
+					Template WitherSkeleton
+				}
+				TFBot
+				{
+					Template WitherSkeleton
+				}
+				TFBot
+				{
+					Template Pigman
+					Attributes AlwaysCrit
+					ItemAttributes
+					{
+						ItemName "The Eyelander"
+						"damage bonus" 1.14
+					}
+				}
+				
+			}
+		}
+		WaveSpawn
+		{
+			Name wave1e
+			Where spawnbot_left		
+			TotalCount 8									
+			MaxActive 8										
+			SpawnCount 4
+
+			WaitBeforeStarting 3								
+			WaitBetweenSpawns 16							
+			WaitForAllDead wave1b
+			TotalCurrency 100
+
+			Squad
+			{
+				TFBot
+				{
+					Template CreeperCharged
+				}
+				TFBot
+				{
+					Template CreeperCharged
+				}
+				TFBot
+				{
+					Template CreeperCharged
+				}
+				TFBot
+				{
+					Template SkeletonGiant
+				}
+			}
+		}
+		//Spawns last preferably
+		WaveSpawn
+		{
+			Name wave2g
+			Where spawnbot_right		
+			TotalCount 8									
+			MaxActive 8											
+			SpawnCount 8
+			WaitForAllDead wave1e
+			WaitBeforeStarting 0								
+			WaitBetweenSpawns 0							
+			
+			TotalCurrency 35
+
+			Squad
+			{
+				TFBot
+				{
+					Template VindicatorCommander
+				}
+				TFBot
+				{
+					Template Pillager
+				}
+				TFBot
+				{
+					Template Pillager
+				}
+				TFBot
+				{
+					Template Pillager
+				}
+			}
+		}
+		WaveSpawn
+		{
+			Name wave2g
+			Where spawnbot_right		
+			TotalCount 4									
+			MaxActive 4											
+			SpawnCount 4
+			WaitForAllDead wave1e
+			WaitBeforeStarting 0								
+			WaitBetweenSpawns 0							
+			
+			TotalCurrency 15
+
+			TFBot
+			{
+				Template Vindicator
+			}
+		}
+		WaveSpawn
+		{
+			Name wave1j
+			Where spawnbot_left		
+			TotalCount 4									
+			MaxActive 4										
+			SpawnCount 4
+
+			WaitBeforeStarting 10								
+			WaitBetweenSpawns 12							
+			WaitForAllSpawned wave1e
+			TotalCurrency 100
+
+			Squad
+			{
+				TFBot
+				{
+					Template CreeperCharged
+				}
+				TFBot
+				{
+					Template CreeperCharged
+				}
+				TFBot
+				{
+					Template CreeperCharged
+				}
+				TFBot
+				{
+					Template SkeletonGiant
+				}
+			}
+		}
+		WaveSpawn
+		{
+			Name wave1f
+			Where spawnbot_left		
+			TotalCount 2									
+			MaxActive 2										
+			SpawnCount 2
+			WaitForAllDead wave1a
+			WaitBeforeStarting 20								
+			WaitBetweenSpawns 12							
+			
+			TotalCurrency 50
+
+			Squad
+			{
+				TFBot
+				{
+					Template WitchGiant
+				}
+				TFBot
+				{
+					Template WitchGiant
+				}
+			}
+		}
+	}
+	//wave 6 - 4250 starting, 400 + 100
+	Wave
+	{
+		InitWaveOutput											// Output which occurs at moment the wave begins.
+		{
+			Target wave_spell_relay								// Name of the entity in the map to target.
+			Action FireUser4									// Input to give the targeted entity.
+		}
+		StartWaveOutput									// Output which occurs at moment the wave begins.
+		{
+			Target wave_start_relay								// Name of the entity in the map to target.
+			Action trigger										// Input to give the targeted entity.
+		}
+		DoneOutput												// Output which occurrs at moment the wave is completed.
+		{
+			Target wave_finished_relay							// Name of the entity in the map to target.
+			Action trigger										// Input to give the targeted entity.
+		}
+
+		Checkpoint Yes
+
+		WaveSpawn
+		{
+			Name wave1a
+			Where spawnbot_left		
+			TotalCount 4									
+			MaxActive 2										
+			SpawnCount 2
+			WaitBeforeStarting 0								
+			WaitBetweenSpawns 25							
+			
+			TotalCurrency 50
+
+			Squad
+			{
+				TFBot
+				{
+					Template WitherSkeletonGiant
+					Attributes AlwaysCrit
+					ItemAttributes
+					{
+						ItemName "The Eyelander"
+						"damage bonus" 1.18
+					}
+				}
+				TFBot
+				{
+					Template WitherSkeletonGiant
+					Attributes AlwaysCrit
+					ItemAttributes
+					{
+						ItemName "The Eyelander"
+						"damage bonus" 1.18
+					}
+				}
+			}
+		}
+		WaveSpawn
+		{
+			Name wave1b
+			Where spawnbot_right	
+			TotalCount 6									
+			MaxActive 6										
+			SpawnCount 6
+			WaitBeforeStarting 1							
+			WaitBetweenSpawns 25							
+			
+			TotalCurrency 50
+			TFBot
+			{
+				Template GhastFlag
+			}
+		}
+		WaveSpawn
+		{
+			Name wave1b
+			Where spawnbot_right
+			TotalCount 16									
+			MaxActive 8										
+			SpawnCount 8
+			
+			WaitBeforeStarting 1							
+			WaitBetweenSpawns 6							
+			
+			TotalCurrency 25
+
+			TFBot
+			{
+				Template Zombie
+			}
+		}
+		WaveSpawn
+		{
+			Name wave1bb
+			Where spawnbot_left	
+			TotalCount 10									
+			MaxActive 5										
+			SpawnCount 5
+			WaitForAllDead wave1b
+			WaitBeforeStarting 0							
+			WaitBetweenSpawns 25							
+			
+			TotalCurrency 50
+
+			TFBot
+			{
+				Template WitherSkeleton
+			}
+		}
+		WaveSpawn
+		{
+			Name wave1c
+			Where spawnbot_left	
+			TotalCount 12									
+			MaxActive 8										
+			SpawnCount 8
+			WaitForAllDead wave1bb
+			WaitBeforeStarting 0							
+			WaitBetweenSpawns 25							
+			
+			TotalCurrency 50
+
+			TFBot
+			{
+				Template WitherSkeleton
+			}
+		}
+		WaveSpawn
+		{
+			Name wave1c
+			TotalCount 1									
+			MaxActive 1										
+			SpawnCount 1
+			WaitForAllDead wave1bb
+			WaitBeforeStarting 0							
+			WaitBetweenSpawns 25							
+			
+			TotalCurrency 50
+
+			Tank
+			{
+				Health 20000
+				Speed 75
+				Name "boss"
+				StartingPathTrackNode "tank_path_a_1"
+
+				OnKilledOutput                                  
+				{
+					Target boss_dead_relay
+					Action Trigger                         
+				}
+				OnBombDroppedOutput                             
+				{
+					Target boss_deploy_relay 
+					Action Trigger                         
+				}
+			}
+		}
+		WaveSpawn
+		{
+			Name wave1c
+			Where spawnbot_left	
+			TotalCount 5									
+			MaxActive 5										
+			SpawnCount 5
+			WaitForAllDead wave1bb
+			WaitBeforeStarting 30							
+			WaitBetweenSpawns 25							
+			
+			TotalCurrency 25
+
+			Squad
+			{
+				TFBot
+				{
+					Template SkeletonGiant
+					Attributes AlwaysCrit
+				}
+				TFBot
+				{
+					Template SkeletonArmored
+				}
+				TFBot
+				{
+					Template SkeletonArmored
+				}
+				TFBot
+				{
+					Template SkeletonArmored
+				}
+				TFBot
+				{
+					Template SkeletonArmored
+				}
+			}
+		}
+		WaveSpawn
+		{
+			Name wave1d
+			Where spawnbot_left	
+			TotalCount 1									
+			MaxActive 1										
+			SpawnCount 1
+			WaitForAllDead wave1b
+			WaitBeforeStarting 0							
+			WaitBetweenSpawns 25							
+			
+			TotalCurrency 25
+
+			TFBot
+			{
+				Template MagmaCubeGiant
+			}
+		}
+		WaveSpawn
+		{
+			Name wave1d_s
+			Where spawnbot_deathpos
+			TotalCount 3									
+			MaxActive 3										
+			SpawnCount 3
+			WaitForAllDead wave1d
+			WaitBeforeStarting 0.1							
+			WaitBetweenSpawns 25
+			Support Limited	
+
+			TFBot
+			{
+				Template MagmaCubeBig
+				ClassIcon magma_cube_support
+			}
+		}
+		WaveSpawn
+		{
+			Name wave1e
+			Where spawnbot_left	
+			TotalCount 1									
+			MaxActive 1										
+			SpawnCount 1
+			WaitForAllDead wave1c
+			WaitBeforeStarting 0							
+			WaitBetweenSpawns 25							
+			
+			TotalCurrency 25
+
+			TFBot
+			{
+				Template MagmaCubeGiant
+			}
+		}
+		WaveSpawn
+		{
+			Name wave1e_s
+			Where spawnbot_deathpos
+			TotalCount 3									
+			MaxActive 3										
+			SpawnCount 3
+			WaitForAllDead wave1e
+			WaitBeforeStarting 0.1							
+			WaitBetweenSpawns 25
+			Support Limited	
+
+			TFBot
+			{
+				Template MagmaCubeBig
+				ClassIcon magma_cube_support
+			}
+		}
+		WaveSpawn
+		{
+			Name wave1f
+			Where spawnbot_left	
+			TotalCount 3									
+			MaxActive 2										
+			SpawnCount 1
+			WaitForAllDead wave1c
+			WaitBeforeStarting 10							
+			WaitBetweenSpawns 25							
+			
+			TotalCurrency 50
+
+				TFBot
+				{
+					Template SkeletonGiant
+					Attributes AlwaysCrit
+				}
+		}
+		WaveSpawn
+		{
+			Name wave1f
+			Where spawnbot_left	
+			TotalCount 20									
+			MaxActive 8										
+			SpawnCount 4
+			WaitForAllDead wave1c
+			WaitBeforeStarting 10							
+			WaitBetweenSpawns 14							
+			
+			TotalCurrency 50
+
+			TFBot
+			{
+				Template SkeletonArmored
+			}
+		}
+		WaveSpawn
+		{
+			Name wave1g
+			Where spawnbot_right
+			TotalCount 3									
+			MaxActive 2										
+			SpawnCount 1
+			WaitForAllDead wave1c
+			WaitBeforeStarting 20							
+			WaitBetweenSpawns 20							
+			
+			TotalCurrency 25
+
+			TFBot
+			{
+				Template WolfGiant_Nerf
+			}
+		}
+		
+		WaveSpawn
+		{
+			Name wave1g
+			Where spawnbot_right	
+			TotalCount 15									
+			MaxActive 5										
+			SpawnCount 5
+			WaitBeforeStarting 6							
+			WaitBetweenSpawns 8							
+			WaitForAllDead wave1bb
+
+			TotalCurrency 50
+			TFBot
+			{
+				Template BlazeFlag
+			}
+		}
+		WaveSpawn
+		{
+			Name wave1g
+			Where spawnbot
+			TotalCount 8									
+			MaxActive 4										
+			SpawnCount 2
+			WaitForAllDead wave1c							
+			WaitBetweenSpawns 25							
+			Support 1
+			TotalCurrency 25
+
+			TFBot
+			{
+				Template CreeperCharged
+			}
+		}
+	}
+	//wave 7 - 4750 starting, 400 + 100
+	Wave
+	{
+		InitWaveOutput											// Output which occurs at moment the wave begins.
+		{
+			Target wave_spell_relay								// Name of the entity in the map to target.
+			Action FireUser4									// Input to give the targeted entity.
+		}
+		StartWaveOutput									// Output which occurs at moment the wave begins.
+		{
+			Target wave_start_relay								// Name of the entity in the map to target.
+			Action trigger										// Input to give the targeted entity.
+		}
+		DoneOutput												// Output which occurrs at moment the wave is completed.
+		{
+			Target wave_finished_relay							// Name of the entity in the map to target.
+			Action trigger										// Input to give the targeted entity.
+		}
+
+		Checkpoint Yes
+		WaveSpawn
+		{
+			Name wave1a
+			Where spawnbot_right
+			TotalCount 1								
+			MaxActive 1									
+			SpawnCount 1						
+			WaitBetweenSpawns 25
+			TotalCurrency 3221
+
+			TFBot
+			{
+				Template EnderDragon
+			}
+		}
+		WaveSpawn
+		{
+			Name wave1a
+			Where spawnbot
+			TotalCount 14								
+			MaxActive 8									
+			SpawnCount 4						
+			WaitBetweenSpawns 6
+			WaitBeforeStarting 1
+			TotalCurrency 200
+
+			Support Limited
+			TFBot
+			{
+				Template Enderman
+				ClassIcon enderman_giant
+			}
+		}
+		WaveSpawn
+		{
+			Name wavedisp
+			Where spawnbot
+			TotalCount 0								
+			MaxActive 0								
+			SpawnCount 0						
+			WaitBetweenSpawns 0
+			WaitBeforeStarting 5
+			TotalCurrency 0
+			Support Limited
+			StartWaveOutput
+			{
+				Target boss_dispenser_spawn
+				Action Trigger
+			}
+
+				TFBot
+				{
+					Class Scout
+					ClassIcon crystal
+				}
+		}
+		WaveSpawn
+		{
+			Name wave1a
+			Where spawnbot
+			TotalCount 49								
+			MaxActive 6									
+			SpawnCount 6						
+			WaitBetweenSpawns 35
+			WaitBeforeStarting 1
+			TotalCurrency 200
+			Support 1
+
+			Squad
+			{
+				TFBot
+				{
+					Template Enderman
+				}
+				TFBot
+				{
+					Template Enderman
+				}
+				TFBot
+				{
+					Template Enderman
+				}
+			}
+		}
+	}
+}

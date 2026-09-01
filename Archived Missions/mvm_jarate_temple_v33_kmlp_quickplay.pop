@@ -1,0 +1,1815 @@
+///////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////
+
+//WAVE RELAYS
+//wave_start_relay (default bomb mode - Bomb resets after 3 seconds)
+//wave_start_relay_ironman (bomb resets after being untouched for 12; this is useful for servers without the bomb reset plugin)
+
+///////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////
+
+//SPAWNBOT NAMES
+//NOTE #1: Sniper, Spy, and Sentry Buster bots have NO dedicated spawnpoints. Engineers ARE Supported!
+//NOTE #2: You can identify a bot spawn room by the lighting: if you see a room that is almost pitch black, it is a bot spawn room.
+//left
+//right
+
+//superultramega
+
+
+//NOTE FOR "spawnbot":
+//-Intended for regular, medium, and giant bots
+
+//NOTE FOR "superultramega":
+//-Intended for bots with a scale of 15 and below.  If you attempt to spawn a bot with a scale higher than 15, they will likely get stuck.
+//-Do NOT spawn supersized bots in superultramega **while** the supersized Tank has not exited its spawning room; bots **will** teleport and get stuck in the walls.
+
+///////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////
+
+//TANK PATHS (spawns tanks 40% bigger)
+//The following paths spawn tanks at the small garages near the bot spawn.
+//tank_path_left_1
+//tank_path_right_1
+
+///////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////
+
+//SPECIAL TANK PATHS
+////tank_path_supertank_1 (spawns the supersized tank)
+
+///////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////
+
+////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////
+//---------------------Mission File-------------------------
+////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////
+#base robot_kmlp.pop
+#base robot_kmlp_nojump.pop
+#base medium_robot_kmlp.pop
+#base medium_standard_robot_kmlp.pop
+#base giant_robot_kmlp.pop
+#base leaders_kmlp.pop
+#base capital_kmlp.pop
+#base super_ultra_mega_robot_kmlp.pop
+#base master_mundy_kmlp.pop
+
+WaveSchedule
+{
+
+	StartingCurrency 0
+	RespawnWaveTime 0
+	FixedRespawnWaveTime	1
+	CanBotsAttackWhileInSpawnRoom no
+	Advanced	1
+
+	////////////////////////////////////////////////////////////////////
+	////////////////////////////////////////////////////////////////////
+	////////////////////////////////////////////////////////////////////
+	////////////////////////////////////////////////////////////////////
+	////////////////////////////////////////////////////////////////////
+	////////////////////////////////////////////////////////////////////
+	//WAVE 1
+
+	Wave
+	{
+		WaitWhenDone	65
+		Checkpoint	Yes
+
+		StartWaveOutput
+		{
+			Target	wave_start_relay
+			Action	Trigger
+		}
+		DoneOutput
+		{
+			Target	wave_complete_relay
+			Action	Trigger
+		}
+
+		/////////////////////////////////////////////PHASE 1
+
+		WaveSpawn
+		{
+			Name	PHASE1
+
+			TotalCurrency	0
+			TotalCount	1
+			MaxActive	1
+
+			WaitBeforeStarting	10
+			WaitBetweenSpawns	1
+
+			SpawnCount	1
+
+			Where	superultramega
+
+			FirstSpawnWarningSound	"Demoman.MVM_LaughEvil01"
+			DoneWarningSound	"Demoman.MVM_PainCrticialDeath04"
+
+			Squad
+			{
+				TFBot
+				{
+					ClassIcon	demoknight_gold_giant
+
+					Name	"Super Big Knight"
+					Health	42000
+					Scale	12
+					Skill	Expert
+
+					Class	Demoman
+
+					Attributes	"AlwaysCrit"
+					Attributes	"MiniBoss"
+					Attributes	"UseBossHealthBar"
+					Attributes	"IgnoreFlag"
+
+					ItemAttributes
+					{
+						ItemName	"the eyelander"
+						"fire rate bonus"	0.40
+						"melee range multiplier"	5
+					}
+
+					CharacterAttributes
+					{
+						"cancel falling damage"	1
+						"airblast vertical vulnerability multiplier"	0.05
+						"move speed penalty"	0.35
+					}
+
+					Item	"ali baba's wee booties"
+					Item	"the splendid screen"
+					Item	"the eyelander"
+
+					BehaviorModifiers	Push
+				}
+			}
+		}
+
+		WaveSpawn
+		{
+			Support	1
+
+			Name	PHASE1S
+
+			TotalCurrency	0
+			TotalCount	21
+
+			WaitBeforeStarting	0
+			WaitBetweenSpawns	1
+
+			SpawnCount	1
+
+			RandomSpawn	1
+			Where	left
+			Where	right
+
+			RandomChoice
+			{
+				TFBot
+				{
+					Template	kmlp_demo_samurai
+				}
+				TFBot
+				{
+					Template	kmlp_demo_eyelander
+				}
+			}
+		}
+	}
+
+	////////////////////////////////////////////////////////////////////
+	////////////////////////////////////////////////////////////////////
+	////////////////////////////////////////////////////////////////////
+	////////////////////////////////////////////////////////////////////
+	////////////////////////////////////////////////////////////////////
+	////////////////////////////////////////////////////////////////////
+	//WAVE 2
+
+	Wave
+	{
+		WaitWhenDone	65
+		Checkpoint	Yes
+
+		StartWaveOutput
+		{
+			Target	wave_start_relay
+			Action	Trigger
+		}
+		DoneOutput
+		{
+			Target	wave_complete_relay
+			Action	Trigger
+		}
+
+		/////////////////////////////////////////////PHASE 1
+
+		WaveSpawn
+		{
+			Name	PHASE1
+
+			TotalCurrency	0
+			TotalCount	1
+
+			WaitBeforeStarting	10
+			WaitBetweenSpawns	1
+
+			Tank
+			{
+				Name	tankboss_superultramega
+
+				Health	101000
+				Speed	10
+
+				StartingPathTrackNode	tank_path_supertank_1
+
+				OnBombDroppedOutput
+				{
+					Target	boss_deploy_relay
+					Action	Trigger
+				}
+			}
+		}
+
+		WaveSpawn
+		{
+			Support	1
+
+			Name	PHASE1S
+
+			TotalCurrency	0
+			TotalCount	21
+			MaxActive	17
+
+			WaitBeforeStarting	0
+			WaitBetweenSpawns	1
+
+			SpawnCount	1
+
+			RandomSpawn	1
+			Where	left
+			Where	right
+
+			RandomChoice
+			{
+				TFBot
+				{
+					Template	kmlp_scout
+				}
+				TFBot
+				{
+					Template	kmlp_scout_nojump
+				}
+				TFBot
+				{
+					Template	kmlp_heavy_shotgun_medium
+				}
+				TFBot
+				{
+					Template	kmlp_heavy_shotgun_spread
+				}
+			}
+		}
+
+		WaveSpawn
+		{
+			Support	1
+
+			Name	PHASE1SG
+
+			TotalCurrency	0
+			TotalCount	5
+			MaxActive	5
+
+			WaitBeforeStarting	0
+			WaitBetweenSpawns	1
+
+			SpawnCount	1
+
+			RandomSpawn	1
+			Where	left
+			Where	right
+
+			RandomChoice
+			{
+				TFBot
+				{
+					Template	kmlp_scout_giant
+				}
+				TFBot
+				{
+					Template	kmlp_scout_capital
+				}
+				TFBot
+				{
+					Template	kmlp_heavy_shotgun_giant
+				}
+				TFBot
+				{
+					Template	kmlp_heavy_shotgun_spread_giant
+				}
+			}
+		}
+	}
+
+	////////////////////////////////////////////////////////////////////
+	////////////////////////////////////////////////////////////////////
+	////////////////////////////////////////////////////////////////////
+	////////////////////////////////////////////////////////////////////
+	////////////////////////////////////////////////////////////////////
+	////////////////////////////////////////////////////////////////////
+	//WAVE 3
+
+	Wave
+	{
+		WaitWhenDone	65
+		Checkpoint	Yes
+
+		StartWaveOutput
+		{
+			Target	wave_start_relay
+			Action	Trigger
+		}
+		DoneOutput
+		{
+			Target	wave_complete_relay
+			Action	Trigger
+		}
+
+		/////////////////////////////////////////////PHASE 1
+
+		WaveSpawn
+		{
+			Name	PHASE1
+
+			TotalCurrency	0
+			TotalCount	2
+			MaxActive	1
+
+			WaitBeforeStarting	10
+			WaitBetweenSpawns	1
+
+			SpawnCount	1
+
+			Where	superultramega
+
+			Squad
+			{
+				TFBot
+				{
+					ClassIcon	pyro_hyper_v2_giant
+					
+					Name	"Inferno Big Boy"
+					Health	65000
+					Scale	13
+					Class	Pyro
+					Skill	Expert
+
+					WeaponRestrictions	PrimaryOnly
+
+					Tag	"bot_giant"
+					Attributes	"AlwaysCrit"
+					Attributes	"UseBossHealthBar"
+					Attributes	"MiniBoss"
+					Attributes	"AlwaysFireWeapon"
+
+					ItemAttributes
+					{
+						ItemName	tf_weapon_flamethrower
+						"flame_speed"	7000
+						"flame_spread_degree"	5
+						"flame_drag"	0.05
+						"flame_reflect_on_collision"	10000
+
+						"weapon burn time increased"	2
+						"weapon burn dmg increased"	6
+
+						"damage penalty"	0.5
+					}
+
+					CharacterAttributes
+					{
+						"airblast vulnerability multiplier"	0.05
+						"move speed penalty"	0.3
+						"cancel falling damage"	1
+						"health regen"	50
+					}
+
+					Item	"old guadalajara"
+
+					Attributes	IgnoreFlag
+					BehaviorModifiers	Push
+				}
+			}
+		}
+
+		WaveSpawn
+		{
+			Support	1
+
+			Name	PHASE1S
+
+			TotalCurrency	0
+			TotalCount	21
+			MaxActive	17
+
+			WaitBeforeStarting	0
+			WaitBetweenSpawns	1
+
+			SpawnCount	1
+
+			RandomSpawn	1
+			Where	left
+			Where	right
+
+			RandomChoice
+			{
+				TFBot
+				{
+					Template	kmlp_pyro_manmelter
+				}
+				TFBot
+				{
+					Template	kmlp_pyro_scorch_shot
+				}
+				TFBot
+				{
+					Template	kmlp_pyro_phlog
+				}
+				TFBot
+				{
+					Template	kmlp_pyro
+				}
+			}
+		}
+		WaveSpawn
+		{
+			Support	1
+
+			Name	PHASE1SG
+
+			TotalCurrency	0
+			TotalCount	5
+			MaxActive	5
+
+			WaitBeforeStarting	0
+			WaitBetweenSpawns	1
+
+			SpawnCount	1
+
+			RandomSpawn	1
+			Where	left
+			Where	right
+
+			RandomChoice
+			{
+				TFBot
+				{
+					Template	kmlp_pyro_manmelter_giant
+				}
+				TFBot
+				{
+					Template	kmlp_pyro_phlog_giant
+				}
+			}
+		}
+	}
+
+	////////////////////////////////////////////////////////////////////
+	////////////////////////////////////////////////////////////////////
+	////////////////////////////////////////////////////////////////////
+	////////////////////////////////////////////////////////////////////
+	////////////////////////////////////////////////////////////////////
+	////////////////////////////////////////////////////////////////////
+	//WAVE 4
+
+	Wave
+	{
+		WaitWhenDone	65
+		Checkpoint	Yes
+
+		StartWaveOutput
+		{
+			Target	wave_start_relay
+			Action	Trigger
+		}
+		DoneOutput
+		{
+			Target	wave_complete_relay
+			Action	Trigger
+		}
+
+		/////////////////////////////////////////////PHASE 1
+
+		WaveSpawn
+		{
+			Name	PHASE1
+
+			TotalCurrency	0
+			TotalCount	1
+			MaxActive	1
+
+			WaitBeforeStarting	3
+			WaitBetweenSpawns	0
+
+			SpawnCount	1
+
+			Where	superultramega
+
+			FirstSpawnWarningSound	"Scout.MVM_Domination05"
+			DoneWarningSound	"Scout.MVM_PainCrticialDeath03"
+
+			Squad
+			{
+				TFBot
+				{
+					ClassIcon	Scout_publicenemy_giant
+
+					Health	45000
+					Name	"The Other Public Enemy Scout"
+					Scale	12
+					Class	Scout
+					Skill	Expert
+
+					WeaponRestrictions	PrimaryOnly
+
+					Attributes	"AlwaysCrit"
+					Attributes	"MiniBoss"
+					Attributes	"UseBossHealthBar"
+
+					ItemAttributes
+					{
+						ItemName	"baby face's blaster"
+						"bullets per shot bonus"	7
+
+						"fire rate bonus"	0.5
+						"faster reload rate"	0.5
+
+						"damage penalty"	0.5
+					}
+
+					CharacterAttributes
+					{
+						"move speed bonus"	0.7
+						"airblast vertical vulnerability multiplier"	0.01
+					}
+
+					Item	"baby face's blaster"
+					Item	"The Fed-Fightin' Fedora"
+					Item	"dillinger's duffel"
+
+					Attributes	IgnoreFlag
+					BehaviorModifiers	Push
+				}
+			}
+		}
+		WaveSpawn
+		{
+			Name	PHASE1
+
+			TotalCurrency	0
+			TotalCount	1
+
+			WaitBeforeStarting	5
+			WaitBetweenSpawns	1
+
+			SpawnCount	1
+
+			Where	superultramega
+
+			DoneWarningSound	"Scout.MVM_PainCrticialDeath02"
+
+			Squad
+			{
+				TFBot
+				{
+					Template	kmlp_scout_superultramega
+				}
+			}
+		}
+		WaveSpawn
+		{
+			Name	PHASE1
+
+			TotalCurrency	0
+			TotalCount	1
+
+			WaitBeforeStarting	7
+			WaitBetweenSpawns	1
+
+			SpawnCount	1
+
+			Where	superultramega
+
+			DoneWarningSound	"Scout.MVM_PainCrticialDeath01"
+
+			Squad
+			{
+				TFBot
+				{
+					Template	kmlp_scout_superultramega_accurate
+				}
+			}
+		}
+
+		WaveSpawn
+		{
+			Support	1
+
+			Name	PHASE1S
+
+			TotalCurrency	0
+			TotalCount	17
+			MaxActive	17
+
+			WaitBeforeStarting	0
+			WaitBetweenSpawns	1
+
+			SpawnCount	1
+
+			RandomSpawn	1
+			Where	left
+			Where	right
+
+			RandomChoice
+			{
+				TFBot
+				{
+					Template	kmlp_scout_bat_giant
+				}
+				TFBot
+				{
+					Template	kmlp_scout
+				}
+				TFBot
+				{
+					Template	kmlp_scout_pistol
+				}
+				TFBot
+				{
+					Template	kmlp_scout_public
+				}
+			}
+		}
+		WaveSpawn
+		{
+			Support	1
+
+			Name	PHASE1SG
+
+			TotalCurrency	0
+			TotalCount	5
+			MaxActive	5
+
+			WaitBeforeStarting	15
+			WaitBetweenSpawns	1
+
+			SpawnCount	1
+
+			RandomSpawn	1
+			Where	left
+			Where	right
+
+			RandomChoice
+			{
+				TFBot
+				{
+					Template	kmlp_scout_giant
+				}
+				TFBot
+				{
+					Template	kmlp_scout_capital
+				}
+				TFBot
+				{
+					Template	kmlp_scout_shortstop_giant
+				}
+				TFBot
+				{
+					Template	kmlp_scout_public_giant
+				}
+			}
+		}
+	}
+
+	////////////////////////////////////////////////////////////////////
+	////////////////////////////////////////////////////////////////////
+	////////////////////////////////////////////////////////////////////
+	////////////////////////////////////////////////////////////////////
+	////////////////////////////////////////////////////////////////////
+	////////////////////////////////////////////////////////////////////
+	//WAVE 5
+
+	Wave
+	{
+		WaitWhenDone	65
+		Checkpoint	Yes
+
+		StartWaveOutput
+		{
+			Target	wave_start_relay
+			Action	Trigger
+		}
+		DoneOutput
+		{
+			Target	wave_complete_relay
+			Action	Trigger
+		}
+
+		/////////////////////////////////////////////PHASE 1
+
+		WaveSpawn
+		{
+			Name	PHASE1
+
+			TotalCurrency	0
+			TotalCount	1
+			MaxActive	1
+
+			WaitBeforeStarting	10
+			WaitBetweenSpawns	1
+
+			SpawnCount	1
+
+			Where	superultramega
+
+			FirstSpawnWarningSound	"Heavy.MVM_Domination02"
+			DoneWarningSound	"Heavy.MVM_PainCrticialDeath02"
+
+			Squad
+			{
+				TFBot
+				{
+					ClassIcon	Heavy_brassbeast_giant
+
+					Health	75000
+					Name	"Sandvich-Stealer ULTRA"
+					Scale	15
+					Class	HeavyWeapons
+					Skill	Expert
+
+					WeaponRestrictions	PrimaryOnly
+
+					Tag	"bot_giant"
+					Attributes	"AlwaysCrit"
+					Attributes	"MiniBoss"
+					Attributes	"UseBossHealthBar"
+
+					ItemAttributes
+					{
+						ItemName	"the brass beast"
+						"attack projectiles"	1
+						"dmg bonus vs buildings"	2
+						"damage bonus"	1.25
+						"fire rate bonus"	0.5
+						"sniper fires tracer"	1
+					}
+					CharacterAttributes
+					{
+						"move speed penalty"	0.3
+						"airblast vertical vulnerability multiplier"	0.01
+						"airblast vulnerability multiplier"	0.5
+						"health regen"	250
+					}
+					Item	"the brass beast"
+					Item	"the u-clank-a"
+
+					Attributes	IgnoreFlag
+					BehaviorModifiers	Push
+				}
+			}
+		}
+
+		WaveSpawn
+		{
+			Name	PHASE1
+
+			TotalCurrency	0
+			TotalCount	1
+
+			WaitBeforeStarting	60
+			WaitBetweenSpawns	1
+
+			SpawnCount	1
+
+			Where	superultramega
+
+			DoneWarningSound	"Heavy.MVM_PainCrticialDeath01"
+
+			Squad
+			{
+				TFBot
+				{
+					Template	kmlp_heavy_superultramega_baxterjax
+				}
+			}
+		}
+		WaveSpawn
+		{
+			Name	PHASE1
+
+			TotalCurrency	0
+			TotalCount	1
+
+			WaitBeforeStarting	60
+			WaitBetweenSpawns	1
+
+			SpawnCount	1
+
+			Where	superultramega
+
+			DoneWarningSound	"Heavy.MVM_PainCrticialDeath03"
+
+			Squad
+			{
+				TFBot
+				{
+					Template	kmlp_heavy_superultramega_baxterjax
+				}
+			}
+		}
+
+		WaveSpawn
+		{
+			Support	1
+
+			Name	PHASE1S
+
+			TotalCurrency	0
+			TotalCount	15
+			MaxActive	15
+
+			WaitBeforeStarting	1
+			WaitBetweenSpawns	1
+
+			SpawnCount	1
+
+			RandomSpawn	1
+			Where	left
+			Where	right
+
+			RandomChoice
+			{
+				TFBot
+				{
+					Template	kmlp_heavy
+				}
+				TFBot
+				{
+					Template	kmlp_heavy_brassbeast
+				}
+				TFBot
+				{
+					Template	kmlp_heavy_shotgun
+				}
+				TFBot
+				{
+					Template	kmlp_heatmaker
+				}
+			}
+		}
+		WaveSpawn
+		{
+			Support	1
+
+			Name	PHASE1SG
+
+			TotalCurrency	0
+			TotalCount	5
+			MaxActive	5
+
+			WaitBeforeStarting	5
+			WaitBetweenSpawns	5
+
+			SpawnCount	1
+
+			RandomSpawn	1
+			Where	left
+			Where	right
+
+			RandomChoice
+			{
+				TFBot
+				{
+					Template	kmlp_heavy_tomislav_giant
+				}
+				TFBot
+				{
+					Template	kmlp_heavy_giant
+				}
+				TFBot
+				{
+					Template	kmlp_heavy_brassbeast_giant
+				}
+				TFBot
+				{
+					Template	kmlp_deflector_giant
+				}
+			}
+		}
+	}
+
+	////////////////////////////////////////////////////////////////////
+	////////////////////////////////////////////////////////////////////
+	////////////////////////////////////////////////////////////////////
+	////////////////////////////////////////////////////////////////////
+	////////////////////////////////////////////////////////////////////
+	////////////////////////////////////////////////////////////////////
+	//WAVE 6
+
+	Wave
+	{
+		WaitWhenDone	65
+		Checkpoint	Yes
+
+		StartWaveOutput
+		{
+			Target	wave_start_relay
+			Action	Trigger
+		}
+		DoneOutput
+		{
+			Target	wave_complete_relay
+			Action	Trigger
+		}
+
+		/////////////////////////////////////////////PHASE 1
+
+		WaveSpawn
+		{
+			Name	PHASE1
+
+			TotalCurrency	0
+			TotalCount	1
+			MaxActive	1
+
+			WaitBeforeStarting	10
+			WaitBetweenSpawns	1
+
+			SpawnCount	1
+
+			Where	superultramega
+
+			FirstSpawnWarningSound	"Demoman.MVM_LaughEvil02"
+			DoneWarningSound	"Demoman.MVM_PainCrticialDeath02"
+
+			Squad
+			{
+				TFBot
+				{
+					ClassIcon	demoknight_gold_giant
+
+					Name	"Hey it's me again!"
+					Health	128000
+					Scale	15
+					Skill	Expert
+
+					Class	Demoman
+
+					Attributes	"AlwaysCrit"
+					Attributes	"MiniBoss"
+					Attributes	"UseBossHealthBar"
+
+					ItemAttributes
+					{
+						ItemName	"the eyelander"
+						"fire rate bonus"	0.40
+						"melee range multiplier"	5
+					}
+
+					CharacterAttributes
+					{
+						"cancel falling damage"	1
+						"airblast vertical vulnerability multiplier"	0.05
+						"move speed penalty"	0.35
+					}
+
+					Item	"ali baba's wee booties"
+					Item	"the splendid screen"
+					Item	"the eyelander"
+
+					Attributes	IgnoreFlag
+					BehaviorModifiers	Push
+				}
+			}
+		}
+
+		WaveSpawn
+		{
+			Support	1
+
+			Name	PHASE1S
+
+			TotalCurrency	0
+			TotalCount	15
+			MaxActive	15
+
+			WaitBeforeStarting	0
+			WaitBetweenSpawns	1
+
+			SpawnCount	1
+
+			RandomSpawn	1
+			Where	left
+			Where	right
+
+			RandomChoice
+			{
+				TFBot
+				{
+					Template	kmlp_carpet_bomber
+				}
+				TFBot
+				{
+					Template	kmlp_carpet_bomber_nojump
+				}
+				TFBot
+				{
+					Template	kmlp_demo_samurai
+				}
+				TFBot
+				{
+					Template	kmlp_demo_eyelander
+				}
+			}
+		}
+		WaveSpawn
+		{
+			Support	1
+
+			Name	PHASE1SG
+
+			TotalCurrency	0
+			TotalCount	4
+			MaxActive	4
+
+			WaitBeforeStarting	15
+			WaitBetweenSpawns	1
+
+			SpawnCount	1
+
+			RandomSpawn	1
+			Where	left
+			Where	right
+
+			RandomChoice
+			{
+				TFBot
+				{
+					Template	kmlp_demo_loch
+				}
+				TFBot
+				{
+					Template	kmlp_demo_samurai_giant
+				}
+			}
+		}
+		WaveSpawn
+		{
+			Support	1
+
+			Name	PHASE1SL
+
+			TotalCurrency	0
+			TotalCount	1
+			MaxActive	1
+
+			WaitBeforeStarting	60
+			WaitBetweenSpawns	60
+
+			SpawnCount	1
+
+			RandomSpawn	1
+			Where	left
+			Where	right
+
+			RandomChoice
+			{
+				TFBot
+				{
+					Template	kmlp_demo_boss
+				}
+				TFBot
+				{
+					Template	kmlp_demo_flak_boss
+				}
+			}
+		}
+	}
+
+	////////////////////////////////////////////////////////////////////
+	////////////////////////////////////////////////////////////////////
+	////////////////////////////////////////////////////////////////////
+	////////////////////////////////////////////////////////////////////
+	////////////////////////////////////////////////////////////////////
+	////////////////////////////////////////////////////////////////////
+	//WAVE 7
+
+	Wave
+	{
+		WaitWhenDone	65
+		Checkpoint	Yes
+
+		StartWaveOutput
+		{
+			Target	wave_start_relay
+			Action	Trigger
+		}
+		DoneOutput
+		{
+			Target	wave_complete_relay
+			Action	Trigger
+		}
+
+		/////////////////////////////////////////////PHASE 1
+
+		WaveSpawn
+		{
+			Name	PHASE1
+
+			TotalCurrency	0
+			TotalCount	1
+			MaxActive	1
+
+			WaitBeforeStarting	0
+			WaitBetweenSpawns	1
+
+			SpawnCount	1
+
+			RandomSpawn	1
+			Where	left
+			Where	right
+
+			FirstSpawnWarningSound	"Engineer.MVM_BattleCry07"
+			DoneWarningSound	"Engineer.MVM_CritDeath"
+
+			Squad
+			{
+				TFBot
+				{
+					Template	kmlp_engineer_boss
+					BehaviorModifiers	Push
+				}
+			}
+		}
+		WaveSpawn
+		{
+			Name	PHASE1
+
+			TotalCurrency	0
+			TotalCount	1
+			MaxActive	1
+
+			WaitBeforeStarting	30
+			WaitBetweenSpawns	1
+
+			SpawnCount	1
+
+			RandomSpawn	1
+			Where	left
+			Where	right
+
+			FirstSpawnWarningSound	"Engineer.MVM_BattleCry05"
+			DoneWarningSound	"Engineer.MVM_CritDeath"
+
+			Squad
+			{
+				TFBot
+				{
+					Template	kmlp_engineer_boss
+					BehaviorModifiers	Push
+				}
+			}
+		}
+
+		/////////////////////////////////////////////PHASE 1
+
+		WaveSpawn
+		{
+			Name	PHASE2
+
+			TotalCurrency	0
+			TotalCount	2
+			MaxActive	2
+
+			WaitForAllDead	PHASE1
+			WaitBeforeStarting	0
+			WaitBetweenSpawns	1
+
+			SpawnCount	2
+
+			Where	superultramega
+
+			FirstSpawnWarningSound	"Engineer.MVM_ActivateCharge01"
+			DoneWarningSound	"Engineer.MVM_CritDeath"
+
+			Squad
+			{
+				ShouldPreserveSquad	1
+
+				TFBot
+				{
+					Template	kmlp_soldier_scatter_boss
+					BehaviorModifiers	Push
+					Attributes	IgnoreFlag
+				}
+				TFBot
+				{
+					Template	kmlp_engineer_superultramega
+					BehaviorModifiers	Push
+					Attributes	AlwaysFireWeapon
+					Attributes	IgnoreFlag
+				}
+			}
+		}
+
+		WaveSpawn
+		{
+			Support	1
+
+			Name	PHASE1S
+
+			TotalCurrency	0
+			TotalCount	15
+			MaxActive	15
+
+			WaitBeforeStarting	10
+			WaitBetweenSpawns	2
+
+			SpawnCount	4
+
+			RandomSpawn	1
+			Where	left
+			Where	right
+
+			Squad
+			{
+				ShouldPreserveSquad	1
+
+				TFBot
+				{
+					Template	kmlp_pyro_medium
+				}
+				TFBot
+				{
+					Template	kmlp_engineer_widowmaker
+					BehaviorModifiers	Push
+				}
+			}
+		}
+
+		WaveSpawn
+		{
+			Support	1
+
+			Name	PHASE1SG
+
+			TotalCurrency	0
+			TotalCount	5
+			MaxActive	5
+
+			WaitBeforeStarting	10
+			WaitBetweenSpawns	2
+
+			SpawnCount	2
+
+			RandomSpawn	1
+			Where	left
+			Where	right
+
+			Squad
+			{
+				ShouldPreserveSquad	1
+
+				TFBot
+				{
+					Template	kmlp_pyro_manmelter_giant
+				}
+				TFBot
+				{
+					Template	kmlp_engineer_widowmaker_giant
+					BehaviorModifiers	Push
+				}
+			}
+		}
+	}
+
+	////////////////////////////////////////////////////////////////////
+	////////////////////////////////////////////////////////////////////
+	////////////////////////////////////////////////////////////////////
+	////////////////////////////////////////////////////////////////////
+	////////////////////////////////////////////////////////////////////
+	////////////////////////////////////////////////////////////////////
+	//WAVE 8
+
+	Wave
+	{
+		WaitWhenDone	65
+		Checkpoint	Yes
+
+		StartWaveOutput
+		{
+			Target	wave_start_relay
+			Action	Trigger
+		}
+		DoneOutput
+		{
+			Target	wave_complete_relay
+			Action	Trigger
+		}
+
+		/////////////////////////////////////////////PHASE 1
+
+		WaveSpawn
+		{
+			Name	PHASE1
+
+			TotalCurrency	0
+			TotalCount	1
+
+			WaitBeforeStarting	10
+			WaitBetweenSpawns	1
+
+			SpawnCount	1
+
+			Where	superultramega
+
+			FirstSpawnWarningSound	"Soldier.MVM_LaughEvil01"
+			DoneWarningSound	"Soldier.MVM_PainCrticialDeath03"
+
+			Squad
+			{
+				TFBot
+				{
+					Template	kmlp_soldier_superultramega_chadd
+					BehaviorModifiers	Push
+					Attributes	IgnoreFlag
+				}
+			}
+		}
+		WaveSpawn
+		{
+			Name	PHASE1
+
+			TotalCurrency	0
+			TotalCount	1
+
+			WaitBeforeStarting	15
+			WaitBetweenSpawns	1
+
+			SpawnCount	1
+
+			Where	superultramega
+
+			FirstSpawnWarningSound	"Soldier.MVM_LaughEvil02"
+			DoneWarningSound	"Soldier.MVM_PainCrticialDeath01"
+
+			Squad
+			{
+				TFBot
+				{
+					ClassIcon	soldier_tankbuster
+
+					Health	20000
+					Name	"Super Burst Auto-Soldier"
+					Scale	12
+					Class	Soldier
+					Skill	Expert
+
+					Attributes	"AlwaysCrit"
+					Attributes	"MiniBoss"
+					Attributes	"UseBossHealthBar"
+					Attributes	"HoldFireUntilFullReload"
+
+					ItemAttributes
+					{
+						ItemName	"the black box"
+						"clip size bonus"	2
+						"fire rate bonus"	0.1
+						"faster reload rate"	0.03
+						"projectile spread angle penalty"	1.3
+						"Projectile speed increased"	1.25
+						"dmg bonus vs buildings"	0.05
+					}
+
+					CharacterAttributes
+					{
+						"increase buff duration"	2
+						"airblast vertical vulnerability multiplier"	0.01
+						"airblast vulnerability multiplier"	0.5
+						"move speed penalty"	0.3
+					}
+
+					Item	"the black box"
+					Item	"the battalion's backup"
+					BehaviorModifiers	Push
+					Attributes	IgnoreFlag
+				}
+			}
+		}
+		WaveSpawn
+		{
+			Name	PHASE1
+
+			TotalCurrency	0
+			TotalCount	1
+
+			WaitBeforeStarting	15
+			WaitBetweenSpawns	1
+
+			SpawnCount	1
+
+			Where	superultramega
+
+			FirstSpawnWarningSound	"Soldier.MVM_LaughEvil03"
+			DoneWarningSound	"Soldier.MVM_PainCrticialDeath02"
+
+			Squad
+			{
+				TFBot
+				{
+					ClassIcon	soldier_nuker
+
+					Health	22500
+					Name	"Building-Murderer PLUS PLUS"
+					Scale	12
+					Class	Soldier
+					Skill	Expert
+
+					WeaponRestrictions	PrimaryOnly
+
+					Tag	"bot_giant"
+					Attributes	"MiniBoss"
+					Attributes	"UseBossHealthBar"
+					Attributes	"HoldFireUntilFullReload"
+					Attributes	"AlwaysCrit"
+					ItemAttributes
+					{
+						ItemName	"the original"
+						"dmg bonus vs buildings"	4.5
+						"damage causes airblast"	1
+						"use large smoke explosion"	1
+						"Blast radius increased"	3
+						"Projectile speed increased"	2
+						"fire rate penalty"	2
+						"damage bonus"	1.2
+						"faster reload rate"	2
+					}
+					CharacterAttributes
+					{
+						"airblast vertical vulnerability multiplier"	0.01
+						"airblast vulnerability multiplier"	0.75
+						"move speed penalty"	0.3
+					}
+					Item	"the original"
+					BehaviorModifiers	Push
+					Attributes	IgnoreFlag
+				}
+			}
+		}
+
+		WaveSpawn
+		{
+			Support	1
+
+			Name	PHASE1S
+
+			TotalCurrency	0
+			TotalCount	15
+			MaxActive	15
+
+			WaitBeforeStarting	0
+			WaitBetweenSpawns	1
+
+			SpawnCount	1
+
+			RandomSpawn	1
+			Where	left
+			Where	right
+
+			RandomChoice
+			{
+				TFBot
+				{
+					Template	kmlp_soldier_buff
+				}
+				TFBot
+				{
+					Template	kmlp_soldier_conch
+				}
+				TFBot
+				{
+					Template	kmlp_soldier_direct_hit
+				}
+				TFBot
+				{
+					Template	kmlp_soldier
+				}
+			}
+		}
+		WaveSpawn
+		{
+			Support	1
+
+			Name	PHASE1SG
+
+			TotalCurrency	0
+			TotalCount	4
+			MaxActive	4
+
+			WaitBeforeStarting	20
+			WaitBetweenSpawns	2
+
+			SpawnCount	1
+
+			RandomSpawn	1
+			Where	left
+			Where	right
+
+			RandomChoice
+			{
+				TFBot
+				{
+					Template	kmlp_soldier_scatter_giant
+				}
+				TFBot
+				{
+					Template	kmlp_soldier_conch_giant
+				}
+				TFBot
+				{
+					Template	kmlp_soldier_capital
+				}
+				TFBot
+				{
+					Template	kmlp_soldier_buff_giant
+				}
+			}
+		}
+	}
+
+	////////////////////////////////////////////////////////////////////
+	////////////////////////////////////////////////////////////////////
+	////////////////////////////////////////////////////////////////////
+	////////////////////////////////////////////////////////////////////
+	////////////////////////////////////////////////////////////////////
+	////////////////////////////////////////////////////////////////////
+	//WAVE 9
+
+	Wave
+	{
+		WaitWhenDone	65
+		Checkpoint	Yes
+
+		StartWaveOutput
+		{
+			Target	wave_start_relay
+			Action	Trigger
+		}
+		DoneOutput
+		{
+			Target	wave_complete_relay
+			Action	Trigger
+		}
+
+		/////////////////////////////////////////////PHASE 1
+
+		WaveSpawn
+		{
+			Name	PHASE1
+
+			TotalCurrency	0
+			TotalCount	1
+
+			WaitBeforeStarting	20
+			WaitBetweenSpawns	1
+
+			SpawnCount	1
+
+			Where	superultramega
+
+			FirstSpawnWarningSound	"Sniper.MVM_LaughLong02"
+			DoneWarningSound	"Sniper.MVM_PainCrticialDeath03"
+
+			Squad
+			{
+				TFBot
+				{
+					Name	"MASTER MUNDY MEGA MELEE MODE!!!!!"
+					ClassIcon	sniper_bushwacka_giant
+					Class	Sniper
+
+					Skill	Expert
+
+					WeaponRestrictions	MeleeOnly
+
+					BehaviorModifiers	Mobber
+					Attributes	IgnoreFlag
+					Attributes	"MiniBoss"
+					Attributes	"AlwaysFireWeapon"
+					Attributes	"UseBossHealthBar"
+
+					ItemAttributes
+					{
+						ItemName	"The Bushwacka"
+						"damage penalty"	0.5
+						"fire rate bonus"	0.25
+						"melee range multiplier"	5
+						"melee bounds multiplier"	8
+					}
+					ItemAttributes
+					{
+						ItemName	"Tough Stuff Muffs"
+						"attach particle effect"	109
+					}
+					CharacterAttributes
+					{
+						"move speed bonus"	0.25
+						"airblast vulnerability multiplier"	255
+						"damage force reduction" 2
+						"cancel falling damage"	1
+					}
+
+					Item	"Villain's Veil"
+					Item	"Tough Stuff Muffs"
+					Item	"The Bushwacka"
+
+					Health	115000
+					Scale	15
+				}
+			}
+		}
+
+		WaveSpawn
+		{
+			Support	1
+
+			Name	PHASE3S1
+
+			TotalCurrency	0
+			TotalCount	5
+			MaxActive	5
+
+			WaitForAllDead	PHASE2
+			WaitBeforeStarting	0
+			WaitBetweenSpawns	1
+
+			SpawnCount	1
+
+			RandomSpawn	1
+			Where	left
+			Where	right
+
+			RandomChoice
+			{
+				TFBot
+				{
+					Template	kmlp_mundy_mini
+				}
+				TFBot
+				{
+					Template	kmlp_mundy_prototype
+				}
+				TFBot
+				{
+					Template	kmlp_mundy_medium
+				}
+				TFBot
+				{
+					Template	kmlp_mundy_big
+				}
+			}
+		}
+		WaveSpawn
+		{
+			Support	1
+
+			Name	PHASE3S2
+
+			TotalCurrency	0
+			TotalCount	5
+			MaxActive	5
+
+			WaitForAllDead	PHASE2
+			WaitBeforeStarting	1
+			WaitBetweenSpawns	1
+
+			SpawnCount	1
+
+			RandomSpawn	1
+			Where	left
+			Where	right
+
+			RandomChoice
+			{
+				TFBot
+				{
+					Template	kmlp_mundy_mini_flying
+				}
+				TFBot
+				{
+					Template	kmlp_mundy_prototype_flying
+				}
+				TFBot
+				{
+					Template	kmlp_mundy_medium_flying
+				}
+				TFBot
+				{
+					Template	kmlp_mundy_big_flying
+				}
+			}
+		}
+		WaveSpawn
+		{
+			Support	1
+
+			Name	PHASE3S3
+
+			TotalCurrency	0
+			TotalCount	5
+			MaxActive	5
+
+			WaitForAllDead	PHASE2
+			WaitBeforeStarting	2
+			WaitBetweenSpawns	1
+
+			SpawnCount	1
+
+			RandomSpawn	1
+			Where	left
+			Where	right
+
+			RandomChoice
+			{
+				TFBot
+				{
+					Template	kmlp_mundy_jarate_mini
+				}
+				TFBot
+				{
+					Template	kmlp_mundy_jarate_prototype
+				}
+				TFBot
+				{
+					Template	kmlp_mundy_jarate_medium
+				}
+				TFBot
+				{
+					Template	kmlp_mundy_jarate_big
+				}
+			}
+		}
+		WaveSpawn
+		{
+			Support	1
+
+			Name	PHASE3S4
+
+			TotalCurrency	0
+			TotalCount	5
+			MaxActive	1
+
+			WaitForAllDead	PHASE2
+			WaitBeforeStarting	3
+			WaitBetweenSpawns	1
+
+			SpawnCount	1
+
+			RandomSpawn	1
+			Where	left
+			Where	right
+
+			RandomChoice
+			{
+				TFBot
+				{
+					Template	kmlp_mundy_jarate_mini_flying
+				}
+				TFBot
+				{
+					Template	kmlp_mundy_jarate_prototype_flying
+				}
+				TFBot
+				{
+					Template	kmlp_mundy_jarate_medium_flying
+				}
+				TFBot
+				{
+					Template	kmlp_mundy_jarate_big_flying
+				}
+			}
+		}
+	}
+}

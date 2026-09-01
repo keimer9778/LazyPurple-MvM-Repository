@@ -1,0 +1,724 @@
+#base	robot_randomguy.pop
+#base	custom_medieval_randomguy.pop
+
+WaveSchedule
+{
+	StartingCurrency				1600
+	RespawnWaveTime					4
+	CanBotsAttackWhileInSpawnRoom	yes
+	EventPopFile					Halloween
+	TextPrintTime					0 [$SIGSEGV]	// How fast a line from the wave description is displayed in the middle of the screen. Use 0 to disable (default: 4)
+
+	Templates
+	{
+		T_TFBot_Sniper_Huntsman_Giant
+		{
+			Class				Sniper
+			ClassIcon			sniper_bow_giant
+			Name				"Giant Bowman"
+			Skill				Hard
+			WeaponRestrictions	PrimaryOnly
+			Item				"The Huntsman"
+			Attributes			miniboss
+			Health				2500
+
+			ItemAttributes
+			{
+				ItemName			"The Huntsman"
+				is_passive_weapon	1
+			}
+
+			CharacterAttributes
+			{
+				"move speed bonus"					0.5
+				"damage force reduction"			0.5
+				"airblast vulnerability multiplier"	0.5
+				"override footstep sound set"		4
+			}
+		}
+	}
+
+	FlagResetTime [$SIGSEGV]
+	{
+		Name		intel
+		ResetTime	45
+	}
+
+	// Balancemod explanation signs:
+	SpawnTemplate [$SIGSEGV]
+	{
+		Name	ExplanationSign
+		origin	"3350 550 100"
+		angles	"0 315 0"
+	}
+
+	// NoReanimators					1 [$SIGSEGV]
+	Mission	// Wave 1 spies
+	{
+		InitialCooldown		180
+		Objective			Spy
+		Where				spawnbot
+		BeginAtWave			1
+		RunForThisManyWaves	1
+		CooldownTime		240
+		DesiredCount		2
+
+		TFBot
+		{
+			Class	Spy
+			Skill	Expert
+			Name	Spy
+		}
+	}
+
+	Wave	// WAVE 1 Money : 350 Total : 950
+	{
+		StartWaveOutput
+		{
+			Target	wave_start_relay
+			Action	Trigger
+		}
+
+		DoneOutput
+		{
+			Target	wave_finished_relay
+			Action	trigger
+		}
+		WaitWhenDone	65
+		Checkpoint		Yes
+
+		// Explanation [$SIGSEGV]
+		// {
+		// Line	"{yellow} Note: the bomb takes 45 seconds to restart"
+		// Line	"{red} hope you're ready for some FUN"
+		// Line	"{green} mission by randomguy"
+		// Line	"{darkgreen} download the sniper_giant icon here: https://www.dropbox.com/s/pir9mmsxg17gze7/leaderboard_class_sniper_giant.vmt?dl=0"
+		// }
+		WaveSpawn
+		{
+			Where						spawnbot
+			Name						bomb_prot
+			TotalCount					100
+			MaxActive					1
+			SpawnCount					1
+			WaitBeforeStarting			0
+			WaitBetweenSpawnsAfterDeath	5
+			TotalCurrency				500
+			Support						1
+
+			TFBot
+			{
+				Class				Heavy
+				WeaponRestrictions	MeleeOnly
+				ClassIcon			heavy_fist_nys
+			}
+		}
+
+		WaveSpawn
+		{
+			Where				spawnbot
+			Name				wave1
+			TotalCount			36
+			MaxActive			12
+			SpawnCount			6
+			WaitBeforeStarting	0
+			WaitBetweenSpawns	5
+			TotalCurrency		200
+
+			TFBot
+			{
+				Template	T_TFBot_HeavyWeapons_HeavyWeight_Champ
+			}
+		}
+
+		WaveSpawn
+		{
+			Where				spawnbot
+			Name				wave1
+			TotalCount			5
+			MaxActive			3
+			SpawnCount			1
+			WaitBeforeStarting	0
+			WaitBetweenSpawns	10
+			TotalCurrency		200
+
+			TFBot
+			{
+				Template	T_TFBot_Giant_Boxing_Heavy
+				Health		3000
+			}
+		}
+
+		WaveSpawn
+		{
+			Where				spawnbot
+			Name				wave1
+			TotalCount			18
+			MaxActive			12
+			SpawnCount			3
+			WaitBeforeStarting	0
+			WaitBetweenSpawns	5
+			TotalCurrency		100
+
+			TFBot
+			{
+				Template	T_TFBot_HeavyWeapons_HeavyWeight_Champ_Fast
+			}
+		}
+
+		WaveSpawn
+		{
+			Where				spawnbot
+			Name				wave2
+			WaitForAllDead		wave1
+			TotalCount			30
+			MaxActive			15
+			SpawnCount			5
+			WaitBeforeStarting	15
+			WaitBetweenSpawns	10
+			TotalCurrency		140
+
+			Randomchoice
+			{
+				TFBot
+				{
+					Template	T_TFBot_Demoman_Knight
+				}
+
+				TFBot
+				{
+					Template	T_TFBot_Demo_Samurai
+					ClassIcon	demoknight
+				}
+			}
+		}
+
+		WaveSpawn
+		{
+			Where				spawnbot
+			Name				wave2
+			WaitForAllDead		wave1
+			TotalCount			8
+			MaxActive			8
+			SpawnCount			2
+			WaitBeforeStarting	15
+			WaitBetweenSpawns	20
+			TotalCurrency		160
+
+			TFBot
+			{
+				Template	T_TFBot_Giant_DemoMan_PrinceTavish
+			}
+		}
+
+		WaveSpawn
+		{
+			Where				spawnbot
+			Name				wave3
+			WaitForAllDead		wave2
+			TotalCount			100
+			MaxActive			15
+			SpawnCount			5
+			WaitBeforeStarting	20
+			WaitBetweenSpawns	5
+			TotalCurrency		200
+
+			TFBot
+			{
+				Template	T_TFBot_Sniper_Desert
+			}
+		}
+
+		WaveSpawn
+		{
+			Name				wave3
+			WaitForAllDead		wave2
+			TotalCount			2
+			MaxActive			2
+			SpawnCount			1
+			WaitBeforeStarting	20
+			WaitBetweenSpawns	90
+			TotalCurrency		200
+
+			FirstSpawnOutput
+			{
+				Target	boss_spawn_relay
+				Action	Trigger
+			}
+
+			Tank
+			{
+				Name					Tank
+				Health					15000	// /98 dps required
+				Speed					75
+				Skin					0
+				StartingPathTrackNode	boss_path_a1	// /takes about 153 seconds to reach hatch (10k is 65dps required)
+
+				OnKilledOutput
+				{
+					Target	boss_dead_relay
+					Action	Trigger
+				}
+
+				OnBombDroppedOutput
+				{
+					Target	boss_deploy_relay
+					Action	Trigger
+				}
+			}
+		}
+
+		WaveSpawn
+		{
+			Where				spawnbot
+			Name				wave4
+			WaitForAllDead		wave3
+			TotalCount			60
+			MaxActive			12
+			SpawnCount			3
+			WaitBeforeStarting	15
+			WaitBetweenSpawns	5
+			TotalCurrency		150
+
+			TFBot
+			{
+				Template	T_TFBot_Sniper_Huntsman
+
+				ItemAttributes
+				{
+					ItemName			"The Huntsman"
+					is_passive_weapon	1
+				}
+			}
+		}
+
+		WaveSpawn
+		{
+			Where				spawnbot
+			Name				wave4
+			WaitForAllDead		wave3
+			TotalCount			6
+			MaxActive			3
+			SpawnCount			1
+			WaitBeforeStarting	10
+			WaitBetweenSpawns	15
+			TotalCurrency		100
+
+			TFBot
+			{
+				Template	T_TFBot_Sniper_Huntsman_Giant
+			}
+		}
+
+		WaveSpawn
+		{
+			Where				spawnbot
+			Name				wave4
+			WaitForAllDead		wave3
+			TotalCount			15
+			MaxActive			6
+			SpawnCount			3
+			WaitBeforeStarting	15
+			WaitBetweenSpawns	10
+			TotalCurrency		150
+
+			TFBot
+			{
+				Template	T_TFBot_Sniper_Huntsman_Spammer
+				ClassIcon	sniper_bow_multi
+
+				ItemAttributes
+				{
+					ItemName			"The Huntsman"
+					is_passive_weapon	1
+					"damage bonus"		0.75
+				}
+			}
+		}
+
+		WaveSpawn
+		{
+			Where				spawnbot
+			Name				wave5
+			WaitForAllDead		wave4
+			TotalCount			30
+			MaxActive			12
+			SpawnCount			3
+			WaitBeforeStarting	15
+			WaitBetweenSpawns	10
+			TotalCurrency		150
+
+			TFBot
+			{
+				Template	T_TFBot_HeavyWeapons_Fist
+				Attributes	AlwaysCrit
+			}
+		}
+
+		WaveSpawn
+		{
+			Where				spawnbot
+			Name				wave5
+			WaitForAllDead		wave4
+			TotalCount			10
+			MaxActive			6
+			SpawnCount			2
+			WaitBeforeStarting	15
+			WaitBetweenSpawns	10
+			TotalCurrency		100
+
+			TFBot
+			{
+				Template	T_TFBot_Soldier_Conch_Katana_Giant
+				Health		1500
+			}
+		}
+
+		WaveSpawn
+		{
+			Name				wave6
+			WaitForAllDead		wave5
+			TotalCount			1
+			MaxActive			1
+			SpawnCount			1
+			WaitBeforeStarting	10
+			WaitBetweenSpawns	0
+			TotalCurrency		360
+
+			FirstSpawnOutput
+			{
+				Target	boss_spawn_relay
+				Action	Trigger
+			}
+
+			Tank
+			{
+				Name					Tank
+				Health					20000	// /130 dps required
+				Speed					75
+				Skin					0
+				StartingPathTrackNode	boss_path_a1	// /takes about 153 seconds to reach hatch (10k is 65dps required)
+
+				OnKilledOutput
+				{
+					Target	boss_dead_relay
+					Action	Trigger
+				}
+
+				OnBombDroppedOutput
+				{
+					Target	boss_deploy_relay
+					Action	Trigger
+				}
+			}
+		}
+
+		WaveSpawn
+		{
+			Where				spawnbot
+			Name				wave6
+			WaitForAllDead		wave5
+			TotalCount			30
+			MaxActive			15
+			SpawnCount			3
+			WaitBeforeStarting	10
+			WaitBetweenSpawns	5
+			TotalCurrency		250
+
+			TFBot
+			{
+				Template	T_TFBot_HeavyWeapons_HeavyWeight_Champ
+			}
+		}
+
+		WaveSpawn
+		{
+			Where				spawnbot
+			Name				wave6
+			WaitForAllDead		wave5
+			TotalCount			50
+			MaxActive			10
+			SpawnCount			5
+			WaitBeforeStarting	10
+			WaitBetweenSpawns	5
+			TotalCurrency		100
+
+			TFBot
+			{
+				Class				Scout
+				ClassIcon			scout_bat_nys
+				WeaponRestrictions	MeleeOnly
+				Skill				Expert
+			}
+		}
+
+		WaveSpawn
+		{
+			Name				wave7
+			WaitForAllDead		wave6
+			TotalCount			2
+			MaxActive			2
+			SpawnCount			1
+			WaitBeforeStarting	20
+			WaitBetweenSpawns	75
+			TotalCurrency		360
+
+			FirstSpawnOutput
+			{
+				Target	boss_spawn_relay
+				Action	Trigger
+			}
+
+			Tank
+			{
+				Name					Tank
+				Health					20000	// /130 dps required
+				Speed					75
+				Skin					0
+				StartingPathTrackNode	boss_path_a1	// /takes about 153 seconds to reach hatch (10k is 65dps required)
+
+				OnKilledOutput
+				{
+					Target	boss_dead_relay
+					Action	Trigger
+				}
+
+				OnBombDroppedOutput
+				{
+					Target	boss_deploy_relay
+					Action	Trigger
+				}
+			}
+		}
+
+		WaveSpawn
+		{
+			Where				spawnbot
+			Name				wave7
+			WaitForAllDead		wave6
+			TotalCount			50
+			MaxActive			10
+			SpawnCount			5
+			WaitBeforeStarting	10
+			WaitBetweenSpawns	10
+			TotalCurrency		140
+
+			TFBot
+			{
+				Template	T_TFBot_Sniper_Desert
+			}
+		}
+
+		WaveSpawn
+		{
+			Where				spawnbot
+			Name				wave8
+			WaitForAllDead		wave7
+			TotalCount			15
+			MaxActive			9
+			SpawnCount			3
+			WaitBeforeStarting	15
+			WaitBetweenSpawns	15
+			TotalCurrency		150
+
+			TFBot
+			{
+				Template	T_TFBot_Heavy_Wrestler
+			}
+		}
+
+		WaveSpawn
+		{
+			Name				wave8
+			WaitForAllDead		wave7
+			TotalCount			1
+			MaxActive			1
+			SpawnCount			1
+			WaitBeforeStarting	90
+			WaitBetweenSpawns	0
+			TotalCurrency		100
+
+			FirstSpawnOutput
+			{
+				Target	boss_spawn_relay
+				Action	Trigger
+			}
+
+			Tank
+			{
+				Name					Tank
+				Health					17500	// /114 dps required
+				Speed					75
+				Skin					0
+				StartingPathTrackNode	boss_path_a1	// /takes about 153 seconds to reach hatch (10k is 65dps required)
+
+				OnKilledOutput
+				{
+					Target	boss_dead_relay
+					Action	Trigger
+				}
+
+				OnBombDroppedOutput
+				{
+					Target	boss_deploy_relay
+					Action	Trigger
+				}
+			}
+		}
+
+		WaveSpawn
+		{
+			Where				spawnbot
+			Name				wave8
+			WaitForAllDead		wave7
+			TotalCount			75
+			MaxActive			15
+			SpawnCount			5
+			WaitBeforeStarting	15
+			WaitBetweenSpawns	10
+			TotalCurrency		150
+
+			TFBot
+			{
+				Template	T_TFBot_HeavyWeapons_HeavyWeight_Champ
+			}
+		}
+
+		WaveSpawn
+		{
+			Name				wave9
+			WaitForAllDead		wave8
+			TotalCount			4
+			MaxActive			4
+			SpawnCount			1
+			WaitBeforeStarting	20
+			WaitBetweenSpawns	60
+			TotalCurrency		600
+
+			FirstSpawnOutput
+			{
+				Target	boss_spawn_relay
+				Action	Trigger
+			}
+
+			Tank
+			{
+				Name					Tank
+				Health					20000	// /130 dps required
+				Speed					75
+				Skin					0
+				StartingPathTrackNode	boss_path_a1	// /takes about 153 seconds to reach hatch (10k is 65dps required)
+
+				OnKilledOutput
+				{
+					Target	boss_dead_relay
+					Action	Trigger
+				}
+
+				OnBombDroppedOutput
+				{
+					Target	boss_deploy_relay
+					Action	Trigger
+				}
+			}
+		}
+
+		WaveSpawn
+		{
+			Where				spawnbot
+			Name				wave9
+			WaitForAllDead		wave8
+			TotalCount			100
+			MaxActive			12
+			SpawnCount			3
+			WaitBeforeStarting	10
+			WaitBetweenSpawns	10
+			TotalCurrency		200
+
+			TFBot
+			{
+				Template	T_TFBot_HeavyWeapons_HeavyWeight_Champ_Fast
+				Attributes	AlwaysCrit
+			}
+		}
+
+		WaveSpawn
+		{
+			Where				spawnbot
+			Name				wave9
+			WaitForAllDead		wave8
+			TotalCount			120
+			MaxActive			12
+			SpawnCount			3
+			WaitBeforeStarting	10
+			WaitBetweenSpawns	10
+			TotalCurrency		200
+
+			TFBot
+			{
+				Template	T_TFBot_Sniper_Desert
+			}
+		}
+
+		WaveSpawn
+		{
+			Where				spawnbot
+			Name				wave10
+			WaitForAllDead		wave9
+			TotalCount			1
+			MaxActive			1
+			SpawnCount			1
+			WaitBeforeStarting	15
+			WaitBetweenSpawns	0
+			TotalCurrency		250
+
+			TFBot
+			{
+				Name				Dragonborn
+				Health				55000
+				Class				Heavy
+				ClassIcon			heavy_chief
+				Skill				Expert
+				MaxVisionRange		400
+				Attributes			AlwaysCrit
+				Item				"Warrior's Spirit"
+				Item				"Dragonborn Helmet"
+				Attributes			MiniBoss
+				Attributes			UseBossHealthBar
+				WeaponRestrictions	MeleeOnly
+
+				CharacterAttributes
+				{
+					"move speed bonus"					0.5
+					"damage bonus"						2
+					"damage force reduction"			0.3
+					"airblast vulnerability multiplier"	0.3
+					"override footstep sound set"		2
+				}
+			}
+		}
+
+		WaveSpawn
+		{
+			Where				spawnbot
+			Name				wave10
+			WaitForAllDead		wave9
+			TotalCount			100
+			MaxActive			15
+			SpawnCount			3
+			WaitBeforeStarting	10
+			WaitBetweenSpawns	3
+			TotalCurrency		1000
+			Support				2
+
+			TFBot
+			{
+				Class				Heavy
+				Skill				Expert
+				Attributes			AlwaysCrit
+				ClassIcon			heavy_fist_nys	// _giant
+				WeaponRestrictions	MeleeOnly
+			}
+		}
+	}
+}
