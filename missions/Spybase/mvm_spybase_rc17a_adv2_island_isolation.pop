@@ -186,7 +186,7 @@ population
 		}
 		T_TFBot_Demoman_Blast
 		{
-					ClassIcon	demo_loosecannon
+					ClassIcon	demo_loosecannon [$SIGSEGV] // Read-only variant, can't modify
 					Name	"Blast Demo"
 					Class	Demoman
 					Skill	Normal
@@ -734,7 +734,7 @@ population
 		}
 			T_TFBot_Chief_Toungtwister
 			{
-					ClassIcon	pyro_chief_inferno
+					ClassIcon	pyro_chief_inferno [$SIGSEGV] // Read-only variant, can't modify
 					Health 50000
 					Name	"Chief Infinite Incinerator"
 					Scale	1.9
@@ -1039,6 +1039,12 @@ population
 		{
 			Target	wave_finished_relay
 			Action	Trigger
+		}
+		InitWaveOutput // Avoid crashing in the 20 player environment
+		{
+			Target	BigNet
+			Action	RunScriptCode
+			Param "Convars.SetValue(`tf_playergib`, 0)"
 		}
 		WaveSpawn
 		{
@@ -1507,12 +1513,9 @@ population
 			WaitBeforeStarting	1
 			WaitBetweenSpawns	18
 			Where	spawnbot_right
-			Squad
+			TFBot
 			{
-				TFBot
-				{
-					Template	T_TFBot_Heavyweapons_Fist
-				}
+				Template	T_TFBot_Heavyweapons_Fist
 			}
 		}
 		WaveSpawn
@@ -1957,17 +1960,14 @@ population
 			TotalCurrency	150
 			TotalCount	2
 			MaxActive	2
-			SpawnCount	3
+			SpawnCount	2
 			WaitBeforeStarting	3
 			WaitBetweenSpawns	15
 			Where	spawnbot
-			Squad
+			TFBot
 			{
-				TFBot
-				{
-					Template	T_TFBot_Giant_Heavy_Healonkill_C
-					Attributes AlwaysCrit
-				}
+				Template	T_TFBot_Giant_Heavy_Healonkill_C
+				Attributes AlwaysCrit
 			}
 		}
 		WaveSpawn
@@ -1998,13 +1998,10 @@ population
 			SpawnCount	1
 			WaitBetweenSpawns	7
 			Where	spawnbot_right
-			Squad
+			TFBot
 			{
-				TFBot
-				{
-					Template	T_TFBot_Heavyweapons_Fist
-					Attributes	DisableDodge
-				}
+				Template	T_TFBot_Heavyweapons_Fist
+				Attributes	DisableDodge
 			}
 		}
 		WaveSpawn
@@ -2410,19 +2407,16 @@ population
 			TotalCurrency	50
 			TotalCount	1
 			Where	spawnbot_left
-			Squad
+			TFBot
 			{
-				TFBot
+				Name	"Giant Armored Sandman"
+				Template	T_TFBot_Giant_Scout_Baseball_Armored
+				Attributes	AlwaysCrit
+				Attributes	DisableDodge
+				CharacterAttributes
 				{
-					Name	"Giant Armored Sandman"
-					Template	T_TFBot_Giant_Scout_Baseball_Armored
-					Attributes	AlwaysCrit
-					Attributes	DisableDodge
-					CharacterAttributes
-					{
-						"airblast vulnerability multiplier"	.1
-						"airblast vertical vulnerability multiplier"	.2
-					}
+					"airblast vulnerability multiplier"	.1
+					"airblast vertical vulnerability multiplier"	.2
 				}
 			}
 		}
@@ -2522,12 +2516,9 @@ population
 			WaitBeforeStarting	3
 			WaitBetweenSpawns	3
 			Where	spawnbot_left
-			Squad
+			TFBot
 			{
-				TFBot
-				{
-					Template	T_TFBot_Giant_Plateshield
-				}
+				Template	T_TFBot_Giant_Plateshield
 			}
 		}
 		WaveSpawn
@@ -2628,7 +2619,7 @@ population
 			WaitBeforeStarting	6
 			WaitBetweenSpawns	9999
 			Support	1
-			FirstSpawnWarningSound "vo\mvm\mght\pyro_mvm_m_laughlong02.mp3"
+			FirstSpawnWarningSound "vo\mvm\mght\pyro_mvm_m_laughlong02.mp3" [$SIGSEGV]
 			Where	spawnbot_left
 			TFBot
 			{
