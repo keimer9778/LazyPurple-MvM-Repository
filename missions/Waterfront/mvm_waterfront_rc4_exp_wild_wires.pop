@@ -1,11 +1,8 @@
-//Wild Wires (Waterfront Expert)
-//Author: Mo_
-//Steam Link: https://steamcommunity.com/id/totallynotcaptainMo/
 #base robot_giant.pop
 #base robot_standard.pop
 You_Can_Put_Anything_Here_Lol // WaveSchedule
 {
-	StartingCurrency	1050
+	StartingCurrency	750
 	RespawnWaveTime	5
 	CanBotsAttackWhileInSpawnRoom	No
 	Advanced	1
@@ -13,7 +10,7 @@ You_Can_Put_Anything_Here_Lol // WaveSchedule
 	{
 		T_TFBot_Giant_Soldier_Laser_Wall
 		{
-			ClassIcon	soldier_giant
+			ClassIcon	soldier_bison
 			WeaponRestrictions	PrimaryOnly
 			Skill	Expert
 			Health	4000
@@ -48,42 +45,9 @@ You_Can_Put_Anything_Here_Lol // WaveSchedule
 				"override footstep sound set"	3
 			}
 		}
-		T_TFBot_Giant_Kritzkrieg
-		{
-			Name "Giant Kritzkrieg Medic"
-			Class Medic
-			ClassIcon medic_giant
-			Skill Normal
-			Health 4500
-			Attributes	MiniBoss
-			Attributes	SpawnWithFullCharge
-			Attributes	IgnoreEnemies
-			Item "The Kritzkrieg"
-			Item "The Virus Doctor"
-			Item "The Overdose"	
-			ItemAttributes
-			{
-				ItemName "The Kritzkrieg"
-				"ubercharge rate bonus" 100
-				"uber duration bonus" 95
-				"heal rate bonus" 1337
-			}
-			CharacterAttributes
-			{
-				"move speed bonus"	1.3
-				"cancel falling damage" 1
-				"damage force reduction" 0.05
-				"airblast vulnerability multiplier" 0.01
-				"airblast vertical vulnerability multiplier"	0.01
-				"bot medic uber health threshold" 9001
-				"dmg taken increased" 0.05 
-				"dmg from melee increased" 20
-				"dmg from ranged reduced" 20
-			}
-		}
 		T_TFBot_Demo_Giant_3burst
 		{
-			ClassIcon	demo_burst_giant
+			ClassIcon	demo_burst_spammer
 			Health	3300
 			Name	"Giant Rapid Burst Fire Demoman"
 			Class	Demoman
@@ -115,7 +79,7 @@ You_Can_Put_Anything_Here_Lol // WaveSchedule
 		}
 		T_TFBot_Soldier_Giant_Powershell
 		{
-			ClassIcon	soldier_giant
+			ClassIcon	soldier_burstfire_spammer
 			Health	4200
 			Name	"Giant Burst Rapid Fire Soldier"
 			Class	Soldier
@@ -152,7 +116,7 @@ You_Can_Put_Anything_Here_Lol // WaveSchedule
 		{
 			Class Soldier
 			Name "Giant Burst Fire Conch Soldier"
-			ClassIcon soldier_conch_giant
+			ClassIcon soldier_conch_spammer
 			item "the concheror"
 			item "the lucky shot"
 			Health 4000
@@ -181,7 +145,7 @@ You_Can_Put_Anything_Here_Lol // WaveSchedule
 		{
 			Class Soldier
 			Name "Giant Burst Fire Conch Soldier"
-			ClassIcon soldier_buff_giant
+			ClassIcon soldier_buff_spammer
 			item "the buff banner"
 			item "the lucky shot"
 			Health 4000
@@ -211,7 +175,7 @@ You_Can_Put_Anything_Here_Lol // WaveSchedule
 			Class Demoman
 			Name	"Stickybomb Demoman"
 			Skill Expert
-			//Classicon demo_sticky_daan
+			Classicon demo_sticky_daan
 			Item "TF_WEAPON_PIPEBOMBLAUNCHER"
 			Item	"scotsman's stove pipe"
 			WeaponRestrictions SecondaryOnly
@@ -234,8 +198,7 @@ You_Can_Put_Anything_Here_Lol // WaveSchedule
 		{
 			Name "Kritzkrieg Medic"
 			Class Medic
-			ClassIcon medic
-      Attributes AlwaysCrit
+			ClassIcon medic_kritz
 			Skill Normal				
 			Attributes SpawnWithFullCharge
 			Item "The Kritzkrieg"
@@ -299,6 +262,7 @@ You_Can_Put_Anything_Here_Lol // WaveSchedule
 			Template	T_TFBot_SentryBuster
 			Item	"Highland High Heels"
 			Item	"the backwards ballcap"
+			Name		"How about you wrangle some hoes"
 			CharacterAttributes
 			{
 			    "head scale" 3.0
@@ -321,7 +285,7 @@ You_Can_Put_Anything_Here_Lol // WaveSchedule
 		{
 			Name "Cow Mangler Soldier"
 			Class Soldier
-			//ClassIcon soldier_mangler
+			ClassIcon soldier_mangler
 			WeaponRestrictions PrimaryOnly
 			Item "The Cow Mangler 5000"
 			Skill Expert
@@ -346,7 +310,7 @@ You_Can_Put_Anything_Here_Lol // WaveSchedule
 		{
 			Name "Cow Mangler Soldier"
 			Class Soldier
-			//ClassIcon soldier_mangler
+			ClassIcon soldier_mangler
 			WeaponRestrictions PrimaryOnly
 			Item "The Cow Mangler 5000"
 			Skill Expert
@@ -415,26 +379,8 @@ You_Can_Put_Anything_Here_Lol // WaveSchedule
 		DesiredCount	3
 		TFBot
 		{
-			Class Sniper
-			Name "Caustic Sniper"
-			Skill Hard
-			Item "teufort_sniperrifle_bogtrotter"
-			Item "The Razorback"
-			Item "Letch's LED"
-			WeaponRestrictions PrimaryOnly
-			ItemAttributes
-			{
-				ItemName "teufort_sniperrifle_bogtrotter"
-				"attach particle effect" 702
-				"damage penalty" .15
-				"fire rate bonus" 2
-				"bleeding duration" 15
-			}
-			ItemAttributes
-			{
-				ItemName "The Bolted Bicorne" [$SIGSEGV]
-				"set item tint RGB" 3329330
-			}
+			Template	T_TFBot_Sniper
+			Skill Expert
 		}
 	}
 	Wave
@@ -451,14 +397,75 @@ You_Can_Put_Anything_Here_Lol // WaveSchedule
         }
 		InitWaveOutput
         {
-            Target wave_start_relay
+            Target gamerules
             Action RunScriptCode
             Param "
 				EntFire(`bombpath_choose_relay`, `Kill`)
 				EntFire(`bombpath_clearall_relay`, `Trigger`)
 				EntFire(`bombpath_right_arrows`, `TurnOff`)
                 EntFire(`bombpath_left`, `Trigger`)
+				ClientPrint(null,3,`\x08FF54F1FFEach wave will consist of forced bomb paths.`)
+				ClientPrint(null,3,`\x08FF54F1FFAny form of wave fail does NOT change it, so don't waste your time on that.`)
+
             "
+        }
+		WaveSpawn
+		{
+			FirstSpawnWarningSound "vo\mvm\norm\scout_mvm_negativevocalization01.mp3"
+		}
+		WaveSpawn
+		{
+			FirstSpawnWarningSound "vo\mvm\norm\scout_mvm_negativevocalization01.mp3"
+		}
+		WaveSpawn
+		{
+			FirstSpawnWarningSound "vo\mvm\norm\scout_mvm_autodejectedtie01.mp3"
+			WaitBeforeStarting	1
+		}
+		WaveSpawn
+		{
+			FirstSpawnWarningSound "vo\mvm\norm\scout_mvm_autodejectedtie01.mp3"
+			WaitBeforeStarting	1
+		}
+		WaveSpawn
+		{
+			FirstSpawnWarningSound "vo\mvm\norm\scout_mvm_go02.mp3"
+			WaitBeforeStarting	2.5
+		}
+		WaveSpawn
+		{
+			FirstSpawnWarningSound "vo\mvm\norm\scout_mvm_go02.mp3"
+			WaitBeforeStarting	2.5
+		}
+		WaveSpawn
+		{
+			FirstSpawnWarningSound "vo\mvm\norm\soldier_mvm_painsevere02.mp3"
+			WaitBeforeStarting	3.5
+		}
+		WaveSpawn
+		{
+			FirstSpawnWarningSound "vo\mvm\norm\soldier_mvm_painsevere02.mp3"
+			WaitBeforeStarting	3.5
+		}
+		WaveSpawn
+		{
+			FirstSpawnWarningSound "vo\mvm\norm\soldier_mvm_yes03.mp3"
+			WaitBeforeStarting	4.5
+		}
+		WaveSpawn
+		{
+			FirstSpawnWarningSound "vo\mvm\norm\soldier_mvm_yes03.mp3"
+			WaitBeforeStarting	4.5
+		}
+		WaveSpawn
+		{
+			FirstSpawnWarningSound "vo\mvm\norm\soldier_mvm_battlecry04.mp3"
+			WaitBeforeStarting	6.2
+		}
+		WaveSpawn
+		{
+			FirstSpawnWarningSound "vo\mvm\norm\soldier_mvm_battlecry04.mp3"
+			WaitBeforeStarting	6.2
 		}
 		WaveSpawn
 		{
@@ -467,9 +474,15 @@ You_Can_Put_Anything_Here_Lol // WaveSchedule
 			MaxActive	1
 			SpawnCount	1
 			WaitBeforeStarting	8.5
+            LastSpawnOutput
+            {
+                Target "tank"
+                Action "color"
+                Param "104 104 104"
+			}
 			Tank
 			{
-				Health	15000
+				Health	14400
 				Name	Tank
 				Speed	75
 				StartingPathTrackNode	tankpath_alt
@@ -483,6 +496,16 @@ You_Can_Put_Anything_Here_Lol // WaveSchedule
 					Target	boss_deploy_relay
 					Action	Trigger
 				}
+			}
+		}
+		WaveSpawn
+		{
+			WaitBeforeStarting 8.6
+            FirstSpawnOutput
+            {
+                Target "tank"
+                Action "setmodelscale"
+                Param "0.75"
 			}
 		}
 		WaveSpawn
@@ -512,7 +535,7 @@ You_Can_Put_Anything_Here_Lol // WaveSchedule
 			Where	spawnbot
 			TFBot
 			{
-				ClassIcon	scout_bat
+				ClassIcon	scout_bat_nys
 				Class	Scout
 				Skill	Expert
 				WeaponRestrictions	MeleeOnly
@@ -552,8 +575,8 @@ You_Can_Put_Anything_Here_Lol // WaveSchedule
 					Skill	Normal
 					ItemAttributes
 					{
-						ItemName "TF_WEAPON_FLAMETHROWER"
-						"airblast disabled" 1
+					ItemName "TF_WEAPON_FLAMETHROWER"
+					"airblast disabled" 1
 					}
 				}
 				TFBot
@@ -567,10 +590,10 @@ You_Can_Put_Anything_Here_Lol // WaveSchedule
 		WaveSpawn
 		{
 			WaitForAllSpawned	W1-A-BURST
-			TotalCurrency	250
-			TotalCount	6
-			MaxActive	6
-			SpawnCount	6
+			TotalCurrency	150
+			TotalCount	7
+			MaxActive	7
+			SpawnCount	7
 			WaitBeforeStarting	18
 			Where	spawnbot
 			Squad
@@ -598,15 +621,21 @@ You_Can_Put_Anything_Here_Lol // WaveSchedule
 				{
 					Template	T_TFBot_Medic_BigHeal
 					Item	"the surgeon's stahlhelm"
-					Name	"Armored Big Heal Medic"
-					Attributes	SpawnWithFullCharge
-					Health	500
-					Scale	1.3
-					ItemAttributes
-					{
-						ItemName "The Quick-Fix"
-						"uber duration bonus" -6
-					}
+					ClassIcon	"medic_pop_armored"
+					Name	"Armored Thicc-Heal Medic"
+					Attributes	"SpawnWithFullCharge"
+					Health	"600"
+					Scale	"1.3"
+				}
+				TFBot
+				{
+					Template	T_TFBot_Medic_BigHeal
+					Item	"the surgeon's stahlhelm"
+					ClassIcon	"medic_pop_armored"
+					Name	"Armored Thicc-Heal Medic"
+					Attributes	"SpawnWithFullCharge"
+					Health	"600"
+					Scale	"1.3"
 				}
 				TFBot
 				{
@@ -622,9 +651,9 @@ You_Can_Put_Anything_Here_Lol // WaveSchedule
 		{
 			WaitForAllSpawned	W1-A-BURST
 			TotalCurrency	0
-			TotalCount	16
-			MaxActive	8
-			SpawnCount	4
+			TotalCount	24
+			MaxActive	12
+			SpawnCount	6
 			WaitBeforeStarting	25
 			WaitBetweenSpawns 2
 			Where	spawnbot_flank
@@ -634,7 +663,7 @@ You_Can_Put_Anything_Here_Lol // WaveSchedule
 				Class	Heavy
 				Skill	Normal
 				ClassIcon	heavy_steelfist
-				Name	"Fists of Steel Heavy"
+				Name	"Steel Manlet"
 				Item	"fists of steel"
 				WeaponRestrictions	MeleeOnly
 				Item "Pugilist's Protector"
@@ -660,7 +689,7 @@ You_Can_Put_Anything_Here_Lol // WaveSchedule
 		}
 		InitWaveOutput
         {
-            Target wave_start_relay
+            Target gamerules
             Action RunScriptCode
             Param "
 				EntFire(`bombpath_choose_relay`, `Kill`)
@@ -668,83 +697,45 @@ You_Can_Put_Anything_Here_Lol // WaveSchedule
 				EntFire(`bombpath_left_arrows`, `TurnOff`)
 				EntFire(`bombpath_right_arrows`, `TurnOn`)
                 EntFire(`bombpath_right`, `Trigger`)
+
             "
+        }
+		WaveSpawn
+		{
+			FirstSpawnWarningSound "vo\mvm\norm\sniper_mvm_domination10.mp3"
+		}
+		WaveSpawn
+		{
+			FirstSpawnWarningSound "vo\mvm\norm\sniper_mvm_domination10.mp3"
+		}
+		WaveSpawn
+		{
+			FirstSpawnWarningSound "vo\mvm\norm\demoman_mvm_yes01.mp3"
+			WaitBeforeStarting 2.2
+		}
+		WaveSpawn
+		{
+			FirstSpawnWarningSound "vo\mvm\norm\demoman_mvm_yes01.mp3"
+			WaitBeforeStarting 2.2
+		}
+		WaveSpawn
+		{
+			FirstSpawnWarningSound "vo\mvm\norm\demoman_mvm_cheers03.mp3"
+			WaitBeforeStarting 3
+		}
+		WaveSpawn
+		{
+			FirstSpawnWarningSound "vo\mvm\norm\demoman_mvm_cheers03.mp3"
+			WaitBeforeStarting 3
 		}
 		WaveSpawn
 		{
 			Name	W2-A1
-			TotalCount	3
-			MaxActive	3
-			SpawnCount	3
-			WaitBeforeStarting	0
-			WaitBetweenSpawns	6
-			Support	Limited
-			Where	spawnbot_tutorial
-			FirstSpawnOutput
-			{
-				Target tutorial_wave_relay
-				Action Trigger
-			}
-			Squad
-			{
-				TFBot
-				{
-					Template	T_TFBot_Sniper_Huntsman_Spammer
-					Name	"Caustic Penetrator Bowman"
-					Item	"the razorback"
-					Item	"shortness of breath"
-					Item	"preventative measure"
-					Item	"stealth bomber"
-					Item	"eotl_coldfront curbstompers"
-					ItemAttributes
-					{
-						ItemName	"the huntsman"
-						"projectile penetration" 1
-						"bleeding duration" 15
-						"damage bonus"	0.66
-						"attach particle effect" 3041
-					}
-				}
-				TFBot
-				{
-					Template	T_TFBot_Sniper_Huntsman
-					Name	"Caustic  Bowman"
-					Item	"shortness of breath"
-					Item	"preventative measure"
-					Item	"stealth bomber"
-					Item	"eotl_coldfront curbstompers"
-					ItemAttributes
-					{
-						ItemName	"the huntsman"
-						"bleeding duration" 15
-						"attach particle effect" 3041
-					}
-				}
-				TFBot
-				{
-					Template	T_TFBot_Sniper_Huntsman
-					Name	"Caustic Bowman"
-					Item	"shortness of breath"
-					Item	"preventative measure"
-					Item	"stealth bomber"
-					Item	"eotl_coldfront curbstompers"
-					ItemAttributes
-					{
-						ItemName	"the huntsman"
-						"bleeding duration" 15
-						"attach particle effect" 3041
-					}
-				}
-			}
-		}
-		WaveSpawn
-		{
-			Name	W2-A1
-			TotalCurrency	200
+			TotalCurrency	100
 			TotalCount	16
 			MaxActive	6
 			SpawnCount	2
-			WaitBeforeStarting	13
+			WaitBeforeStarting	0
 			WaitBetweenSpawns	6
 			Where	spawnbot
 			Squad
@@ -752,31 +743,31 @@ You_Can_Put_Anything_Here_Lol // WaveSchedule
 				TFBot
 				{
 					Template	T_TFBot_Sniper_Huntsman_Spammer
-					Name	"Caustic Penetrator Bowman"
-					ClassIcon	"sniper_bow_multi"
-					Item	"the razorback"
-					Item	"shortness of breath"
-					Item	"preventative measure"
-					Item	"stealth bomber"
-					Item	"eotl_coldfront curbstompers"
+					Name	"Rapid Fire Penetrator Bowman"
+					ClassIcon	"sniper_bow_multi_pene"
 					ItemAttributes
 					{
 						ItemName	"the huntsman"
 						"projectile penetration" 1
-						"bleeding duration" 15
-						"damage bonus"	0.66
-						"attach particle effect" 3041
 					}
 				}
 				TFBot
 				{
-					Template	T_TFBot_Medic_BigHeal
-					Item	"the surgeon's stahlhelm"
-					Attributes	SpawnWithFullCharge
+					ClassIcon	medic_shield_lite
+					Name	"Shield Medic"
+					Class	Medic
+					Skill	Normal
+					Attributes	"SpawnWithFullCharge"
+					Attributes  "ProjectileShield"
 					ItemAttributes
-					{
-						ItemName "The Quick-Fix"
-						"uber duration bonus" -4
+				{
+					ItemName	"tf_weapon_medigun"
+					"increase buff duration"	420
+					"generate rage on heal"	1
+				}
+				CharacterAttributes
+				{
+					"bot medic uber deploy delay duration" 900
 					}
 				}
 			}
@@ -788,7 +779,7 @@ You_Can_Put_Anything_Here_Lol // WaveSchedule
 			TotalCount	16
 			MaxActive	4
 			SpawnCount	2
-			WaitBeforeStarting	10
+			WaitBeforeStarting	0
 			WaitBetweenSpawns	6
 			Where	spawnbot
 			TFBot
@@ -803,7 +794,7 @@ You_Can_Put_Anything_Here_Lol // WaveSchedule
 			TotalCount	33
 			MaxActive	8
 			SpawnCount	3
-			WaitBeforeStarting	10
+			WaitBeforeStarting	2
 			WaitBetweenSpawns	2
 			Where	spawnbot
 			RandomChoice
@@ -862,7 +853,7 @@ You_Can_Put_Anything_Here_Lol // WaveSchedule
 			MaxActive	6
 			SpawnCount	3
 			WaitBeforeStarting	8
-			WaitBetweenSpawns	20
+			WaitBetweenSpawns	18
 			Where	spawnbot
 			Squad
 			{
@@ -870,22 +861,20 @@ You_Can_Put_Anything_Here_Lol // WaveSchedule
 				{
 					Template	T_TFBot_Giant_Soldier_RocketShotgun
 					item	"the war pig"
-					ItemAttributes
-					{
-						ItemName	"the black box"
-						"damage bonus"	0.88
-						"faster reload rate" 1.40
-					}
+				ItemAttributes
+				{
+					ItemName	"the black box"
+					"damage bonus"	0.88
+					"faster reload rate" 1.40
+				}
 				}
 				TFBot
 				{
 					Template	T_TFBot_Kritzkrieg_Medic
-					ClassIcon	Medic
 				}
 				TFBot
 				{
 					Template	T_TFBot_Kritzkrieg_Medic
-					ClassIcon	Medic
 				}
 			}
 		}
@@ -893,18 +882,23 @@ You_Can_Put_Anything_Here_Lol // WaveSchedule
 		{
 			Name	W2-A2-1
 			WaitForAllSpawned	W2-A2
-			TotalCurrency	300
+			TotalCurrency	200
 			TotalCount	4
 			MaxActive	3
 			SpawnCount	2
 			WaitBeforeStarting	30
-			Where	spawnbot_flank2
+			Where	spawnbot_boss
+			FirstSpawnOutput
+			{
+			Target boss_door_open_relay
+			Action Trigger
+			}
 			Squad
 			{
 				TFBot
 				{
 					Template	T_TFBot_Giant_Demoman
-					ClassIcon	demo_burst
+					ClassIcon	"demo_spammer"
 					Item	"scotch bonnet"
 					Item	"the chargin' targe"
 					CharacterAttributes
@@ -915,11 +909,8 @@ You_Can_Put_Anything_Here_Lol // WaveSchedule
 				}
 				TFBot
 				{
-					Template	T_TFBot_Giant_Kritzkrieg
-					CharacterAttributes
-					{
-						"move speed bonus"	1
-					}
+					Template	T_TFBot_Giant_Medic_Regen
+					Name	"Giant Regen Medic"
 				}
 			}
 		}
@@ -939,22 +930,11 @@ You_Can_Put_Anything_Here_Lol // WaveSchedule
 				TFBot
 				{
 					Template	T_TFBot_Demoman_Knight
-					Attributes	AlwaysCrit
+					Attributes	"AlwaysCrit"
 				}
 				TFBot
 				{
 					Template	T_TFBot_Sniper_Huntsman
-					Name	"Caustic Bowman"
-					Item	"shortness of breath"
-					Item	"preventative measure"
-					Item	"stealth bomber"
-					Item	"eotl_coldfront curbstompers"
-					ItemAttributes
-					{
-						ItemName	"the huntsman"
-						"bleeding duration" 15
-						"attach particle effect" 3041
-					}
 				}
 			}
 		}
@@ -973,7 +953,7 @@ You_Can_Put_Anything_Here_Lol // WaveSchedule
         }
 		InitWaveOutput
         {
-            Target wave_start_relay
+            Target gamerules
             Action RunScriptCode
             Param "
 				EntFire(`bombpath_choose_relay`, `Kill`)
@@ -981,6 +961,7 @@ You_Can_Put_Anything_Here_Lol // WaveSchedule
 				EntFire(`bombpath_right_arrows`, `TurnOff`)
 				EntFire(`bombpath_left_arrows`, `TurnOn`)
                 EntFire(`bombpath_left`, `Trigger`)
+
             "
         }
 		WaveSpawn
@@ -995,20 +976,11 @@ You_Can_Put_Anything_Here_Lol // WaveSchedule
 			Where	spawnbot_flank
 			TFBot
 			{
-				Name	"Caustic Tomislav Heavy"
+				ClassIcon	heavy_accurate_lite
+				Name	"Tomislav Heavy"
 				Class	Heavy
-				Skill	Expert
+				Skill	Normal
 				item	"tomislav"
-				Item "The Eliminators Safeguard"
-				Item "Shortness Of Breath"
-				Item "Stealth Bomber"
-				ItemAttributes
-				{
-					ItemName	"tomislav"
-					"bleeding duration" 15
-					"damage bonus"	0.5
-					"attach particle effect" 3041
-				}
 			}
 		}
 		WaveSpawn
@@ -1046,15 +1018,31 @@ You_Can_Put_Anything_Here_Lol // WaveSchedule
 		}
 		WaveSpawn
 		{
+			WaitBeforeStarting 10.8
+            FirstSpawnOutput
+            {
+                Target "tank"
+                Action "setmodelscale"
+                Param "0.75"
+			}
+		}
+		WaveSpawn
+		{
 			Name	W3-A2
 			TotalCurrency	150
 			TotalCount	1
 			MaxActive	1
 			SpawnCount	1
 			WaitBeforeStarting	10
+            LastSpawnOutput
+            {
+                Target "tank"
+                Action "color"
+                Param "104 104 104"
+			}
 			Tank
 			{
-				Health	20000
+				Health	19000
 				Name	Tank
 				Speed	75
 				StartingPathTrackNode	tankpath_alt
@@ -1072,6 +1060,11 @@ You_Can_Put_Anything_Here_Lol // WaveSchedule
 		}
 		WaveSpawn
 		{
+			FirstSpawnWarningSound "vo/mvm/mght/pyro_mvm_m_jeers01.mp3"
+			WaitBeforeStarting	15
+		}
+		WaveSpawn
+		{
 			Name	W3-A2
 			TotalCurrency	150
 			TotalCount	12
@@ -1080,51 +1073,52 @@ You_Can_Put_Anything_Here_Lol // WaveSchedule
 			WaitBeforeStarting	15
 			WaitBetweenSpawns	20.5
 			Where	spawnbot
+			FirstSpawnWarningSound "vo/mvm/mght/pyro_mvm_m_jeers01.mp3"
 			Squad
 			{
 				TFBot
 				{
-					Class Pyro
-					Name "Giant Afterburner Pyro"
-					Skill Expert
-					ClassIcon pyro_giant
-					//Item "The Gas Passer"
-					Item "Fear Monger"
-					Item "The Degreaser"
-					Item "dec2014 Pyromancer's Raiments"
-					Health 3300
-					WeaponRestrictions PrimaryOnly
-					Attributes MiniBoss
-					Attributes AlwaysCrit
-				//	ItemAttributes 
-				//	{
-				//		ItemName "The Gas Passer"
-				//		"mult_item_meter_charge_rate" 0.05
-				//		"weapon burn dmg increased" 4
-				//		"killstreak tier" 1
-				//
-				//	}
-					ItemAttributes 
-					{
-						ItemName "Fear Monger"
-						"set item tint rgb" 16711680
+				Class Pyro
+				Name "Giant Gas Pyro"
+				Skill Expert
+				ClassIcon pyro_gaspasser_tind
+				Item "The Gas Passer"
+				Item "Fear Monger"
+				Item "The Degreaser"
+				Item "dec2014 Pyromancer's Raiments"
+				Health 3300
+				WeaponRestrictions SecondaryOnly
+				Attributes MiniBoss
+				Attributes AlwaysCrit
+				ItemAttributes 
+				{
+					ItemName "The Gas Passer"
+					"mult_item_meter_charge_rate" 0.05
+					"weapon burn dmg increased" 4
+					"killstreak tier" 1
 
-					}
-					ItemAttributes 
-					{
-						ItemName "The Degreaser"
-						"weapon burn dmg increased" 4.5
-						"mult airblast refire time" 0.01
-						"killstreak tier" 1
-						"damage bonus HIDDEN" 1.35
-					}
-					CharacterAttributes 
-					{
-						"move speed penalty"	0.5
-						"damage force reduction" 0.6
-						"airblast vulnerability multiplier" 0.3
-						"override footstep sound set" 2
-					}
+				}
+				ItemAttributes 
+				{
+					ItemName "Fear Monger"
+					"set item tint rgb" 16711680
+
+				}
+				ItemAttributes 
+				{
+					ItemName "The Degreaser"
+					"weapon burn dmg increased" 3
+					"mult airblast refire time" 0.01
+					"killstreak tier" 1
+					"damage bonus HIDDEN" 1.35
+				}
+				CharacterAttributes 
+				{
+					"move speed penalty"	0.5
+					"damage force reduction" 0.6
+					"airblast vulnerability multiplier" 0.3
+					"override footstep sound set" 2
+				}
 				}
 				TFBot
 				{
@@ -1153,17 +1147,7 @@ You_Can_Put_Anything_Here_Lol // WaveSchedule
 			TFBot
 			{
 				Template	T_TFBot_Giant_Scout_Fast
-				Attributes	AlwaysCrit
-				Health 1337
-				Item	"shortness of breath"
-				Item	"preventative measure"
-				Item	"stealth bomber"
-				ItemAttributes
-				{
-					ItemName	"The Holy Mackerel"
-					"bleeding duration" 15
-					"attach particle effect" 3041
-				}
+				Health "1337"
 			}
 		}
 		WaveSpawn
@@ -1227,11 +1211,12 @@ You_Can_Put_Anything_Here_Lol // WaveSchedule
 			Support	1
 			TFBot
 			{
-				Class	Scout
+				Class	"Scout"
 				Name	"Soda Popper Scout"
 				Skill	Normal
 				Item	"The Soda Popper"
 				Item	"the backwards ballcap"
+				ClassIcon scout_popper2
 			}
 		}
 	}
@@ -1249,7 +1234,7 @@ You_Can_Put_Anything_Here_Lol // WaveSchedule
         }
 		InitWaveOutput
         {
-            Target wave_start_relay
+            Target gamerules
             Action RunScriptCode
             Param "
 				EntFire(`bombpath_choose_relay`, `Kill`)
@@ -1257,6 +1242,7 @@ You_Can_Put_Anything_Here_Lol // WaveSchedule
 				EntFire(`bombpath_right_arrows`, `TurnOff`)
 				EntFire(`bombpath_left_arrows`, `TurnOn`)
                 EntFire(`bombpath_left`, `Trigger`)
+
             "
         }
 		WaveSpawn
@@ -1270,25 +1256,26 @@ You_Can_Put_Anything_Here_Lol // WaveSchedule
 			TFBot
 			{
 				Template	T_TFBot_Giant_Scout_Baseball_Armored
-				Name	"Armored Caustic League Scout"
 				Item	"big steel jaw of summer fun"
 				Attributes	AlwaysCrit
-				Itemattributes
-				{
-					ItemName "Batter's Helmet"
-					"set item tint RGB" 7511618
-				}
-				ItemAttributes
-				{
-					ItemName "The Sandman"
-					"bleeding duration" 15
-				}
+				CharacterAttributes
+			{
+				"attach particle effect" 3045
+			}
 			}
 		}
 		WaveSpawn
 		{
+			StartWaveWarningSound "vo/mvm/mght/scout_mvm_m_domination05.mp3"
+		}
+		WaveSpawn
+		{
+			StartWaveWarningSound "vo/mvm/mght/scout_mvm_m_domination05.mp3"
+		}
+		WaveSpawn
+		{
 			Name	W5-A1
-			TotalCurrency	200
+			TotalCurrency	100
 			TotalCount	12
 			MaxActive	6
 			SpawnCount	3
@@ -1299,40 +1286,8 @@ You_Can_Put_Anything_Here_Lol // WaveSchedule
 			{
 				TFBot
 				{
-					Class Soldier
-					Name "Giant Caustic Burst Soldier"
-					ClassIcon	soldier_burstfire
-					Health 4200
-					Skill Expert
-					WeaponRestrictions PrimaryOnly
-					Attributes MiniBoss
-					Attributes HoldFireUntilFullReload
-					Item 	"Exquisite Rack"
-					Item	"tyrantium helmet"
-					ItemAttributes
-					{
-						ItemName "TF_WEAPON_ROCKETLAUNCHER"
-						"damage bonus" 2.0
-						"faster reload rate" 0.4
-						"fire rate bonus" 0.2
-						"clip size upgrade atomic" 5.0
-						"bleeding duration" 15
-						"attach particle effect" 3041
-					}
-					ItemAttributes
-					{
-						ItemName	"tyrantium helmet"
-						"set item tint RGB" 7511618
-					}
-					CharacterAttributes
-					{
-						"move speed bonus"	0.5
-						"damage force reduction" 0.4
-						"airblast vulnerability multiplier" 0.4
-						"override footstep sound set" 3
-						"Projectile speed increased" 0.9
-						"ragdolls plasma effect" 1
-					}
+					Template	T_TFBot_Giant_Soldier_Laser_Wall
+					Attributes	AlwaysCrit
 				}
 				TFBot
 				{
@@ -1374,12 +1329,8 @@ You_Can_Put_Anything_Here_Lol // WaveSchedule
 			Where	spawnbot_flank
 			TFBot
 			{
-				Name "Bison Soldier"
-				Class Soldier
-				Skill Expert
-				WeaponRestrictions SecondaryOnly
-				Attributes	AlwaysCrit
-				Item "The Righteous Bison"
+				Class	Soldier
+				Skill	Hard
 			}
 		}
 		WaveSpawn
@@ -1396,6 +1347,7 @@ You_Can_Put_Anything_Here_Lol // WaveSchedule
 			{
 				TFBot
 				{
+					ClassIcon	pyro_reflect_daan
 					Name	"Airblast Pyro"
 					Class	Pyro
 					Skill	Hard
@@ -1411,6 +1363,12 @@ You_Can_Put_Anything_Here_Lol // WaveSchedule
 		}
 		WaveSpawn
 		{
+			FirstSpawnWarningSound "vo/mvm/mght/demoman_mvm_m_laughevil01.mp3"
+			WaitForAllSpawned	W5-A1
+			WaitBeforeStarting	25
+		}
+		WaveSpawn
+		{
 			Name	W5-A2
 			WaitForAllSpawned	W5-A1
 			TotalCurrency	200
@@ -1418,12 +1376,17 @@ You_Can_Put_Anything_Here_Lol // WaveSchedule
 			MaxActive	6
 			SpawnCount	2
 			WaitBeforeStarting	25
-			WaitBetweenSpawns	20
-			Where	spawnbot
+			WaitBetweenSpawns	16
+			Where	spawnbot_boss
+			FirstSpawnWarningSound "vo\mvm\mght\demoman_mvm_m_laughevil01.mp3"
+			FirstSpawnOutput
+			{
+			Target boss_door_open_relay
+			Action Trigger
+			}
 			TFBot
 			{
 				Template	T_TFBot_Demo_Giant_3burst
-				ClassIcon	demo_burst
 			}
 		}
 		WaveSpawn
@@ -1433,7 +1396,7 @@ You_Can_Put_Anything_Here_Lol // WaveSchedule
 			TotalCurrency	100
 			TotalCount	50
 			MaxActive	5
-			SpawnCount	3
+			SpawnCount	4
 			WaitBeforeStarting	10
 			WaitBetweenSpawns	5
 			Where	spawnbot
@@ -1442,7 +1405,7 @@ You_Can_Put_Anything_Here_Lol // WaveSchedule
 			{
 				Class	Pyro
 				Name	"Fire Spreader Pyro"
-				ClassIcon pyro
+				ClassIcon	pyro_bigfire
 				Skill	Normal
 				Item	"pyro helm"
 				Attributes	"AlwaysFireWeapon"
@@ -1472,7 +1435,7 @@ You_Can_Put_Anything_Here_Lol // WaveSchedule
         }
 		InitWaveOutput
         {
-            Target wave_start_relay
+            Target gamerules
             Action RunScriptCode
             Param "
 				EntFire(`bombpath_choose_relay`, `Kill`)
@@ -1480,6 +1443,7 @@ You_Can_Put_Anything_Here_Lol // WaveSchedule
 				EntFire(`bombpath_left_arrows`, `TurnOff`)
 				EntFire(`bombpath_right_arrows`, `TurnOn`)
                 EntFire(`bombpath_right`, `Trigger`)
+
             "
         }
 		WaveSpawn
@@ -1490,7 +1454,13 @@ You_Can_Put_Anything_Here_Lol // WaveSchedule
 			MaxActive	4
 			SpawnCount	2
 			WaitBetweenSpawns	31
-			Where	spawnbot_flank2
+			Where	spawnbot_boss
+			StartWaveWarningSound "vo/mvm/mght/heavy_mvm_m_revenge11.mp3"
+			FirstSpawnOutput
+			{
+				Target boss_door_open_relay
+				Action Trigger
+			}
 			Squad
 			{
 				TFBot
@@ -1499,14 +1469,14 @@ You_Can_Put_Anything_Here_Lol // WaveSchedule
 				}
 				TFBot
 				{
-					Template	T_TFBot_Giant_Medic
-					Item	"the warsworn helmet"
-					CharacterAttributes
-					{
-						"move speed bonus"	1
-					}
+					Template	T_TFBot_Giant_Medic_Regen
+					Name	"Giant Regen Medic"
 				}
 			}
+		}
+		WaveSpawn
+		{
+			StartWaveWarningSound "vo/mvm/mght/heavy_mvm_m_revenge11.mp3"
 		}
 		WaveSpawn
 		{
@@ -1523,7 +1493,7 @@ You_Can_Put_Anything_Here_Lol // WaveSchedule
 				Class	Heavy
 				Skill	Expert
 				ClassIcon	heavy_steelfist
-				Name	"Fists of Steel Heavy"
+				Name	"Steel Manlet"
 				Item	"fists of steel"
 				WeaponRestrictions	MeleeOnly
 				Item "Pugilist's Protector"
@@ -1561,15 +1531,17 @@ You_Can_Put_Anything_Here_Lol // WaveSchedule
 			Where	spawnbot
 			TFBot
 			{
+				ClassIcon	pyro_reflect_daan
+				Health	175
 				Name	"Airblast Pyro"
 				Class	Pyro
 				Skill	Expert
-        ClassIcon pyro
 				Item	"traffic cone"
 			}
 		}
 		WaveSpawn
 		{
+			FirstSpawnWarningSound "vo/mvm/mght/soldier_mvm_m_dominationscout03.mp3"
 			WaitForAllSpawned	W4-A1
 			WaitBeforeStarting	31.5
 		}
@@ -1583,7 +1555,8 @@ You_Can_Put_Anything_Here_Lol // WaveSchedule
 			SpawnCount	2
 			WaitBeforeStarting	31.5
 			WaitBetweenSpawns	29
-			Where	spawnbot
+			Where	spawnbot_boss
+			FirstSpawnWarningSound "vo/mvm/mght/soldier_mvm_m_dominationscout03.mp3"
 			Squad
 			{
 				TFBot
@@ -1593,123 +1566,107 @@ You_Can_Put_Anything_Here_Lol // WaveSchedule
 				}
 				TFBot
 				{
-					Template	T_TFBot_Giant_Kritzkrieg
-					CharacterAttributes
-					{
-						"move speed bonus"	1
+				Name "Giant Kritzkrieg Medic"
+				Class Medic
+				ClassIcon medic_kritz_giant
+				Skill Normal
+				Health 4500
+				Attributes MiniBoss
+				Attributes SpawnWithFullCharge
+				Item "The Kritzkrieg"
+				Item "The Virus Doctor"
+				Item "The Overdose"	
+				ItemAttributes
+				{
+				ItemName "The Kritzkrieg"
+				"ubercharge rate bonus" 100
+				"uber duration bonus" 95
+				"heal rate bonus" 1337
+				}
+				CharacterAttributes
+				{
+					"move speed bonus"	0.5
+					"damage force reduction" 0.05
+					"airblast vulnerability multiplier" 0.04
+					"airblast vertical vulnerability multiplier" 0.04
+					"bot medic uber health threshold" 9001
 					}
 				}
 			}
 		}
 		WaveSpawn
 		{
+			FirstSpawnWarningSound "vo/mvm/mght/pyro_mvm_m_laughevil01.mp3"
+			WaitForAllSpawned	W4-A2-2
+			WaitBeforeStarting	29
+		}		
+		WaveSpawn
+		{
 			Name	W4-A3
 			WaitForAllSpawned	W4-A2-2
-			TotalCurrency	500
+			TotalCurrency	250
 			TotalCount	4
 			MaxActive	4
-			SpawnCount	4
+			SpawnCount	2
 			WaitBeforeStarting	29
+			WaitBetweenSpawns	25
+			FirstSpawnWarningSound "vo/mvm/mght/pyro_mvm_m_laughevil01.mp3"
 			Where	spawnbot_boss
-			FirstSpawnOutput
-			{
-				Target boss_door_open_relay
-				Action Trigger
-			}
 			Squad
 			{
 				TFBot
 				{
-					Class Pyro
-					Name "Causticax, Re-Re-Reconstructed"
-					Skill Expert
-					Health 27000
-					Item "powerhouse_flamethrower_flashfryer"
-					WeaponRestrictions PrimaryOnly
-					Attributes AlwaysFireWeapon
-					Attributes UseBossHealthBar
+					ClassIcon	pyro_dragonfury
+					Health	3300
+					Name	"Giant Dragon's Fury Pyro"
+					Class	Pyro
+					Skill	Expert
+					Item	"the dragon's fury"
+					Item	"pyromancer's mask"
+					Attributes	"MiniBoss"
+					ItemAttributes
+					{
+						ItemName	"the dragon's fury"
+						"damage bonus"	1.5
+					}
+					CharacterAttributes
+					{
+						"move speed bonus"	0.5
+						"damage force reduction"	0.1
+						"rage giving scale"	0.5
+						"airblast vertical vulnerability multiplier"	0.1
+						"airblast vulnerability multiplier"	0.1
+						"override footstep sound set"	3
+						"Projectile speed increased"	0.9
+					}
+				}
+				TFBot
+				{
+				Name "Giant Blinking Uber Medic"
+				Class Medic
+					ClassIcon medic_uber_giant
+					Skill Normal
+					Health 3000
 					Attributes MiniBoss
-					ClassIcon pyro_giant
-					Item	"full metal helmet"
-					Item	"masked loyalty"
-					Item	"torcher's trench coat"
-					Item	"the special eyes"
+					Attributes SpawnWithFullCharge
+					Item	"the razorback"
+					Item	"the warsworn helmet"
+					Item gentlemanne_medigun_dressedtokill
 					ItemAttributes
 					{
-						ItemName	"the special eyes"
-						"set item tint RGB"	7511618
-					}
-					ItemAttributes
-					{
-						ItemName "powerhouse_flamethrower_flashfryer"
-						"damage bonus" 1.75
-						"bleeding duration" 5
-						"weapon burn time reduced" .0
-						"health from healers increased" 25
+					ItemName gentlemanne_medigun_dressedtokill
+					"ubercharge rate bonus" 20
+					"uber duration bonus" -7
+					"set_item_texture_wear" 0.2
 					}
 					CharacterAttributes
 					{
-						"move speed bonus" 0.45
-						"damage force reduction" 0
-						"airblast vulnerability multiplier" 0
-						"override footstep sound set" 6
-					}
-				}
-				TFBot
-				{
-					Template	T_TFBot_Soldier_Extended_Battalion
-					Health	900
-					Scale	1.5
-					ItemAttributes
-					{
-						ItemName	"tf_weapon_rocketlauncher"
-						"bleeding duration" 15
-						"attach particle effect" 3041
-					}
-					CharacterAttributes
-					{
-						"damage force reduction" 0.1
-						"airblast vulnerability multiplier" 0.1
-						"increase buff duration"	1337
-						"deploy time increased" 0.1
-					}
-				}
-				TFBot
-				{
-					Template	T_TFBot_Soldier_Extended_Battalion
-					Health	900
-					Scale	1.5
-					ItemAttributes
-					{
-						ItemName	"tf_weapon_rocketlauncher"
-						"bleeding duration" 15
-						"attach particle effect" 3041
-					}
-					CharacterAttributes
-					{
-						"damage force reduction" 0.1
-						"airblast vulnerability multiplier" 0.1
-						"increase buff duration"	1337
-						"deploy time increased" 0.1
-					}
-				}
-				TFBot
-				{
-					Template	T_TFBot_Soldier_Extended_Battalion
-					Health	900
-					Scale	1.5
-					ItemAttributes
-					{
-						ItemName	"tf_weapon_rocketlauncher"
-						"bleeding duration" 15
-						"attach particle effect" 3041
-					}
-					CharacterAttributes
-					{
-						"damage force reduction" 0.1
-						"airblast vulnerability multiplier" 0.1
-						"increase buff duration"	1337
-						"deploy time increased" 0.1
+					"move speed bonus"	0.5
+					"damage force reduction" 0.01
+					"airblast vulnerability multiplier" 0.01
+					"airblast vertical vulnerability multiplier" 0.01
+					"heal rate bonus" 200
+					"bot medic uber health threshold" 13371337
 					}
 				}
 			}
@@ -1719,11 +1676,10 @@ You_Can_Put_Anything_Here_Lol // WaveSchedule
 			Name	W4-A2
 			WaitForAllSpawned	W4-A1-1
 			TotalCurrency	100
-			TotalCount	20
+			TotalCount	30
 			MaxActive	4
 			SpawnCount	1
 			WaitBeforeStarting	25
-			WaitBetweenSpawns	1
 			Support	1
 			Where	spawnbot_flank
 			TFBot
@@ -1772,7 +1728,7 @@ You_Can_Put_Anything_Here_Lol // WaveSchedule
         }
 		InitWaveOutput
         {
-            Target wave_start_relay
+            Target gamerules
             Action RunScriptCode
             Param "
 				EntFire(`bombpath_choose_relay`, `Kill`)
@@ -1780,6 +1736,7 @@ You_Can_Put_Anything_Here_Lol // WaveSchedule
 				EntFire(`bombpath_right_arrows`, `TurnOff`)
 				EntFire(`bombpath_left_arrows`, `TurnOn`)
                 EntFire(`bombpath_left`, `Trigger`)
+
             "
         }
 		WaveSpawn
@@ -1788,11 +1745,18 @@ You_Can_Put_Anything_Here_Lol // WaveSchedule
 			TotalCount	1
 			MaxActive	1
 			SpawnCount	1
+            LastSpawnOutput
+            {
+                Target "tank"
+                Action "color"
+                Param "104 104 104"
+			}
 			Tank
 			{
-				Health	15000
+				Health	20000
 				Name	Tank
 				Speed	75
+				Skin	1
 				StartingPathTrackNode tankpath_same
 				OnKilledOutput
 				{
@@ -1813,11 +1777,18 @@ You_Can_Put_Anything_Here_Lol // WaveSchedule
 			MaxActive	1
 			SpawnCount	1
 			WaitBeforeStarting	5
+            LastSpawnOutput
+            {
+                Target "tank1"
+                Action "color"
+                Param "104 104 104"
+			}
 			Tank
 			{
-				Health	15000
+				Health	20000
 				Name	Tank1
 				Speed	75
+				Skin	1
 				StartingPathTrackNode tankpath_alt
 				OnKilledOutput
 				{
@@ -1837,9 +1808,15 @@ You_Can_Put_Anything_Here_Lol // WaveSchedule
 			MaxActive	1
 			SpawnCount	1
 			WaitBeforeStarting	115
+            LastSpawnOutput
+            {
+                Target "Tank2"
+                Action "color"
+                Param "104 104 104"
+			}
 			Tank
 			{
-				Health	34420
+				Health	35420
 				Name	Tank2
 				Speed	75
 				Skin	1
@@ -1869,7 +1846,7 @@ You_Can_Put_Anything_Here_Lol // WaveSchedule
 		WaveSpawn
 		{
 			Name	W6-A1
-			TotalCurrency	225
+			TotalCurrency	25
 			TotalCount	1
 			MaxActive	1
 			SpawnCount	1
@@ -1878,9 +1855,9 @@ You_Can_Put_Anything_Here_Lol // WaveSchedule
 			FirstSpawnWarningSound "vo/mvm/mght/Soldier_mvm_m_jeers02.mp3"
 			TFBot
 			{
-			ClassIcon	soldier_burstfire //soldier_banner_infi
-			Health	15420
-			Name	"Chief Caustic Infinity"
+			ClassIcon	soldier_banner_infi
+			Health	18420
+			Name	"Chief Battalion Burst Infinity"
 			Class	Soldier
 			Skill	Expert
 			Item	"exquisite rack"
@@ -1897,7 +1874,6 @@ You_Can_Put_Anything_Here_Lol // WaveSchedule
 				"fire rate bonus" -1
 				"attach particle effect" 3041
 				"set_item_texture_wear" 0.2
-				"bleeding duration" 5
 			}
 			ItemAttributes
 			{
@@ -1930,38 +1906,48 @@ You_Can_Put_Anything_Here_Lol // WaveSchedule
 			MaxActive	8
 			SpawnCount	2
 			WaitBeforeStarting	58
-			WaitBetweenSpawns	19
+			WaitBetweenSpawns	20
 			Where	spawnbot
 			RandomChoice
 			{
 				TFBot
 				{
-					Template	T_TFBot_Giant_Demo_Burst
-					Attributes	AlwaysCrit
-					item	"the concheror"
-					item	"scotch bonnet"
-					Attributes SpawnWithFullCharge 
-					Name	"Giant Conch Burst Demo"
-					ItemAttributes
-					{
-						ItemName "TF_WEAPON_GRENADELAUNCHER"
-						"faster reload rate" 0.35
-					}
-					CharacterAttributes
-					{
-						"deploy time increased" 0.5
-						"increase buff duration" 1337
-					}
+				Template	T_TFBot_Giant_Demo_Burst
+				Attributes	"AlwaysCrit"
+				ClassIcon	demo_burst_conch_yoovy_giant
+				item	"the concheror"
+				item	"scotch bonnet"
+				Attributes SpawnWithFullCharge 
+				Name	"Giant Conch Burst Demo"
+				ItemAttributes
+				{
+				ItemName "TF_WEAPON_GRENADELAUNCHER"
+				"faster reload rate" 0.35
+				}
+				CharacterAttributes
+				{
+					"deploy time increased" 0.5
+					"increase buff duration" 1337
+				}
 				}
 				TFBot
 				{
 					Template	T_TFBot_Giant_Heavyweapons_Shotgun
+					item	"the buff banner"
 					item	"heavy hair"
+					Attributes SpawnWithFullCharge 
+					Name	"Giant Buff Shotgun Heavy"
+					ClassIcon	heavy_shotgun_buff_lite
 					ItemAttributes
 					{
 					ItemName "TF_WEAPON_SHOTGUN_HWG"
 					"fire rate bonus" 1.55
 					"damage penalty" 0.33
+					}
+					CharacterAttributes
+					{
+						"deploy time increased" 0.5
+						"increase buff duration" 1337
 					}
 				}
 				TFBot
@@ -1986,6 +1972,7 @@ You_Can_Put_Anything_Here_Lol // WaveSchedule
 			{
 				Template	T_TFBot_Giant_Scout
 				Skill	Hard
+				Health 1600
 				Item "The Backwards Ballcap"
 				Item "pyroland_scattergun_shottohell"
 				Attributes	"HoldFireUntilFullReload"
@@ -2009,19 +1996,19 @@ You_Can_Put_Anything_Here_Lol // WaveSchedule
 			TotalCount	1
 			MaxActive	1
 			SpawnCount	1
-			WaitBeforeStarting	155
+			WaitBeforeStarting	157
 			Where	spawnbot_boss
 			StartWaveWarningSound "vo/mvm/norm/Soldier_mvm_laughevil01.mp3"
 			FirstSpawnWarningSound "vo/mvm/mght/Soldier_mvm_m_jeers06.mp3"
 			FirstSpawnOutput
 			{
-				Target boss_door_open_relay
+			Target boss_door_open_relay
 				Action Trigger
 			}
 			TFBot
 			{
-				ClassIcon	soldier_burstfire //soldier_conq_burst_accu
-				Health	22420
+			ClassIcon	soldier_conq_burst_accu
+				Health	28420
 				Name	"Chief Cheap Trick Stunner"
 				Class	Soldier
 				Skill	Expert
@@ -2031,24 +2018,24 @@ You_Can_Put_Anything_Here_Lol // WaveSchedule
 				Item	"Big Steel Jaw of Summer Fun"
 				Item	"exquisite rack"
 				Item	"the diplomat"
-				Attributes	HoldFireUntilFullReload
-				Attributes	MiniBoss
-				Attributes	UseBossHealthBar
-				Attributes	SpawnWithFullCharge
+				Attributes	"HoldFireUntilFullReload"
+				Attributes	"MiniBoss"
+				Attributes	"UseBossHealthBar"
+				Attributes	"SpawnWithFullCharge"
 				ItemAttributes
 				{
-					ItemName	"the direct hit"
-					"rocket specialist"	4
-					"fire rate bonus"	-1
-					"faster reload rate" 0.5
-					"clip size upgrade atomic"	12
-					"killstreak tier"	2
-					"killstreak idleeffect"	1
-					"set_item_texture_wear" 0.2
-					"damage bonus"	0.25
-					"dmg bonus vs buildings"	1.5
-					"dmg pierces resists absorbs"	1
-					"attach particle effect" 3083
+				ItemName	"the direct hit"
+				"rocket specialist"	4
+				"fire rate bonus"	-1
+				"faster reload rate" 0.30
+				"clip size upgrade atomic"	12
+				"killstreak tier"	2
+				"killstreak idleeffect"	1
+				"set_item_texture_wear" 0.2
+				"damage bonus"	0.5
+				"dmg bonus vs buildings"	2
+				"dmg pierces resists absorbs"	1
+				"attach particle effect" 3083
 				}
 				ItemAttributes
 				{
@@ -2078,7 +2065,7 @@ You_Can_Put_Anything_Here_Lol // WaveSchedule
 		{
 			WaitForAllSpawned	W6-A1
 			TotalCurrency	25
-			TotalCount	6
+			TotalCount	8
 			MaxActive	2
 			SpawnCount	2
 			WaitBeforeStarting	50
@@ -2095,7 +2082,7 @@ You_Can_Put_Anything_Here_Lol // WaveSchedule
 		{
 			WaitForAllSpawned	W6-A1
 			TotalCurrency	0
-			TotalCount	8
+			TotalCount	16
 			MaxActive	2
 			SpawnCount	2
 			WaitBeforeStarting	50
@@ -2104,12 +2091,13 @@ You_Can_Put_Anything_Here_Lol // WaveSchedule
 			Where	spawnbot_flank2
 			TFBot
 			{
+				ClassIcon	pyro_dragonfury
+				Health	175
 				Name	"Dragon's Fury Pyro"
 				Class	Pyro
 				Skill	Hard
 				MaxVisionRange	800
 				WeaponRestrictions	PrimaryOnly
-				ClassIcon pyro_dragon_fury_swordstone
 				ItemAttributes
 				{
 					ItemName	"the dragon's fury"
@@ -2122,7 +2110,7 @@ You_Can_Put_Anything_Here_Lol // WaveSchedule
 		{
 			WaitForAllSpawned	W6-A1
 			TotalCurrency	35
-			TotalCount	16
+			TotalCount	22
 			MaxActive	4
 			SpawnCount	4
 			WaitBeforeStarting	50
@@ -2131,28 +2119,10 @@ You_Can_Put_Anything_Here_Lol // WaveSchedule
 			Where	spawnbot
 			TFBot
 			{
-				ClassIcon	scout_bat
-				Name	"Caustic Scout"
+				ClassIcon	scout_bat_nys
 				Class	Scout
 				Skill	Expert
 				WeaponRestrictions	MeleeOnly
-				Item	"batsaber"
-				ItemAttributes 
-				{
-					ItemName "Batsaber"
-					"set item tint RGB" 7511618
-					"crit vs non burning players" 1
-					"damage bonus"	0.66
-					"bleeding duration"	15
-				}
-			}
-		}
-		WaveSpawn
-		{
-			Support Limited
-			TFBot
-			{
-				ClassIcon	scout_bat
 				Attributes	AlwaysCrit
 			}
 		}
