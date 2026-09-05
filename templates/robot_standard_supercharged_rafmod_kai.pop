@@ -1,0 +1,381 @@
+WaveSchedule
+{
+	//// PRECACHES ////
+
+	PrecacheModel "models/weapons/c_models/c_critbanner/c_critbanner.mdl"
+
+	//// POINT TEMPLATES ////
+
+	PointTemplates
+	{
+
+	}
+
+	//// ROBOT TEMPLATES ////
+	
+	Templates
+	{
+		//// SOLDIER TEMPLATES ////
+
+		// Minigiant
+
+		T_TFBot_Soldier_Extended_Buff_Banner_Supercharged
+		{
+			Name "Supercharged Banner Soldier"
+			Class Soldier
+			ClassIcon soldier_critbuff
+			Skill Expert
+			Health 600
+			Scale 1.4
+			Attributes SpawnWithFullCharge
+			WeaponRestrictions PrimaryOnly
+
+			Item "The Buff Banner"
+
+			CharacterAttributes
+			{
+				"deploy time decreased" 0.33
+			}
+
+			ItemAttributes
+			{
+				ItemName "TF_WEAPON_ROCKETLAUNCHER"
+				"fire rate bonus" 0.6
+				"faster reload rate" 0.001
+			}
+
+			ItemAttributes
+			{
+				ItemName "The Buff Banner"
+
+				"increase buff duration" 9.0
+				"effect cond override" 56
+				"custom item model" "models/weapons/c_models/c_critbanner/c_critbanner.mdl"
+			}
+		}
+
+		T_TFBot_Soldier_DiveBomber
+		{
+			Name "Dive-Bomber Soldier"
+			Class Soldier
+			ClassIcon soldier_airstrike_lite
+			Skill Expert
+			Health 600
+			Scale 1.4
+			Attributes SuppressFire
+			Attributes HoldFireUntilFullReload
+			WeaponRestrictions PrimaryOnly
+			
+			Item "The Air Strike"
+			Item "The B.A.S.E. Jumper"
+
+			CharacterAttributes
+			{
+				"cancel falling damage" 1
+				"self dmg push force increased" 3
+				"blast dmg to self increased" 0
+			}
+
+			ItemAttributes
+			{
+				ItemName "The Air Strike"
+				"faster reload rate" 0.5
+				"clip size upgrade atomic" 4
+				"projectile spread angle penalty" 2
+			}
+
+			ItemAttributes
+			{
+				ItemName "The B.A.S.E. Jumper"
+
+				"parachute redeploy" 1
+			}
+
+			FireInput
+			{
+				Target !self
+				Action $ChangeAttributes
+				Param DiveBombInit
+				Delay 0
+				Repeats 0
+				Cooldown 8
+				IfSeeTarget 1
+				IfLeftSpawn 1
+			}
+
+			EventChangeAttributes
+			{
+				DiveBombInit [$SIGSEGV]
+				{
+					AimOffset "0 0 -10000"
+
+					FireWeapon
+					{
+						Type "Jump"
+						Delay 0
+						Repeats 1
+						Cooldown -1
+					}
+					FireWeapon
+					{
+						Type "Primary"
+						Delay 0.5
+						Repeats 1
+						Cooldown -1
+					}
+					FireInput
+					{
+						Target !self
+						Action $ChangeAttributes
+						Param DiveBomb
+						Delay 1
+						Repeats 1
+						Cooldown -1
+					}
+				}
+				DiveBomb [$SIGSEGV]
+				{
+					FireWeapon
+					{
+						Type "Jump"
+						Delay 0
+						Repeats 1
+						Cooldown -1
+					}
+					FireWeapon
+					{
+						Type "Jump"
+						Delay 5
+						Repeats 1
+						Cooldown -1
+					}
+					FireWeapon
+					{
+						Type "Primary"
+						Delay 0
+						Duration 7
+						Repeats 1
+						Cooldown -1
+						IfSeeTarget 1
+					}
+				}
+			}
+		}
+
+		//// PYRO TEMPLATES ////
+
+		T_TFBot_Pyro_Dragon_Fury_Burst
+		{
+			Name "Burst Fire Dragon's Fury Pyro"
+			Class Pyro
+			ClassIcon pyro_dragon_fury_burstfire_swordstone
+			Skill Expert
+			Health 525
+			Scale 1.4
+			Attributes SuppressFire
+			WeaponRestrictions PrimaryOnly
+
+			MaxVisionRange 900
+
+			Item "The Dragon's Fury"
+
+			ItemAttributes
+			{
+				ItemName "The Dragon's Fury"
+
+				"mult_item_meter_charge_rate" 0.2
+			}
+
+			FireWeapon
+			{
+				Type "Primary"
+				Delay 0
+				Cooldown 3
+				Duration 0.5
+				IfSeeTarget 1
+				IfLeftSpawn 1
+				MinTargetRange 0
+				MaxTargetRange 900
+			}
+		}
+
+		//// DEMOMAN TEMPLATES ////
+
+		T_TFBot_Demoman_Mortar
+		{
+			Name "Mortar Bomber Demoman"
+			Class Demoman
+			ClassIcon demo_mortar
+			Skill Expert
+			Attributes HoldFireUntilFullReload
+			WeaponRestrictions PrimaryOnly
+
+			SpawnTemplate "MortarDemo_PT"
+
+			Item "The Iron Bomber"
+
+			ItemAttributes
+			{
+				ItemName "The Iron Bomber"
+				"fire rate bonus" 0.05
+				"reload time increased" 1.75
+				"clip size penalty" 0.75
+				"projectile spread angle penalty" 3
+			}
+		}
+
+		//// ENGINEER TEMPLATES ////
+
+		// Common
+		T_TFBot_Engineer_Ranger_Supercharged
+		{
+			Name "Supercharged Ranger Engineer"
+			Class Engineer
+			ClassIcon engineer_ranger_penetrate_hyper
+			Skill Expert
+			Health 250
+			Attributes HoldFireUntilFullReload
+			WeaponRestrictions PrimaryOnly
+			Action FetchFlag
+
+			Item "The Rescue Ranger"
+
+			ItemAttributes
+			{
+				ItemName "The Rescue Ranger"
+				"damage bonus" 1.5
+				"dmg bonus vs buildings" 3
+				"faster reload rate" 0.2
+				"projectile speed decreased" 0.75
+				"projectile penetration" 1
+			}
+		}
+
+		// Minigiant
+		T_TFBot_Engineer_Pomson_Burst
+		{
+			Name "Burst Fire Pomson Engineer"
+			Class Engineer
+			ClassIcon heavy_shotgun_burst_lite_atomic2
+			Skill Expert
+			Health 750
+			Scale 1.4
+			Attributes HoldFireUntilFullReload
+			WeaponRestrictions PrimaryOnly
+			Action FetchFlag
+
+			Item "The Pomson 6000"
+
+			ItemAttributes
+			{
+				ItemName "The Pomson 6000"
+				"fire rate bonus" 0.1
+				"faster reload rate" 0.6
+				"clip size bonus" 2.25
+			}
+		}
+
+		//// MEDIC TEMPLATES ////
+
+		T_TFBot_Medic_Supercharged
+		{
+			Name "Supercharged Medic"
+			Class Medic
+			ClassIcon medic_uber_invert
+			Attributes SpawnWithFullCharge
+			Attributes ProjectileShield
+			ExtAttr SuppressCanteenUse
+
+			UseBestWeapon 1
+
+			Tag dontdoublehp
+			Tag dontdoublehp_damageres
+
+			Item "Upgradeable TF_WEAPON_SYRINGEGUN_MEDIC"
+
+			Item "Battery Canteens"
+
+			CharacterAttributes
+			{
+				"bot medic uber health threshold" 50000
+				"mod weapon blocks healing" 1
+			}
+
+			ItemAttributes
+			{
+				ItemName "Upgradeable TF_WEAPON_SYRINGEGUN_MEDIC"
+				"damage bonus" 1.5
+				"always crit" 1
+			}
+			ItemAttributes
+			{
+				ItemName "TF_WEAPON_MEDIGUN"
+				"heal rate bonus" 15
+				"ubercharge rate bonus" 100
+                "uber duration bonus" -9
+				"generate rage on heal" 1
+                "increase buff duration" 100
+				"canteen specialist" 1
+				"medigun charge is crit boost" 1
+			}
+			ItemAttributes
+			{
+				ItemName "Battery Canteens"
+				"ubercharge" 1
+				"powerup charges" 1
+			}
+
+			FireWeapon
+			{
+				Type "Special"
+				Duration 0.5
+				Delay 0.5
+				Repeats 0
+				Cooldown 0.5
+			}
+			FireWeapon
+			{
+				Type "Action"
+				Duration 0.5
+				Delay 0
+				Repeats 1
+				Cooldown -1
+				IfHealthBelow 54
+			}
+		}
+
+		//// SNIPER TEMPLATES ////
+
+		// Minigiant
+		T_TFBot_Sniper_Huntsman_Ballista
+		{
+			Name "Ballista Bowman"
+			Class Sniper
+			ClassIcon sniper_bow_multi_penetrator
+			Skill Expert
+			Health 1200
+			Scale 1.5
+
+			UseHumanAnimations 1
+
+			Item "The Fortified Compound"
+			
+			CharacterAttributes
+			{
+				"move speed penalty" 0.85
+				"head scale" 0.7
+				"hand scale" 1.5
+			}
+
+			ItemAttributes
+			{
+				ItemName "The Fortified Compound"
+				"damage bonus" 2
+				"fire rate bonus" 1.25
+				"mult projectile scale" 1.5
+				"custom projectile size" 10
+				"projectile penetration" 1
+			}
+		}
+	}
+}
