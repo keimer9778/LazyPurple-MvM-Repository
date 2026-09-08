@@ -27,7 +27,7 @@
 WaveSchedule
 {
 	StartingCurrency				1000
-	RespawnWaveTime 				5
+	RespawnWaveTime 				1
 	CanBotsAttackWhileInSpawnRoom	No
 	DisableSound "Announcer.MVM_Wave_End" [$SIGSEGV]
 	PrecacheModel "models\bots\soldier_boss\bot_soldier_boss_gibby.mdl" [$SIGSEGV]					// Credit to CTriggerHurt for creating the gibby model
@@ -89,7 +89,7 @@ WaveSchedule
 				"OnTrigger"	"introExplosionHatch,Start,,0,-1"
 				"OnTrigger"	"introExplosionColumn,Start,,0,-1"
 				"OnTrigger" "introExplosionLoop,Enable,,0.1,-1"
-				"OnTrigger"  "bossText,Display,,0,1"
+				"OnTrigger"  "bossText,Display,,0.5,1"
 			}
 			game_text												// Title text
 			{
@@ -115,7 +115,7 @@ WaveSchedule
 				"TargetName" "bossIntroSubordinate"												// coordinates, instead they will use coordinates relative to Wrath.
 				"OnTrigger"	"tf_gamerules,PlayVO,ambient\explosions\explode_4.wav,0,-1"			// You can create a second PointTemplate spawned via FirstSpawnOutput to 
 				"OnTrigger" "point_populator_interface,$ResumeWavespawn,darkFlame,0,-1"			// make this second template's relay use absolute coordinates. An example of
-				"OnTrigger" "point_populator_interface,$PauseWavespawn,firstSupportLeft,0,-1"	// particles via VScript <LINE HERE>, though this is not a recommended way
+				"OnTrigger" "point_populator_interface,$PauseWavespawn,firstSupportLeft,0,-1"	// particles via VScript is on Line 3225, though this is not a recommended way
 				"OnTrigger" "point_populator_interface,$PauseWavespawn,firstSupportRight,0,-1"	// of creating particles.
 				"OnTrigger" "point_populator_interface,$ResumeWavespawn,secondSupportLeft,0,-1"
 				"OnTrigger" "point_populator_interface,$ResumeWavespawn,secondSupportRight,0,-1"
@@ -679,7 +679,7 @@ WaveSchedule
 		// (Giant Deflector Heavy -> Giant Spreader Soldier -> Giant Ancient Fury Pyro) + Armored Uber Medic 2 * (2 + 4) = 12
 		// Penetration Bowman (4)
 		// Bison Soldier (4)
-		// Armored Scout (12) | Generally there will never be 12 Armored Scouts on the field at once, about 4-5 on average
+		// Armored Scout (4) | Generally there will never be 12 Armored Scouts on the field at once, about 4-5 on average
 
 		WaveSpawn	// Second set. DPS flank units (left)
 					// Counts: (3 + 3) + 4 + [12] = 22
@@ -724,7 +724,7 @@ WaveSchedule
 			TotalCount 3
 			MaxActive 3
 			SpawnCount 3
-			WaitForAllDead wave02aGiant
+			WaitForAllSpawned wave02aGiant
 			WaitBeforeStarting 8
 			WaitBetweenSpawns 0
 			TotalCurrency 100
@@ -768,23 +768,6 @@ WaveSchedule
 				Template T_TFBot_Sniper_Huntsman_Penetration
 			}
 		}
-		WaveSpawn	// Supporting units post-huntsmen (middle)
-		{
-			Name "wave02Support"
-			Where spawnbot_right
-			MaxActive 4
-			SpawnCount 2
-			WaitBeforeStarting 2
-			WaitBetweenSpawns 2
-			TotalCurrency 50
-			WaitForAllDead wave02aGiant
-			Support 1
-		
-			TFBot
-			{
-				Template T_TFBot_Soldier_Bison					// !! Replace with Soldier_Spammer_Easy if no impact
-			}
-		}
 		WaveSpawn	// Second set. Support rushing units (middle)
 		{
 			Name "wave02Scouts"
@@ -806,6 +789,23 @@ WaveSchedule
 					"damage force reduction" 0.3	// Prevent them from getting knocked around
 				}									// Not having this reduction might make them
 			}										// more annoying to deal with
+		}
+		WaveSpawn	// Supporting units post-huntsmen (middle)
+		{
+			Name "wave02Support"
+			Where spawnbot_right
+			MaxActive 4
+			SpawnCount 2
+			WaitBeforeStarting 2
+			WaitBetweenSpawns 2
+			TotalCurrency 50
+			WaitForAllDead wave02b
+			Support 1
+		
+			TFBot
+			{
+				Template T_TFBot_Soldier_Bison
+			}
 		}
 		WaveSpawn	// Third set. DPS flank units (left)
 		{
@@ -2011,7 +2011,7 @@ WaveSchedule
 				Health	100000
 				UseCustomModel "models\bots\soldier_boss\bot_soldier_boss_gibby.mdl" [$SIGSEGV]
 				Name "Sinful Emperor Wrath"
-				Scale 2.2
+				Scale 2
 				Skill Expert
 				Attributes AlwaysCrit
 				Attributes UseBossHealthBar
@@ -2020,12 +2020,12 @@ WaveSchedule
 				Attributes HoldFireUntilFullReload
 				Tag dontdoublehp
 				Tag dontdoublehp_damageres
-				RocketCustomParticle	flare_glow [$SIGSEGV]
-				SpawnTemplate boss_logic [$SIGSEGV]
-				SpawnTemplate relativeRecallVisuals [$SIGSEGV] 
-				SpawnTemplate introExplosionSecond [$SIGSEGV]
-				SpawnTemplate Interface [$SIGSEGV]
-				SpawnTemplate spellVisualCollapsingSkies [$SIGSEGV]
+				RocketCustomParticle flare_glow [$SIGSEGV]
+				SpawnTemplate boss_logic [$SIGSEGV]					// Manages the boss's moveset
+				SpawnTemplate relativeRecallVisuals [$SIGSEGV]		// Particles upon recall 
+				SpawnTemplate introExplosionSecond [$SIGSEGV]		// Sounds for when the Dark Flames spawn (this should have been placed outside of the bot's definition, but oh well)
+				SpawnTemplate Interface [$SIGSEGV]					// Manages support spawns to properly conclude the wave (does not use $FinishWave)
+				SpawnTemplate spellVisualCollapsingSkies [$SIGSEGV]	// Custom meteor shower
 				Item	TF_WEAPON_ROCKETLAUNCHER
 				Item	"The Infernal Impaler"
 				Item	"Field Fatigues"
@@ -2064,7 +2064,7 @@ WaveSchedule
 					Param 28
 					Delay 1
 					Cooldown 5
-					Repeats 0
+					Repeats -1
 					IfSeeTarget 1
 					IfLeftSpawn 1
 				}
@@ -2226,13 +2226,22 @@ WaveSchedule
 						{
 							ItemName "The Buff Banner"
 							"increase buff duration" 100.0
-							"dmg from ranged reduced" 0.9					// Reduce damage to further discourage bodyblocking during banners
-							"dmg from melee increased" 0.9
+							"dmg from ranged reduced" 0.75					// Reduce damage to further discourage bodyblocking during banners
+							"dmg from melee increased" 0.75
 						}
 						CharacterAttributes
 						{
 							"no_jump" 0
 							"increased jump height" 3
+						}
+						FireInput [$SIGSEGV]
+						{
+							Target "!self"
+							Action $SetProp$m_iszClassIcon
+							Param buff
+							Delay 0
+							Cooldown 0
+							Repeats 1
 						}
 						AddAttribute [$SIGSEGV]   							// Revert the jump behavior
 						{
@@ -2287,8 +2296,8 @@ WaveSchedule
 						{
 							ItemName "The Concheror"
 							"increase buff duration" 100.0
-							"dmg from ranged reduced" 0.9						// Reduce damage to further discourage bodyblocking during banners
-							"dmg from melee increased" 0.9
+							"dmg from ranged reduced" 0.75						// Reduce damage to further discourage bodyblocking during banners
+							"dmg from melee increased" 0.75
 						}
 						CharacterAttributes
 						{
@@ -2307,7 +2316,7 @@ WaveSchedule
 						{
 							Target "!self"
 							Action $SetProp$m_iszClassIcon
-							Param Conch
+							Param conch
 							Delay 0
 							Cooldown 0
 							Repeats 1
@@ -2516,10 +2525,10 @@ WaveSchedule
 							"faster reload rate" 0.4
 							"projectile spread angle penalty" 5
 							"Projectile speed increased" 1.5
-							"dmg penalty vs players" 0
+							"dmg penalty vs players" 3
 							"clip size upgrade atomic" 20
 							"set item tint RGB" 16716820
-							"dmg bonus vs buildings" 2
+							"dmg bonus vs buildings" 10
 							"attach particle effect" 35
 						}
 						ChangeAttributes [$SIGSEGV]
@@ -2549,7 +2558,7 @@ WaveSchedule
 							"clip size upgrade atomic" 8
 							"projectile spread angle penalty" 5
 						}
-						AimOffset	"0 0 2000" [$SIGSEGV]
+						AimOffset	"0 0 1200" [$SIGSEGV]
 						HomingRockets [$SIGSEGV]					// Faster turning speed and firing speed, and slower rockets in Round 2
 						{
 							IgnoreDisguisedSpies 1
@@ -2619,7 +2628,7 @@ WaveSchedule
 							Duration 99999 //Duration of a looping taunt (Default: 0.1)
 							Name "Taunt: Second Rate Sorcery"
 						}
-						FireInput [$SIGSEGV]				// Pushback
+						FireInput [$SIGSEGV]	// Pushback
                         {
                             Target "!self"
                             Action "RunScriptCode"
@@ -2633,7 +2642,10 @@ WaveSchedule
 										{ 
 											local dir = p.GetOrigin() - center;
 											dir.z = 0; 
-											if (dir.Length() < 1) dir = Vector(1, 0, 0); 
+											if (dir.Length() < 1)
+											{
+												dir = Vector(1, 0, 0);
+											} 
 											dir.Norm(); 
 											p.SetVelocity(dir * power + Vector(0, 0, up)); 
 										} 
@@ -2641,6 +2653,23 @@ WaveSchedule
                             Delay 2.5
                             Repeats 1
                         }
+						FireInput [$SIGSEGV]	// Destroy buildings because we can't have nice things
+						{
+							Target "!self"
+							Action "RunScriptCode"
+							Param 	"local sentry = null;
+									local center = self.GetOrigin();
+
+									while (sentry = Entities.FindByClassnameWithin(sentry, `obj_sentrygun`, center, 75))
+									{
+										if (sentry.GetTeam() != self.GetTeam())
+										{
+											EntFireByHandle(sentry, `Kill`, ``, 0, self, self);
+										}
+									}"
+							Delay 2.5
+							Repeats 1
+						}
 						FireInput [$SIGSEGV]
 						{
 							Target "!self"
@@ -2720,7 +2749,7 @@ WaveSchedule
 							Duration 99999 //Duration of a looping taunt (Default: 0.1)
 							Name "Taunt: Second Rate Sorcery"
 						}
-						FireInput  [$SIGSEGV]				// Pushback
+						FireInput  [$SIGSEGV]	// Pushback
                         {
                             Target "!self"
                             Action "RunScriptCode"
@@ -2734,7 +2763,10 @@ WaveSchedule
 										{ 
 											local dir = p.GetOrigin() - center;
 											dir.z = 0; 
-											if (dir.Length() < 1) dir = Vector(1, 0, 0); 
+											if (dir.Length() < 1)
+											{
+												dir = Vector(1, 0, 0);
+											}
 											dir.Norm(); 
 											p.SetVelocity(dir * power + Vector(0, 0, up)); 
 										} 
@@ -2742,18 +2774,35 @@ WaveSchedule
                             Delay 2.5
                             Repeats 1
                         }
+						FireInput [$SIGSEGV]	// Destroy buildings because we can't have nice things
+						{
+							Target "!self"
+							Action "RunScriptCode"
+							Param 	"local sentry = null;
+									local center = self.GetOrigin();
+
+									while (sentry = Entities.FindByClassnameWithin(sentry, `obj_sentrygun`, center, 75))
+									{
+										if (sentry.GetTeam() != self.GetTeam())
+										{
+											EntFireByHandle(sentry, `Kill`, ``, 0, self, self);
+										}
+									}"
+							Delay 2.5
+							Repeats 1
+						}
 						FireInput [$SIGSEGV]
 						{
 							Target "!self"
 							Action "RunScriptCode"
 							Param	"local ang = self.EyeAngles();
-									local yaw = ang.y * 3.14159 / 180.0; 
-									local dir = Vector(cos(yaw), sin(yaw), 0); 
-									local r = Vector(-sin(yaw), cos(yaw), 0); 
-									local p = self.GetOrigin() + Vector(0, 0, 80) + (dir * 120) - (r * 120); 
-									local m = SpawnEntityFromTable(`tf_projectile_lightningorb`, {origin = p, angles = ang}); 
+									local yaw = ang.y * 3.14159 / 180.0;
+									local dir = Vector(cos(yaw), sin(yaw), 0);
+									local r = Vector(-sin(yaw), cos(yaw), 0);
+									local p = self.GetOrigin() + Vector(0, 0, 80) + (dir * 120) - (r * 120);
+									local m = SpawnEntityFromTable(`tf_projectile_lightningorb`, {origin = p, angles = ang});
 									m.SetOwner(self);
-									m.SetTeam(self.GetTeam()); 
+									m.SetTeam(self.GetTeam());
 									m.SetVelocity(dir * 400);"
 							Delay 2.5
 							Repeats 1
@@ -2762,12 +2811,13 @@ WaveSchedule
 						{
 							Target "!self"
 							Action "RunScriptCode"
-							Param	"local ang = self.EyeAngles(); 
-									local yaw = ang.y * 3.14159 / 180.0; 
-									local dir = Vector(cos(yaw), sin(yaw), 0); 
-									local p = self.GetOrigin() + Vector(0, 0, 80) + (dir * 120); 
-									local m = SpawnEntityFromTable(`tf_projectile_lightningorb`,{origin = p, angles = ang}); 
-									m.SetOwner(self); m.SetTeam(self.GetTeam()); 
+							Param	"local ang = self.EyeAngles();
+									local yaw = ang.y * 3.14159 / 180.0;
+									local dir = Vector(cos(yaw), sin(yaw), 0);
+									local p = self.GetOrigin() + Vector(0, 0, 80) + (dir * 120);
+									local m = SpawnEntityFromTable(`tf_projectile_lightningorb`,{origin = p, angles = ang});
+									m.SetOwner(self);
+									m.SetTeam(self.GetTeam());
 									m.SetVelocity(dir * 400);"
 							Delay 2.5
 							Repeats 1
@@ -2776,14 +2826,14 @@ WaveSchedule
 						{
 							Target "!self"
 							Action "RunScriptCode"
-							Param	"local ang=self.EyeAngles(); 
-									local yaw = ang.y * 3.14159 / 180.0; 
-									local dir = Vector(cos(yaw), sin(yaw), 0); 
-									local r = Vector(-sin(yaw), cos(yaw), 0); 
-									local p = self.GetOrigin() + Vector(0, 0, 80) + (dir * 120) + (r * 120); 
-									local m = SpawnEntityFromTable(`tf_projectile_lightningorb`, {origin = p, angles = ang}); 
+							Param	"local ang=self.EyeAngles();
+									local yaw = ang.y * 3.14159 / 180.0;
+									local dir = Vector(cos(yaw), sin(yaw), 0);
+									local r = Vector(-sin(yaw), cos(yaw), 0);
+									local p = self.GetOrigin() + Vector(0, 0, 80) + (dir * 120) + (r * 120);
+									local m = SpawnEntityFromTable(`tf_projectile_lightningorb`, {origin = p, angles = ang});
 									m.SetOwner(self);
-									m.SetTeam(self.GetTeam()); 
+									m.SetTeam(self.GetTeam());
 									m.SetVelocity(dir * 400);"
 							Delay 2.5
 							Repeats 1
@@ -2792,14 +2842,14 @@ WaveSchedule
 						{
 							Target "!self"
 							Action "RunScriptCode"
-							Param	"local ang = self.EyeAngles(); 
-									local yaw = ang.y * 3.14159 / 180.0; 
-									local dir = Vector(cos(yaw), sin(yaw), 0); 
-									local r = Vector(-sin(yaw), cos(yaw), 0); 
-									local p = self.GetOrigin() + Vector(0, 0, 80) + (dir * 120) - (r * 120); 
-									local m = SpawnEntityFromTable(`tf_projectile_lightningorb`, {origin = p, angles = ang}); 
+							Param	"local ang = self.EyeAngles();
+									local yaw = ang.y * 3.14159 / 180.0;
+									local dir = Vector(cos(yaw), sin(yaw), 0);
+									local r = Vector(-sin(yaw), cos(yaw), 0);
+									local p = self.GetOrigin() + Vector(0, 0, 80) + (dir * 120) - (r * 120);
+									local m = SpawnEntityFromTable(`tf_projectile_lightningorb`, {origin = p, angles = ang});
 									m.SetOwner(self);
-									m.SetTeam(self.GetTeam()); 
+									m.SetTeam(self.GetTeam());
 									m.SetVelocity(dir * 300);"
 							Delay 3.5
 							Repeats 1
@@ -2808,13 +2858,13 @@ WaveSchedule
 						{
 							Target "!self"
 							Action "RunScriptCode"
-							Param	"local ang = self.EyeAngles(); 
-									local yaw = ang.y * 3.14159 / 180.0; 
-									local dir = Vector(cos(yaw), sin(yaw), 0); 
-									local p = self.GetOrigin() + Vector(0, 0, 80) + (dir * 120); 
-									local m = SpawnEntityFromTable(`tf_projectile_lightningorb`, {origin = p, angles = ang}); 
+							Param	"local ang = self.EyeAngles();
+									local yaw = ang.y * 3.14159 / 180.0;
+									local dir = Vector(cos(yaw), sin(yaw), 0);
+									local p = self.GetOrigin() + Vector(0, 0, 80) + (dir * 120);
+									local m = SpawnEntityFromTable(`tf_projectile_lightningorb`, {origin = p, angles = ang});
 									m.SetOwner(self);
-									m.SetTeam(self.GetTeam()); 
+									m.SetTeam(self.GetTeam());
 									m.SetVelocity(dir * 300);"
 							Delay 3.5
 							Repeats 1
@@ -2823,14 +2873,14 @@ WaveSchedule
 						{
 							Target "!self"
 							Action "RunScriptCode"
-							Param	"local ang = self.EyeAngles(); 
-									local yaw = ang.y * 3.14159 / 180.0; 
-									local dir = Vector(cos(yaw), sin(yaw), 0); 
-									local r = Vector(-sin(yaw), cos(yaw), 0); 
-									local p = self.GetOrigin()+Vector(0, 0, 80) + (dir * 120) + (r * 120); 
-									local m=SpawnEntityFromTable(`tf_projectile_lightningorb`,{origin = p, angles = ang}); 
+							Param	"local ang = self.EyeAngles();
+									local yaw = ang.y * 3.14159 / 180.0;
+									local dir = Vector(cos(yaw), sin(yaw), 0);
+									local r = Vector(-sin(yaw), cos(yaw), 0);
+									local p = self.GetOrigin() + Vector(0, 0, 80) + (dir * 120) + (r * 120);
+									local m = SpawnEntityFromTable(`tf_projectile_lightningorb`, {origin = p, angles = ang});
 									m.SetOwner(self);
-									m.SetTeam(self.GetTeam()); 
+									m.SetTeam(self.GetTeam());
 									m.SetVelocity(dir * 300);"
 							Delay 3.5
 							Repeats 1
@@ -2894,34 +2944,55 @@ WaveSchedule
                         {
                             Target "!self"
                             Action "RunScriptCode"
-                            Param	"local radius = 250; 
-									local power = 900; 
-									local up = 550; 
-									local center = self.GetOrigin(); 
+                            Param	"local radius = 250;
+									local power = 900;
+									local up = 550;
+									local center = self.GetOrigin();
 									for (local p = null; p = Entities.FindByClassnameWithin(p, `player`, center, radius); )
 									{ 
 										if (p.GetTeam() != self.GetTeam() && p.IsAlive())
 										{ 
 											local dir = p.GetOrigin() - center;
 											dir.z = 0; 
-											if (dir.Length() < 1) dir = Vector(1,0,0); 
-											dir.Norm(); 
-											p.SetVelocity(dir * power + Vector(0, 0, up)); 
+											if (dir.Length() < 1)
+											{
+												dir = Vector(1,0,0);
+											}
+											dir.Norm();
+											p.SetVelocity(dir * power + Vector(0, 0, up));
 										} 
 									}"
                             Delay 2.5
                             Repeats 1
                         }
+						FireInput [$SIGSEGV]	// Destroy buildings because we can't have nice things
+						{
+							Target "!self"
+							Action "RunScriptCode"
+							Param 	"local sentry = null;
+									local center = self.GetOrigin();
+
+									while (sentry = Entities.FindByClassnameWithin(sentry, `obj_sentrygun`, center, 75))
+									{
+										if (sentry.GetTeam() != self.GetTeam())
+										{
+											EntFireByHandle(sentry, `Kill`, ``, 0, self, self);
+										}
+									}"
+							Delay 2.5
+							Repeats 1
+						}
 						FireInput [$SIGSEGV]
 						{
 							Target "!self"
 							Action "RunScriptCode"
-							Param	"local center = self.GetOrigin(); 
+							Param	"local center = self.GetOrigin();
 									for (local i = 0; i < 6; i++)
 									{
-										local p = center + Vector(RandomInt(-500, 500), RandomInt(-500, 500), RandomInt(800, 800)); 
-										local m = SpawnEntityFromTable(`tf_projectile_spellfireball`, {origin = p, angles = QAngle(90, 0, 0)}); 
-										m.SetOwner(self); m.SetTeam(self.GetTeam()); 
+										local p = center + Vector(RandomInt(-500, 500), RandomInt(-500, 500), 800);
+										local m = SpawnEntityFromTable(`tf_projectile_spellfireball`, {origin = p, angles = QAngle(90, 0, 0)});
+										m.SetOwner(self);
+										m.SetTeam(self.GetTeam());
 										m.SetVelocity(Vector(0, 0, -900));
 									}"
 							Delay 3
@@ -2931,13 +3002,13 @@ WaveSchedule
 						{
 							Target "!self"
 							Action "RunScriptCode"
-							Param	"local center = self.GetOrigin(); 
+							Param	"local center = self.GetOrigin();
 									for(local i = 0; i < 6; i++)
 									{
-										local p = center + Vector(RandomInt(-500, 500), RandomInt(-500, 500), RandomInt(800, 800)); 
-										local m = SpawnEntityFromTable(`tf_projectile_spellfireball`, {origin = p, angles = QAngle(90, 0, 0)}); 
+										local p = center + Vector(RandomInt(-500, 500), RandomInt(-500, 500), 800);
+										local m = SpawnEntityFromTable(`tf_projectile_spellfireball`, {origin = p, angles = QAngle(90, 0, 0)});
 										m.SetOwner(self);
-										m.SetTeam(self.GetTeam()); 
+										m.SetTeam(self.GetTeam());
 										m.SetVelocity(Vector(0, 0, -900));
 									}"
 							Delay 3.5
@@ -2947,13 +3018,14 @@ WaveSchedule
 						{
 							Target "!self"
 							Action "RunScriptCode"
-							Param	"local center=self.GetOrigin(); 
-									for(local i=0;i<6;i++)
+							Param	"local center = self.GetOrigin();
+									for(local i = 0; i<6; i++)
 									{
-										local p=center+Vector(RandomInt(-500,500),RandomInt(-500,500),RandomInt(800,800)); 
-										local m=SpawnEntityFromTable(`tf_projectile_spellfireball`,{origin=p,angles=QAngle(90,0,0)}); 
-										m.SetOwner(self); m.SetTeam(self.GetTeam()); 
-										m.SetVelocity(Vector(0,0,-900));
+										local p = center + Vector(RandomInt(-500, 500), RandomInt(-500, 500), 800);
+										local m = SpawnEntityFromTable(`tf_projectile_spellfireball`, {origin = p, angles = QAngle(90, 0, 0)});
+										m.SetOwner(self);
+										m.SetTeam(self.GetTeam());
+										m.SetVelocity(Vector(0, 0, -900));
 									}"
 							Delay 4
 							Repeats 1
@@ -2962,13 +3034,14 @@ WaveSchedule
 						{
 							Target "!self"
 							Action "RunScriptCode"
-							Param	"local center=self.GetOrigin(); 
-									for(local i=0;i<6;i++)
+							Param	"local center=self.GetOrigin();
+									for(local i = 0; i < 6; i++)
 									{
-										local p=center+Vector(RandomInt(-500,500),RandomInt(-500,500),RandomInt(800,800)); 
-										local m=SpawnEntityFromTable(`tf_projectile_spellfireball`,{origin=p,angles=QAngle(90,0,0)}); 
-										m.SetOwner(self); m.SetTeam(self.GetTeam()); 
-										m.SetVelocity(Vector(0,0,-900));
+										local p = center + Vector(RandomInt(-500, 500), RandomInt(-500, 500), 800);
+										local m = SpawnEntityFromTable(`tf_projectile_spellfireball`, {origin = p, angles = QAngle(90, 0, 0)});
+										m.SetOwner(self);
+										m.SetTeam(self.GetTeam());
+										m.SetVelocity(Vector(0, 0, -900));
 									}"
 							Delay 4.5
 							Repeats 1
@@ -2977,13 +3050,14 @@ WaveSchedule
 						{
 							Target "!self"
 							Action "RunScriptCode"
-							Param	"local center=self.GetOrigin(); 
-									for(local i=0;i<6;i++)
+							Param	"local center = self.GetOrigin();
+									for(local i = 0; i < 6; i++)
 									{
-										local p=center+Vector(RandomInt(-500,500),RandomInt(-500,500),RandomInt(800,800)); 
-										local m=SpawnEntityFromTable(`tf_projectile_spellfireball`,{origin=p,angles=QAngle(90,0,0)}); 
-										m.SetOwner(self); m.SetTeam(self.GetTeam()); 
-										m.SetVelocity(Vector(0,0,-900));
+										local p = center + Vector(RandomInt(-500, 500), RandomInt(-500, 500), 800); 
+										local m = SpawnEntityFromTable(`tf_projectile_spellfireball`, {origin = p,angles = QAngle(90, 0, 0)});
+										m.SetOwner(self);
+										m.SetTeam(self.GetTeam());
+										m.SetVelocity(Vector(0, 0, -900));
 									}"
 							Delay 5
 							Repeats 1
@@ -2992,7 +3066,15 @@ WaveSchedule
 						{
 							Target "!self"
 							Action "RunScriptCode"
-							Param "local center=self.GetOrigin(); for(local i=0;i<6;i++){local p=center+Vector(RandomInt(-500,500),RandomInt(-500,500),RandomInt(800,800)); local m=SpawnEntityFromTable(`tf_projectile_spellfireball`,{origin=p,angles=QAngle(90,0,0)}); m.SetOwner(self); m.SetTeam(self.GetTeam()); m.SetVelocity(Vector(0,0,-900));}"
+							Param	"local center = self.GetOrigin();
+									for(local i = 0; i < 6; i++)
+									{
+										local p = center + Vector(RandomInt(-500, 500), RandomInt(-500, 500), 800);
+										local m = SpawnEntityFromTable(`tf_projectile_spellfireball`, {origin = p, angles = QAngle(90, 0, 0)});
+										m.SetOwner(self);
+										m.SetTeam(self.GetTeam());
+										m.SetVelocity(Vector(0, 0, -900));
+									}"
 							Delay 5.5
 							Repeats 1
 						}
@@ -3008,7 +3090,7 @@ WaveSchedule
 						{
 							Item "player"
 							Name "move speed bonus"
-							Value 0.3
+							Value 0.4
 							Delay 4
 							Repeats 1
 						}
@@ -3087,14 +3169,14 @@ WaveSchedule
 						{
 							Item "player"
 							Name "move speed bonus"
-							Value 0.3
+							Value 0.4
 							Delay 5
 							Repeats 1
 						}
 						AddAttribute [$SIGSEGV]
 						{
 							Item "player"
-							Name "dmg from range reduced"
+							Name "dmg from ranged reduced"
 							Value 1
 							Delay 5
 							Repeats 1
@@ -3118,7 +3200,7 @@ WaveSchedule
 						ChangeAttributes [$SIGSEGV]
 						{
 							Name "spellCooldownSecondMoveset"
-							Delay 30
+							Delay 24
 							Repeats 1
 						}
 						FireInput [$SIGSEGV]
@@ -3141,7 +3223,7 @@ WaveSchedule
 						{											// Either teleports far from the intended coordinates, or
 							Target "!self"							// he teleports back to his original spot if NoFixUp = 1.
 							Action "RunScriptCode"
-							Param "self.SetAbsOrigin(Vector(-10,-4310,-280));"
+							Param "self.SetAbsOrigin(Vector(-10, -4310, -280));"
 							Delay 3
 							Repeats 1
 						}
@@ -3149,7 +3231,7 @@ WaveSchedule
 						{
 							Target "!self"
 							Action "RunScriptCode"
-							Param "DispatchParticleEffect(`mvm_hatch_destroy`, Vector(-1330,-3775,10), Vector(0,0,0));"
+							Param "DispatchParticleEffect(`mvm_hatch_destroy`, Vector(-1330, -3775, 10), Vector(0, 0, 0));"
 							Delay 3
 							Repeats 1
 						}
@@ -3157,7 +3239,7 @@ WaveSchedule
 						{
 							Target "!self"
 							Action "RunScriptCode"
-							Param "DispatchParticleEffect(`fireSmoke_Collumn_mvmAcres`, Vector(-1330,-3775,10), Vector(0,0,0));"
+							Param "DispatchParticleEffect(`fireSmoke_Collumn_mvmAcres`, Vector(-1330, -3775, 10), Vector(0, 0, 0));"
 							Delay 3
 							Repeats 1
 						}
@@ -3165,7 +3247,7 @@ WaveSchedule
 						{
 							Target "!self"
 							Action "RunScriptCode"
-							Param "DispatchParticleEffect(`mvm_hatch_destroy`, Vector(940,-3775,10), Vector(0,0,0));"
+							Param "DispatchParticleEffect(`mvm_hatch_destroy`, Vector(940, -3775, 10), Vector(0, 0, 0));"
 							Delay 3
 							Repeats 1
 						}
@@ -3173,33 +3255,9 @@ WaveSchedule
 						{
 							Target "!self"
 							Action "RunScriptCode"
-							Param "DispatchParticleEffect(`fireSmoke_Collumn_mvmAcres`, Vector(940,-3775,10), Vector(0,0,0));"
+							Param "DispatchParticleEffect(`fireSmoke_Collumn_mvmAcres`, Vector(940, -3775, 10), Vector(0, 0, 0));"
 							Delay 3
 							Repeats 1
-						}
-					}
-					meleeRush [$SIGSEGV]
-					{
-						FireInput [$SIGSEGV]
-						{
-							Target "!self"
-							Action $SetProp$m_iszClassIcon
-							Param soldier_escapeplan
-							Delay 0
-							Cooldown 0
-							Repeats 1
-						}
-						WeaponRestrictions MeleeOnly
-						Attributes DisableDodge
-						Item "The Escape Plan"
-						ItemAttributes
-						{
-							ItemName "The Escape Plan"
-							"damage bonus" 10
-						}
-						CharacterAttributes
-						{
-							"move speed bonus" 1.5
 						}
 					}
 					spellFireballSpinner [$SIGSEGV]
@@ -3231,53 +3289,68 @@ WaveSchedule
                         {
                             Target "!self"
                             Action "RunScriptCode"
-                            Param	"local radius = 250; 
-									local power = 900; 
-									local up = 550; 
-									local center = self.GetOrigin(); 
-									for (local p = null; p = Entities.FindByClassnameWithin(p, `player`, center, radius); )
+                            Param	"local radius = 250;
+									local power = 900;
+									local up = 550;
+									local center = self.GetOrigin();
+									for (local p = null; p = Entities.FindByClassnameWithin(p, `player`, center, radius);)
 									{ 
 										if (p.GetTeam() != self.GetTeam() && p.IsAlive())
 										{ 
 											local dir = p.GetOrigin() - center;
-											dir.z = 0; 
-											if (dir.Length() < 1) dir = Vector(1,0,0); 
+											dir.z = 0;
+											if (dir.Length() < 1) dir = Vector(1,0,0);
 											dir.Norm(); 
-											p.SetVelocity(dir * power + Vector(0,0,up)); 
+											p.SetVelocity(dir * power + Vector(0,0,up));
 										} 
 									}"
                             Delay 2.5
                             Repeats 1
                         }
+						FireInput [$SIGSEGV]	// Destroy buildings because we can't have nice things
+						{
+							Target "!self"
+							Action "RunScriptCode"
+							Param 	"local sentry = null;
+									local center = self.GetOrigin();
+
+									while (sentry = Entities.FindByClassnameWithin(sentry, `obj_sentrygun`, center, 75))
+									{
+										if (sentry.GetTeam() != self.GetTeam())
+											EntFireByHandle(sentry, `Kill`, ``, 0, self, self);
+									}"
+							Delay 2.5
+							Repeats 1
+						}
 						FireInput [$SIGSEGV]
 						{
 							Target "!self"
 							Action "RunScriptCode"
-							Param	"self.ValidateScriptScope(); 
-									local sc=self.GetScriptScope(); 
-									local boss=self; 
-									sc.spinStep <- 0; 
-									sc.FireSpinner <- function(){ 
-										local center=boss.GetOrigin()+Vector(0,0,50); 
-										local phase=spinStep*10.0; 
-										spinStep++; 
-										local rad=phase*0.0174533; 
-										local dir=Vector(cos(rad),sin(rad),0); 
-										local offset=75; 
-										local speed=850; 
-										local pos1=center+dir*offset; 
-										local pos2=center-dir*offset; 
-										local fb1=SpawnEntityFromTable(`tf_projectile_spellfireball`,{origin=pos1,angles=QAngle(0,phase,0)}); 
-										local fb2=SpawnEntityFromTable(`tf_projectile_spellfireball`,{origin=pos2,angles=QAngle(0,phase+180,0)}); 
-										fb1.SetOwner(boss); 
-										fb2.SetOwner(boss); 
-										fb1.SetTeam(boss.GetTeam()); 
-										fb2.SetTeam(boss.GetTeam()); 
-										fb1.SetVelocity(dir*speed); fb2.SetVelocity(dir*-speed); 
-									}; 
-									for(local i=0;i<30;i++)
-									{ 
-										EntFireByHandle(boss,`RunScriptCode`,`FireSpinner()`,i*0.08,boss,boss); 
+							Param	"self.ValidateScriptScope();
+									local sc = self.GetScriptScope();
+									local boss = self;
+									sc.spinStep <- 0;
+									sc.FireSpinner <- function(){
+										local center = boss.GetOrigin() + Vector(0, 0, 50);
+										local phase = spinStep * 10.0;
+										spinStep++;
+										local rad = phase*0.0174533;
+										local dir = Vector(cos(rad), sin(rad), 0);
+										local offset = 75;
+										local speed = 850;
+										local pos1 = center + dir * offset;
+										local pos2 = center - dir * offset;
+										local fb1 = SpawnEntityFromTable(`tf_projectile_spellfireball`, {origin = pos1, angles = QAngle(0, phase, 0)});
+										local fb2 = SpawnEntityFromTable(`tf_projectile_spellfireball`, {origin = pos2, angles = QAngle(0, phase + 180, 0)});
+										fb1.SetOwner(boss);
+										fb2.SetOwner(boss);
+										fb1.SetTeam(boss.GetTeam());
+										fb2.SetTeam(boss.GetTeam());
+										fb1.SetVelocity(dir*speed); fb2.SetVelocity(dir * -speed);
+									};
+									for(local i = 0; i < 30; i++)
+									{
+										EntFireByHandle(boss, `RunScriptCode`, `FireSpinner()`, i * 0.08, boss, boss);
 									}"
 							Delay 2.5
 							Repeats 1
@@ -3294,7 +3367,7 @@ WaveSchedule
 						{
 							Item "player"
 							Name "move speed bonus"
-							Value 0.3
+							Value 0.4
 							Delay 4
 							Repeats 1
 						}
@@ -3337,40 +3410,61 @@ WaveSchedule
 							Delay 0.1
 							Repeats 1
 						}
-						FireInput [$SIGSEGV] // Pushback on cast
+						FireInput [$SIGSEGV]	// Pushback on cast
                         {
                             Target "!self"
                             Action "RunScriptCode"
-                            Param	"local radius = 250; 
-									local power = 900; 
-									local up = 550; 
-									local center = self.GetOrigin(); 
+                            Param	"local radius = 250;
+									local power = 900;
+									local up = 550;
+									local center = self.GetOrigin();
 									for (local p = null; p = Entities.FindByClassnameWithin(p, `player`, center, radius); )
 									{ 
 										if (p.GetTeam() != self.GetTeam() && p.IsAlive())
 										{ 
 											local dir = p.GetOrigin() - center;
 											dir.z = 0; 
-											if (dir.Length() < 1) dir = Vector(1,0,0); 
+											if (dir.Length() < 1)
+											{
+												dir = Vector(1, 0, 0);
+											}
 											dir.Norm(); 
-											p.SetVelocity(dir * power + Vector(0,0,up)); 
+											p.SetVelocity(dir * power + Vector(0, 0, up));
 										} 
 									}"
                             Delay 2.5
                             Repeats 1
                         }
+						FireInput [$SIGSEGV]	// Destroy buildings because we can't have nice things
+						{
+							Target "!self"
+							Action "RunScriptCode"
+							Param 	"local sentry = null;
+									local center = self.GetOrigin();
+
+									while (sentry = Entities.FindByClassnameWithin(sentry, `obj_sentrygun`, center, 75))
+									{
+										if (sentry.GetTeam() != self.GetTeam())
+										{
+											EntFireByHandle(sentry, `Kill`, ``, 0, self, self);
+										}
+									}
+								"
+							Delay 2.5
+							Repeats 1
+						}
 						FireInput [$SIGSEGV]
 						{
 							Target "!self"
 							Action "RunScriptCode"
-							Param	"local center = self.GetOrigin(); 
+							Param	"local center = self.GetOrigin();
 									for (local i = 0; i < 6; i++)
 									{
-										local p = center + Vector(RandomInt(-500,500), RandomInt(-500,500), RandomInt(800,800)); 
-										local m = SpawnEntityFromTable(`tf_projectile_spellfireball`, {origin = p, angles = QAngle(90,0,0)}); 
+										local p = center + Vector(RandomInt(-500, 500), RandomInt(-500, 500), RandomInt(800, 800));
+										local m = SpawnEntityFromTable(`tf_projectile_spellfireball`, {origin = p, angles = QAngle(90, 0, 0)});
 										m.SetOwner(self);
-										m.SetTeam(self.GetTeam()); 
-										m.SetVelocity(Vector(0,0,-900));
+										m.SetTeam(self.GetTeam());
+										m.SetVelocity(Vector(0, 0, -900));
 									}"
 							Delay 3
 							Repeats 1
@@ -3379,14 +3473,14 @@ WaveSchedule
 						{
 							Target "!self"
 							Action "RunScriptCode"
-							Param	"local center = self.GetOrigin(); 
+							Param	"local center = self.GetOrigin();
 									for (local i = 0; i < 6; i++)
 									{
-										local p = center + Vector(RandomInt(-500,500), RandomInt(-500,500), RandomInt(800,800)); 
-										local m = SpawnEntityFromTable(`tf_projectile_spellfireball`, {origin = p, angles = QAngle(90,0,0)}); 
+										local p = center + Vector(RandomInt(-500, 500), RandomInt(-500, 500), RandomInt(800, 800));
+										local m = SpawnEntityFromTable(`tf_projectile_spellfireball`, {origin = p, angles = QAngle(90, 0, 0)});
 										m.SetOwner(self);
-										m.SetTeam(self.GetTeam()); 
-										m.SetVelocity(Vector(0,0,-900));
+										m.SetTeam(self.GetTeam());
+										m.SetVelocity(Vector(0, 0, -900));
 									}"
 							Delay 3.5
 							Repeats 1
@@ -3395,14 +3489,14 @@ WaveSchedule
 						{
 							Target "!self"
 							Action "RunScriptCode"
-							Param	"local center = self.GetOrigin(); 
+							Param	"local center = self.GetOrigin();
 									for (local i = 0; i < 6; i++)
 									{
-										local p = center + Vector(RandomInt(-500,500), RandomInt(-500,500), RandomInt(800,800)); 
-										local m = SpawnEntityFromTable(`tf_projectile_spellfireball`, {origin = p, angles = QAngle(90,0,0)}); 
+										local p = center + Vector(RandomInt(-500, 500), RandomInt(-500, 500), RandomInt(800, 800));
+										local m = SpawnEntityFromTable(`tf_projectile_spellfireball`, {origin = p, angles = QAngle(90, 0, 0)});
 										m.SetOwner(self);
-										m.SetTeam(self.GetTeam()); 
-										m.SetVelocity(Vector(0,0,-900));
+										m.SetTeam(self.GetTeam());
+										m.SetVelocity(Vector(0, 0, -900));
 									}"
 							Delay 4
 							Repeats 1
@@ -3411,14 +3505,14 @@ WaveSchedule
 						{
 							Target "!self"
 							Action "RunScriptCode"
-							Param	"local center = self.GetOrigin(); 
+							Param	"local center = self.GetOrigin();
 									for (local i = 0; i < 6; i++)
 									{
-										local p = center + Vector(RandomInt(-500,500), RandomInt(-500,500), RandomInt(800,800)); 
-										local m = SpawnEntityFromTable(`tf_projectile_spellfireball`, {origin = p, angles = QAngle(90,0,0)}); 
+										local p = center + Vector(RandomInt(-500,500), RandomInt(-500,500), RandomInt(800,800));
+										local m = SpawnEntityFromTable(`tf_projectile_spellfireball`, {origin = p, angles = QAngle(90, 0, 0)});
 										m.SetOwner(self);
-										m.SetTeam(self.GetTeam()); 
-										m.SetVelocity(Vector(0,0,-900));
+										m.SetTeam(self.GetTeam());
+										m.SetVelocity(Vector(0, 0, -900));
 									}"
 							Delay 4.5
 							Repeats 1
@@ -3427,14 +3521,14 @@ WaveSchedule
 						{
 							Target "!self"
 							Action "RunScriptCode"
-							Param	"local center = self.GetOrigin(); 
+							Param	"local center = self.GetOrigin();
 									for (local i = 0; i < 6; i++)
 									{
-										local p = center + Vector(RandomInt(-500,500), RandomInt(-500,500), RandomInt(800,800)); 
-										local m = SpawnEntityFromTable(`tf_projectile_spellfireball`, {origin = p, angles = QAngle(90,0,0)}); 
+										local p = center + Vector(RandomInt(-500, 500), RandomInt(-500, 500), RandomInt(800, 800));
+										local m = SpawnEntityFromTable(`tf_projectile_spellfireball`, {origin = p, angles = QAngle(90,0,0)});
 										m.SetOwner(self);
-										m.SetTeam(self.GetTeam()); 
-										m.SetVelocity(Vector(0,0,-900));
+										m.SetTeam(self.GetTeam());
+										m.SetVelocity(Vector(0, 0, -900));
 									}"
 							Delay 5
 							Repeats 1
@@ -3443,14 +3537,14 @@ WaveSchedule
 						{
 							Target "!self"
 							Action "RunScriptCode"
-							Param	"local center = self.GetOrigin(); 
+							Param	"local center = self.GetOrigin();
 									for (local i = 0; i < 6; i++)
 									{
-										local p = center + Vector(RandomInt(-500,500), RandomInt(-500,500), RandomInt(800,800)); 
-										local m = SpawnEntityFromTable(`tf_projectile_spellfireball`, {origin = p, angles = QAngle(90,0,0)}); 
+										local p = center + Vector(RandomInt(-500, 500), RandomInt(-500, 500), RandomInt(800, 800));
+										local m = SpawnEntityFromTable(`tf_projectile_spellfireball`, {origin = p, angles = QAngle(90,0,0)});
 										m.SetOwner(self);
-										m.SetTeam(self.GetTeam()); 
-										m.SetVelocity(Vector(0,0,-900));
+										m.SetTeam(self.GetTeam());
+										m.SetVelocity(Vector(0, 0, -900));
 									}"
 							Delay 5.5
 							Repeats 1
@@ -3467,7 +3561,7 @@ WaveSchedule
 						{
 							Item "player"
 							Name "move speed bonus"
-							Value 0.25
+							Value 0.4
 							Delay 4
 							Repeats 1
 						}
@@ -3476,6 +3570,53 @@ WaveSchedule
 							Name "spellCooldownSecondMoveset"
 							Delay  5.7
 							Repeats 1
+						}
+					}
+					
+					meleeRush [$SIGSEGV]
+					{
+						FireInput [$SIGSEGV]
+						{
+							Target "!self"
+							Action $SetProp$m_iszClassIcon
+							Param soldier_escapeplan
+							Delay 0
+							Cooldown 0
+							Repeats 1
+						}
+						FireInput [$SIGSEGV]
+						{
+							Target "!self"
+							Action "RunScriptCode"
+							Param "self.RemoveCond(7);"
+							Delay 0
+							Repeats 1
+						}
+						FireInput [$SIGSEGV]
+						{
+							Target "!self"
+							Action "RunScriptCode"
+							Param "
+								EntFire(`spellRadiusBottom`, `Kill`, ``, 0);
+								EntFire(`spellRadiusTop`, `Kill`, ``, 0);
+								EntFire(`collapingSkiesVisual`, `Kill`, ``, 0);
+							"
+							Delay 0
+							Repeats 1
+						}
+						WeaponRestrictions MeleeOnly
+						Attributes DisableDodge
+						Item "The Escape Plan"
+						ItemAttributes
+						{
+							ItemName "The Escape Plan"
+							"damage bonus" 10
+						}
+						CharacterAttributes
+						{
+							"no_attack" 0
+							"move speed bonus" 1.5
+							// "gesture speed increase" 10
 						}
 					}
 				}
