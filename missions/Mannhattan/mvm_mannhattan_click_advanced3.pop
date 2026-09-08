@@ -9,8 +9,25 @@ population
 {
 	StartingCurrency	800
 	RespawnWaveTime	5
-	CanBotsAttackWhileInSpawnRoom	no
+	CanBotsAttackWhileInSpawnRoom	No
 	Advanced	1
+
+	PointTemplates [$SIGSEGV]
+    {
+        MissionNamePT
+        {
+            OnSpawnOutput
+            {
+                Target BigNet
+                Action RunScriptCode
+                Param "
+                        NetProps.SetPropString(Entities.FindByClassname(null, `tf_objective_resource`), `m_iszMvMPopfileName`, `Click Advanced: Modern Meets Future`)
+                      "
+            }
+        }
+    }
+    SpawnTemplate "MissionNamePT" [$SIGSEGV]
+
 	Mission
 	{
 		Objective	DestroySentries
@@ -659,7 +676,7 @@ population
 		}
 		InitWaveOutput
 		{
-			Target holograms_centerpath_relay
+			Target holograms_3way_relay
 			Action Trigger
 		}
 		WaveSpawn
@@ -1936,15 +1953,14 @@ population
 	Wave
 	{
 		WaitWhenDone	65
-		Checkpoint	No
+		Checkpoint	No [$SIGSEGV]
 		Description	"Total : 800 + 8000 + 600 (9400) [Failed -> Back to wave 6]"
 		StartWaveOutput
 		{
 			Target	wave_start_relay
 			Action	Trigger
 		}
-		
-		InitWaveOutput // 메딕 힐 안해서 넣음
+		InitWaveOutput
 		{
 			Target holograms_3way_relay
 			Action Trigger
