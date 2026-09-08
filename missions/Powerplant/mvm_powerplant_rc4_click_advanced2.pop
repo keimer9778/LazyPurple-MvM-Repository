@@ -8,8 +8,25 @@ WaveSchedule
 {
 	StartingCurrency	1200
 	RespawnWaveTime	5
-	CanBotsAttackWhileInSpawnRoom	no
+	CanBotsAttackWhileInSpawnRoom	No
 	Advanced	1
+
+	PointTemplates [$SIGSEGV]
+    {
+        MissionNamePT
+        {
+            OnSpawnOutput
+            {
+                Target BigNet
+                Action RunScriptCode
+                Param "
+                        NetProps.SetPropString(Entities.FindByClassname(null, `tf_objective_resource`), `m_iszMvMPopfileName`, `Click Advanced: Powerplant Raid`)
+                      "
+            }
+        }
+    }
+    SpawnTemplate "MissionNamePT" [$SIGSEGV]
+
 	Mission
 	{
 		Objective	DestroySentries
@@ -679,13 +696,10 @@ WaveSchedule
 			WaitBeforeStarting	20
 			WaitBetweenSpawns	0
 			Where	spawnbot
-			Squad
+			TFBot
 			{
-				TFBot
-				{
-					Skill	Expert
-					Template	T_TFBot_Pyro_Backburner
-				}
+				Skill	Expert
+				Template	T_TFBot_Pyro_Backburner
 			}
 		}
 		WaveSpawn
