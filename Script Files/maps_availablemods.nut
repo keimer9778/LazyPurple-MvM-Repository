@@ -23,7 +23,7 @@
 	"mvm_charon_b11" : {"HP" : 1, "DMG" : 1, "SPD" : 1, "INVS" : 1, "MRTHN" : 1}
 	"mvm_chopper_rc1d" : {"HP" : 1, "DMG" : 1, "SPD" : 1, "MDVL" : 1, "MRTHN" : 1}
 	"mvm_cliffside_b9" : {"HP" : 1, "DMG" : 1, "PRTL" : [Vector(967, 4050, 1230)], "MRTHN" : 1}
-	"mvm_cloudpiercer_b9" : {"HP" : 1, "DMG" : 1, "SPD" : 1, "INVS" : 1, "MDVL" : 1, "MRTHN" : 1}
+	"mvm_cloudpiercer_b11" : {"HP" : 1, "DMG" : 1, "SPD" : 1, "INVS" : 1, "MDVL" : 1, "MRTHN" : 1}
 	"mvm_coaltown" : {"HP" : 1, "DMG" : 1, "SPD" : 1, "INVS" : 1, "MDVL" : 1, "PRTL" : [Vector(0, 128, 940)], "MRTHN" : 1}
 	"mvm_coastrock_rc1_1" : {"HP" : 1, "DMG" : 1, "MDVL" : 1, "MRTHN" : 1}
 	"mvm_coldtown_rc1f" : {"HP" : 1, "DMG" : 1, "SPD" : 1, "INVS" : 1, "PRTL" : [Vector(0, 128, 940)], "MRTHN" : 1}
@@ -93,7 +93,6 @@
 	"mvm_manndarin_final" : {"HP" : 1, "DMG" : 1, "PRTL" : [Vector(869, -1314, 570), Vector(-292, 172, 510)], "MRTHN" : 1}
 	"mvm_mannhattan" : {"HP" : 1, "DMG" : 1, "SPD" : 1, "INVS" : 1, "MRTHN" : 1}
 	"mvm_mannkara_b3" : {"HP" : 1, "DMG" : 1, "INVS" : 1, "MRTHN" : 1}
-	"mvm_mannufactured_rc10" : {"HP" : 1, "DMG" : 1, "SPD" : 1, "MRTHN" : 1}
 	"mvm_mannworks" : {"HP" : 1, "DMG" : 1, "SPD" : 1, "INVS" : 1, "PRTL" : [Vector(500, 540, 500)], "MDVL" : 1, "MRTHN" : 1}
 	"mvm_maplehill_rc1" : {"HP" : 1, "DMG" : 1, "SPD" : 1, "PRTL" : [Vector(-766, 2310, -238), Vector(1264, 16, -221)], "MRTHN" : 1}
 	"mvm_marsbase_rc5" : {"HP" : 1, "DMG" : 1, "SPD" : 1, "INVS" : 1, "PRTL" : [Vector(5295, 6636, 327)], "MRTHN" : 1}
@@ -110,7 +109,6 @@
 	"mvm_oilrig_rc5d" : {"HP" : 1, "DMG" : 1, "SPD" : 1, "MDVL" : 1, "MRTHN" : 1}
 	"mvm_outlands_rc3" : {"HP" : 1, "DMG" : 1, "SPD" : 1, "INVS" : 1, "PRTL" : [Vector(0, 1788, 500)], "MDVL" : 1, "MRTHN" : 1}
 	"mvm_outpost_v9" : {"HP" : 1, "DMG" : 1, "SPD" : 1, "MDVL" : 1, "MRTHN" : 1}
-	"mvm_overgreen" : {"HP" : 1, "DMG" : 1, "SPD" : 1, "INVS" : 1, "PRTL" : [Vector(90, -1860, 420)], "MRTHN" : 1}
 	"mvm_overrun_b2" : {"HP" : 1, "DMG" : 1, "PRTL" : [Vector(-269, 667, 601)], "MDVL" : 1, "MRTHN" : 1}
 	"mvm_oxidize_rc18" : {"HP" : 1, "DMG" : 1, "SPD" : 1, "PRTL" : [Vector(-2080, 1560, 340), Vector(831, 2312, 295)], "MDVL" : 1, "MRTHN" : 1}
 	"mvm_paradigm_rc5" : {"HP" : 1, "DMG" : 1, "SPD" : 1, "INVS" : 1, "PRTL" : [Vector(450, -2798, 67)], "MDVL" : 1, "MRTHN" : 1}
@@ -135,13 +133,12 @@
 	"mvm_scrapyard_rc2a" : {"HP" : 1, "DMG" : 1, "SPD" : 1, "INVS" : 1, "MRTHN" : 1}
 	"mvm_seabed_b6" : {"HP" : 1, "DMG" : 1, "SPD" : 1, "MRTHN" : 1}
 	"mvm_sequoia_rc8" : {"HP" : 1, "DMG" : 1, "SPD" : 1, "PRTL" : [Vector(-3526, -1200, 120)], "MDVL" : 1, "MRTHN" : 1}
-	
 	"mvm_shadows_b3" : {"HP" : 1, "DMG" : 1, "PRTL" : [Vector(-507, 0, 4500)], "MDVL" : 1, "MRTHN" : 1}
 	"mvm_shank_rc4" : {"HP" : 1, "DMG" : 1, "INVS" : 1, "PRTL" : [Vector(-27, 3067, 230), Vector(-2408, 1543, 121)], "MRTHN" : 1}
 	"mvm_sharp_rc9" : {"HP" : 1, "DMG" : 1, "PRTL" : [Vector(-27, 3067, 230), Vector(-2408, 1543, 121)], "MDVL" : 1, "MRTHN" : 1}
 	"mvm_shipper_b4" : {"HP" : 1, "DMG" : 1, "SPD" : 1, "INVS" : 1, "PRTL" : [Vector(1413, -98, 600), Vector(1646, 2523, 911)], "MDVL" : 1, "MRTHN" : 1}
-	"mvm_shiverpeak_rc3" : {"HP" : 1, "DMG" : 1, "PRTL" : [Vector(-3362, 207, 230), Vector(-3529, 2152, 140)], "MDVL" : 1, "MRTHN" : 1}
-	"mvm_silentsky_rc3" : {"HP" : 1, "DMG" : 1, "INVS" : 1, "MDVL" : 1, "MRTHN" : 1}
+	"mvm_shiverpeak_rc3" : {"HP" : 1, "DMG" : 1, "SPD" : 1, "PRTL" : [Vector(-3362, 207, 230), Vector(-3529, 2152, 140)], "MDVL" : 1, "MRTHN" : 1}
+	"mvm_silentsky_rc3" : {"HP" : 1, "DMG" : 1, "SPD" : 1, "INVS" : 1, "MDVL" : 1, "MRTHN" : 1}
 	"mvm_silesia" : {"HP" : 1, "DMG" : 1, "SPD" : 1, "MRTHN" : 1}
 	"mvm_skangus_rc25" : {"HP" : 1, "DMG" : 1, "SPD" : 1, "MRTHN" : 1}
 	"mvm_skeleclipse_b7a" : {"HP" : 1, "DMG" : 1, "INVS" : 1, "MDVL" : 1, "MRTHN" : 1}
@@ -178,7 +175,6 @@
 	"mvm_whitecliff_rc4a" : {"HP" : 1, "DMG" : 1, "SPD" : 1, "PRTL" : [Vector(-435, -2082, 430)], "MRTHN" : 1}
 	"mvm_whitecliff_event_rc2" : {"HP" : 1, "DMG" : 1, "SPD" : 1, "MRTHN" : 1}
 	"mvm_winterbridge_rc4c" : {"HP" : 1, "DMG" : 1, "SPD" : 1, "INVS" : 1, "MRTHN" : 1}
-	"mvm_wizardry" : {"HP" : 1, "DMG" : 1, "SPD" : 1, "INVS" : 1, "PRTL" : [Vector(0, 633, 160)], "MDVL" : 1, "MRTHN" : 1}
 	"mvm_yiresa_rc5a" : {"HP" : 1, "DMG" : 1, "SPD" : 1, "MDVL" : 1, "MRTHN" : 1}
 	"mvm_yucatan_rc4" : {"HP" : 1, "DMG" : 1, "SPD" : 1, "INVS" : 1, "PRTL" : [Vector(-73, 3668, 532), Vector(-138, 1925, 532)], "MDVL" : 1, "MRTHN" : 1}
 	
@@ -194,6 +190,11 @@
 	"mvm_siege_mode_v7" : {"HP" : 1, "DMG" : 1, "MRTHN" : 1}
 	"mvm_mansion_v9" : {"HP" : 1, "DMG" : 1, "MRTHN" : 1}
 	"mvm_mansion_rc1d" : {"HP" : 1, "DMG" : 1, "SPD" : 1, "INVS" : 1, "PRTL" : [Vector(910, -844, -50), Vector(734, 827, 43)], "MRTHN" : 1, "MDVL" : 1, "MRTHN" : 1}
+	"mvm_mind_bloom_rc2" : {"HP" : 1, "DMG" : 1, "SPD" : 1, "MRTHN" : 1}
 	"mvm_lainos_rc15" : {"HP" : 1, "DMG" : 1, "SPD" : 1, "INVS" : 1, "MDVL" : 1, "MRTHN" : 1}
 	"mvm_scream_tv" : {"HP" : 1, "DMG" : 1, "SPD" : 1, "INVS" : 1, "MDVL" : 1, "MRTHN" : 1}
+	"mvm_mannufactured_rc10" : {"HP" : 1, "DMG" : 1, "SPD" : 1, "MRTHN" : 1}
+	"mvm_cargoship_v2a6" : {"HP" : 1, "DMG" : 1, "SPD" : 1, "MRTHN" : 1}
+	"mvm_overgreen" : {"HP" : 1, "DMG" : 1, "SPD" : 1, "INVS" : 1, "PRTL" : [Vector(90, -1860, 420)], "MRTHN" : 1}
+	"mvm_wizardry" : {"HP" : 1, "DMG" : 1, "SPD" : 1, "INVS" : 1, "PRTL" : [Vector(0, 633, 160)], "MDVL" : 1, "MRTHN" : 1}
 }

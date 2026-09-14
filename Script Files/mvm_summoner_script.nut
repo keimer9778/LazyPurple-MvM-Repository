@@ -70,6 +70,36 @@ const MAX_WEAPONS = 8
 
 		return Weapon
 	}
+	
+	function GivePlayerCosmetic(Player, ItemID, ModelPath = null)
+	{
+		local Weapon = CreateByClassname("tf_weapon_parachute")
+		SetPropInt(Weapon, "m_AttributeManager.m_Item.m_iItemDefinitionIndex", 1101)
+		SetPropBool(Weapon, "m_AttributeManager.m_Item.m_bInitialized", true)
+		Weapon.SetTeam(Player.GetTeam())
+		Weapon.DispatchSpawn()
+		Player.Weapon_Equip(Weapon)
+		local Wearable = GetPropEntity(Weapon, "m_hExtraWearable")
+		Weapon.Kill()
+
+		SetPropInt(Wearable, "m_AttributeManager.m_Item.m_iItemDefinitionIndex", ItemID)
+		SetPropBool(Wearable, "m_AttributeManager.m_Item.m_bInitialized", true)
+		SetPropBool(Wearable, "m_bValidatedAttachedEntity", true)
+		Wearable.DispatchSpawn()
+
+		// (optional) Set the model to something new. (Obeys econ's ragdoll physics when ragdolling as well)
+		if (ModelPath)
+			Wearable.SetModelSimple(ModelPath)
+
+		// (optional) if one wants to delete the item entity, collect them within the player's scope, then send Kill() to the entities within the scope.
+		Player.ValidateScriptScope()
+		local PlayerScope = Player.GetScriptScope()
+		if (!("Wearables" in PlayerScope))
+			PlayerScope.Wearables <- []
+		PlayerScope.Wearables.append(Wearable)
+
+		return Wearable
+	}
 
 	//// SUMMONER FUNCTIONS ////
 
@@ -79,7 +109,7 @@ const MAX_WEAPONS = 8
 		{
 			if (Child.GetClassname() == "bot_generator")
 			{
-				local TraceParams = 
+				local TraceParams =
 				{
 					start = Target.GetOrigin()
 					end = Child.GetOrigin()
@@ -101,30 +131,8 @@ const MAX_WEAPONS = 8
 		}
 	}
 
-	function SummonerDemomanMinionInit(Target)
-	{
-		Target.RemoveWeaponRestriction(7)
-		Target.ClearAllBotAttributes()
-		Target.ClearAllBotTags()
-		Target.SetCustomModelWithClassAnimations(null)
-		Target.SetDifficulty(3)
-		Target.SetMaxVisionRangeOverride(9999)
+	//// SOLDIER MINION FUNCTIONS ////
 
-		SetFakeClientConVarValue(Target, "name", "Resurrected Demoman")
-		Target.SetCustomModelWithClassAnimations("models/bots/demo/bot_demo_gibby.mdl")
-		SetPropString(Target, "m_PlayerClass.m_iszClassIcon", "demo_summoner")
-
-		Target.AddWeaponRestriction(2)
-		Target.AddBotAttribute(16)
-		Target.AddBotAttribute(32)
-		Target.AddBotAttribute(2048)
-
-		Target.AddCustomAttribute("cannot pick up intelligence", 1, 0)
-		Target.AddCustomAttribute("max health additive bonus", 125, 0)
-
-		Target.SetHealth(300)
-		Target.SetModelScale(1.3, 0.0)
-	}
 	function SummonerSoldierMinionInit(Target)
 	{
 		Target.RemoveWeaponRestriction(7)
@@ -139,38 +147,14 @@ const MAX_WEAPONS = 8
 		SetPropString(Target, "m_PlayerClass.m_iszClassIcon", "soldier_summoner")
 
 		Target.AddWeaponRestriction(2)
+		Target.AddBotAttribute(1)
 		Target.AddBotAttribute(16)
-		Target.AddBotAttribute(32)
 		Target.AddBotAttribute(2048)
 
 		Target.AddCustomAttribute("cannot pick up intelligence", 1, 0)
 		Target.AddCustomAttribute("max health additive bonus", 125, 0)
 
 		Target.SetHealth(300)
-		Target.SetModelScale(1.3, 0.0)
-	}
-	function SummonerHeavyMinionInit(Target)
-	{
-		Target.RemoveWeaponRestriction(7)
-		Target.ClearAllBotAttributes()
-		Target.ClearAllBotTags()
-		Target.SetCustomModelWithClassAnimations(null)
-		Target.SetDifficulty(1)
-		Target.SetMaxVisionRangeOverride(9999)
-
-		SetFakeClientConVarValue(Target, "name", "Resurrected Heavy")
-		Target.SetCustomModelWithClassAnimations("models/bots/heavy/bot_heavy_gibby.mdl")
-		SetPropString(Target, "m_PlayerClass.m_iszClassIcon", "heavy_summoner")
-
-		Target.AddWeaponRestriction(2)
-		Target.AddBotAttribute(16)
-		Target.AddBotAttribute(32)
-		Target.AddBotAttribute(2048)
-
-		Target.AddCustomAttribute("cannot pick up intelligence", 1, 0)
-		Target.AddCustomAttribute("max health additive bonus", 150, 0)
-
-		Target.SetHealth(450)
 		Target.SetModelScale(1.3, 0.0)
 	}
 
@@ -188,8 +172,8 @@ const MAX_WEAPONS = 8
 		SetPropString(Target, "m_PlayerClass.m_iszClassIcon", "soldier_spammer")
 
 		Target.AddWeaponRestriction(2)
+		Target.AddBotAttribute(1)
 		Target.AddBotAttribute(16)
-		Target.AddBotAttribute(32)
 		Target.AddBotAttribute(2048)
 
 		Target.AddCustomAttribute("cannot pick up intelligence", 1, 0)
@@ -203,6 +187,175 @@ const MAX_WEAPONS = 8
 		Primary.AddAttribute("faster reload rate", 0.001, 0)
 		Primary.AddAttribute("projectile speed decreased", 0.65, 0)
 	}
+
+	function SummonerSuperchargedRapidFireSoldierMinionInit(Target)
+	{
+		Target.RemoveWeaponRestriction(7)
+		Target.ClearAllBotAttributes()
+		Target.ClearAllBotTags()
+		Target.SetCustomModelWithClassAnimations(null)
+		Target.SetDifficulty(3)
+		Target.SetMaxVisionRangeOverride(9999)
+
+		SetFakeClientConVarValue(Target, "name", "Resurrected Rapid Fire Soldier")
+		Target.SetCustomModelWithClassAnimations("models/bots/soldier/bot_soldier_gibby.mdl")
+		SetPropString(Target, "m_PlayerClass.m_iszClassIcon", "soldier_spammer")
+
+		Target.AddWeaponRestriction(2)
+		Target.AddBotAttribute(1)
+		Target.AddBotAttribute(16)
+		Target.AddBotAttribute(512)
+		Target.AddBotAttribute(2048)
+
+		Target.AddCustomAttribute("cannot pick up intelligence", 1, 0)
+		Target.AddCustomAttribute("max health additive bonus", 400, 0)
+
+		Target.SetHealth(600)
+		Target.SetModelScale(1.4, 0.0)
+
+		local Primary = Target.GetActiveWeapon()
+		Primary.AddAttribute("damage bonus", 2, 0)
+		Primary.AddAttribute("fire rate bonus", 0.5, 0)
+		Primary.AddAttribute("faster reload rate", 0.001, 0)
+		Primary.AddAttribute("projectile speed decreased", 0.65, 0)
+
+		Target.AcceptInput("$AddItemAttribute", format("%s|%s|%i", "projectile trail particle", "flare_glow", Primary.GetSlot()), null, null)
+	}
+
+	//// DEMOMAN MINION FUNCTIONS ////
+
+	// Giant Demoman Functions //
+
+	function SummonerGBurstDemoMinionInit(Target)
+	{
+		Target.RemoveWeaponRestriction(7)
+		Target.ClearAllBotAttributes()
+		Target.ClearAllBotTags()
+		Target.SetCustomModelWithClassAnimations(null)
+		Target.SetDifficulty(3)
+		Target.SetMaxVisionRangeOverride(9999)
+
+		SetFakeClientConVarValue(Target, "name", "Resurrected Giant Demoman")
+		Target.SetCustomModelWithClassAnimations("models/bots/demo_boss/bot_demo_boss_gibby.mdl")
+		SetPropString(Target, "m_PlayerClass.m_iszClassIcon", "demo_summoner")
+
+		Target.AddWeaponRestriction(2)
+		Target.AddBotAttribute(1)
+		Target.AddBotAttribute(16)
+		Target.AddBotAttribute(2048)
+		Target.SetIsMiniBoss(true)
+
+		Target.AddCustomAttribute("cannot pick up intelligence", 1, 0)
+		Target.AddCustomAttribute("max health additive bonus", 3125, 0)
+		Target.AddCustomAttribute("move speed penalty", 0.5, 0)
+		Target.AddCustomAttribute("damage force reduction", 0.4, 0)
+		Target.AddCustomAttribute("airblast vulnerability multiplier", 0.4, 0)
+		Target.AddCustomAttribute("override footstep sound set", 4, 0)
+
+		Target.SetHealth(3300)
+		Target.SetModelScale(1.75, 0.0)
+
+		local Primary = Target.GetActiveWeapon()
+		Primary.AddAttribute("fire rate bonus", 0.1, 0)
+		Primary.AddAttribute("faster reload rate", 0.65, 0)
+		Primary.AddAttribute("clip size upgrade atomic", 7, 0)
+		Primary.AddAttribute("projectile speed increased", 1.1, 0)
+		Primary.AddAttribute("projectile spread angle penalty", 5, 0)
+	}
+
+	// Minigiant Demoman Functions //
+
+	function SummonerDemomanMinionInit(Target)
+	{
+		Target.RemoveWeaponRestriction(7)
+		Target.ClearAllBotAttributes()
+		Target.ClearAllBotTags()
+		Target.SetCustomModelWithClassAnimations(null)
+		Target.SetDifficulty(3)
+		Target.SetMaxVisionRangeOverride(9999)
+
+		SetFakeClientConVarValue(Target, "name", "Resurrected Demoman")
+		Target.SetCustomModelWithClassAnimations("models/bots/demo/bot_demo_gibby.mdl")
+		SetPropString(Target, "m_PlayerClass.m_iszClassIcon", "demo_summoner")
+
+		Target.AddWeaponRestriction(2)
+		Target.AddBotAttribute(1)
+		Target.AddBotAttribute(16)
+		Target.AddBotAttribute(2048)
+
+		Target.AddCustomAttribute("cannot pick up intelligence", 1, 0)
+		Target.AddCustomAttribute("max health additive bonus", 125, 0)
+
+		Target.SetHealth(300)
+		Target.SetModelScale(1.3, 0.0)
+	}
+
+	//// HEAVY MINION FUNCTIONS ////
+
+	// Giant Heavy Functions //
+
+	function SummonerGDeflectorHeavyMinionInit(Target)
+	{
+		Target.RemoveWeaponRestriction(7)
+		Target.ClearAllBotAttributes()
+		Target.ClearAllBotTags()
+		Target.SetCustomModelWithClassAnimations(null)
+		Target.SetDifficulty(3)
+		Target.SetMaxVisionRangeOverride(9999)
+
+		SetFakeClientConVarValue(Target, "name", "Resurrected Giant Heavy")
+		Target.SetCustomModelWithClassAnimations("models/bots/heavy_boss/bot_heavy_boss_gibby.mdl")
+		SetPropString(Target, "m_PlayerClass.m_iszClassIcon", "heavy_summoner")
+
+		Target.AddWeaponRestriction(2)
+		Target.AddBotAttribute(1)
+		Target.AddBotAttribute(16)
+		Target.SetIsMiniBoss(true)
+
+		Target.AddCustomAttribute("cannot pick up intelligence", 1, 0)
+		Target.AddCustomAttribute("max health additive bonus", 4700, 0)
+		Target.AddCustomAttribute("move speed penalty", 0.5, 0)
+		Target.AddCustomAttribute("damage force reduction", 0.3, 0)
+		Target.AddCustomAttribute("airblast vulnerability multiplier", 0.3, 0)
+		Target.AddCustomAttribute("override footstep sound set", 2, 0)
+
+		Target.SetHealth(5000)
+		Target.SetModelScale(1.75, 0.0)
+
+		GivePlayerWeapon(Target, "tf_weapon_minigun", 850)
+		GivePlayerCosmetic(Target, 840, "models/player/items/mvm_loot/heavy/robo_ushanka.mdl")
+
+		local Primary = Target.GetActiveWeapon()
+		Primary.AddAttribute("damage bonus", 1.5, 0)
+		Primary.AddAttribute("attack projectiles", 1, 0)
+	}
+
+	// Minigiant Heavy Functions //
+
+	function SummonerHeavyMinionInit(Target)
+	{
+		Target.RemoveWeaponRestriction(7)
+		Target.ClearAllBotAttributes()
+		Target.ClearAllBotTags()
+		Target.SetCustomModelWithClassAnimations(null)
+		Target.SetDifficulty(1)
+		Target.SetMaxVisionRangeOverride(9999)
+
+		SetFakeClientConVarValue(Target, "name", "Resurrected Heavy")
+		Target.SetCustomModelWithClassAnimations("models/bots/heavy/bot_heavy_gibby.mdl")
+		SetPropString(Target, "m_PlayerClass.m_iszClassIcon", "heavy_summoner")
+
+		Target.AddWeaponRestriction(2)
+		Target.AddBotAttribute(1)
+		Target.AddBotAttribute(16)
+
+		Target.AddCustomAttribute("cannot pick up intelligence", 1, 0)
+		Target.AddCustomAttribute("max health additive bonus", 150, 0)
+
+		Target.SetHealth(450)
+		Target.SetModelScale(1.3, 0.0)
+	}
+
 	function SummonerBrassBeastHeavyMinionInit(Target)
 	{
 		Target.RemoveWeaponRestriction(7)
@@ -217,9 +370,8 @@ const MAX_WEAPONS = 8
 		SetPropString(Target, "m_PlayerClass.m_iszClassIcon", "heavy_brass_beast_summoner")
 
 		Target.AddWeaponRestriction(2)
+		Target.AddBotAttribute(1)
 		Target.AddBotAttribute(16)
-		Target.AddBotAttribute(32)
-		Target.AddBotAttribute(2048)
 
 		Target.AddCustomAttribute("cannot pick up intelligence", 1, 0)
 		Target.AddCustomAttribute("max health additive bonus", 600, 0)
