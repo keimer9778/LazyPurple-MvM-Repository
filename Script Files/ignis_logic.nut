@@ -180,10 +180,6 @@ foreach(k,v in OTHER_CONSTANTS)
 			}
 		}
 		local randomTable = IgnisLogic.ShuffleTable(tAlivePlayers)
-		for(local i = 1; i <= ITERATION_COUNT; i++)
-		{
-			
-		}
 		foreach(hTarget in ShuffleTable(tAlivePlayers))
 		{
 			EntFireByHandle(hTarget, "runscriptcode", "IgnisLogic.AttackWrapper(self)",-1,null,null)

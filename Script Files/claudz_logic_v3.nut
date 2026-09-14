@@ -819,9 +819,9 @@ foreach(k, v in ::Entities.getclass())
 
     GetClosestPlayersToBot = function(bot, numOfPlayers = 4, team = 2) {
         function sortDist(playerA, playerB) {
-            local distA = Dist(bot, playerA)
-            local distB = Dist(bot, playerB)
-            if (distA > distB) return playerA
+            local distA = CzUtil.Dist(bot, playerA)
+            local distB = CzUtil.Dist(bot, playerB)
+            if (distA > distB) return 1
             else return -1
         }
 
