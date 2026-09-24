@@ -1,0 +1,1880 @@
+#base robot_giant.pop
+#base robot_standard.pop
+#base robot_click.pop
+#base robot_click_giant.pop
+#base robot_lazypurple.pop
+
+// A reference list for spawn locations and the starting tank path.
+// ----------------------------------------------------------------
+// spawnbot (main side)
+// spawnbot_flank (left side)
+// spawnbot_flank_behind_1 (Gate 1)
+// spawnbot_flank_behind_2 (Gate 2)
+// spawnbot_flank_behind_3 (Gate 3)
+// I'm not using spawn, either of the _limited spawnbots, Ahead, Behind, or Anywhere
+
+// ======================================================================
+// Testing Notes:
+
+// WAVE 1:
+// 
+// 
+// 
+// 
+// 
+
+// WAVE 2:
+// 
+// 
+// 
+// 
+// 
+// 
+
+// WAVE 3:
+// The first half seems a little too easy if shield uptime is good, though I think
+// for now this is acceptable. We'll see if the first half needs buffing. The second
+// half absolutely does not.
+// 
+// 
+
+// WAVE 4:
+// I've set the Giant Deflector + Giant Shield Medic spawn cooldown from 18 -> 20s. We'll see if it really needs to be changed
+// to 20s in the next test.
+// 
+// 
+
+// WAVE 5:
+// I may need to remove the last pair of Giant Hyper Pyro + Shield Uber Medic at the end. Not sure, needs another test. If I do,
+// I need to lower the Tanker Soldiers TotalCount a little bit to compensate.
+
+// OVERALL THOUGHTS:
+// Mission's in a surprisingly good state!
+// 
+// 
+// ======================================================================
+
+WaveSchedule
+{
+	StartingCurrency				600
+	RespawnWaveTime 				1
+	FixedRespawnWaveTime			Yes
+	CanBotsAttackWhileInSpawnRoom	No
+    RobotLimit 26 [$SIGSEGV]
+
+	PointTemplates [$SIGSEGV]
+	{
+		MissionNamePT
+		{
+			OnSpawnOutput
+			{
+				Target BigNet
+				Action RunScriptCode
+				Param "
+						NetProps.SetPropString(Entities.FindByClassname(null, `tf_objective_resource`), `m_iszMvMPopfileName`, `(Grandmaster) Saturation`)
+					  "
+			}
+		}
+	}
+
+	SpawnTemplate "MissionNamePT" [$SIGSEGV]
+
+	Wave
+	{
+		StartWaveOutput
+		{
+			Target wave_start_relay
+			Action Trigger
+		}
+		DoneOutput
+		{
+			Target wave_finished_relay
+			Action Trigger
+		}
+		InitWaveOutput
+		{
+			Target BigNet
+			Action RunScriptCode
+			Param "ClientPrint(null, 3,`\x07E7B53BNOTICE: This mission is in a very early state of testing. Please be patient with its balancing!`)"
+		}
+		WaitWhenDone 65
+		Checkpoint Yes
+
+        // Subwave 1 (maxActive: 26)
+        // Giant Rapid Buff Soldier + Uber Medic (8)
+        // Giant Sturdy FaN Scout (2)
+        // Heavy (8)
+		// Soldier (4)
+        // Pyro (4)
+		WaveSpawn	// 
+		{
+			Name "wave01aGiant1"
+			Where spawnbot
+			TotalCount 8
+			MaxActive 8
+			SpawnCount 4
+			WaitBeforeStarting 0
+			WaitBetweenSpawns 8
+			TotalCurrency 50
+		
+			Squad
+			{
+				TFBot
+				{
+					Template T_TFBot_Giant_Soldier_Spammer_Buff
+					CharacterAttributes
+					{
+						"airblast vertical vulnerability multiplier" 0.2
+						"airblast vulnerability multiplier" 0.2
+						"damage force reduction" 0.2
+					}
+				}
+				TFBot
+				{
+					Template T_TFBot_Medic_QuickUber
+				}
+                TFBot
+				{
+					Template T_TFBot_Medic_QuickUber
+				}
+                TFBot
+				{
+					Template T_TFBot_Medic_QuickUber
+				}
+			}
+		}
+        WaveSpawn	// 
+		{
+			Name "wave01aGiant2"
+			Where spawnbot_flank
+			TotalCount 8
+			MaxActive 8
+			SpawnCount 4
+            WaitForAllSpawned "wave01aGiant1"
+			WaitBeforeStarting 8
+			WaitBetweenSpawns 8
+			TotalCurrency 50
+		
+			Squad
+			{
+				TFBot
+				{
+					Template T_TFBot_Giant_Soldier_Spammer_Buff
+					CharacterAttributes
+					{
+						"airblast vertical vulnerability multiplier" 0.2
+						"airblast vulnerability multiplier" 0.2
+						"damage force reduction" 0.2
+					}
+				}
+				TFBot
+				{
+					Template T_TFBot_Medic_QuickUber
+				}
+                TFBot
+				{
+					Template T_TFBot_Medic_QuickUber
+				}
+                TFBot
+				{
+					Template T_TFBot_Medic_QuickUber
+				}
+			}
+		}
+        WaveSpawn	// 
+		{
+			Name "wave01aGiant3"
+			Where spawnbot
+			TotalCount 8
+			MaxActive 2
+			SpawnCount 1
+			WaitBeforeStarting 8
+			WaitBetweenSpawns 5
+			TotalCurrency 50
+		
+			TFBot
+            {
+                Template T_TFBot_Giant_Scout_FAN_Sturdy
+                // Attributes  AlwaysCrit
+            }
+		}
+        WaveSpawn	// 
+		{
+			Name "wave01a"
+			Where spawnbot
+			TotalCount 16
+			MaxActive 6
+			SpawnCount 2
+			WaitBeforeStarting 0
+			WaitBetweenSpawns 2
+			TotalCurrency 50
+		
+			TFBot
+            {
+                Class   Heavy
+                Skill   Expert
+            }
+		}
+        WaveSpawn	// 
+		{
+			Name "wave01a"
+			Where spawnbot
+			TotalCount 12
+			MaxActive 4
+			SpawnCount 2
+			WaitBeforeStarting 0
+			WaitBetweenSpawns 0
+			TotalCurrency 50
+			Support	Limited
+		
+			TFBot
+            {
+                Class   Soldier
+				Skill	Expert
+            }
+		}
+        WaveSpawn	// 
+		{
+			Name "wave01a"
+			Where spawnbot_flank
+			TotalCount 12
+			MaxActive 4
+			SpawnCount 2
+			WaitBeforeStarting 0
+			WaitBetweenSpawns 0
+			TotalCurrency 50
+		
+			TFBot
+            {
+                Class   Pyro
+                Skill   Expert
+				ItemAttributes
+				{
+					ItemName	TF_WEAPON_FLAMETHROWER
+					"airblast disabled" 1
+				}
+            }
+		}
+
+        // Subwave 2 (maxActive: 26)
+        // Giant Heavy + Giant Medic (4)
+        // Soldier [8]
+		// Pyro (6)
+        WaveSpawn	// 
+		{
+			Name "wave01bGiant"
+			Where spawnbot
+			TotalCount 2
+			MaxActive 2
+			SpawnCount 2
+            WaitForAllSpawned "wave01aGiant2"
+			WaitBeforeStarting 6
+			WaitBetweenSpawns 0
+			TotalCurrency 100
+		
+			Squad
+            {
+                TFBot
+                {
+                    Template T_TFBot_Giant_Heavyweapons_Deflector
+					CharacterAttributes
+					{
+						"airblast vertical vulnerability multiplier" 0.2
+						"airblast vulnerability multiplier" 0.2
+						"damage force reduction" 0.2
+					}
+                }
+				TFBot
+                {
+                    Template T_TFBot_Giant_Medic_Regen
+					CharacterAttributes
+					{
+						"airblast vertical vulnerability multiplier" 0.2
+						"airblast vulnerability multiplier" 0.2
+						"damage force reduction" 0.2
+					}
+                }
+            }
+		}
+        WaveSpawn	// 
+		{
+			Name "wave01bGiant"
+			Where spawnbot_flank
+			TotalCount 2
+			MaxActive 2
+			SpawnCount 2
+            WaitForAllSpawned "wave01aGiant2"
+			WaitBeforeStarting 26
+			WaitBetweenSpawns 0
+			TotalCurrency 100
+		
+			Squad
+            {
+                TFBot
+                {
+                    Template T_TFBot_Giant_Heavyweapons_Deflector
+					CharacterAttributes
+					{
+						"airblast vertical vulnerability multiplier" 0.2
+						"airblast vulnerability multiplier" 0.2
+						"damage force reduction" 0.2
+					}
+                }
+				TFBot
+                {
+                    Template T_TFBot_Giant_Medic_Regen
+					CharacterAttributes
+					{
+						"airblast vertical vulnerability multiplier" 0.2
+						"airblast vulnerability multiplier" 0.2
+						"damage force reduction" 0.2
+					}
+                }
+            }
+		}
+        WaveSpawn	// 
+		{
+			Name "wave01b"
+			Where spawnbot
+			// TotalCount 16
+			MaxActive 8
+			SpawnCount 1
+            WaitForAllSpawned "wave01a"
+			WaitBeforeStarting 0
+			WaitBetweenSpawns 2
+			TotalCurrency 50
+			Support 1
+		
+			TFBot
+            {
+                Class   Soldier
+                Skill   Expert
+            }
+		}
+        WaveSpawn	// 
+		{
+			Name "wave01b"
+			Where spawnbot_flank
+			// TotalCount 16
+			MaxActive 8
+			SpawnCount 1
+            WaitForAllSpawned "wave01a"
+			WaitBeforeStarting 1
+			WaitBetweenSpawns 2
+			TotalCurrency 50
+			Support 1
+		
+			TFBot
+            {
+                Class   Scout
+                Skill   Expert
+            }
+		}
+		WaveSpawn	// 
+		{
+			Name "wave01b"
+			Where spawnbot_flank
+			TotalCount 14
+			MaxActive 6
+			SpawnCount 1
+            WaitForAllSpawned "wave01a"
+			WaitBeforeStarting 0
+			WaitBetweenSpawns 2
+			TotalCurrency 50
+		
+			TFBot
+            {
+                Class	Pyro
+				Skill	Expert
+				ItemAttributes
+				{
+					ItemName	TF_WEAPON_FLAMETHROWER
+					"airblast disabled" 1
+				}
+            }
+		}
+	}
+	Wave
+	{
+		StartWaveOutput
+		{
+			Target wave_start_relay
+			Action Trigger
+		}
+		DoneOutput
+		{
+			Target wave_finished_relay
+			Action Trigger
+		}
+		WaitWhenDone 65
+		Checkpoint Yes
+
+        // Subwave 1 (maxActive: 26)
+		// Giant Pyro + Giant Sturdy Medic (4)
+		// Demoman (8)
+		// Heavy + Uber Medic (8)
+		WaveSpawn	// 
+		{
+			Name "wave02aGiant"
+			Where spawnbot
+			TotalCount 4
+			MaxActive 4
+			SpawnCount 2
+			WaitBeforeStarting 0
+			WaitBetweenSpawns 20
+			TotalCurrency 100
+		
+			Squad
+			{
+				TFBot
+				{
+					Template T_TFBot_Giant_Pyro
+					Attributes	AlwaysCrit
+					Attributes	AlwaysFireWeapon
+					CharacterAttributes
+					{
+						"airblast vertical vulnerability multiplier" 0.2
+						"airblast vulnerability multiplier" 0.2
+						"damage force reduction" 0.2
+					}
+				}
+				TFBot
+				{
+					Template T_TFBot_Giant_Medic_Sturdy
+				}
+			}
+		}
+		WaveSpawn	// 
+		{
+			Name "wave02a"
+			Where spawnbot_flank
+			TotalCount 16
+			MaxActive 4
+			SpawnCount 1
+			WaitBeforeStarting 0
+			WaitBetweenSpawns 1
+			TotalCurrency 50
+		
+			TFBot
+			{
+				Class	Demoman
+				Skill	Expert
+			}
+		}
+		WaveSpawn	// 
+		{
+			Name "wave02a"
+			Where spawnbot
+			TotalCount 12
+			MaxActive 4
+			SpawnCount 2
+			WaitBeforeStarting 0
+			WaitBetweenSpawns 4
+			TotalCurrency 50
+		
+			TFBot
+			{
+				Class	Demoman
+				Skill	Expert
+			}
+		}
+		WaveSpawn	// 
+		{
+			Name "wave02a"
+			Where spawnbot
+			TotalCount 10
+			MaxActive 8
+			SpawnCount 2
+			WaitBeforeStarting 0
+			WaitBetweenSpawns 3
+			TotalCurrency 50
+		
+			Squad
+			{
+				TFBot
+				{
+					Class	Heavy
+					Skill	Expert
+				}
+				TFBot
+				{
+					Template T_TFBot_Medic_QuickUber
+				}
+			}
+		}
+		WaveSpawn	// 
+		{
+			Name "wave02a"
+			Where spawnbot
+			TotalCount 14
+			MaxActive 6
+			SpawnCount 2
+			WaitBeforeStarting 0
+			WaitBetweenSpawns 2
+			TotalCurrency 50
+			Support Limited
+		
+			TFBot
+			{
+				Template T_TFBot_Scout_Soda
+				Skill	Expert
+			}
+		}
+
+		// Subwave 2 (maxActive: 26)
+		// Giant Rapid Sticky Demo + Kritzkrieg Medic (6)
+		// Concheror Soldier + Kritzkrieg Medic (12)
+		// Heavy + Uber Medic (6)
+		// Soda Scout [2]
+		WaveSpawn	// 
+		{
+			Name "wave02bGiant"
+			Where spawnbot_flank
+			TotalCount 12
+			MaxActive 6
+			SpawnCount 3
+			WaitForAllSpawned "wave02aGiant"
+			WaitBeforeStarting 2
+			WaitBetweenSpawns 8
+			TotalCurrency 50
+		
+			Squad
+			{
+				TFBot
+				{
+					Template T_TFBot_Giant_Demo_Sticky_Spammer
+					CharacterAttributes
+					{
+						"airblast vertical vulnerability multiplier" 0.2
+						"airblast vulnerability multiplier" 0.2
+						"damage force reduction" 0.2
+					}
+				}
+				TFBot
+				{
+					Template T_TFBot_Medic_Kritzkrieg
+				}
+				TFBot
+				{
+					Template T_TFBot_Medic_QuickUber
+				}
+			}
+		}
+		WaveSpawn	// 
+		{
+			Name "wave02b"
+			Where spawnbot
+			TotalCount 20
+			MaxActive 12
+			SpawnCount 2
+			WaitForAllSpawned "wave02a"
+			WaitBeforeStarting 5
+			WaitBetweenSpawns 1
+			TotalCurrency 50
+		
+			Squad
+			{
+				TFBot
+				{
+					Template T_TFBot_Soldier_Extended_Concheror
+					// Name	"Rapid Fire Bowman"
+					// ClassIcon	sniper_bow_armored
+				}
+				TFBot
+				{
+					Template T_TFBot_Medic_Kritzkrieg
+				}
+			}
+		}
+		WaveSpawn	// 
+		{
+			Name "wave02b"
+			Where spawnbot_flank
+			TotalCount 10
+			MaxActive 6
+			SpawnCount 1
+			WaitForAllSpawned "wave02a"
+			WaitBeforeStarting 5
+			WaitBetweenSpawns 1
+			TotalCurrency 50
+		
+			Squad
+			{
+				TFBot
+				{
+					Class	Heavy
+					Skill	Expert
+				}
+				TFBot
+				{
+					Template T_TFBot_Medic_QuickUber
+				}
+			}
+		}
+		WaveSpawn	// 
+		{
+			Name "wave02bSupport"
+			Where spawnbot
+			MaxActive 2
+			SpawnCount 1
+			WaitForAllSpawned "wave02aGiant"
+			WaitBeforeStarting 5
+			WaitBetweenSpawns 7
+			TotalCurrency 50
+			Support 1
+		
+			TFBot
+			{
+				Template T_TFBot_Scout_Soda
+			}
+		}
+
+		// Subwave 3 (maxActive: 26)
+		// Giant Dragon Pyro + Uber Medic (9)
+		// Concheror Soldier (8)
+		// Soda Popper Scout [2]
+		// Direct Hit Soldier [7]
+		WaveSpawn	// 
+		{
+			Name "wave02cGiant"
+			Where spawnbot_flank
+			TotalCount 9
+			MaxActive 9
+			SpawnCount 3
+			WaitForAllSpawned "wave02bGiant"
+			WaitBeforeStarting 2
+			WaitBetweenSpawns 4
+			TotalCurrency 50
+		
+			Squad
+			{
+				TFBot
+				{
+					Template T_TFBot_Giant_Pyro
+					Attributes	AlwaysCrit
+					Attributes	AlwaysFireWeapon
+				}
+				TFBot
+				{
+					Template T_TFBot_Medic_QuickUber
+				}
+				TFBot
+				{
+					Template T_TFBot_Medic_QuickUber
+				}
+			}
+		}
+		WaveSpawn	// 
+		{
+			Name "wave02c"
+			Where spawnbot
+			TotalCount	10
+			MaxActive 8
+			SpawnCount 2
+			WaitForAllSpawned "wave02b"
+			WaitBeforeStarting 5
+			WaitBetweenSpawns 2
+			TotalCurrency 50
+		
+			TFBot
+			{
+				Template T_TFBot_Soldier_Extended_Concheror
+				Skill	Hard
+			}
+		}
+		WaveSpawn	// 
+		{
+			Name "wave02cSupport"
+			Where spawnbot_flank
+			MaxActive 7
+			SpawnCount 2
+			WaitForAllSpawned "wave02b"
+			WaitBeforeStarting 5
+			WaitBetweenSpawns 10
+			TotalCurrency 50
+			Support 1
+		
+			TFBot
+			{
+				Template T_TFBot_Soldier_DirectHit
+			}
+		}
+	}
+	Wave
+	{
+		StartWaveOutput
+		{
+			Target wave_start_relay
+			Action Trigger
+		}
+		DoneOutput
+		{
+			Target wave_finished_relay
+			Action Trigger
+		}
+		WaitWhenDone 65
+		Checkpoint Yes
+
+        // Subwave 1 (maxActive: 26)
+		// Giant Burst Fire Soldier + Uber Medic (3)
+		// Giant Burst Fire Demo (4)
+		// Fast Pyro (10)
+		// Shortstop Scout (9)
+		WaveSpawn	// 
+		{
+			Name "wave03aGiant"
+			Where spawnbot
+			TotalCount 9
+			MaxActive 3
+			SpawnCount 3
+			WaitBeforeStarting 0
+			WaitBetweenSpawns 6
+			TotalCurrency 100
+
+			Squad
+			{
+				TFBot
+				{
+					Template T_TFBot_Giant_Soldier_Spammer_Reload
+					CharacterAttributes
+					{
+						"airblast vertical vulnerability multiplier" 0.2
+						"airblast vulnerability multiplier" 0.2
+						"damage force reduction" 0.2
+					}
+				}
+				TFBot
+				{
+					Template T_TFBot_Medic_QuickUber
+				}
+				TFBot
+				{
+					Template T_TFBot_Medic_QuickUber
+				}
+			}
+		}
+		WaveSpawn	// 
+		{
+			Name "wave03aGiant"
+			Where spawnbot_flank
+			TotalCount 10
+			MaxActive 4
+			SpawnCount 1
+			WaitBeforeStarting 0
+			WaitBetweenSpawns 6
+			TotalCurrency 100
+		
+			TFBot
+			{
+				Template T_TFBot_Giant_Demo_Burst
+				// Attributes	AlwaysCrit
+				CharacterAttributes
+				{
+					"airblast vertical vulnerability multiplier" 0.2
+					"airblast vulnerability multiplier" 0.2
+					"damage force reduction" 0.2
+				}
+			}
+		}
+		WaveSpawn	// 
+		{
+			Name "wave03a"
+			Where spawnbot
+			TotalCount 36
+			MaxActive 10
+			SpawnCount 2
+			WaitBeforeStarting 0
+			WaitBetweenSpawns 2
+			TotalCurrency 50
+		
+			TFBot
+			{
+				Template T_TFBot_Pyro_Fast
+				Skill	Expert
+				ItemAttributes
+				{
+					ItemName	TF_WEAPON_FLAMETHROWER
+					"airblast disabled" 1
+				}
+			}
+		}
+		WaveSpawn	// 
+		{
+			Name "wave03a"
+			Where spawnbot
+			TotalCount 20
+			MaxActive 9
+			SpawnCount 1
+			WaitBeforeStarting 0
+			WaitBetweenSpawns 2
+			TotalCurrency 50
+		
+			TFBot
+			{
+				Template T_TFBot_Scout_Shortstop
+			}
+		}
+
+		// Subwave 2 (maxActive: 27)
+		// Giant Rapid Fire Soldier + Uber Medic (4)
+		// Steel Gauntlet (8)
+		// Shortstop Scout (9)
+		// Fast Pyro (8)
+		
+		WaveSpawn	// 
+		{
+			Name "wave03bGiant"
+			Where spawnbot
+			TotalCount 8
+			MaxActive 4
+			SpawnCount 1
+			WaitForAllSpawned "wave03aGiant"
+			WaitBeforeStarting 7
+			WaitBetweenSpawns 6
+			TotalCurrency 50
+		
+			Squad
+			{
+				TFBot
+				{
+					Template T_TFBot_Giant_Soldier_Spammer
+					Attributes	AlwaysCrit
+					CharacterAttributes
+					{
+						"airblast vertical vulnerability multiplier" 0.2
+						"airblast vulnerability multiplier" 0.2
+						"damage force reduction" 0.2
+					}
+				}
+				TFBot
+				{
+					Template T_TFBot_Medic_QuickUber
+				}
+			}
+		}
+		WaveSpawn	// 
+		{
+			Name "wave03b"
+			Where spawnbot
+			TotalCount 10
+			MaxActive 4
+			SpawnCount 1
+			WaitForAllSpawned "wave03a"
+			WaitBeforeStarting 0
+			WaitBetweenSpawns 1
+			TotalCurrency 25
+		
+			TFBot
+			{
+				Template T_TFBot_Heavyweapons_Fist
+				BehaviorModifiers	Push
+				Attributes	AlwaysCrit
+			}
+		}
+		WaveSpawn	// 
+		{
+			Name "wave03b"
+			Where spawnbot_flank
+			TotalCount 10
+			MaxActive 4
+			SpawnCount 1
+			WaitForAllSpawned "wave03a"
+			WaitBeforeStarting 0
+			WaitBetweenSpawns 1
+			TotalCurrency 25
+		
+			TFBot
+			{
+				Template T_TFBot_Heavyweapons_Fist
+				BehaviorModifiers	Push
+				Attributes	AlwaysCrit
+			}
+		}
+		WaveSpawn	// 
+		{
+			Name "wave03b"
+			Where spawnbot_flank
+			TotalCount 20
+			MaxActive 9
+			SpawnCount 1
+			WaitForAllSpawned "wave03a"
+			WaitBeforeStarting 0
+			WaitBetweenSpawns 1
+			TotalCurrency 25
+		
+			TFBot
+			{
+				Template T_TFBot_Scout_Shortstop
+				Skill	Hard
+			}
+		}
+		WaveSpawn	// 
+		{
+			Name "wave03b"
+			Where spawnbot_flank
+			TotalCount 18
+			MaxActive 8
+			SpawnCount 1
+			WaitForAllSpawned "wave03a"
+			WaitBeforeStarting 0
+			WaitBetweenSpawns 1
+			TotalCurrency 25
+		
+			Squad
+			{
+				TFBot
+				{
+					Template T_TFBot_Pyro_Fast
+					Skill	Normal
+					ItemAttributes
+					{
+						ItemName	TF_WEAPON_FLAMETHROWER
+						"airblast disabled" 1
+					}
+				}
+				TFBot
+				{
+					Template T_TFBot_Medic_QuickUber
+				}
+			}
+		}
+
+		// Subwave 3 (maxActive: 26)
+		// Giant Burst Fire Soldier + Armored Uber Medic (8)
+		// Giant Sturdy FaN Scout (4)
+		// Strong Burst Shotgun Heavy (8)
+		// Armored Blaster Scout [8] -> Replaces Strong Burst Shotgun Heavy
+		// Penetrator Huntsman [6] -> [10] Replaces Giant Sturdy FaN Scout 
+		WaveSpawn	// 
+		{
+			Name "wave03cGiant"
+			Where spawnbot
+			TotalCount 12
+			MaxActive 8
+			SpawnCount 4
+			WaitForAllSpawned "wave03b"
+			WaitBeforeStarting 6
+			WaitBetweenSpawns 6
+			TotalCurrency 50
+		
+			Squad
+			{
+				TFBot
+				{
+					Template T_TFBot_Giant_Soldier_Spammer_Reload
+					CharacterAttributes
+					{
+						"airblast vertical vulnerability multiplier" 0.2
+						"airblast vulnerability multiplier" 0.2
+						"damage force reduction" 0.2
+					}
+				}
+				TFBot
+				{
+					Template T_TFBot_Medic_QuickUber
+				}
+				TFBot
+				{
+					Template T_TFBot_Medic_QuickUber
+				}
+				TFBot
+				{
+					Template T_TFBot_Medic_QuickUber
+				}
+			}
+		}
+		WaveSpawn	// 
+		{
+			Name "wave03cGiantScout"
+			Where spawnbot
+			TotalCount 10
+			MaxActive 4
+			SpawnCount 1
+			WaitForAllSpawned "wave03b"
+			WaitBeforeStarting 0
+			WaitBetweenSpawns 4
+			TotalCurrency 50
+		
+			TFBot
+			{
+				Template T_TFBot_Giant_Scout_FAN_Sturdy
+			}
+		}
+		WaveSpawn	// 
+		{
+			Name "wave03c"
+			Where spawnbot_flank
+			TotalCount 20
+			MaxActive 8
+			SpawnCount 2
+			WaitForAllSpawned "wave03b"
+			WaitBeforeStarting 0
+			WaitBetweenSpawns 2
+			TotalCurrency 50
+		
+			TFBot
+			{
+				Template T_TFBot_Heavy_Shotgun_Burst
+				ClassIcon	heavy_shotgun_burst_hyper
+				Name	"Strong Burst Shotgun Heavy"
+				ItemAttributes
+				{
+					ItemName	TF_WEAPON_SHOTGUN_HWG
+					"damage bonus" 1
+				}
+			}
+		}
+		WaveSpawn	// 
+		{
+			Name "wave03cSupport"
+			Where spawnbot_flank
+			MaxActive 8
+			SpawnCount 1
+			WaitForAllSpawned "wave03c"
+			WaitBeforeStarting 0
+			WaitBetweenSpawns 2
+			TotalCurrency 25
+			Support 1
+		
+			TFBot
+			{
+				Template T_TFBot_Scout_Blaster_Pusher_Armored
+				Name	"Armored Blaster Scout"
+				ItemAttributes
+				{
+					ItemName	"Baby Face's Blaster"
+					"scattergun has knockback" 3
+					"bullets per shot bonus" 2
+				}
+
+			}
+		}
+		WaveSpawn	// 
+		{
+			Name "wave03cSupport"
+			Where spawnbot_flank
+			MaxActive 6
+			SpawnCount 1
+			WaitForAllSpawned "wave03b"
+			WaitBeforeStarting 0
+			WaitBetweenSpawns 2
+			TotalCurrency 25
+			Support 1
+		
+			TFBot
+			{
+				Template T_TFBot_Sniper_Huntsman_Penetration
+			}
+		}
+		WaveSpawn	// 
+		{
+			Name "wave03cSupport"
+			Where spawnbot_flank
+			MaxActive 4
+			SpawnCount 1
+			WaitForAllSpawned "wave03cGiantScout"
+			WaitBeforeStarting 0
+			WaitBetweenSpawns 2
+			TotalCurrency 50
+			Support 1
+		
+			TFBot
+			{
+				Template T_TFBot_Sniper_Huntsman_Penetration
+			}
+		}
+	}
+	
+	Wave
+	{
+		StartWaveOutput
+		{
+			Target wave_start_relay
+			Action Trigger
+		}
+		DoneOutput
+		{
+			Target wave_finished_relay
+			Action Trigger
+		}
+		WaitWhenDone 65
+		Checkpoint Yes
+
+        // Subwave 1 (maxActive: 26)
+		// Giant Deflector HoK Heavy + Giant Uber Medic (4)
+		// Giant Rapid Fire Demoman (1)
+		// Strong Bonk Scout (12)
+		// Penetrator Huntsman (9)
+		WaveSpawn	// 
+		{
+			Name "wave04aGiant"
+			Where spawnbot
+			TotalCount 6
+			MaxActive 4
+			SpawnCount 2
+			WaitBeforeStarting 0
+			WaitBetweenSpawns 20
+			TotalCurrency 50
+
+			Squad
+			{
+				TFBot
+				{
+					Template T_TFBot_Giant_Heavy_Deflector_HealOnKill
+					CharacterAttributes
+					{
+						"airblast vertical vulnerability multiplier" 0.2
+						"airblast vulnerability multiplier" 0.2
+						"damage force reduction" 0.2
+					}
+				}
+				TFBot
+				{
+					Template T_TFBot_Giant_Medic_Shield_Regen
+					CharacterAttributes
+					{
+						"airblast vertical vulnerability multiplier" 0.2
+						"airblast vulnerability multiplier" 0.2
+						"damage force reduction" 0.2
+						"bot medic uber health threshold" 300
+					}
+				}
+			}
+		}
+		WaveSpawn	// 
+		{
+			Name "wave04aGiant"
+			Where spawnbot_flank
+			TotalCount 4
+			MaxActive 1
+			SpawnCount 1
+			WaitBeforeStarting 5
+			WaitBetweenSpawns 0
+			TotalCurrency 50
+
+			TFBot
+			{
+				Template T_TFBot_Giant_Demo_Spammer
+				Attributes	AlwaysCrit
+				CharacterAttributes
+				{
+					"airblast vertical vulnerability multiplier" 0.2
+					"airblast vulnerability multiplier" 0.2
+					"damage force reduction" 0.2
+				}
+			}
+		}
+		WaveSpawn	// 
+		{
+			Name "wave04a"
+			Where spawnbot_flank
+			TotalCount 24
+			MaxActive 12
+			SpawnCount 4
+			WaitBeforeStarting 0
+			WaitBetweenSpawns 3
+			TotalCurrency 50
+			Support Limited
+
+			TFBot	// Remove the Holy Mackerel and Bonk Boy items for less strain.
+			{
+				ClassIcon	scout_superbonk_hyper
+				Name	"Strong Bonk Scout"
+				Class	Scout
+				Skill	Expert
+				WeaponRestrictions	PrimaryOnly
+				Item	"Bonk! Atomic Punch"
+				Item	"Bonk Helm"
+				ItemAttributes
+				{
+					ItemName	TF_WEAPON_SCATTERGUN
+					"damage bonus" 2
+				}
+				CharacterAttributes
+				{
+					"move speed bonus" 2.0
+					"deploy time increased" 0.5
+				}
+			}
+		}
+		WaveSpawn	// 
+		{
+			Name "wave04a"
+			Where spawnbot
+			TotalCount 15
+			MaxActive 9
+			SpawnCount 3
+			WaitBeforeStarting 3
+			WaitBetweenSpawns 3
+			TotalCurrency 50
+
+			TFBot
+			{
+				Template T_TFBot_Sniper_Huntsman_Spammer_Penetration
+				// Attributes	AlwaysCrit
+			}
+		}
+
+		// Subwave 2 (maxActive: 26)
+		// Tank
+		// Colonel Barrage (4)
+		// Heal-on-Hit Deflector Heavy (12)
+		// Hyper Pyro (10)
+		WaveSpawn //
+		{
+			Name "wave04bTank"
+			TotalCount 1
+			WaitForAllSpawned "wave04aGiant"
+			WaitBeforeStarting 15
+			WaitBetweenSpawns 0
+			TotalCurrency 100
+			
+			FirstSpawnOutput
+			{
+				Target boss_spawn_relay
+				Action Trigger
+			}
+
+			Tank
+			{
+				Health 40000
+				Speed 75
+				Name "tankboss"
+				StartingPathTrackNode "boss_path_1"
+				OnKilledOutput
+				{
+					Target boss_dead_relay
+					Action Trigger
+				}
+				OnBombDroppedOutput
+				{
+					Target boss_deploy_relay
+					Action Trigger
+				}
+			}
+		}
+		WaveSpawn	// 
+		{
+			Name "wave04bGiant"
+			Where spawnbot
+			TotalCount 4
+			MaxActive 2
+			SpawnCount 1
+			WaitForAllSpawned "wave04aGiant"
+			WaitBeforeStarting 6
+			WaitBetweenSpawns 8
+			TotalCurrency 50
+
+			TFBot
+			{
+				Template T_TFBot_Giant_Soldier_SlowBarrage
+				CharacterAttributes
+				{
+					"airblast vertical vulnerability multiplier" 0.2
+					"airblast vulnerability multiplier" 0.2
+					"damage force reduction" 0.2
+				}
+			}
+		}
+		WaveSpawn	// 
+		{
+			Name "wave04bGiant"
+			Where spawnbot_flank
+			TotalCount 4
+			MaxActive 2
+			SpawnCount 1
+			WaitForAllSpawned "wave04aGiant"
+			WaitBeforeStarting 12
+			WaitBetweenSpawns 8
+			TotalCurrency 50
+
+			TFBot
+			{
+				Template T_TFBot_Giant_Soldier_SlowBarrage
+				CharacterAttributes
+				{
+					"airblast vertical vulnerability multiplier" 0.2
+					"airblast vulnerability multiplier" 0.2
+					"damage force reduction" 0.2
+				}
+			}
+		}
+		WaveSpawn	// 
+		{
+			Name "wave04b"
+			Where spawnbot_flank
+			TotalCount 28
+			MaxActive 12
+			SpawnCount 2
+			WaitForAllSpawned "wave04a"
+			WaitBeforeStarting 5
+			WaitBetweenSpawns 2
+			TotalCurrency 50
+
+			TFBot
+			{
+				Template T_TFBot_Heavy_Deflector_HoH
+			}
+		}
+
+		WaveSpawn	// 
+		{
+			Name "wave04b"
+			Where spawnbot
+			TotalCount 18
+			MaxActive 6
+			SpawnCount 2
+			WaitForAllSpawned "wave04a"
+			WaitBeforeStarting 8
+			WaitBetweenSpawns 2
+			TotalCurrency 50
+
+			TFBot
+			{
+				ClassIcon	pyro_hyper
+				Name	"Hyper Pyro"
+				Class	Pyro
+				Skill	Expert
+				WeaponRestrictions	PrimaryOnly
+				Item	"Blood Botkiller Flame Thrower Mk.I"
+				Item	"The Flamboyant Flamenco"
+				ItemAttributes
+				{
+					ItemName	"Blood Botkiller Flame Thrower Mk.I"
+					"damage bonus" 2.0
+					"airblast disabled" 1	// Experimental change, let's turn it off for now. If too easy, we can turn it on.
+				}
+				CharacterAttributes
+				{
+					"move speed bonus" 2.0
+				}
+			}
+		}
+		WaveSpawn	// 
+		{
+			Name "wave04b"
+			Where spawnbot
+			TotalCount 12
+			MaxActive 4
+			SpawnCount 2
+			WaitForAllSpawned "wave04a"
+			WaitBeforeStarting 8
+			WaitBetweenSpawns 2
+			TotalCurrency 50
+
+			TFBot
+			{
+				ClassIcon	pyro_hyper
+				Name	"Hyper Pyro"
+				Class	Pyro
+				Skill	Expert
+				WeaponRestrictions	PrimaryOnly
+				Item	"Blood Botkiller Flame Thrower Mk.I"
+				Item	"The Flamboyant Flamenco"
+				ItemAttributes
+				{
+					ItemName	"Blood Botkiller Flame Thrower Mk.I"
+					"damage bonus" 2.0
+					"airblast disabled" 1	// Experimental change, let's turn it off for now. If too easy, we can turn it on.
+				}
+				CharacterAttributes
+				{
+					"move speed bonus" 2.0
+				}
+			}
+		}
+		
+		// Subwave 3 (maxActive: 18)
+		// Giant Rapid Fire Demo + Giant Shield Medic (4)
+		// Armored Penetrator Bowman (6)
+		// Strong Bonk Scout [8]
+		// Concheror Soldier [14] -> Replaces Armored Penetrator Bowman
+
+		WaveSpawn	// 
+		{
+			Name "wave04cGiant"
+			Where spawnbot_flank
+			TotalCount 4
+			MaxActive 4
+			SpawnCount 2
+			WaitForAllSpawned "wave04bGiant"
+			WaitBeforeStarting 10
+			WaitBetweenSpawns 20
+			TotalCurrency 50
+
+			Squad
+			{
+				TFBot
+				{
+					Template T_TFBot_Giant_Demo_Spammer
+					Attributes	AlwaysCrit
+				}
+				TFBot
+				{
+					Template T_TFBot_Giant_Medic_Shield_Regen
+					CharacterAttributes
+					{
+						"airblast vertical vulnerability multiplier" 0.2
+						"airblast vulnerability multiplier" 0.2
+						"damage force reduction" 0.2
+						"bot medic uber health threshold" 300
+					}
+				}
+			}
+		}
+		WaveSpawn	// 
+		{
+			Name "wave04c"
+			Where spawnbot_flank
+			TotalCount 13
+			MaxActive 6
+			SpawnCount 1
+			WaitForAllSpawned "wave04b"
+			WaitBeforeStarting 4
+			WaitBetweenSpawns 2
+			TotalCurrency 50
+
+			TFBot
+			{
+				Template T_TFBot_Sniper_Huntsman_Spammer_Penetration
+			}
+		}
+		WaveSpawn	// 
+		{
+			Name "wave04c"
+			Where spawnbot_flank
+			MaxActive 8
+			SpawnCount 2
+			WaitForAllSpawned "wave04b"
+			WaitBeforeStarting 8
+			WaitBetweenSpawns 2
+			TotalCurrency 50
+			Support	1
+
+			TFBot	// Remove the Holy Mackerel and Bonk Boy items for less strain.
+			{
+				ClassIcon	scout_superbonk_hyper
+				Name	"Strong Bonk Scout"
+				Class	Scout
+				Skill	Expert
+				WeaponRestrictions	PrimaryOnly
+				Item	"Bonk! Atomic Punch"
+				Item	"Bonk Helm"
+				ItemAttributes
+				{
+					ItemName	TF_WEAPON_SCATTERGUN
+					"damage bonus" 2
+				}
+				CharacterAttributes
+				{
+					"move speed bonus" 2.0
+					"deploy time increased" 0.5
+				}
+			}
+		}
+		WaveSpawn	// 
+		{
+			Name "wave04c"
+			Where spawnbot
+			TotalCount 14
+			MaxActive 14
+			SpawnCount 2
+			WaitForAllSpawned "wave04b"
+			WaitBeforeStarting 8
+			WaitBetweenSpawns 2
+			TotalCurrency 50
+
+			TFBot
+			{
+				Template T_TFBot_Soldier_Extended_Concheror
+			}
+		}
+	}
+	Wave
+	{
+		StartWaveOutput
+		{
+			Target wave_start_relay
+			Action Trigger
+		}
+		DoneOutput
+		{
+			Target wave_finished_relay
+			Action Trigger
+		}
+		WaitWhenDone 65
+		Checkpoint Yes
+
+		// Subwave 1 (maxActive: 20)
+		// Giant Hyper Shotgun Soldier (6)
+		// Giant Hyper Conch Soldier + Uber Medic (2)
+		// Blast Soldier (18)
+
+		WaveSpawn	// 
+		{
+			Name "wave05aGiant"
+			Where spawnbot
+			TotalCount 12
+			MaxActive 6
+			SpawnCount 1
+			WaitBeforeStarting 0
+			WaitBetweenSpawns 5
+			TotalCurrency 50
+
+			TFBot
+			{
+				Template T_TFBot_Giant_Soldier_Shotgun_Hyper
+				CharacterAttributes
+				{
+					"airblast vertical vulnerability multiplier" 0.2
+					"airblast vulnerability multiplier" 0.2
+					"damage force reduction" 0.2
+				}
+			}
+		}
+		WaveSpawn	// 
+		{
+			Name "wave05aGiant"
+			Where spawnbot
+			TotalCount 6
+			MaxActive 2
+			SpawnCount 2
+			WaitBeforeStarting 5
+			WaitBetweenSpawns 0
+			TotalCurrency 50
+
+			Squad
+			{
+				TFBot
+				{
+					Template T_TFBot_Giant_Soldier_Conch_Hyper
+					CharacterAttributes
+					{
+						"airblast vertical vulnerability multiplier" 0.2
+						"airblast vulnerability multiplier" 0.2
+						"damage force reduction" 0.2
+					}
+				}
+				TFBot
+				{
+					Template T_TFBot_Medic_Shield_Extended
+				}
+			}
+		}
+		WaveSpawn	// 
+		{
+			Name "wave05a"
+			Where spawnbot
+			TotalCount 20
+			MaxActive 6
+			SpawnCount 2
+			WaitBeforeStarting 0
+			WaitBetweenSpawns 2
+			TotalCurrency 50
+
+			TFBot
+			{
+				Template T_TFBot_Soldier_Blast
+				Name	"Blast Soldier"
+				Attributes	AlwaysCrit
+			}
+		}
+		WaveSpawn	// 
+		{
+			Name "wave05a"
+			Where spawnbot_flank
+			TotalCount 30
+			MaxActive 12
+			SpawnCount 6
+			WaitBeforeStarting 0
+			WaitBetweenSpawns 5
+			TotalCurrency 50
+
+			Squad
+			{
+				TFBot
+				{
+					Template T_TFBot_Medic_Shield_Extended
+					FireWeapon [$SIGSEGV]	// Makes the shield auto-pop
+					{
+						Type "Special"
+						Duration 0.5
+						Delay 0.5
+						Repeats 0
+						Cooldown 0.5
+					}	
+				}
+				TFBot
+				{
+					Template T_TFBot_Soldier_Blast
+					Name	"Blast Soldier"
+					Attributes	AlwaysCrit
+				}
+				TFBot
+				{
+					Template T_TFBot_Soldier_Blast
+					Name	"Blast Soldier"
+					Attributes	AlwaysCrit
+				}
+				TFBot
+				{
+					Template T_TFBot_Soldier_Blast
+					Name	"Blast Soldier"
+					Attributes	AlwaysCrit
+				}
+				TFBot
+				{
+					Template T_TFBot_Soldier_Blast
+					Name	"Blast Soldier"
+					Attributes	AlwaysCrit
+				}
+				TFBot
+				{
+					Template T_TFBot_Soldier_Blast
+					Name	"Blast Soldier"
+					Attributes	AlwaysCrit
+				}
+				TFBot
+				{
+					Template T_TFBot_Soldier_Blast
+					Name	"Blast Soldier"
+					Attributes	AlwaysCrit
+				}
+			}
+		}
+
+		// Subwave 2 (maxActive: 26)
+		// Wastelander (5)
+		// Giant Pistol Scout (6)
+		// Ancient Dragon Pyro (9)
+		// Armored Blaster Scout (6)
+
+		WaveSpawn	// 
+		{
+			Name "wave05bGiant"
+			Where spawnbot_flank
+			TotalCount 8
+			MaxActive 5
+			SpawnCount 1
+			WaitForAllSpawned "wave05aGiant"
+			WaitBeforeStarting 10
+			WaitBetweenSpawns 6
+			TotalCurrency 50
+
+			TFBot
+			{
+				Template T_TFBot_Giant_Demo_Wastelander
+				Attributes	AlwaysCrit
+				CharacterAttributes
+				{
+					"airblast vertical vulnerability multiplier" 0.2
+					"airblast vulnerability multiplier" 0.2
+					"damage force reduction" 0.2
+				}
+			}
+		}
+		WaveSpawn	// 
+		{
+			Name "wave05bGiant"
+			Where spawnbot_flank
+			TotalCount 12
+			MaxActive 6
+			SpawnCount 1
+			WaitForAllSpawned "wave05aGiant"
+			WaitBeforeStarting 10
+			WaitBetweenSpawns 4
+			TotalCurrency 50
+
+			TFBot
+			{
+				Template T_TFBot_Giant_Scout_Pistol
+				Attributes	AlwaysCrit
+				CharacterAttributes
+				{
+					"airblast vertical vulnerability multiplier" 0.3
+					"airblast vulnerability multiplier" 0.3
+					"damage force reduction" 0.3
+				}
+			}
+		}
+		WaveSpawn	// 
+		{
+			Name "wave05b"
+			Where spawnbot
+			TotalCount 24
+			MaxActive 9
+			SpawnCount 3
+			WaitForAllSpawned "wave05a"
+			WaitBeforeStarting 10
+			WaitBetweenSpawns 3
+			TotalCurrency 50
+
+			TFBot
+			{
+				Template T_TFBot_Pyro_Dragon_Hyper
+			}
+		}
+		WaveSpawn	// 
+		{
+			Name "wave05b"
+			Where spawnbot_flank
+			TotalCount 10
+			MaxActive 6
+			SpawnCount 2
+			WaitForAllSpawned "wave05a"
+			WaitBeforeStarting 10
+			WaitBetweenSpawns 2
+			TotalCurrency 50
+			Support	Limited
+
+			TFBot
+			{
+				Template T_TFBot_Scout_Blaster_Pusher_Armored
+				Attributes	AlwaysCrit
+				Name	"Armored Blaster Scout"
+				ItemAttributes
+				{
+					ItemName	"Baby Face's Blaster"
+					"scattergun has knockback" 3
+					"bullets per shot bonus" 2
+				}
+			}
+		}
+
+		// Subwave 3 (maxActive: 26)
+		// Giant Hyper Pyro + Shield Uber Medic (4)
+		// Tanker Soldier (16)
+		// Armored Blaster Scout (6) -> [22] Replaces Tanker Soldier
+
+		WaveSpawn	// 
+		{
+			Name "wave05cGiant"
+			Where spawnbot
+			TotalCount 12
+			MaxActive 4
+			SpawnCount 2
+			WaitForAllSpawned "wave05b"
+			WaitBeforeStarting 10
+			WaitBetweenSpawns 10
+			TotalCurrency 50
+
+			Squad
+			{
+				TFBot	// Manual implementation to remove AlwaysCrit, makes this more fair.
+				{		// Crit bots with Backup rub me the wrong way, so I opted for this.
+					ClassIcon	pyro_hyper_giant
+					Health	4200
+					Name	"Giant Hyper Pyro"
+					Class	Pyro
+					Skill	Expert
+					WeaponRestrictions PrimaryOnly
+					Attributes	MiniBoss
+					Item	"Blood Botkiller Flame Thrower Mk.I"
+					Item	"The Flamboyant Flamenco"
+					ItemAttributes
+					{
+						ItemName	"Blood Botkiller Flame Thrower Mk.I"
+						"damage bonus" 2.0
+					}
+					CharacterAttributes
+					{
+						"move speed bonus" 0.75
+						"damage force reduction" 0.2
+						"airblast vulnerability multiplier" 0.2
+						"airblast vertical vulnerability multiplier" 0.2
+						"override footstep sound set" 6
+					}
+				}
+				TFBot
+				{
+					Template T_TFBot_Medic_Shield_Extended
+				}
+			}
+		}
+		WaveSpawn	// 
+		{
+			Name "wave05c"
+			Where spawnbot_flank
+			TotalCount 30
+			MaxActive 6
+			SpawnCount 1
+			WaitForAllSpawned "wave05b"
+			WaitBeforeStarting 10
+			WaitBetweenSpawns 1
+			TotalCurrency 50
+			Support	Limited
+
+			TFBot
+			{
+				Template T_TFBot_Scout_Blaster_Pusher_Armored
+				Name	"Armored Blaster Scout"
+				Attributes	AlwaysCrit
+				ItemAttributes
+				{
+					ItemName	"Baby Face's Blaster"
+					"scattergun has knockback" 3
+					"bullets per shot bonus" 2
+				}
+			}
+		}
+		WaveSpawn	// 
+		{
+			Name "wave05c"
+			Where spawnbot
+			TotalCount 14
+			MaxActive 8
+			SpawnCount 2
+			WaitForAllSpawned "wave05b"
+			WaitBeforeStarting 10
+			WaitBetweenSpawns 3
+			TotalCurrency 50
+
+			TFBot
+			{
+				Template T_TFBot_Soldier_Tanker
+			}
+		}
+		WaveSpawn	// 
+		{
+			Name "wave05c"
+			Where spawnbot
+			TotalCount 14
+			MaxActive 8
+			SpawnCount 2
+			WaitForAllSpawned "wave05b"
+			WaitBeforeStarting 10
+			WaitBetweenSpawns 3
+			TotalCurrency 50
+
+			TFBot
+			{
+				Template T_TFBot_Soldier_Tanker
+			}
+		}
+		WaveSpawn	// 
+		{
+			Name "wave05cSupport"
+			Where spawnbot
+			MaxActive 22
+			SpawnCount 2
+			WaitForAllSpawned "wave05c"
+			WaitBeforeStarting 20
+			WaitBetweenSpawns 1
+			TotalCurrency 50
+			Support	1
+
+			TFBot
+			{
+				Template T_TFBot_Scout_Blaster_Pusher_Armored
+				Name	"Armored Blaster Scout"
+				Attributes	AlwaysCrit
+				ItemAttributes
+				{
+					ItemName	"Baby Face's Blaster"
+					"scattergun has knockback" 3
+					"bullets per shot bonus" 2
+				}
+			}
+		}
+	}
+}
