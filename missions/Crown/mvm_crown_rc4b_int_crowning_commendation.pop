@@ -2,6 +2,8 @@
 #base	robot_standard.pop
 #base	robot_giant.pop
 
+//#base	custom_weapons_randomguy.pop
+//#base	overclock_cactus_general.pop
 // #base	robot_gatebot.pop
 // ^ Gatebot templates are all redefined here to add DisableDodge to them.
 WaveSchedule
@@ -14,30 +16,13 @@ WaveSchedule
 	AddSentryBusterWhenDamageDealtExceeds	3500
 	AddSentryBusterWhenKillCountExceeds		20
 
-	PointTemplates
-	{
-		MissionNamePT
-		{
-			OnSpawnOutput
-			{
-				Target BigNet
-				Action RunScriptCode
-				Param "
-						NetProps.SetPropString(Entities.FindByClassname(null, `tf_objective_resource`), `m_iszMvMPopfileName`, `(Intermediate) Crowning Commendation`)
-					  "
-			}
-		}
-	}
-
-	SpawnTemplate "MissionNamePT"
-
 	Templates	// This section is super unorganised because I modified this pop over like 4 years.
 	{
 		GateBoss_1
 		{
 			Class		Soldier
-			// ClassIcon	soldier_sergeant_crits_blast
-			ClassIcon	soldier_libertylauncher
+			ClassIcon	soldier_sergeant_crits_blast
+			// ClassIcon	soldier_libertylauncher
 			Health		35000	// 40000
 			Name		"Major Tosser"
 
@@ -67,14 +52,16 @@ WaveSchedule
 
 					ItemAttributes
 					{
-						ItemName							"The Liberty Launcher"
-						"damage blast push"					3
-						"damage penalty"					0.75
-						"fire rate bonus"					0.25
-						"clip size upgrade atomic"			16
-						"faster reload rate"				0.25
-						"Blast radius increased"			1.2
-						"projectile spread angle penalty"	5
+						ItemName						"The Liberty Launcher"
+						"damage blast push"				3
+						"damage penalty"				0.75
+						"fire rate bonus"				0.25
+						"clip size upgrade atomic"		16
+						"faster reload rate"			0.25
+						// "Blast radius decreased"			1.2
+						"Projectile speed decreased"	0.65
+						"Projectile speed increased"	1
+						//"projectile spread angle penalty"	5
 					}
 
 					CharacterAttributes
@@ -103,14 +90,16 @@ WaveSchedule
 
 					ItemAttributes
 					{
-						ItemName							"The Liberty Launcher"
-						"damage blast push"					3
-						"damage penalty"					0.75
-						"fire rate bonus"					0.25
-						"clip size upgrade atomic"			16
-						"faster reload rate"				0.25
-						"Blast radius increased"			1.2
-						"projectile spread angle penalty"	5
+						ItemName						"The Liberty Launcher"
+						"damage blast push"				3
+						"damage penalty"				0.75
+						"fire rate bonus"				0.25
+						"clip size upgrade atomic"		16
+						"faster reload rate"			0.25
+						// "Blast radius decreased"			1.2
+						"Projectile speed decreased"	0.65
+						"Projectile speed increased"	1
+						// "projectile spread angle penalty"	5
 					}
 
 					CharacterAttributes
@@ -664,6 +653,193 @@ WaveSchedule
 			}
 		}
 
+		T_TFGateBot_Sniper_Huntsman_Spammer_Nerf
+		{
+			Class		Sniper
+			Name		"Rapid Fire Bowman"
+			scale		1.5
+			Health		1200
+			ClassIcon	sniper_bow_multi
+
+			EventChangeAttributes
+			{
+				Default
+				{
+					Tag					nav_prefer_gate1_flank	// having these will cause bots to run towards gates
+					Tag					bot_gatebot	// having these will cause bots to run towards gates
+					BehaviorModifiers	push	// having these will cause bots to run towards gates
+					Attributes			IgnoreFlag	// having these will cause bots to run towards gates
+					Item				"MvM GateBot Light Sniper"
+					Item				"The Huntsman"
+					// Item				"Rifleman's Regalia"
+					Skill				Hard
+					Tag					bot_giant
+					Attributes			DisableDodge
+
+					ItemAttributes
+					{
+						ItemName			"The Huntsman"
+						"fire rate bonus"	0.6
+						"damage penalty"	0.5
+					}
+
+					CharacterAttributes
+					{
+						"head scale"		0.7
+						"move speed bonus"	0.85
+					}
+				}
+
+				RevertGateBotsBehavior
+				{
+					Item		"MvM GateBot Light Sniper"
+
+					ItemAttributes	// turn off light hat
+					{
+						ItemName				"MvM GateBot Light Sniper"
+						"item style override"	1
+					}
+					Item		"The Huntsman"
+					// Item	"Rifleman's Regalia"
+					Skill		Hard
+					Tag			bot_giant
+					Attributes	DisableDodge
+
+					ItemAttributes
+					{
+						ItemName			"The Huntsman"
+						"fire rate bonus"	0.6
+						"damage penalty"	0.5
+					}
+
+					CharacterAttributes
+					{
+						"head scale"		0.7
+						"move speed bonus"	0.85
+					}
+				}
+			}
+		}
+
+		T_TFGateBot_Giant_Soldier_SmallBurstHoming
+		{
+			Class		Soldier
+			Name		"Giant Super Salvo MKI"
+			ClassIcon	soldier_bazooka_homing_nys
+			Health		4200
+
+			EventChangeAttributes
+			{
+				Default
+				{
+					Tag					bot_gatebot	// having these will cause bots to run towards gates
+					Tag					nav_prefer_gate1_flank	// having these will cause bots to run towards gates
+					BehaviorModifiers	push	// having these will cause bots to run towards gates
+					Attributes			IgnoreFlag	// having these will cause bots to run towards gates
+					Item				"MvM GateBot Light Soldier"
+					Skill				Expert
+					WeaponRestrictions	PrimaryOnly
+					Attributes			MiniBoss
+					Attributes			HoldFireUntilFullReload
+					Tag					bot_giant
+					Attributes			DisableDodge
+
+					ItemAttributes
+					{
+						ItemName					TF_WEAPON_ROCKETLAUNCHER
+						"faster reload rate"		0.6
+						"fire rate bonus"			-1
+						"clip size upgrade atomic"	-1
+						//"Projectile speed increased"	0.65
+						"Blast radius decreased"	0.8
+						"projectile trail particle"	halloween_rockettrail
+					}
+
+					CharacterAttributes
+					{
+						"damage force reduction"			0.4
+						"airblast vulnerability multiplier"	0.4
+						"override footstep sound set"		3
+						"move speed bonus"					0.5
+					}
+
+					HomingRockets [$SIGSEGV]
+					{
+						IgnoreDisguisedSpies	1
+						IgnoreStealthedSpies	1
+						RocketSpeed				0.1
+						TurnPower				360
+						MaxAimError				360
+						AimTime					2
+						Acceleration			9999
+						AccelerationTime		9999
+						AccelerationStartTime	2
+					}
+
+					AddCond [$SIGSEGV]
+					{
+						Index	36
+						Delay	1
+					}
+				}
+
+				RevertGateBotsBehavior
+				{
+					Item				"MvM GateBot Light Soldier"
+
+					ItemAttributes	// turn off light hat
+					{
+						ItemName				"MvM GateBot Light Soldier"
+						"item style override"	1
+					}
+					Skill				Expert
+					WeaponRestrictions	PrimaryOnly
+					Attributes			MiniBoss
+					Attributes			HoldFireUntilFullReload
+					Tag					bot_giant
+					Attributes			DisableDodge
+
+					ItemAttributes
+					{
+						ItemName					TF_WEAPON_ROCKETLAUNCHER
+						"faster reload rate"		0.6
+						"fire rate bonus"			-1
+						"clip size upgrade atomic"	-1
+						//"Projectile speed increased"	0.65
+						"Blast radius decreased"	0.8
+						"projectile trail particle"	halloween_rockettrail
+					}
+
+					CharacterAttributes
+					{
+						"damage force reduction"			0.4
+						"airblast vulnerability multiplier"	0.4
+						"override footstep sound set"		3
+						"move speed bonus"					0.5
+					}
+
+					HomingRockets [$SIGSEGV]
+					{
+						IgnoreDisguisedSpies	1
+						IgnoreStealthedSpies	1
+						RocketSpeed				0.1
+						TurnPower				360
+						MaxAimError				360
+						AimTime					2
+						Acceleration			9999
+						AccelerationTime		9999
+						AccelerationStartTime	2
+					}
+
+					AddCond [$SIGSEGV]
+					{
+						Index	36
+						Delay	1
+					}
+				}
+			}
+		}
+
 		T_TFGateBot_Giant_Soldier_Spammer_Reload
 		{
 			Class		Soldier
@@ -691,7 +867,7 @@ WaveSchedule
 					{
 						ItemName						TF_WEAPON_ROCKETLAUNCHER
 						"move speed bonus"				0.5
-						"faster reload rate"			0.6
+						"faster reload rate"			0.7
 						"fire rate bonus"				0.1
 						"clip size upgrade atomic"		5.0
 						"Projectile speed increased"	0.65
@@ -725,7 +901,7 @@ WaveSchedule
 					{
 						ItemName						TF_WEAPON_ROCKETLAUNCHER
 						"move speed bonus"				0.5
-						"faster reload rate"			0.6
+						"faster reload rate"			0.7
 						"fire rate bonus"				0.1
 						"clip size upgrade atomic"		5.0
 						"Projectile speed increased"	0.65
@@ -741,12 +917,63 @@ WaveSchedule
 			}
 		}
 
+		T_TFBot_Giant_Soldier_BurstHoming
+		{
+			Class				Soldier
+			Name				"Giant Super Salvo MKII"
+			ClassIcon			soldier_burstfire_homing_nys
+			Health				4200
+			Skill				Expert
+			WeaponRestrictions	PrimaryOnly
+			Attributes			MiniBoss
+			Attributes			HoldFireUntilFullReload
+			Tag					bot_giant
+
+			ItemAttributes
+			{
+				ItemName					TF_WEAPON_ROCKETLAUNCHER
+				"faster reload rate"		0.6
+				"fire rate bonus"			-1
+				"clip size upgrade atomic"	5
+				//"Projectile speed increased"	0.65
+				"Blast radius decreased"	0.8
+				"projectile trail particle"	halloween_rockettrail
+			}
+
+			CharacterAttributes
+			{
+				"damage force reduction"			0.4
+				"airblast vulnerability multiplier"	0.4
+				"override footstep sound set"		3
+				"move speed bonus"					0.5
+			}
+
+			HomingRockets [$SIGSEGV]
+			{
+				IgnoreDisguisedSpies	1
+				IgnoreStealthedSpies	1
+				RocketSpeed				0.1
+				TurnPower				360
+				MaxAimError				360
+				AimTime					2
+				Acceleration			9999
+				AccelerationTime		9999
+				AccelerationStartTime	2
+			}
+
+			AddCond [$SIGSEGV]
+			{
+				Index	36
+				Delay	1
+			}
+		}
+
 		T_TFGateBot_Giant_Demo
 		{
-			Class	Demoman
-			Name	"Giant Rapid Fire Demoman"
-			// ClassIcon	demo_spammer
-			Health	3300
+			Class		Demoman
+			Name		"Giant Rapid Fire Demoman"
+			ClassIcon	demo_spammer
+			Health		3300
 
 			EventChangeAttributes
 			{
@@ -863,10 +1090,10 @@ WaveSchedule
 
 		T_TFGateBot_Demoman_Normal_Loch
 		{
-			Class	Demoman
-			Name	Loch-N-Demo
+			Class		Demoman
+			Name		Loch-N-Demo
+			ClassIcon	demo_loch_nys
 
-			// ClassIcon	demo_loch_nys
 			EventChangeAttributes
 			{
 				Default
@@ -998,7 +1225,9 @@ WaveSchedule
 						"fire rate bonus"					0.25
 						"clip size upgrade atomic"			5
 						"faster reload rate"				0.2
-						"Blast radius decreased"			1.2
+						// "Blast radius decreased"			1.2
+						"Projectile speed decreased"		0.65
+						"Projectile speed increased"		1
 						"projectile spread angle penalty"	4
 					}
 
@@ -1036,7 +1265,9 @@ WaveSchedule
 						"fire rate bonus"					0.25
 						"clip size upgrade atomic"			5
 						"faster reload rate"				0.2
-						"Blast radius decreased"			1.2
+						// "Blast radius decreased"			1.2
+						"Projectile speed decreased"		0.65
+						"Projectile speed increased"		1
 						"projectile spread angle penalty"	4
 					}
 
@@ -1174,6 +1405,7 @@ WaveSchedule
 			Action	RunScriptCode
 			Param	"
 			IncludeScript(`mvm_crown_smalltank_randomguy`)
+			IncludeScript(`tank_hp_shower`)
 			"
 		}
 
@@ -1279,6 +1511,7 @@ WaveSchedule
 					// "override footstep sound set"		4
 					// }
 					Template	T_TFBot_Giant_Demoman
+					ClassIcon	demo_spammer
 				}
 
 				TFBot
@@ -1336,7 +1569,7 @@ WaveSchedule
 			{
 				Template	T_TFBot_Scout_Melee
 				Name		"Bat Scout"
-				ClassIcon	scout_bat
+				ClassIcon	scout_bat_nys
 			}
 		}
 
@@ -1359,12 +1592,15 @@ WaveSchedule
 			{
 				// Template	T_TFBot_Giant_HeavyWeapons
 				// Name				"Giant Winter-Bitten Heavy"	// "Giant Burst Shotgun Heavy"
-				Name				"Giant Burst Fire Shotgun Heavy"
-				Class				Heavyweapons
-				// ClassIcon			heavy_shotgun_burst_lite
-				ClassIcon			heavy_shotgun
+				// Name				"Giant Burst Fire Shotgun Heavy"
+				Name				"Giant Burst Fire Shotgun Pyro"
+				// Class				Heavyweapons
+				Class				Pyro
+				ClassIcon			heavy_shotgun_burst_lite
+				// ClassIcon			heavy_shotgun
 				Skill				Expert
-				Health				5000
+				// Health				5000
+				Health				3000
 				Attributes			MiniBoss
 				MaxVisionRange		1000
 				WeaponRestrictions	SecondaryOnly
@@ -1373,7 +1609,7 @@ WaveSchedule
 
 				ItemAttributes
 				{
-					ItemName					TF_WEAPON_SHOTGUN_HWG
+					ItemName					TF_WEAPON_SHOTGUN_PYRO
 					"fire rate bonus"			0.2
 					"bullets per shot bonus"	2	// 3.33
 					"damage penalty"			0.33
@@ -1384,7 +1620,7 @@ WaveSchedule
 
 				CharacterAttributes
 				{
-					"move speed bonus"					0.7
+					"move speed bonus"					0.6	// 7
 					"damage force reduction"			0.3
 					"airblast vulnerability multiplier"	0.3
 					"override footstep sound set"		2
@@ -1464,6 +1700,7 @@ WaveSchedule
 			TFBot
 			{
 				Template	T_TFGateBot_Scout_SodaPopper	// T_TFGateBot_Scout_FAN_Stock
+				ClassIcon	scout_pop
 			}
 		}
 
@@ -1520,11 +1757,11 @@ WaveSchedule
 
 			TFBot
 			{
-				Class	Demoman
-				Skill	Normal
-				Item	"The Loch-n-Load"
-				Name	Loch-N-Demo
-				// ClassIcon	demo_loch_nys
+				Class		Demoman
+				Skill		Normal
+				Item		"The Loch-n-Load"
+				Name		Loch-N-Demo
+				ClassIcon	demo_loch_nys
 			}
 		}
 
@@ -1583,6 +1820,13 @@ WaveSchedule
 			TFBot
 			{
 				Template	T_TFBot_Giant_Soldier_RocketPush
+
+				ItemAttributes
+				{
+					ItemName						"The Liberty Launcher"
+					"Blast radius decreased"		1
+					"Projectile speed decreased"	0.7
+				}
 				Tag			bot_giant
 			}
 		}
@@ -1603,25 +1847,27 @@ WaveSchedule
 
 			RandomChoice
 			{
+				Shuffle	1 [$SIGSEGV]
+
 				TFBot
 				{
 					Template	T_TFBot_Scout_Melee
 					Name		"Bat Scout"
-					ClassIcon	scout_bat	// T_TFGateBot_Scout_Melee
+					ClassIcon	scout_bat_nys	// T_TFGateBot_Scout_Melee
 				}
 
 				TFBot
 				{
 					Template	T_TFBot_Scout_Melee
 					Name		"Bat Scout"
-					ClassIcon	scout_bat
+					ClassIcon	scout_bat_nys
 				}
 
 				TFBot
 				{
 					Template	T_TFBot_Scout_Melee
 					Name		"Bat Scout"
-					ClassIcon	scout_bat
+					ClassIcon	scout_bat_nys
 				}
 
 				// TFBot
@@ -1632,22 +1878,22 @@ WaveSchedule
 				{
 					// Class	Scout
 					// Skill	Easy	// Normal
-					Class	Demoman
-					Skill	Normal
-					Item	"The Loch-n-Load"
-					Name	Loch-N-Demo
-					// ClassIcon	demo_loch_nys
+					Class		Demoman
+					Skill		Normal
+					Item		"The Loch-n-Load"
+					Name		Loch-N-Demo
+					ClassIcon	demo_loch_nys
 				}
 
 				TFBot
 				{
 					// Class	Scout
 					// Skill	Easy	// Normal
-					Class	Demoman
-					Skill	Normal
-					Item	"The Loch-n-Load"
-					Name	Loch-N-Demo
-					// ClassIcon	demo_loch_nys
+					Class		Demoman
+					Skill		Normal
+					Item		"The Loch-n-Load"
+					Name		Loch-N-Demo
+					ClassIcon	demo_loch_nys
 				}
 			}
 		}
@@ -1748,8 +1994,8 @@ WaveSchedule
 
 			TFBot
 			{
-				Template	T_TFGateBot_Giant_Soldier_Spammer_Reload	// _RocketShotgun
-				Name		"Giant Burst Fire Soldier"	// the name given is wrong
+				Template	T_TFGateBot_Giant_Soldier_SmallBurstHoming	//T_TFGateBot_Giant_Soldier_Spammer_Reload	// _RocketShotgun
+				//Name		"Giant Burst Fire Soldier"	// the name given is wrong
 			}
 		}
 
@@ -1764,8 +2010,8 @@ WaveSchedule
 			MaxActive			10
 			SpawnCount			5
 			WaitBeforeStarting	5
-			WaitBetweenSpawns	18
-			TotalCurrency		150
+			WaitBetweenSpawns	15	// 18
+			TotalCurrency		450	//150
 
 			Squad
 			{
@@ -1779,8 +2025,8 @@ WaveSchedule
 				{
 					Template	T_TFBot_Pyro_FlareGun
 					Name		"Rapid Flare Pyro"
+					ClassIcon	pyro_flare_spammer
 
-					// ClassIcon	pyro_flare_spammer
 					ItemAttributes
 					{
 						ItemName				"The Flare Gun"
@@ -1793,8 +2039,8 @@ WaveSchedule
 				{
 					Template	T_TFBot_Pyro_FlareGun
 					Name		"Rapid Flare Pyro"
+					ClassIcon	pyro_flare_spammer
 
-					// ClassIcon	pyro_flare_spammer
 					ItemAttributes
 					{
 						ItemName				"The Flare Gun"
@@ -1807,8 +2053,8 @@ WaveSchedule
 				{
 					Template	T_TFBot_Pyro_FlareGun
 					Name		"Rapid Flare Pyro"
+					ClassIcon	pyro_flare_spammer
 
-					// ClassIcon	pyro_flare_spammer
 					ItemAttributes
 					{
 						ItemName				"The Flare Gun"
@@ -1821,8 +2067,8 @@ WaveSchedule
 				{
 					Template	T_TFBot_Pyro_FlareGun
 					Name		"Rapid Flare Pyro"
+					ClassIcon	pyro_flare_spammer
 
-					// ClassIcon	pyro_flare_spammer
 					ItemAttributes
 					{
 						ItemName				"The Flare Gun"
@@ -1833,7 +2079,7 @@ WaveSchedule
 			}
 		}
 
-		WaveSpawn	// WHY ARE THESE GUYS SO GOOD?
+		WaveSpawn
 		{
 			Name				stage2
 			WaitForAllDead		stage1_2
@@ -1844,7 +2090,7 @@ WaveSchedule
 			MaxActive			8	// 10
 			SpawnCount			2
 			WaitBeforeStarting	5
-			WaitBetweenSpawns	11	// 9
+			WaitBetweenSpawns	8	// 11	// 9
 			TotalCurrency		100
 
 			Squad
@@ -1861,8 +2107,6 @@ WaveSchedule
 				}
 			}
 		}
-
-		// Bro these things stink.
 		// moved to mission supp
 		// WaveSpawn
 		// {
@@ -1900,57 +2144,54 @@ WaveSchedule
 		// Attributes	IgnoreFlag
 		// }
 		// }
-		WaveSpawn
-		{
-			Name				stage3
-			WaitForAllDead		stage2
-			Where				spawnbot_main_0
-			Where				spawnbot_main_1
-			TotalCount			6	// 3	// 4
-			MaxActive			6	// 3	// 4
-			SpawnCount			2	// 1
-			WaitBeforeStarting	5
-			WaitBetweenSpawns	15
-			TotalCurrency		200
-
-			Squad
-			{
-				TFBot
-				{
-					// Template	T_TFBot_Giant_Scout_Baseball_Armored
-					Template	T_TFBot_Giant_Pyro
-					Tag			bot_giant
-				}
-
-				TFBot
-				{
-					Template	T_TFBot_Medic_QuickUber
-				}
-			}
-		}
-
-		WaveSpawn
-		{
-			Name				support
-			WaitForAllDead		stage2
-			Where				spawnbot_all_0
-			Where				spawnbot_all_1
-			TotalCount			100
-			MaxActive			10
-			SpawnCount			2
-			WaitBeforeStarting	0
-			WaitBetweenSpawns	2	// 3
-			RandomSpawn			1
-			Support				1
-			TotalCurrency		100
-
-			TFBot
-			{
-				Class	Demoman
-				Skill	Normal
-				// Attributes	AlwaysFireWeapon
-			}
-		}
+		// WaveSpawn
+		// {
+		// 	Name				stage3
+		// 	WaitForAllDead		stage2
+		// 	Where				spawnbot_main_0
+		// 	Where				spawnbot_main_1
+		// 	TotalCount			6	// 3	// 4
+		// 	MaxActive			6	// 3	// 4
+		// 	SpawnCount			2	// 1
+		// 	WaitBeforeStarting	5
+		// 	WaitBetweenSpawns	15
+		// 	TotalCurrency		200
+		// 	Squad
+		// 	{
+		// 		TFBot
+		// 		{
+		// 			// Template	T_TFBot_Giant_Scout_Baseball_Armored
+		// 			Template	T_TFBot_Giant_Pyro
+		// 			Attributes	AlwaysFireWeapon
+		// 			Tag			bot_giant
+		// 		}
+		// 		TFBot
+		// 		{
+		// 			Template	T_TFBot_Medic_QuickUber
+		// 		}
+		// 	}
+		// }
+		// WaveSpawn
+		// {
+		// 	Name				support
+		// 	WaitForAllDead		stage2
+		// 	Where				spawnbot_all_0
+		// 	Where				spawnbot_all_1
+		// 	TotalCount			100
+		// 	MaxActive			10
+		// 	SpawnCount			2
+		// 	WaitBeforeStarting	0
+		// 	WaitBetweenSpawns	3	// 2	// 3
+		// 	RandomSpawn			1
+		// 	Support				1
+		// 	TotalCurrency		100
+		// 	TFBot
+		// 	{
+		// 		Class	Demoman
+		// 		Skill	Normal
+		// 		// Attributes	AlwaysFireWeapon
+		// 	}
+		// }
 	}
 
 	// WAVE 4 //////////CURRENCY 1200///////////////////////////////////
@@ -2041,12 +2282,12 @@ WaveSchedule
 
 				TFBot
 				{
-					Template	T_TFGateBot_Sniper_Huntsman_Spammer
+					Template	T_TFGateBot_Sniper_Huntsman_Spammer_Nerf
 				}
 
 				TFBot
 				{
-					Template	T_TFGateBot_Sniper_Huntsman_Spammer
+					Template	T_TFGateBot_Sniper_Huntsman_Spammer_Nerf
 				}
 			}
 		}
@@ -2067,7 +2308,7 @@ WaveSchedule
 
 			TFBot
 			{
-				Template	T_TFGateBot_Sniper_Huntsman_Spammer
+				Template	T_TFGateBot_Sniper_Huntsman_Spammer_Nerf
 			}
 		}
 
@@ -2215,6 +2456,7 @@ WaveSchedule
 				TFBot
 				{
 					Template	T_TFBot_Giant_Soldier_Spammer_Reload
+					ClassIcon	soldier_burstfire_directhit_yoovy
 					// ClassIcon	soldier_directhit_spammer
 					Item		"The Direct Hit"
 
@@ -2374,7 +2616,7 @@ WaveSchedule
 
 			TFBot
 			{
-				Template	T_TFBot_Giant_Scout_Baseball_Armored	// T_TFGateBot_Giant_Scout_Baseball_Armored
+				Template	T_TFBot_Giant_Scout_Baseball	//T_TFBot_Giant_Scout_Baseball_Armored	// T_TFGateBot_Giant_Scout_Baseball_Armored
 				Tag			bot_giant
 			}
 		}
@@ -2398,7 +2640,7 @@ WaveSchedule
 				Template			T_TFBot_Scout_Bonk
 				WeaponRestrictions	PrimaryOnly
 				Skill				Easy
-				// ClassIcon			scout_bonk_scatter
+				ClassIcon			scout_bonk_scatter
 			}
 		}
 
@@ -2440,7 +2682,7 @@ WaveSchedule
 			// {
 			TFBot
 			{
-				Template	T_TFBot_Giant_Soldier_Spammer_Reload
+				Template	T_TFBot_Giant_Soldier_BurstHoming	//T_TFBot_Giant_Soldier_Spammer_Reload
 				Tag			bot_giant
 			}
 			// TFBot
@@ -2595,8 +2837,8 @@ WaveSchedule
 				CharacterAttributes
 				{
 					"move speed bonus"					0.5
-					"damage force reduction"			0.0
-					"airblast vulnerability multiplier"	0.0
+					"damage force reduction"			0.4
+					"airblast vulnerability multiplier"	0.4
 					"override footstep sound set"		6
 				}
 			}
@@ -2638,6 +2880,12 @@ WaveSchedule
 				Name		"Rapid Fire Bowman"
 				ClassIcon	sniper_bow_multi
 				Skill		Hard
+
+				ItemAttributes
+				{
+					Itemname			"The Huntsman"
+					"damage penalty"	0.5
+				}
 			}
 		}
 
