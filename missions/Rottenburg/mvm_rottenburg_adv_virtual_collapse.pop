@@ -13,23 +13,6 @@ WaveSchedule
 	CanBotsAttackWhileInSpawnRoom no
 	Advanced 1
 
-	PointTemplates
-	{
-		MissionNamePT
-		{
-			OnSpawnOutput
-			{
-				Target BigNet
-				Action RunScriptCode
-				Param "
-						NetProps.SetPropString(Entities.FindByClassname(null, `tf_objective_resource`), `m_iszMvMPopfileName`, `(Advanced) Virtual Collapse`)
-					  "
-			}
-		}
-	}
-
-	SpawnTemplate "MissionNamePT"
-
 	Templates
 	{
 		T_TFBot_Scout_Extended_Buff_Banner
@@ -47,19 +30,35 @@ WaveSchedule
 			}
 		}
 
-		T_TFBot_Demoman_ClusterBomb_Delayed
+		T_TFBot_Giant_Soldier_Blackbox_Almost
 		{
-			Class Demoman
-			ClassIcon demo_clusterbomb_delay
-			Name "Cluster Bomb Demoman"
-			Skill Hard
-			Item "The Iron Bomber"
+			Class Soldier
+			ClassIcon soldier_blackbox_giant
+			Name "Giant Almost Black Box Soldier"
+			Health 4200
+			Item "The Black Box"
+			Skill Expert
+			Attributes MiniBoss
+			WeaponRestrictions PrimaryOnly
+			//Attributes HoldFireUntilFullReload
 			ItemAttributes
 			{
-				ItemName "The Iron Bomber"
-				"faster reload rate" 1.25
-				"fire rate bonus" 0.15
-				"fuse bonus" 1.5
+				ItemName "The Black Box"
+				"fire rate bonus" 0.001
+				"clip size upgrade atomic" 0
+				"faster reload rate" 1.7
+				//"blast radius increased" 1.25
+				//"Projectile speed increased" 0.4
+				"projectile spread angle penalty" 4
+				"heal on hit for rapidfire" 1000
+			}
+			CharacterAttributes
+			{
+				"move speed bonus"    0.5
+				"damage force reduction" 0.4
+				"airblast vulnerability multiplier" 0.4
+				"override footstep sound set" 3
+				"Projectile speed increased" 0.9
 			}
 		}
 
@@ -209,7 +208,7 @@ WaveSchedule
 				local ent = Entities.FindByClassname(null, `tf_objective_resource`)
 				if (ent)
 				{
-					NetProps.SetPropString(ent, `m_iszMvMPopfileName`, `Virtual Collapse (Advanced)`)
+					//NetProps.SetPropString(ent, `m_iszMvMPopfileName`, `Virtual Collapse (Advanced)`)
 				}
 			"
 		}
@@ -223,8 +222,9 @@ WaveSchedule
 			TotalCount 20
 			MaxActive 8
 			SpawnCount 4
+			WaitBeforeStarting 1
 			WaitBetweenSpawns 6
-			TotalCurrency 125
+			TotalCurrency 75
 
 			TFBot
 			{
@@ -236,10 +236,27 @@ WaveSchedule
 		WaveSpawn
 		{
 			Where spawnbot
+			TotalCount 3
+			MaxActive 3
+			SpawnCount 1
+			WaitBeforeStarting 0
+			WaitBetweenSpawns 20
+			TotalCurrency 50
+
+			TFBot
+			{
+				Template T_TFBot_Giant_Boxing_Heavy
+			}
+		}
+
+		WaveSpawn
+		{
+			Where spawnbot
 			Name "01"
 			TotalCount 12
 			MaxActive 6
 			SpawnCount 3
+			WaitBeforeStarting 1
 			WaitBetweenSpawns 4.5
 			TotalCurrency 50
 
@@ -257,6 +274,7 @@ WaveSchedule
 			TotalCount 4
 			MaxActive 2
 			SpawnCount 1
+			WaitBeforeStarting 1
 			WaitBetweenSpawns 4.5
 			TotalCurrency 50
 
@@ -271,16 +289,16 @@ WaveSchedule
 			Where flankers
 			Name "01"
 			WaitBeforeStarting 11
-			TotalCount 12
+			TotalCount 16
 			MaxActive 8
 			SpawnCount 4
 			WaitBetweenSpawns 7
-			TotalCurrency 125
+			TotalCurrency 75
 
 			TFBot
 			{
-				Template T_TFBot_Scout_Melee
-				ClassIcon scout_bat_nys
+				Class Scout
+				Skill Easy
 			}
 		}
 
@@ -333,7 +351,7 @@ WaveSchedule
 			SpawnCount 2
 			WaitBeforeStarting 16
 			WaitBetweenSpawns 7
-			TotalCurrency 75
+			TotalCurrency 50
 
 			TFBot
 			{
@@ -352,23 +370,23 @@ WaveSchedule
 			SpawnCount 3
 			WaitBetweenSpawns 21
 			WaitBeforeStarting 18
-			TotalCurrency 150
+			TotalCurrency 125
 
 			Squad
 			{
 				TFBot
 				{
-					Template T_TFBot_Giant_Soldier
+					Template T_TFBot_Giant_Soldier_BigrockBurstNoDamage
 				}
 
 				TFBot
 				{
-					Template T_TFBot_Medic_BigHeal
+					Template T_TFBot_Medic_Kritzkrieg
 				}
 
 				TFBot
 				{
-					Template T_TFBot_Medic_BigHeal
+					Template T_TFBot_Medic_Kritzkrieg
 				}
 			}
 		}
@@ -378,9 +396,9 @@ WaveSchedule
 			Where spawnbot
 			Name "03"
 			WaitForAllSpawned "02"
-			TotalCount 18
-			MaxActive 12
-			SpawnCount 6
+			TotalCount 15
+			MaxActive 10
+			SpawnCount 5
 			WaitBetweenSpawns 5
 			WaitBeforeStarting 8
 			TotalCurrency 50
@@ -457,7 +475,7 @@ WaveSchedule
 				local ent = Entities.FindByClassname(null, `tf_objective_resource`)
 				if (ent)
 				{
-					NetProps.SetPropString(ent, `m_iszMvMPopfileName`, `Virtual Collapse (Advanced)`)
+					//NetProps.SetPropString(ent, `m_iszMvMPopfileName`, `Virtual Collapse (Advanced)`)
 				}
 			"
 		}
@@ -484,7 +502,11 @@ WaveSchedule
 
 				TFBot
 				{
-					Template T_TFBot_Medic_QuickFix
+					Template T_TFBot_Medic_Bullet
+					CharacterAttributes
+					{
+						"mod weapon blocks healing" 1
+					}
 				}
 			}
 		}
@@ -510,16 +532,28 @@ WaveSchedule
 		{
 			Where spawnbot
 			Name "01"
-			TotalCount 1
-			MaxActive 1
-			SpawnCount 1
+			TotalCount 2
+			MaxActive 2
+			SpawnCount 2
 			WaitBeforeStarting 2
 			WaitBetweenSpawns 14
 			TotalCurrency 25
 
-			TFBot
+			Squad
 			{
-				Template T_TFBot_Giant_Soldier_Extended_Concheror
+				TFBot
+				{
+					Template T_TFBot_Giant_Soldier_Extended_Concheror
+				}
+
+				TFBot
+				{
+					Template T_TFBot_Medic_Bullet
+					CharacterAttributes
+					{
+						"mod weapon blocks healing" 1
+					}
+				}
 			}
 		}
 
@@ -580,7 +614,11 @@ WaveSchedule
 
 				TFBot
 				{
-					Template T_TFBot_Medic_BigHeal
+					Template T_TFBot_Medic_Bullet
+					CharacterAttributes
+					{
+						"mod weapon blocks healing" 1
+					}
 				}
 			}
 		}
@@ -592,7 +630,7 @@ WaveSchedule
 			TotalCount 1
 			MaxActive 1
 			SpawnCount 1
-			WaitBeforeStarting 25
+			WaitBeforeStarting 10
 			TotalCurrency 150
 
 			FirstSpawnOutput
@@ -627,14 +665,14 @@ WaveSchedule
 			Where spawnbot
 			Name "03_Giants"
 			WaitForAllSpawned "02"
-			TotalCount 8
-			MaxActive 8
-			SpawnCount 2
-			WaitBeforeStarting 35
-			WaitBetweenSpawns 12
-			TotalCurrency 220
+			TotalCount 4
+			MaxActive 4
+			SpawnCount 1
+			WaitBeforeStarting 15
+			WaitBetweenSpawns 10
+			TotalCurrency 110
 
-			Squad
+			RandomChoice
 			{
 				TFBot
 				{
@@ -644,8 +682,28 @@ WaveSchedule
 
 				TFBot
 				{
-					Template T_TFBot_Soldier_Extended_Concheror
+					Template T_TFBot_Giant_Pyro
+					Attributes AlwaysCrit
+					Attributes AlwaysFireWeapon
 				}
+			}
+		}
+
+		WaveSpawn
+		{
+			Where spawnbot
+			Name "03_Giants"
+			WaitForAllSpawned "02"
+			TotalCount 21
+			MaxActive 6
+			SpawnCount 3
+			WaitBeforeStarting 8
+			WaitBetweenSpawns 3
+			TotalCurrency 110
+
+			TFBot
+			{
+				Template T_TFBot_Soldier_Extended_Concheror
 			}
 		}
 
@@ -654,10 +712,10 @@ WaveSchedule
 			Where flankers
 			Name "03"
 			WaitForAllSpawned "02"
-			TotalCount 20
+			TotalCount 25
 			MaxActive 10
-			SpawnCount 10
-			WaitBeforeStarting 42
+			SpawnCount 5
+			WaitBeforeStarting 18
 			WaitBetweenSpawns 5
 			TotalCurrency 80
 
@@ -672,10 +730,10 @@ WaveSchedule
 			Where spawnbot
 			Name "04"
 			WaitForAllSpawned "03_Giants"
-			TotalCount 6
-			MaxActive 6
-			SpawnCount 3
-			WaitBeforeStarting 20
+			TotalCount 8
+			MaxActive 8
+			SpawnCount 4
+			WaitBeforeStarting 13
 			WaitBetweenSpawns 13
 			TotalCurrency 100
 
@@ -683,7 +741,13 @@ WaveSchedule
 			{
 				TFBot
 				{
-					Template T_TFBot_Giant_Demo_RapidFire
+					Template T_TFBot_Giant_Demoman
+					ClassIcon demo_spammer
+				}
+
+				TFBot
+				{
+					Template T_TFBot_Medic
 				}
 
 				TFBot
@@ -771,10 +835,12 @@ WaveSchedule
 					IncludeScript(`mvm_rottenburg_virtual_collapse`, getroottable())
 				}
 
+				TankExt.AddTankIcon(1, `tank_targe`, `targetank_color`)
+
 				local ent = Entities.FindByClassname(null, `tf_objective_resource`)
 				if (ent)
 				{
-					NetProps.SetPropString(ent, `m_iszMvMPopfileName`, `Virtual Collapse (Advanced)`)
+					//NetProps.SetPropString(ent, `m_iszMvMPopfileName`, `Virtual Collapse (Advanced)`)
 				}
 			"
 		}
@@ -855,6 +921,8 @@ WaveSchedule
 				TFBot
 				{
 					Template T_TFBot_Medic_BigHeal_Armored
+					Item "The Razorback"
+					Name "Did FraHtcy3 touch this mission?"
 				}
 			}
 		}
@@ -862,18 +930,24 @@ WaveSchedule
 		WaveSpawn
 		{
 			Where flankers
-			Name "02"
+			Name "02_S"
 			WaitForAllSpawned "01"
 			TotalCount 12
 			MaxActive 8
 			SpawnCount 4
 			WaitBeforeStarting 5
-			WaitBetweenSpawns 13
+			WaitBetweenSpawns 14
 			TotalCurrency 40
+			Support Limited
 
 			TFBot
 			{
 				Template T_TFBot_Scout_Milk_Melee
+				ClassIcon scout_milk_slowdown
+				CharacterAttributes
+				{
+					"applies snare effect" 0.65
+				}
 			}
 		}
 
@@ -925,7 +999,7 @@ WaveSchedule
 			SpawnCount 4
 			WaitBeforeStarting 12
 			WaitBetweenSpawns 10
-			TotalCurrency 100
+			TotalCurrency 75
 
 			Squad
 			{
@@ -960,7 +1034,7 @@ WaveSchedule
 			MaxActive 1
 			SpawnCount 1
 			WaitBeforeStarting 6
-			TotalCurrency 250
+			TotalCurrency 175
 
 			FirstSpawnOutput
 			{
@@ -981,7 +1055,7 @@ WaveSchedule
 				Speed 75
 				Name "targetank_color"
 				StartingPathTrackNode "tank_path_b_10"
-				ClassIcon tank_targe [$SIGSEGV]
+				//ClassIcon tank_targe [$SIGSEGV]
 
 				OnKilledOutput
 				{
@@ -1002,11 +1076,11 @@ WaveSchedule
 			Where spawnbot
 			Name "04"
 			WaitForAllSpawned "03"
-			TotalCount 12
-			MaxActive 6
-			SpawnCount 3
+			TotalCount 20
+			MaxActive 8
+			SpawnCount 4
 			WaitBeforeStarting 28
-			WaitBetweenSpawns 6
+			WaitBetweenSpawns 5
 			TotalCurrency 25
 			Support 1
 
@@ -1022,18 +1096,22 @@ WaveSchedule
 			Where flankers
 			Name "04"
 			WaitForAllSpawned "03"
-			TotalCount 12
+			TotalCount 20
 			MaxActive 8
 			SpawnCount 4
 			WaitBeforeStarting 17
-			WaitBetweenSpawns 5
+			WaitBetweenSpawns 10
 			TotalCurrency 50
 			Support 1
 
 			TFBot
 			{
-				Template T_TFBot_Scout_Melee
-				ClassIcon scout_bat_nys
+				Template T_TFBot_Scout_Milk_Melee
+				ClassIcon scout_milk_slowdown
+				CharacterAttributes
+				{
+					"applies snare effect" 0.65
+				}
 			}
 		}
 
@@ -1053,7 +1131,8 @@ WaveSchedule
 			{
 				TFBot
 				{
-					Template T_TFBot_Giant_Pyro_DF
+					Template T_TFBot_Giant_Pyro_Long_Flame
+					Attributes AlwaysFireWeapon
 				}
 
 				TFBot
@@ -1102,7 +1181,7 @@ WaveSchedule
 				local ent = Entities.FindByClassname(null, `tf_objective_resource`)
 				if (ent)
 				{
-					NetProps.SetPropString(ent, `m_iszMvMPopfileName`, `Virtual Collapse (Advanced)`)
+					//NetProps.SetPropString(ent, `m_iszMvMPopfileName`, `Virtual Collapse (Advanced)`)
 				}
 			"
 		}
@@ -1178,12 +1257,13 @@ WaveSchedule
 				Name "Small Armored Sandman Scout"
 				Class Scout
 				Skill Hard
-				Health 450
+				Health 650
 				Scale 1.4
 				Item "Batter's Helmet"
 				Item "The Sandman"
 				WeaponRestrictions MeleeOnly
 				ClassIcon scout_stun_armored_normal
+				Attributes AlwaysCrit
 			}
 		}
 
@@ -1201,7 +1281,7 @@ WaveSchedule
 
 			TFBot
 			{
-				Template T_TFBot_Giant_Soldier_Spammer_Reload
+				Template T_TFBot_Giant_Soldier_BigrockBurstNoDamage
 			}
 		}
 
@@ -1225,34 +1305,13 @@ WaveSchedule
 
 		WaveSpawn
 		{
-			Where flankers
-			Name "03"
-			TotalCount 12
-			MaxActive 8
-			SpawnCount 4
-			WaitBeforeStarting 10
-			WaitBetweenSpawns 10
-			TotalCurrency 50
-			WaitForAllSpawned "02"
-
-			TFBot
-			{
-				Class Heavy
-				Skill Easy
-			}
-		}
-
-		WaveSpawn
-		{
 			Where spawnbot
-			Name "03"
-			TotalCount 3
-			MaxActive 3
+			TotalCount 4
+			MaxActive 4
 			SpawnCount 1
-			WaitBeforeStarting 20
-			WaitBetweenSpawns 11
+			WaitBeforeStarting 30
+			WaitBetweenSpawns 30
 			TotalCurrency 70
-			WaitForAllSpawned "02"
 
 			TFBot
 			{
@@ -1265,13 +1324,13 @@ WaveSchedule
 		{
 			Where spawnbot
 			Name "04"
-			TotalCount 9
-			MaxActive 9
-			SpawnCount 3
+			TotalCount 4
+			MaxActive 4
+			SpawnCount 2
 			WaitBeforeStarting 25
 			WaitBetweenSpawns 25
-			TotalCurrency 100
-			WaitForAllSpawned "03"
+			TotalCurrency 50
+			WaitForAllSpawned "02"
 
 			Squad
 			{
@@ -1282,12 +1341,7 @@ WaveSchedule
 
 				TFBot
 				{
-					Template T_TFBot_Medic_BigHeal_Armored
-				}
-
-				TFBot
-				{
-					Template T_TFBot_Medic_BigHeal_Armored
+					Template T_TFBot_Giant_Infinite_QuickFix
 				}
 			}
 		}
@@ -1297,12 +1351,12 @@ WaveSchedule
 			Where flankers
 			Name "04"
 			TotalCount 28
-			MaxActive 4
-			SpawnCount 4
+			MaxActive 6
+			SpawnCount 2
 			WaitBeforeStarting 12
 			WaitBetweenSpawns 4
 			TotalCurrency 40
-			WaitForAllSpawned "03"
+			WaitForAllSpawned "02"
 			Support 1
 
 			TFBot
@@ -1317,12 +1371,12 @@ WaveSchedule
 			Where spawnbot
 			Name "04"
 			TotalCount 30
-			MaxActive 3
+			MaxActive 6
 			SpawnCount 3
 			WaitBeforeStarting 18
 			WaitBetweenSpawns 9
-			TotalCurrency 45
-			WaitForAllSpawned "03"
+			TotalCurrency 65
+			WaitForAllSpawned "02"
 			Support 1
 
 			TFBot
@@ -1334,41 +1388,20 @@ WaveSchedule
 
 		WaveSpawn
 		{
-			Where spawnbot
-			Name "04"
-			TotalCount 28
-			MaxActive 4
-			SpawnCount 4
-			WaitBeforeStarting 14
-			WaitBetweenSpawns 6
-			TotalCurrency 40
-			WaitForAllSpawned "03"
-			Support 1
-
-			TFBot
-			{
-				Template T_TFBot_Scout_Sandman
-				Attributes AlwaysCrit
-			}
-		}
-
-		WaveSpawn
-		{
 			Where flankers
 			Name "04"
 			TotalCount 20
-			MaxActive 2
+			MaxActive 6
 			SpawnCount 2
 			WaitBeforeStarting 22
 			WaitBetweenSpawns 12
-			TotalCurrency 45
-			WaitForAllSpawned "03"
+			TotalCurrency 65
+			WaitForAllSpawned "02"
 			Support 1
 
 			TFBot
 			{
-				Template T_TFBot_Heavyweapons_Deflector
-				Skill Normal
+				Template T_TFBot_Soldier_DirectHit
 			}
 		}
 	}
@@ -1401,7 +1434,7 @@ WaveSchedule
 				local ent = Entities.FindByClassname(null, `tf_objective_resource`)
 				if (ent)
 				{
-					NetProps.SetPropString(ent, `m_iszMvMPopfileName`, `Virtual Collapse (Advanced)`)
+					//NetProps.SetPropString(ent, `m_iszMvMPopfileName`, `Virtual Collapse (Advanced)`)
 				}
 			"
 		}
@@ -1440,12 +1473,12 @@ WaveSchedule
 
 				TFBot
 				{
-					Template T_TFBot_Scout_Extended_Buff_Banner
+					Template T_TFBot_Soldier_Extended_Battalion
 				}
 
 				TFBot
 				{
-					Template T_TFBot_Scout_Extended_Buff_Banner
+					Template T_TFBot_Soldier_Extended_Concheror
 				}
 
 				TFBot
@@ -1539,9 +1572,9 @@ WaveSchedule
 		{
 			Where flankers
 			Name "02"
-			TotalCount 8
+			TotalCount 16
 			MaxActive 8
-			SpawnCount 2
+			SpawnCount 4
 			WaitBeforeStarting 13
 			WaitBetweenSpawns 8
 			TotalCurrency 60
@@ -1575,7 +1608,7 @@ WaveSchedule
 
 			TFBot
 			{
-				Template T_TFBot_Demoman_ClusterBomb_Delayed
+				Template T_TFBot_Demo_Burst
 			}
 		}
 
@@ -1595,13 +1628,13 @@ WaveSchedule
 			{
 				TFBot
 				{
-					Template T_TFBot_Giant_Demo_Burst
+					Template T_TFBot_Giant_Demoman_Stickybomb_BurstFire
+					Attributes AlwaysCrit
 				}
 
 				TFBot
 				{
-					Template T_TFBot_Giant_Medic_Regen
-					Name "Giant Regen Medic"
+					Template T_TFBot_Giant_Medic_Bullet
 					CharacterAttributes
 					{
 						"mod weapon blocks healing" 1
@@ -1641,11 +1674,11 @@ WaveSchedule
 			Where spawnbot
 			Where flankers
 			Name "04"
-			TotalCount 20
-			MaxActive 10
-			SpawnCount 5
+			TotalCount 18
+			MaxActive 6
+			SpawnCount 3
 			WaitBeforeStarting 8
-			WaitBetweenSpawns 5
+			WaitBetweenSpawns 12
 			TotalCurrency 30
 			WaitForAllSpawned "03"
 			Support 1
@@ -1660,60 +1693,38 @@ WaveSchedule
 		WaveSpawn
 		{
 			Where spawnbot
-			Where flankers
 			Name "04"
-			TotalCount 12
-			MaxActive 6
-			SpawnCount 3
-			WaitBeforeStarting 9
-			WaitBetweenSpawns 6
-			TotalCurrency 30
+			TotalCount 4
+			MaxActive 4
+			SpawnCount 1
+			WaitBeforeStarting 0
+			WaitBetweenSpawns 10
+			TotalCurrency 65
 			WaitForAllSpawned "03"
-			Support 1
 
 			TFBot
 			{
-				Template T_TFBot_Pyro_DF
+				Template T_TFBot_Giant_Soldier_Blackbox_Almost
+				Attributes AlwaysCrit
 			}
 		}
 
 		WaveSpawn
 		{
-			Where spawnbot
+			Where flankers
 			Name "04"
-			TotalCount 9
-			MaxActive 9
-			SpawnCount 3
-			WaitBeforeStarting 0
-			WaitBetweenSpawns 13
-			TotalCurrency 100
+			TotalCount 4
+			MaxActive 4
+			SpawnCount 1
+			WaitBeforeStarting 1
+			WaitBetweenSpawns 10
+			TotalCurrency 65
 			WaitForAllSpawned "03"
 
-			Squad
+			TFBot
 			{
-				TFBot
-				{
-					Template T_TFBot_Giant_Soldier_RocketShotgun
-					Attributes AlwaysCrit
-				}
-
-				TFBot
-				{
-					Template T_TFBot_Medic_BigHeal_Armored
-					CharacterAttributes
-					{
-						"mod weapon blocks healing" 1
-					}
-				}
-
-				TFBot
-				{
-					Template T_TFBot_Medic_BigHeal_Armored
-					CharacterAttributes
-					{
-						"mod weapon blocks healing" 1
-					}
-				}
+				Template T_TFBot_Giant_Soldier_Blackbox_Almost
+				Attributes AlwaysCrit
 			}
 		}
 	}
@@ -1748,10 +1759,12 @@ WaveSchedule
 					IncludeScript(`mvm_rottenburg_virtual_collapse`, getroottable())
 				}
 
+				TankExt.AddTankIcon(1, `tank_targe`, `targetank_color`)
+
 				local ent = Entities.FindByClassname(null, `tf_objective_resource`)
 				if (ent)
 				{
-					NetProps.SetPropString(ent, `m_iszMvMPopfileName`, `Virtual Collapse (Advanced)`)
+					//NetProps.SetPropString(ent, `m_iszMvMPopfileName`, `Virtual Collapse (Advanced)`)
 				}
 			"
 		}
@@ -1822,7 +1835,8 @@ WaveSchedule
 
 			TFBot
 			{
-				Template T_TFBot_Pyro_BackBurner
+				Class Pyro
+				Skill Normal
 				Attributes AlwaysCrit
 			}
 		}
@@ -1976,7 +1990,7 @@ WaveSchedule
 
 			TFBot
 			{
-				Template T_TFBot_Giant_Heavyweapons_CritOnKill
+				Template T_TFBot_Giant_Heavyweapons_Deflector_HealOnKill_Fix
 				Health 5500
 			}
 		}
@@ -2065,7 +2079,7 @@ WaveSchedule
 				Name "targetank_color"
 				Skin 1
 				StartingPathTrackNode "tank_path_b_10"
-				ClassIcon tank_targe [$SIGSEGV]
+				//ClassIcon tank_targe [$SIGSEGV]
 
 				OnKilledOutput
 				{

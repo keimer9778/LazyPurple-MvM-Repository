@@ -2,6 +2,8 @@
 #base	robot_standard.pop
 #base	robot_giant.pop
 
+//#base	custom_weapons_randomguy.pop
+//#base	overclock_cactus_general.pop
 // #base	robot_gatebot.pop
 // #base	robot_randomguy_new.pop
 WaveSchedule
@@ -12,23 +14,6 @@ WaveSchedule
 	Advanced								1
 	AddSentryBusterWhenDamageDealtExceeds	3000
 	AddSentryBusterWhenKillCountExceeds		15
-
-	PointTemplates
-	{
-		MissionNamePT
-		{
-			OnSpawnOutput
-			{
-				Target BigNet
-				Action RunScriptCode
-				Param "
-						NetProps.SetPropString(Entities.FindByClassname(null, `tf_objective_resource`), `m_iszMvMPopfileName`, `(Advanced) Monarchy Mutilation`)
-					  "
-			}
-		}
-	}
-
-	SpawnTemplate "MissionNamePT"
 
 	Templates
 	{
@@ -263,7 +248,7 @@ WaveSchedule
 		{
 			Class		Soldier
 			Name		"Direct Hit Buff Soldier"
-			ClassIcon	soldier_buff
+			ClassIcon	soldier_directhit_buff_lite
 
 			EventChangeAttributes
 			{
@@ -693,6 +678,14 @@ WaveSchedule
 				}
 			}
 		}
+
+		T_TFBot_Medic_Bigheal_Improved
+		{
+			Template	T_TFBot_Medic_Bigheal
+			Name		"Bigheal Medic"
+			Item		"The Surgeon's Stahlhelm"
+			ClassIcon	medic_quickfix_seel2
+		}
 	}
 
 	Mission
@@ -798,6 +791,7 @@ WaveSchedule
 			Action	RunScriptCode
 			Param	"
 			IncludeScript(`mvm_crown_smalltank_randomguy.nut`)
+			IncludeScript(`tank_hp_shower`)
 			"
 		}
 
@@ -900,7 +894,7 @@ WaveSchedule
 			SpawnCount			4	// 6
 			WaitBeforeStarting	10
 			WaitBetweenSpawns	5
-			TotalCurrency		200
+			TotalCurrency		100	// 200
 			RandomSpawn			1
 
 			TFBot
@@ -957,7 +951,7 @@ WaveSchedule
 			{
 				Template			T_TFBot_Giant_Scout	// _Bonk_Improved	// _SlowCharge
 				WeaponRestrictions	MeleeOnly
-				ClassIcon			scout_bat	// _nys
+				ClassIcon			scout_bat_nys
 				Name				"Giant Bat Scout"
 			}
 		}
@@ -1077,7 +1071,7 @@ WaveSchedule
 			{
 				// Template	T_TFBot_Heavy_Plasma
 				// ClassIcon	heavy_atomic_v2
-				Skill	Normal
+				Skill	Easy	// Normal
 				// Name		"Plasma Heavy"
 				Class	HeavyWeapons
 				// Item	"the bubble pipe"
@@ -1153,10 +1147,10 @@ WaveSchedule
 
 				TFBot
 				{
-					// Template	T_TFBot_Medic_Bigheal_Improved
-					Template	T_TFBot_Medic_Bigheal
-					Name		"Bigheal Medic"
-					Item		"The Surgeon's Stahlhelm"
+					Template	T_TFBot_Medic_Bigheal_Improved
+					// Template	T_TFBot_Medic_Bigheal
+					// Name		"Bigheal Medic"
+					// Item		"The Surgeon's Stahlhelm"
 				}
 			}
 		}
@@ -1192,7 +1186,6 @@ WaveSchedule
 			WaitBeforeStarting	20	// 15
 			WaitBetweenSpawns	6
 			TotalCurrency		150
-			RandomSpawn			0
 
 			TFBot
 			{
@@ -1212,7 +1205,6 @@ WaveSchedule
 			WaitBeforeStarting	20
 			WaitBetweenSpawns	25
 			TotalCurrency		50
-			RandomSpawn			0
 
 			TFBot
 			{
@@ -1282,13 +1274,12 @@ WaveSchedule
 			WaitForAllDead		stage2	// stage3	// Spawned	stage3
 			Where				spawnbot_main_0
 			Where				spawnbot_main_1
-			TotalCount			2	// 1	// 2
-			MaxActive			2	// 1	// 2
-			SpawnCount			2	// 1	// 2
+			TotalCount			3	// 2	// 1	// 2
+			MaxActive			3	// 2	// 1	// 2
+			SpawnCount			3	// 2	// 1	// 2
 			WaitBeforeStarting	0	// 10
 			WaitBetweenSpawns	0
 			TotalCurrency		200
-			RandomSpawn			0
 
 			Squad
 			{
@@ -1304,10 +1295,18 @@ WaveSchedule
 				// }
 				TFBot
 				{
-					// Template	T_TFBot_Medic_Bigheal_Improved
-					Template	T_TFBot_Medic_Bigheal
-					Name		"Bigheal Medic"
-					Item		"The Surgeon's Stahlhelm"
+					Template	T_TFBot_Medic_Bigheal_Improved
+					// Template	T_TFBot_Medic_Bigheal
+					// Name		"Bigheal Medic"
+					// Item		"The Surgeon's Stahlhelm"
+				}
+
+				TFBot
+				{
+					Template	T_TFBot_Medic_Bigheal_Improved
+					// Template	T_TFBot_Medic_Bigheal
+					// Name		"Bigheal Medic"
+					// Item		"The Surgeon's Stahlhelm"
 				}
 			}
 		}
@@ -1319,13 +1318,12 @@ WaveSchedule
 			// WaitForAllDead		stage4a
 			Where				spawnbot_main_0
 			Where				spawnbot_main_1
-			TotalCount			2	// 1	// 4	// 2
-			MaxActive			2	// 1	// 4	// 2
-			SpawnCount			2	// 1	// 4	// 2
+			TotalCount			3	// 2	// 1	// 4	// 2
+			MaxActive			3	// 2	// 1	// 4	// 2
+			SpawnCount			3	// 2	// 1	// 4	// 2
 			WaitBeforeStarting	15	// 10	// 20	// 0	// 30	// 50
 			WaitBetweenSpawns	0	// damn some of these commented out values really are an enigma.
-			TotalCurrency		200
-			RandomSpawn			0
+			TotalCurrency		100	// 200
 
 			Squad
 			{
@@ -1333,7 +1331,7 @@ WaveSchedule
 				{
 					Template	T_TFBot_Giant_HeavyWeapons
 					Tag			bot_giant
-					// Skill		Easy //Dumbass.
+					// Skill		Easy
 				}
 
 				// TFBot
@@ -1354,10 +1352,18 @@ WaveSchedule
 				// }
 				TFBot
 				{
-					// Template	T_TFBot_Medic_Bigheal_Improved
-					Template	T_TFBot_Medic_Bigheal
-					Name		"Bigheal Medic"
-					Item		"The Surgeon's Stahlhelm"
+					Template	T_TFBot_Medic_Bigheal_Improved
+					// Template	T_TFBot_Medic_Bigheal
+					// Name		"Bigheal Medic"
+					// Item		"The Surgeon's Stahlhelm"
+				}
+
+				TFBot
+				{
+					Template	T_TFBot_Medic_Bigheal_Improved
+					// Template	T_TFBot_Medic_Bigheal
+					// Name		"Bigheal Medic"
+					// Item		"The Surgeon's Stahlhelm"
 				}
 			}
 		}
@@ -1374,7 +1380,6 @@ WaveSchedule
 			WaitBeforeStarting	5	// 15
 			WaitBetweenSpawns	4	// 5
 			TotalCurrency		100
-			RandomSpawn			0
 			Support				1
 
 			TFBot
@@ -1693,7 +1698,7 @@ WaveSchedule
 			SpawnCount			3
 			WaitBeforeStarting	15	// 10
 			WaitBetweenSpawns	25
-			TotalCurrency		300
+			TotalCurrency		200	// 300
 
 			Squad
 			{
@@ -1786,11 +1791,11 @@ WaveSchedule
 			Name				giant
 			Where				spawnbot_tank_0
 			Where				spawnbot_main_1
-			TotalCount			3	// 2	// 3
+			TotalCount			4	// 3	// 2	// 3
 			MaxActive			3	// 2	// 1
 			SpawnCount			1
 			WaitBeforeStarting	0
-			WaitBetweenSpawns	40
+			WaitBetweenSpawns	30	// 40
 			TotalCurrency		135	// 90
 			RandomSpawn			1
 
@@ -1806,11 +1811,11 @@ WaveSchedule
 			Name				giant
 			Where				spawnbot_tank_0
 			Where				spawnbot_main_1
-			TotalCount			3	// 2	// 3
+			TotalCount			4	// 3	// 2	// 3
 			MaxActive			3	// 2	// 1
 			SpawnCount			1
-			WaitBeforeStarting	20
-			WaitBetweenSpawns	40
+			WaitBeforeStarting	15	// 20
+			WaitBetweenSpawns	30	// 40
 			TotalCurrency		135	// 90
 			RandomSpawn			1
 
@@ -1941,7 +1946,7 @@ WaveSchedule
 			SpawnCount			2	// 3
 			WaitBeforeStarting	0	// 20
 			WaitBetweenSpawns	25	// 20
-			TotalCurrency		200
+			TotalCurrency		100	// 200
 
 			Squad
 			{
@@ -2112,7 +2117,7 @@ WaveSchedule
 			SpawnCount			3	// 2	// 3
 			WaitBeforeStarting	0
 			WaitBetweenSpawns	25	// 0
-			TotalCurrency		150
+			TotalCurrency		50	// 150
 
 			// Squad
 			// {
@@ -2260,7 +2265,7 @@ WaveSchedule
 					Scale		1.5
 					Health		650
 					Name		"Jumbo Pyro"
-					// Classicon	pyro_armored2
+					Classicon	pyro_armored2
 					Tag			bot_giant
 				}
 
@@ -2272,7 +2277,7 @@ WaveSchedule
 					Scale		1.5
 					Health		650
 					Name		"Jumbo Pyro"
-					// Classicon	pyro_armored2
+					Classicon	pyro_armored2
 					Tag			bot_giant
 				}
 			}

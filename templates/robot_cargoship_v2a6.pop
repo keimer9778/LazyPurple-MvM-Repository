@@ -1,0 +1,1340 @@
+// +-+-+ +-+-+-+-+ +-+-+-+-+
+// |D|a| |S|p|u|d| |L|o|r|d|
+// +-+-+ +-+-+-+-+ +-+-+-+-+
+
+// Advice From HeRp-A-dErP-a-NErp.eXe: Give Giants a prenerf Jungle Inferno airblast resist. Jungle Inferno broke airblast resist on giants so this is what you would give Giant bots now.
+// Giant Scout - "airblast vulnerability multiplier" 0.3
+// Giant Pyro / Medic - "airblast vulnerability multiplier" 0.25
+// Giant Demoman - "airblast vulnerability multiplier" 0.2
+// Giant Soldier - "airblast vulnerability multiplier" 0.15
+// Giant Heavy - "airblast vulnerability multiplier" 0.1
+// All giants also come with "airblast vertical vulnerability multiplier"	0.5
+// For bosses, I reccomend giving them absolutely 100% immunity to airblast, which would be like this.
+// "airblast vulnerability multiplier" 0.001
+// "airblast vertical vulnerability multiplier"	0.001
+// I would also give Sentry Busters 100% airblast immunity as well because Pyros can get really annoying with airblast. 
+// They've gotten especially airblast happy when JI broke Giant airblast resist.
+
+// MUST BE DEFINED OUTSIDE EventChangeAttributes: Name, Class, Health, ClassIcon, Scale
+
+// Approx. duration of WaveSpawn: (WaitBeforeStarting) + (WaitBetweenSpawns) * ((TotalCount) / (SpawnCount) - 1)
+
+
+
+WaveSchedule {
+	Templates {
+		//----- Scouts -----//
+		
+		T_TFBot_DSL_Scout_Fish_Giant {
+			Name "Giant Salmon Slapper"
+			Class Scout
+			Health 1600
+			ClassIcon scout_fish_nys_giant
+			
+			Skill Easy
+			Attributes MiniBoss
+			CharacterAttributes {
+				"airblast vertical vulnerability multiplier" 0.5
+				"airblast vulnerability multiplier" 0.3
+				"damage force reduction" 0.7
+				"override footstep sound set" 5
+			} // end CharacterAttributes
+			
+			WeaponRestrictions MeleeOnly
+			Item "The Holy Mackerel"
+		} // end T_TFBot_DSL_Scout_Fish_Giant
+		T_TFBot_DSL_Scout_Giant_Armored_Boss {
+			Name "Hardest Hitter on the High Seas"
+			// Name "Briny Baller"
+			Class Scout
+			Health 35000
+			ClassIcon scout_stun_giant_armored
+			Scale 1.8
+			
+			Skill Expert
+			Attributes AlwaysCrit
+			Attributes MiniBoss
+			Attributes UseBossHealthBar
+			Tag bot_giant
+			Tag ocean_spawn
+			CharacterAttributes {
+				"airblast vulnerability multiplier" 0.001
+				"airblast vertical vulnerability multiplier" 0.001
+				"damage force reduction" 0.4
+				"move speed penalty" 0.3
+				"override footstep sound set" 5
+				"rage giving scale" 0.15
+			} // end CharacterAttributes
+			
+			WeaponRestrictions MeleeOnly
+			Item "The Sandman"
+			ItemAttributes {
+				ItemName "The Sandman"
+				//"damage bonus" 1.5
+				"effect bar recharge rate increased" -1
+			} // end ItemAttributes
+			Item "Batter's Helmet"
+		} // end T_TFBot_DSL_Scout_Giant_Armored_Boss
+		T_TFBot_DSL_Scout_Fish {
+			Name "Salmon Slapper"
+			Class Scout
+			ClassIcon scout_fish_nys
+			
+			Skill Hard
+			//BehaviorModifiers Mobber
+			
+			WeaponRestrictions MeleeOnly
+			Item "The Holy Mackerel"
+		} // end T_TFBot_DSL_Scout_Fish
+		T_TFBot_DSL_Scout_MilkSpammer {
+			Name "Boston Milk Party"
+			Class Scout
+			ClassIcon scout_milk
+			
+			Skill Normal
+			
+			WeaponRestrictions SecondaryOnly
+			Item "Mad Milk"
+			ItemAttributes {
+				ItemName "Mad Milk"
+				"effect bar recharge rate increased" -1
+			} // end ItemAttributes
+		} // end T_TFBot_DSL_Scout_MilkSpammer
+		
+		T_TFGateBot_DSL_Scout_Giant_Fast {
+			Name "Fast Fisherman"
+			Class Scout
+			Health 1200
+			ClassIcon scout_giant_fast
+			
+			EventChangeAttributes {
+				Default {
+					Skill Easy
+					Attributes IgnoreFlag
+					Attributes MiniBoss
+					BehaviorModifiers Push
+					Tag bot_gatebot
+					Tag bot_giant
+					Tag ocean_spawn
+					CharacterAttributes {
+						"move speed bonus"	2
+						"damage force reduction" 0.7
+						"airblast vulnerability multiplier" 0.7
+						"override footstep sound set" 5
+					} // end CharacterAttributes
+					
+					WeaponRestrictions MeleeOnly
+					Item "The Holy Mackerel"
+					Item "MvM Gatebot Light Scout"
+				} // end Default
+				RevertGateBotsBehavior {
+					Skill Easy
+					Attributes MiniBoss
+					Tag bot_giant
+					Tag ocean_spawn
+					CharacterAttributes {
+						"move speed bonus"	2
+						"damage force reduction" 0.7
+						"airblast vulnerability multiplier" 0.7
+						"override footstep sound set" 5
+					} // end CharacterAttributes
+					
+					WeaponRestrictions MeleeOnly
+					Item "The Holy Mackerel"
+					Item "MvM Gatebot Light Scout"
+					ItemAttributes {
+						ItemName "MvM GateBot Light Scout"
+						
+						"item style override" 1
+					} // end ItemAttributes
+				} // end RevertGateBotsBehavior
+			} // end EventChangeAttributes
+		} // end T_TFGateBot_DSL_Scout_Giant_Fast
+		T_TFGateBot_DSL_Scout_Giant_PocketPistol {
+			Name "Giant Pocket Pistol Scout"
+			Class Scout
+			Health 1600
+			ClassIcon scout_giant
+			
+			EventChangeAttributes {
+				Default {
+					Skill Hard
+					Attributes IgnoreFlag
+					Attributes MiniBoss
+					BehaviorModifiers Push
+					Tag bot_gatebot
+					Tag bot_giant
+					CharacterAttributes {
+						"airblast vertical vulnerability multiplier" 0.5
+						"airblast vulnerability multiplier" 0.3
+						"damage force reduction" 0.7
+						"override footstep sound set" 5
+					} // end CharacterAttributes
+					
+					WeaponRestrictions SecondaryOnly
+					Item "Pretty Boy's Pocket Pistol"
+					Item "MvM Gatebot Light Scout"
+				} // end Default
+				RevertGateBotsBehavior {
+					Skill Hard
+					Attributes MiniBoss
+					Tag bot_giant
+					CharacterAttributes {
+						"airblast vertical vulnerability multiplier" 0.5
+						"airblast vulnerability multiplier" 0.3
+						"damage force reduction" 0.7
+						"override footstep sound set" 5
+					} // end CharacterAttributes
+					
+					WeaponRestrictions SecondaryOnly
+					Item "Pretty Boy's Pocket Pistol"
+					Item "MvM Gatebot Light Scout"
+					ItemAttributes {
+						ItemName "MvM GateBot Light Scout"
+						
+						"item style override" 1
+					} // end ItemAttributes
+				} // end RevertGateBotsBehavior
+			} // end EventChangeAttributes
+		} // end T_TFGateBot_DSL_Scout_Giant_PocketPistol
+		T_TFGateBot_DSL_Scout_Bonk {
+			Name "Salmon Slapper"
+			Class Scout
+			ClassIcon scout_bonk
+			
+			EventChangeAttributes {
+				Default {
+					Skill Hard
+					Attributes IgnoreFlag
+					BehaviorModifiers Push
+					Tag bot_gatebot
+					
+					WeaponRestrictions MeleeOnly
+					Item "Bonk! Atomic Punch"
+					Item "The Holy Mackerel"
+					Item "MvM GateBot Light Scout"
+				} // end Default
+				RevertGateBotsBehavior {
+					Skill Hard
+					
+					WeaponRestrictions MeleeOnly
+					Item "Bonk! Atomic Punch"
+					Item "The Holy Mackerel"
+					Item "MvM GateBot Light Scout"
+					ItemAttributes {
+						ItemName "MvM GateBot Light Scout"
+						
+						"item style override" 1
+					} // end ItemAttributes
+				} // end RevertGateBotsBehavior
+			} // end EventChangeAttributes
+		} // end T_TFGateBot_DSL_Scout_Bonk
+		T_TFGateBot_DSL_Scout_Fish {
+			Name "Salmon Slapper"
+			Class Scout
+			ClassIcon scout_fish_nys
+			
+			EventChangeAttributes {
+				Default {
+					Skill Hard
+					Attributes IgnoreFlag
+					BehaviorModifiers Push
+					Tag bot_gatebot
+					
+					WeaponRestrictions MeleeOnly
+					Item "The Holy Mackerel"
+					Item "MvM GateBot Light Scout"
+				} // end Default
+				RevertGateBotsBehavior {
+					Skill Hard
+					
+					WeaponRestrictions MeleeOnly
+					Item "The Holy Mackerel"
+					Item "MvM GateBot Light Scout"
+					ItemAttributes {
+						ItemName "MvM GateBot Light Scout"
+						
+						"item style override" 1
+					} // end ItemAttributes
+				} // end RevertGateBotsBehavior
+			} // end EventChangeAttributes
+		} // T_TFGateBot_DSL_Scout_Fish
+		T_TFGateBot_DSL_Scout_MilkSpammer {
+			Name "Boston Milk Party"
+			Class Scout
+			ClassIcon scout_milk
+			
+			EventChangeAttributes {
+				Default {
+					Skill Normal
+					Attributes IgnoreFlag
+					BehaviorModifiers Push
+					Tag bot_gatebot
+					
+					WeaponRestrictions SecondaryOnly
+					Item "Mad Milk"
+					ItemAttributes {
+						ItemName "Mad Milk"
+						"effect bar recharge rate increased" -1
+					} // end ItemAttributes
+					Item "MvM Gatebot Light Scout"
+				} // end Default
+				RevertGateBotsBehavior {
+					Skill Normal
+					
+					WeaponRestrictions SecondaryOnly
+					Item "Mad Milk"
+					ItemAttributes {
+						ItemName "Mad Milk"
+						"effect bar recharge rate increased" -1
+					} // end ItemAttributes
+					Item "MvM Gatebot Light Scout"
+					ItemAttributes {
+						ItemName "MvM GateBot Light Scout"
+						"item style override" 1
+					} // end ItemAttributes
+				} // end RevertGateBotsBehavior
+			} // end EventChangeAttributes
+		} // end T_TFGatBot_DSL_Scout_MilkSpammer
+		T_TFGateBot_DSL_Scout_Sandman_FastCharge_Crit {
+			Name "Hyper League Scout"
+			Class Scout
+			ClassIcon scout_stun
+			
+			EventChangeAttributes {
+				Default {
+					Skill Hard
+					Attributes IgnoreFlag
+					BehaviorModifiers Push
+					Tag bot_gatebot
+					
+					WeaponRestrictions MeleeOnly
+					Item "The Sandman"
+					ItemAttributes {
+						ItemName "The Sandman"
+						"effect bar recharge rate increased" 0.25
+					} // end ItemAttributes
+					Item "MvM GateBot Light Scout"
+				} // end Default
+				RevertGateBotsBehavior {
+					Skill Hard
+					
+					WeaponRestrictions MeleeOnly
+					Item "The Sandman"
+					ItemAttributes {
+						ItemName "The Sandman"
+						"effect bar recharge rate increased" 0.25
+					} // end ItemAttributes
+					Item "MvM Gatebot Light Scout"
+					ItemAttributes {
+						ItemName "MvM GateBot Light Scout"
+						"item style override" 1
+					} // end ItemAttributes
+				} // end RevertGateBotsBehavior
+			} // end EventChangeAttributes
+		} // end T_TFGateBot_DSL_Scout_Sandman_FastCharge_Crit
+		T_TFGateBot_DSL_Scout_Shortstop {
+			Name "Shortstop Scout"
+			Class Scout
+			Health 650
+			ClassIcon scout_shortstop
+			Scale 1.4
+			
+			EventChangeAttributes {
+				Default {
+					Skill Easy
+					Attributes IgnoreFlag
+					BehaviorModifiers Push
+					Tag bot_gatebot
+					Tag bot_giant
+					CharacterAttributes {
+						"head scale" 0.7
+						"move speed bonus" 1.25
+					} // end CharacterAttributes
+					
+					WeaponRestrictions PrimaryOnly
+					Item "The Shortstop"
+					Item "MvM Gatebot Light Scout"
+				} // end Default
+				RevertGateBotsBehavior {
+					Skill Easy
+					Tag bot_giant
+					CharacterAttributes {
+						"head scale" 0.7
+						"move speed bonus" 1.25
+					} // end CharacterAttributes
+					
+					WeaponRestrictions PrimaryOnly
+					Item "The Shortstop"
+					Item "MvM Gatebot Light Scout"
+					ItemAttributes {
+						ItemName "MvM Gatebot Light Scout"
+						"item style override" 1
+					} // end ItemAttributes
+				} // end RevertGateBotsBehavior
+			} // end EventChangeAttributes
+		} // end T_TFGateBot_DSL_Scout_Shortstop
+		
+		
+		
+		//-----Soldiers-----//
+		
+		T_TFBot_DSL_Soldier_Bazooka_Boss {
+			Name "Stop Littering in the Ocean"
+			Class Soldier
+			Health 45000
+			ClassIcon soldier_bazooka
+			Scale 1.8
+			
+			Skill Expert
+			Attributes HoldFireUntilFullReload
+			Attributes MiniBoss
+			Attributes UseBossHealthBar
+			Tag bot_giant
+			Tag ocean_spawn
+			CharacterAttributes {
+				"airblast vulnerability multiplier" 0.001
+				"airblast vertical vulnerability multiplier" 0.001
+				"damage force reduction" 0.4
+				"health regen" 40
+				"move speed bonus" 0.5
+				"override footstep sound set" 3
+				"rage giving scale" 0.15
+			} // end CharacterAttributes
+			
+			WeaponRestrictions PrimaryOnly
+			Item "The Beggar's Bazooka"
+			ItemAttributes {
+				ItemName "The Beggar's Bazooka"
+				"auto fires full clip" 0
+				"can overload" 0
+				"clip size upgrade atomic" 12
+				// "damage bonus" 0.8
+				"faster reload rate"  0.2
+				// "fire rate bonus" 0.5
+				"projectile speed decreased"  0.2
+				"projectile spread angle penalty" 15
+			} // end ItemAttributes
+			Item "Bucket Hat"
+			Item "Lieutenant Bites"
+			Item "The Captain's Cocktails"
+		} // end T_TFBot_DSL_Soldier_Bazooka_Boss
+		T_TFBot_DSL_Soldier_Crit {
+			Name "Charged Soldier"
+			Class Soldier
+			ClassIcon soldier_crit
+			
+			Skill Normal
+			Attributes AlwaysCrit
+			
+			WeaponRestrictions PrimaryOnly
+			Item "The Original"
+			ItemAttributes {
+				ItemName "The Original"
+				
+				"faster reload rate" 0.2
+				"fire rate bonus" 2
+				"projectile speed increased" 0.5
+			} // end ItemAttributes
+		} // end T_TFBot_DSL_Soldier_Crit
+		
+		T_TFGateBot_DSL_Soldier_Bazooka {
+			Name "Ocean Trash"
+			Class Soldier
+			ClassIcon soldier_bazooka
+			
+			EventChangeAttributes {
+				Default {
+					Skill Hard
+					Attributes HoldFireUntilFullReload
+					Attributes IgnoreFlag
+					BehaviorModifiers Push
+					Tag bot_gatebot
+					
+					WeaponRestrictions PrimaryOnly
+					Item "The Beggar's Bazooka"
+					ItemAttributes {
+						ItemName "The Beggar's Bazooka"
+						
+						"auto fires full clip" 0
+						"can overload" 0
+					} // end ItemAttributes
+					Item "MvM Gatebot Light Soldier"
+				} // end Default
+				RevertGateBotsBehavior {
+					Skill Hard
+					Attributes HoldFireUntilFullReload
+					
+					WeaponRestrictions PrimaryOnly
+					Item "The Beggar's Bazooka"
+					ItemAttributes {
+						ItemName "The Beggar's Bazooka"
+						
+						"auto fires full clip" 0
+						"can overload" 0
+					} // end ItemAttributes
+					Item "MvM Gatebot Light Soldier"
+					ItemAttributes {
+						ItemName "MvM Gatebot Light Soldier"
+						
+						"item style override" 1
+					} // end ItemAttributes
+				} // end RevertGateBotsBehavior
+			} // end EventChangeAttributes
+		} // end T_TFGateBot_DSL_Soldier_Bazooka
+		T_TFGateBot_DSL_Soldier_Equalizer {
+			Name "Equalizer Soldier"
+			Class Soldier
+			ClassIcon soldier_equalizer
+			
+			EventChangeAttributes {
+				Default {
+					Skill Expert
+					Attributes IgnoreFlag
+					BehaviorModifiers Push
+					Tag bot_gatebot
+					
+					WeaponRestrictions MeleeOnly
+					Item "The Equalizer"
+					Item "MvM GateBot Light Soldier"
+				} // end Default
+				RevertGateBotsBehavior {
+					Skill Expert
+					
+					WeaponRestrictions MeleeOnly
+					Item "The Equalizer"
+					Item "MvM GateBot Light Soldier"
+					ItemAttributes {
+						ItemName "MvM GateBot Light Soldier"
+						
+						"item style override" 1
+					} // end ItemAttributes
+				} // end RevertGateBotsBehavior
+			} // end EventChangeAttributes
+		} // end T_TFGateBot_DSL_Soldier_Equalizer
+		T_TFGateBot_DSL_Soldier_Whip {
+			Name "BDSM Soldier"
+			Class Soldier
+			ClassIcon soldier_disciplinary
+			
+			EventChangeAttributes {
+				Default {
+					Skill Expert
+					Attributes AlwaysCrit
+					Attributes AlwaysFireWeapon
+					Attributes IgnoreFlag
+					BehaviorModifiers Push
+					Tag bot_gatebot
+					
+					WeaponRestrictions MeleeOnly
+					Item "The Disciplinary Action"
+					Item "MvM GateBot Light Soldier"
+				} // end Default
+				RevertGateBotsBehavior {
+					Skill Expert
+					Attributes AlwaysCrit
+					Attributes AlwaysFireWeapon
+					
+					WeaponRestrictions MeleeOnly
+					Item "The Disciplinary Action"
+					Item "MvM GateBot Light Soldier"
+					ItemAttributes {
+						ItemName "MvM GateBot Light Soldier"
+						
+						"item style override" 1
+					} // end ItemAttributes
+				} // end RevertGateBotsBehavior
+			} // end EventChangeAttributes
+		} // end T_TFGateBot_DSL_Soldier_Whip
+		
+		
+		
+		//-----Pyros-----//
+		
+		T_TFBot_DSL_Pyro_Giant_DragonFury {
+			Name "Giant Dragon's Fury Pyro"
+			Class Pyro
+			Health 2800
+			ClassIcon pyro_dragon_fury_swordstone
+			
+			Skill Expert
+			Attributes MiniBoss
+			Tag bot_giant
+			Tag ocean_spawn
+			CharacterAttributes {
+				"airblast vertical vulnerability multiplier" 0.5
+				"airblast vulnerability multiplier" 0.25
+				"damage force reduction" 0.6
+				"move speed bonus"	0.5
+				"override footstep sound set" 6
+			} // end CharacterAttributes
+			
+			WeaponRestrictions PrimaryOnly
+			Item "The Dragon's Fury"
+		} // end T_TFBot_DSL_Pyro_Giant_DragonFury
+		T_TFBot_DSL_Pyro_Axtinguisher {
+			Name "Axtinguisher Pyro"
+			Class Pyro
+			Skill Expert
+			ClassIcon pyro_axtinguisher
+			
+			//BehaviorModifiers Mobber
+			
+			WeaponRestrictions MeleeOnly
+			Item "The Axtinguisher"
+		} // end T_TFBot_DSL_Pyro_Axtinguisher
+		T_TFBot_DSL_Pyro_NeonAnnihilator {
+			Name "Aqua Assassin"
+			Class Pyro
+			ClassIcon pyro_neon
+			
+			Skill Normal
+			CharacterAttributes {
+				"move speed bonus" 1.1
+			} // end CharacterAttributes
+			
+			WeaponRestrictions MeleeOnly
+			Item "The Neon Annihilator"
+		} // end T_TFBot_DSL_Pyro_NeonAnnihilator
+		
+		T_TFGateBot_DSL_Pyro_Axtinguisher {
+			Name "Axtinguisher Pyro"
+			Class Pyro
+			ClassIcon pyro_axtinguisher
+			
+			EventChangeAttributes {
+				Default {
+					Skill Expert
+					Attributes IgnoreFlag
+					BehaviorModifiers Push
+					Tag bot_gatebot
+					
+					WeaponRestrictions MeleeOnly
+					Item "The Axtinguisher"
+					Item "MvM GateBot Light Pyro"
+				} // end Default
+				RevertGateBotsBehavior {
+					Skill Expert
+					
+					WeaponRestrictions MeleeOnly
+					Item "The Axtinguisher"
+					Item "MvM GateBot Light Pyro"
+					ItemAttributes {
+						ItemName "MvM GateBot Light Pyro"
+						
+						"item style override" 1
+					} // end ItemAttributes
+				} // end RevertGateBotsBehavior
+			} // end EventChangeAttributes
+		} // T_TFGateBot_DSL_Pyro_Axtinguisher
+		T_TFGateBot_DSL_Pyro_Phlog {
+			Name "Pyro Takes Skill"
+			Class Pyro
+			ClassIcon pyro_phlog
+			
+			EventChangeAttributes {
+				Default {
+					Skill Easy
+					//Attributes AlwaysCrit
+					//Attributes AlwaysFireWeapon
+					Attributes IgnoreFlag
+					BehaviorModifiers Push
+					Tag bot_gatebot
+					
+					WeaponRestrictions PrimaryOnly
+					Item "The Phlogistinator"
+					ItemAttributes {
+						ItemName "The Phlogistinator"
+						
+						"airblast disabled" 0
+					} // end ItemAttributes
+					Item "MvM GateBot Light Pyro"
+				} // end Default
+				RevertGateBotsBehavior {
+					Skill Easy
+					//Attributes AlwaysCrit
+					//Attributes AlwaysFireWeapon
+					
+					WeaponRestrictions PrimaryOnly
+					Item "The Phlogistinator"
+					ItemAttributes {
+						ItemName "The Phlogistinator"
+						
+						"airblast disabled" 0
+					} // end ItemAttributes
+					Item "MvM GateBot Light Pyro"
+					ItemAttributes {
+						ItemName "MvM GateBot Light Pyro"
+						
+						"item style override" 1
+					} // end ItemAttributes
+				} // end RevertGateBotsBehavior
+			} // end EventChangeAttributes
+		} // end T_TFGateBot_DSL_Pyro_Phlog
+		T_TFGateBot_DSL_Pyro_ScorchShot {
+			Name "Pyro Pusher"
+			Class Pyro
+			ClassIcon pyro_flare
+			
+			EventChangeAttributes {
+				Default {
+					Skill Expert
+					Attributes IgnoreFlag
+					BehaviorModifiers Push
+					Tag bot_gatebot
+					
+					WeaponRestrictions SecondaryOnly
+					Item "The Scorch Shot"
+					ItemAttributes {
+						ItemName "The Scorch Shot"
+						
+						"damage bonus"	1
+						"faster reload rate" 1.25
+						"fire rate bonus" 0.75
+						"Projectile speed increased" 0.35
+					} // end ItemAttributes
+					Item "MvM GateBot Light Pyro"
+				} // end Default
+				RevertGateBotsBehavior {
+					Skill Expert
+					
+					WeaponRestrictions SecondaryOnly
+					Item "The Scorch Shot"
+					ItemAttributes {
+						ItemName "The Scorch Shot"
+						
+						"damage bonus"	1
+						"faster reload rate" 1.25
+						"fire rate bonus" 0.75
+						"Projectile speed increased" 0.35
+					} // end ItemAttributes
+					Item "MvM GateBot Light Pyro"
+					ItemAttributes {
+						ItemName "MvM GateBot Light Pyro"
+						
+						"item style override" 1
+					} // end ItemAttributes
+				}
+			} // end EventChangeAttributes
+		} // end T_TFGateBot_DSL_Pyro_ScorchShot
+		
+		
+		
+		//-----Demomen-----//
+		
+		T_TFBot_DSL_Demoknight_Boss_Samurai {
+			Name "Sword of the Sea"
+			Class Demoman
+			Health 40000
+			Scale 1.9
+			ClassIcon demoknight_samurai_giant
+			
+			Skill Expert
+			//Attributes AlwaysCrit
+			Attributes MiniBoss
+			Attributes UseBossHealthBar
+			Tag bot_giant
+			Tag ocean_spawn
+			CharacterAttributes {
+				"airblast vertical vulnerability multiplier" 0.001
+				"airblast vulnerability multiplier" 0.001
+				"charge recharge rate increased" 2
+				"charge time increased" 10
+				"damage force reduction" 0.3
+				"move speed bonus" 0.4
+				"override footstep sound set" 2
+				"rage giving scale" 0.1
+			} // end CharacterAttributes
+			
+			WeaponRestrictions MeleeOnly
+			Item "The Chargin' Targe"
+			ItemAttributes {
+				ItemName "The Chargin' Targe"
+				
+				"attack not cancel charge" 1
+				"dmg taken from blast reduced" 1.0 // No damage resistance
+				"dmg taken from fire reduced" 1.0 // No damage resistance
+			} // end ItemAttributes
+			Item "The Half-Zatoichi"
+			ItemAttributes {
+				ItemName "The Half-Zatoichi"
+				
+				"damage bonus" 3
+				"honorbound" 0 // So smart soldiers/demos can't oneshot the boss (altho that would be funny... what if we could detect when players cheesed the boss, and spawn a second un-cheesable boss?)
+				"restore health on kill" 10 // 10% HOK (4000HP) instead of 50%
+			} // end ItemAttributes
+			Item "Demo Kabuto"
+		} // end T_TFBot_DSL_Demoknight_Boss_Samurai
+		T_TFBot_DSL_Demoknight_Caber {
+			Name "Kamikaze Demoman"
+			Class Demoman
+			ClassIcon demo_caber
+				
+			Skill Expert
+			WeaponRestrictions MeleeOnly
+			Item "The Tide Turner"
+			ItemAttributes {
+				ItemName "The Tide Turner"
+				
+				"attack not cancel charge" 1
+			} // end ItemAttributes
+			Item "The Ullapool Caber"
+		} // end T_TFBot_DSL_Demoknight_Caber
+		
+		T_TFGateBot_DSL_Demoman_Giant_RapidFire {
+			Name "Giant Rapid Fire Demoman"
+			Class Demoman
+			Health 3000
+			ClassIcon demo_giant
+			
+			EventChangeAttributes {
+				Default {
+					Skill Expert
+					Attributes HoldFireUntilFullReload
+					Attributes IgnoreFlag
+					Attributes MiniBoss
+					BehaviorModifiers Push
+					Tag bot_gatebot
+					Tag bot_giant
+					CharacterAttributes {
+						"airblast vertical vulnerability multiplier" 0.5
+						"airblast vulnerability multiplier" 0.2
+						"move speed bonus"	0.5
+						"override footstep sound set" 4
+					} // end CharacterAttributes
+					
+					WeaponRestrictions PrimaryOnly
+					ItemAttributes {
+						ItemName "TF_WEAPON_GRENADELAUNCHER"
+						"damage force reduction" 0.5
+						"fire rate bonus" 0.5
+					} // end ItemAttributes
+					Item "MvM GateBot Light Demoman"
+				} // end Default
+				RevertGateBotsBehavior {
+					Skill Expert
+					Attributes HoldFireUntilFullReload
+					Attributes MiniBoss
+					Tag bot_giant
+					CharacterAttributes {
+						"airblast vertical vulnerability multiplier" 0.5
+						"airblast vulnerability multiplier" 0.2
+						"move speed bonus"	0.5
+						"override footstep sound set" 4
+					} // end CharacterAttributes
+					
+					WeaponRestrictions PrimaryOnly
+					ItemAttributes {
+						ItemName "TF_WEAPON_GRENADELAUNCHER"
+						"damage force reduction" 0.5
+						"fire rate bonus" 0.5
+					} // end ItemAttributes
+					Item "MvM GateBot Light Demoman"
+					ItemAttributes {
+						ItemName "MvM GateBot Light Demoman"
+						"item style override" 1
+					} // end ItemAttributes
+				} // end RevertGateBotsBehavior
+			} // end EventChangeAttributes
+		} // end T_TFGateBot_DSL_Demoman_Giant_RapidFire
+		T_TFGateBot_DSL_Demoknight_Caber {
+			Name "Kamikaze Demoman"
+			Class Demoman
+			ClassIcon demo_caber
+			
+			EventChangeAttributes {
+				Default {
+					Skill Expert
+					Attributes IgnoreFlag
+					BehaviorModifiers Push
+					
+					WeaponRestrictions MeleeOnly
+					Item "The Tide Turner"
+					ItemAttributes {
+						ItemName "The Tide Turner"
+						
+						"attack not cancel charge" 1
+					} // end ItemAttributes
+					Item "The Ullapool Caber"
+					Item "MvM GateBot Light Demoman"
+				} // end Default
+				RevertGateBotsBehavior {
+					Skill Expert
+					WeaponRestrictions MeleeOnly
+					Item "The Tide Turner"
+					ItemAttributes {
+						ItemName "The Tide Turner"
+						
+						"attack not cancel charge" 1
+					} // end ItemAttributes
+					Item "The Ullapool Caber"
+					Item "MvM GateBot Light Demoman"
+					ItemAttributes {
+						ItemName "MvM GateBot Light Demoman"
+						
+						"item style override" 1
+					} // end ItemAttributes
+				} // end RevertGateBotsBehavior
+			} // end EventChangeAttributes
+		} // end T_TFGateBot_DSL_Demoknight_Caber
+		T_TFGateBot_DSL_Demoknight_Large {
+			Name "Executioner"
+			Class Demoman
+			Health 750
+			Scale 1.3
+			ClassIcon demoknight
+			//AutoJumpMin 5
+			//AutoJumpMax 10
+			
+			EventChangeAttributes {
+				Default {
+					Skill Expert
+					//Attributes AirChargeOnly
+					//Attributes AutoJump
+					//AutoJumpMin 5
+					//AutoJumpMax 10
+					Attributes IgnoreFlag
+					BehaviorModifiers Push
+					Tag bot_gatebot
+					Tag bot_giant
+					CharacterAttributes {
+						"charge time increased" 1.2
+						"charge recharge rate increased" 2.5
+						"increased jump height" 2.3
+						"bot custom jump particle"	1
+						"move speed bonus"	0.8
+					} // end CharacterAttributes
+					
+					WeaponRestrictions MeleeOnly
+					Item "The Eyelander"
+					Item "The Splendid Screen"
+					ItemAttributes {
+						ItemName "The Splendid Screen"
+						
+						"Attack not cancel charge" 1
+					} // end ItemAttributes
+					Item "MvM GateBot Light Demoman"
+				} // end Default
+				RevertGateBotsBehavior {
+					Skill Expert
+					//Attributes AirChargeOnly
+					//Attributes AutoJump
+					//AutoJumpMin 5
+					//AutoJumpMax 10
+					Tag bot_giant
+					CharacterAttributes {
+						"charge time increased" 1.2
+						"charge recharge rate increased" 2.5
+						"increased jump height" 2.3
+						"bot custom jump particle"	1
+						"move speed bonus"	0.8
+					} // end CharacterAttributes
+					
+					WeaponRestrictions MeleeOnly
+					Item "The Eyelander"
+					Item "The Splendid Screen"
+					ItemAttributes {
+						ItemName "The Splendid Screen"
+						
+						"Attack not cancel charge" 1
+					} // end ItemAttributes
+					Item "MvM GateBot Light Demoman"
+					ItemAttributes {
+						ItemName "MvM GateBot Light Demoman"
+						"item style override" 1
+					} // end ItemAttributes
+				} // end RevertGateBotsBehavior
+			} // end EventChangeAttributes
+		} // end T_TFGateBot_DSL_Demoknight_Large
+		
+		
+		
+		//----- Heavies -----//
+		
+		T_TFBot_DSL_Heavy_Wild {
+			Name "Wild Heavy"
+			Class Heavyweapons
+			Health 360
+			ClassIcon heavy_dwarf
+			
+			Skill Expert
+			Attributes AlwaysFireWeapon
+			
+			WeaponRestrictions MeleeOnly
+			Item "The Buffalo Steak Sandvich"
+			Item "Warrior's Spirit"
+		} // end T_TFBot_DSL_Heavy_Wild
+		
+		T_TFGateBot_DSL_Giant_Heavy {
+			Name "Giant Heavy"
+			Class Heavyweapons
+			Health 5000
+			ClassIcon heavy_giant
+			
+			EventChangeAttributes {
+				Default {
+					Skill Expert
+					Attributes IgnoreFlag
+					Attributes MiniBoss
+					BehaviorModifiers Push
+					Tag bot_gatebot
+					Tag bot_giant
+					Tag ocean_spawn
+					MaxVisionRange 1200
+					CharacterAttributes {
+						"airblast vulnerability multiplier" 0.1
+						"airblast vertical vulnerability multiplier" 0.5
+						"damage force reduction" 0.3
+						"move speed bonus" 0.5
+						"override footstep sound set" 2
+					} // end CharacterAttributes
+					
+					WeaponRestrictions PrimaryOnly
+					ItemAttributes {
+						ItemName "TF_WEAPON_MINIGUN"
+						
+						"damage bonus" 1.5
+					} // end ItemAttributes
+					Item "MvM GateBot Light Heavy"
+				} // end Default
+				RevertGateBotsBehavior {
+					Skill Expert
+					Attributes MiniBoss
+					Tag bot_giant
+					Tag ocean_spawn
+					MaxVisionRange 1200
+					CharacterAttributes {
+						"airblast vulnerability multiplier" 0.1
+						"airblast vertical vulnerability multiplier" 0.5
+						"damage force reduction" 0.3
+						"move speed bonus" 0.5
+						"override footstep sound set" 2
+					} // end CharacterAttributes
+					
+					WeaponRestrictions PrimaryOnly
+					ItemAttributes {
+						ItemName "TF_WEAPON_MINIGUN"
+						
+						"damage bonus" 1.5
+					} // end ItemAttributes
+					Item "MvM GateBot Light Heavy"
+					ItemAttributes {
+						ItemName "MvM GateBot Light Heavy"
+						
+						"item style override" 1
+					} // end ItemAttributes
+				} // end RevertGateBotsBehavior
+			} // end EventChangeAttributes
+		} // end T_TFGateBot_DSL_Giant_Heavy
+		T_TFGateBot_DSL_Heavy_Heater {
+			Name "Heater Heavy"
+			Class Heavyweapons
+			ClassIcon heavy_heater
+			
+			EventChangeAttributes {
+				Default {
+					Skill Normal
+					Attributes IgnoreFlag
+					BehaviorModifiers Push
+					Tag bot_gatebot
+					MaxVisionRange 1200
+					
+					WeaponRestrictions PrimaryOnly
+					Item "The Huo Long Heatmaker"
+					Item "MvM GateBot Light Heavy"
+				} // end Default
+				RevertGateBotsBehavior {
+					Skill Normal
+					MaxVisionRange 1200
+					
+					WeaponRestrictions PrimaryOnly
+					Item "The Huo Long Heatmaker"
+					Item "MvM GateBot Light Heavy"
+					ItemAttributes {
+						ItemName "MvM GateBot Light Heavy"
+						"item style override" 1
+					} // end ItemAttributes
+				} // end RevertGateBotsBehavior
+			} // end EventChangeAttributes
+		} // end T_TFGateBot_DSL_Heavy_Heater
+		
+		
+		
+		//----- Medics -----//
+		
+		T_TFBot_DSL_Medic_Kritzkrieg_Giant {
+			Name "Giant Kritzkrieg Medic"
+			Class Medic
+			Health 4500
+			ClassIcon medic_kritz_giant
+			
+			Skill Expert
+			Attributes AlwaysCrit
+			Attributes MiniBoss
+			Attributes SpawnWithFullCharge
+			Tag bot_giant
+			Tag ocean_spawn
+			CharacterAttributes {
+				"airblast vulnerability multiplier" 0.25
+				"airblast vertical vulnerability multiplier" 0.5
+				"bot medic uber health threshold" 999999
+				"damage force reduction" 0.6
+				"heal rate bonus" 2
+				"move speed bonus" 0.5
+			} // end CharacterAttributes
+			
+			WeaponRestrictions SecondaryOnly
+			Item "The Kritzkrieg"
+			ItemAttributes {
+				ItemName "The Kritzkrieg"
+				
+				"uber duration bonus" 999999
+				"ubercharge rate bonus" 999999
+			} // end ItemAttributes
+		} // end T_TFBot_DSL_Medic_Kritzkrieg_Giant
+		T_TFBot_DSL_Medic_Combat {
+			Name "Combat Medic"
+			Class Medic
+			ClassIcon medic_syringe
+			
+			Skill Expert
+			
+			WeaponRestrictions PrimaryOnly
+			Item "The Blutsauger"
+		} // end T_TFBot_DSL_Medic_Combat
+		T_TFBot_DSL_Medic_Kritzkrieg {
+			Name "Kritzkreig Medic"
+			Class Medic
+			ClassIcon medic_kritz
+			
+			Skill Hard
+			Attributes SpawnWithFullCharge
+			CharacterAttributes {
+				"heal rate bonus" 2
+			} // end CharacterAttributes					
+			
+			WeaponRestrictions SecondaryOnly
+			Item "The Kritzkrieg"
+			ItemAttributes {
+				ItemName "The Kritzkrieg"
+				
+				"ubercharge rate bonus" 5
+			} // end ItemAttributes
+		} // end T_TFBot_DSL_Medic_Kritzkrieg
+		
+		T_TFGateBot_DSL_Medic_Combat {
+			Name "Combat Medic"
+			Class Medic
+			ClassIcon medic_syringe
+			
+			EventChangeAttributes {
+				Default {
+					Skill Expert
+					Attributes IgnoreFlag
+					BehaviorModifiers Push
+					Tag bot_gatebot
+					
+					WeaponRestrictions PrimaryOnly
+					Item "The Blutsauger"
+					Item "MvM GateBot Light Medic"
+				} // end Default
+				RevertGateBotsBehavior {
+					Skill Expert
+					
+					WeaponRestrictions PrimaryOnly
+					Item "The Blutsauger"
+					Item "MvM GateBot Light Medic"
+					ItemAttributes {
+						ItemName "MvM GateBot Light Medic"
+						
+						"item style override" 1
+					} // end ItemAttributes
+				} // end RevertGateBotsBehavior
+			} // end EventChangeAttributes
+		} // end T_TFGateBot_DSL_Medic_Combat
+		
+		
+		
+		//----- Snipers -----//
+		
+		T_TFBot_DSL_Sniper_Aquamann_Boss { // i forgot what i was doing with this lmao
+			Name "Aquamann"
+			Class Sniper
+			Health 50000
+			ClassIcon sniper_bow_multi
+			Scale 1.9
+			
+			Skill Expert
+			Attributes AlwaysCrit
+			//Attributes AlwaysFireWeapon
+			Attributes MiniBoss
+			Attributes UseBossHealthBar
+			Tag bot_giant
+			Tag ocean_spawn
+			//Tag ocean_rider // currently does nothing
+			CharacterAttributes {
+				"airblast vulnerability multiplier" 0.3
+				"airblast vertical vulnerability multiplier" 0.5
+				"damage force reduction" 0.4
+				"move speed bonus" 0.3
+				"override footstep sound set" 3
+			} // end CharacterAttributes
+			
+			WeaponRestrictions PrimaryOnly
+			Item "The Huntsman"
+			ItemAttributes {
+				ItemName "The Huntsman"
+				
+				"override projectile type" 3
+				"Set DamageType Ignite" 1
+				//"use large smoke explosion" 1
+			} // end ItemAttributes
+			Item "Jarate"
+			ItemAttributes {
+				ItemName "Jarate"
+				
+				"is_passive_weapon" 1
+				"override projectile type" 27 // fires nothing
+			} // end ItemAttributes
+		} // end T_TFBot_DSL_Sniper_Aquamann_Boss
+		T_TFBot_DSL_Sniper_SMG_Giant {
+			Name "Giant SMG Sniper"
+			Class Sniper
+			Health 3500
+			ClassIcon sniper_smg
+			
+			Skill Normal
+			Attributes MiniBoss
+			Tag bot_giant
+			Tag ocean_spawn
+			CharacterAttributes {
+				"airblast vulnerability multiplier" 0.25
+				"airblast vertical vulnerability multiplier" 0.5
+				"damage force reduction" 0.6
+				"move speed bonus" 0.5
+				"override footstep sound set" 3
+			} // end CharacterAttributes
+			
+			WeaponRestrictions SecondaryOnly
+			Item "Upgradeable TF_WEAPON_SMG"
+			ItemAttributes {
+				ItemName "Upgradeable TF_WEAPON_SMG"
+				"damage bonus" 1.2
+				"faster reload rate" -0.4
+			} // end ItemAttributes
+		} // end T_TFBot_DSL_Sniper_SMG_Giant
+		T_TFBot_DSL_Sniper_Bushwacka {
+			Name "Bushwacka Sniper"
+			Class Sniper
+			Health 1200
+			ClassIcon sniper_bushwacka
+			Scale 1.4
+			
+			Skill Expert
+			Tag bot_giant
+			CharacterAttributes {
+				// "move speed bonus" 0.85
+			} // end CharacterAttribtues
+			
+			WeaponRestrictions MeleeOnly
+			Item "The Bushwacka"
+		} // end T_TFBot_DSL_Sniper_Bushwacka
+		T_TFBot_DSL_Sniper_SMG {
+			Name "SMG Sniper"
+			Class Sniper
+			ClassIcon sniper_smg
+			
+			Skill Normal
+			
+			WeaponRestrictions SecondaryOnly
+			Item "Upgradeable TF_WEAPON_SMG"
+		} // end T_TFBot_DSL_Sniper_SMG
+		
+		T_TFGateBot_DSL_Sniper_Huntsman_Spammer {
+			Name "Bowman Rapid Fire"
+			Class Sniper
+			Health 900
+			Scale 1.5
+			ClassIcon sniper_bow_multi
+			
+			EventChangeAttributes {
+				Default {
+					Skill Hard
+					Attributes IgnoreFlag
+					BehaviorModifiers Push
+					Tag bot_gatebot
+					Tag bot_giant
+					CharacterAttributes {
+						"head scale" 0.7
+						"move speed bonus"	0.85
+					} // end CharacterAttributes
+					
+					Item "The Huntsman"
+					ItemAttributes {
+						ItemName "The Huntsman"
+						
+						"fire rate bonus" 0.6
+					} // end ItemAttributes
+					Item "MvM GateBot Light Sniper"
+				} // end Default
+				RevertGateBotsBehavior {
+					Skill Hard
+					Tag bot_giant
+					CharacterAttributes {
+						"head scale" 0.7
+						"move speed bonus"	0.85
+					} // end CharacterAttributes
+					
+					Item "The Huntsman"
+					ItemAttributes {
+						ItemName "The Huntsman"
+						
+						"fire rate bonus" 0.6
+					} // end ItemAttributes
+					Item "MvM GateBot Light Sniper"
+					ItemAttributes {
+						ItemName "MvM GateBot Light Sniper"
+						
+						"item style override" 1
+					} // end ItemAttributes
+				} // end RevertGateBotsBehavior
+			} // end EventChangeAttributes
+		} // end T_TFGateBot_DSL_Sniper_Huntsman_Spammer
+		T_TFGateBot_DSL_Sniper_SMG {
+			Name "SMG Sniper"
+			Class Sniper
+			ClassIcon sniper_smg
+			
+			EventChangeAttributes {
+				Default {
+					Skill Hard
+					Attributes IgnoreFlag
+					BehaviorModifiers Push
+					Tag bot_gatebot
+					
+					WeaponRestrictions SecondaryOnly
+					Item "Upgradeable TF_WEAPON_SMG"
+					Item "MvM GateBot Light Sniper"
+				} // end Default
+				RevertGateBotsBehavior {
+					Skill Hard
+					
+					WeaponRestrictions SecondaryOnly
+					Item "Upgradeable TF_WEAPON_SMG"
+					Item "MvM GateBot Light Sniper"
+					ItemAttributes {
+						ItemName "MvM GateBot Light Sniper"
+						
+						"item style override" 1
+					} // end ItemAttributes
+				} // end RevertGateBotsBehavior
+			} // end EventChangeAttributes
+		} // end T_TFGateBot_DSL_Sniper_SMG
+	} // end Templates
+} // end WaveSchedule
+
+
+
+// +-+-+ +-+-+-+-+ +-+-+-+-+
+// |D|a| |S|p|u|d| |L|o|r|d|
+// +-+-+ +-+-+-+-+ +-+-+-+-+
