@@ -14,14 +14,12 @@ WaveSchedule
 	{
 		"MasterWeaponsBullet"
 		{
-			OriginalItemName "The Cow Mangler 5000"
+			OriginalItemName "The Rescue Ranger"
 
-			"override projectile type" 13
-			"energy weapon penetration" 1
-			"dmg penalty vs players" 1.25
+			"damage bonus" 1.5
 			"dmg bonus vs buildings" 1.5
-			"projectile speed increased" 1.5
-			"projectile spread angle penalty" 2
+			"projectile penetration" 1
+			"projectile spread angle penalty" 1
 		}
 		"MasterWeaponsRocket"
 		{
@@ -33,10 +31,15 @@ WaveSchedule
 			"mod projectile heat aim error" 360
 			"mod projectile heat aim time" 1
 			"mod projectile heat no predict target speed" 1
+			"projectile trail particle" "eyeboss_projectile"
 		}
 	}
 
 	//// POINT TEMPLATES ////
+
+	PointTemplates
+	{
+	}
 
 	//// ROBOT TEMPLATES ////
 
@@ -48,7 +51,7 @@ WaveSchedule
 		{
 			Name "Supercharged Burst Fire Soldier"
 			Class Soldier
-			ClassIcon soldier_burstfire_hyper_lite_giant
+			ClassIcon soldier_burstfire_hyper_giant
 			Skill Expert
 			Health 4000
 			Attributes MiniBoss
@@ -236,11 +239,49 @@ WaveSchedule
 
 		//// ENGINEER TEMPLATES ////
 
+		T_TFBot_Giant_Engineer_Rescue_Ranger_Shotgun
+		{
+			Name "Giant Ranger Shotgun Engineer"
+			Class Engineer
+			ClassIcon engineer_rescueranger_shotgun_entropy_giant
+			Skill Expert
+			Health 3000
+			Attributes MiniBoss
+			Attributes HoldFireUntilFullReload
+			WeaponRestrictions PrimaryOnly
+			Action FetchFlag
+
+			Item "The Rescue Ranger"
+
+			CharacterAttributes
+			{
+				"move speed penalty" 0.5
+                "damage force reduction" 0.6
+                "airblast vulnerability multiplier" 0.6
+				"override footstep sound set" 7
+				"voice pitch scale" 0
+				"head scale" 0.7
+				"hand scale" 1.1
+			}
+
+			ItemAttributes
+			{
+				ItemName "The Rescue Ranger"
+
+				"fire rate penalty" 1.5
+
+				"projectile penetration" 1
+
+				"mult projectile count" 9
+				"projectile spread angle penalty" 3
+			}
+		}
+
 		T_TFBot_Giant_Engineer_MasterWeapons
 		{
 			Name "Giant Master-Weapons Engineer"
 			Class Engineer
-			ClassIcon engineer_upgraded_giant
+			ClassIcon engineer_hyper_giant
 			Skill Expert
 			Health 3500
 			Attributes MiniBoss
@@ -305,7 +346,7 @@ WaveSchedule
 		{
 			Name "Giant Vaccinator-Cycler Medic"
 			Class Medic
-			ClassIcon medic_vac_trio_nys_giant
+			ClassIcon medic_vac_trio_giant
 			Skill Expert
 			Health 4500
 			Attributes MiniBoss
@@ -453,8 +494,8 @@ WaveSchedule
 			Skill Expert
 			Health 3000
 			Attributes MiniBoss
+			Attributes SuppressFire
 			WeaponRestrictions PrimaryOnly
-            Action Sniper
 
 			MaxVisionRange 2500
 
@@ -474,7 +515,7 @@ WaveSchedule
 			{
 				ItemName "TF_WEAPON_SNIPERRIFLE"
 
-				"damage bonus" 2.0
+				"damage bonus" 2
 			}
 
 			FireWeapon
@@ -507,6 +548,123 @@ WaveSchedule
 				Cooldown 1
 				IfNoTarget 1
 				IfLeftSpawn 1
+			}
+		}
+
+		T_TFBot_Giant_Sniper_Explosive_Headshot
+		{
+			Name "Giant Marksman Sniper"
+			Class Sniper
+			ClassIcon sniper_headshot_explosive
+			Skill Expert
+			Health 3000
+			Attributes MiniBoss
+			Attributes SuppressFire
+			WeaponRestrictions PrimaryOnly
+
+			MaxVisionRange 2500
+
+			AimAt Head
+			AimTrackingInterval 0.01
+
+			UseCustomModel "models/bots/sniper_boss/bot_sniper_boss.mdl"
+
+			Item "The AWPer Hand"
+
+			CharacterAttributes
+			{
+				"move speed penalty" 0.5
+				"damage force reduction" 0.7
+				"airblast vulnerability multiplier" 0.7
+				"override footstep sound set" 5
+			}
+
+			ItemAttributes
+			{
+				ItemName "The AWPer Hand"
+
+				"damage bonus" 2
+				"explosive sniper shot" 3
+				"disable buildings on hit" 1
+				"sniper fires tracer" 1
+			}
+
+			FireWeapon
+			{
+				Type "Primary"
+				Delay 0
+				Cooldown 2.5
+				Duration 0.1
+				IfSeeTarget 1
+				IfLeftSpawn 1
+			}
+
+			FireInput
+			{
+				Target !self
+				Action $AddCond
+				Param 1
+				Delay 0.1
+				Cooldown 0.1
+				IfSeeTarget 1
+				IfLeftSpawn 1
+			}
+
+			FireInput
+			{
+				Target !self
+				Action $RemoveCond
+				Param 1
+				Delay 2
+				Cooldown 1
+				IfNoTarget 1
+				IfLeftSpawn 1
+			}
+		}
+
+		T_TFBot_Giant_Sniper_Carbine
+		{
+			Name "Giant Carbine Sniper"
+			Class Sniper
+			ClassIcon sniper_carbine_giant
+			Skill Expert
+			Health 3000
+			Attributes MiniBoss
+			WeaponRestrictions SecondaryOnly
+
+			MaxVisionRange 1200
+
+			UseCustomModel "models/bots/sniper_boss/bot_sniper_boss.mdl"
+
+			Item "The Cleaner's Carbine"
+
+			CharacterAttributes
+			{
+				"move speed penalty" 0.5
+				"damage force reduction" 0.7
+				"airblast vulnerability multiplier" 0.7
+				"override footstep sound set" 5
+			}
+
+			ItemAttributes
+			{
+				ItemName "The Cleaner's Carbine"
+
+				"damage bonus" 1.5
+
+				"reload time increased" 2
+
+				"clip size bonus" 2
+				"clip size penalty" 1
+			}
+
+			FireWeapon
+			{
+				Type "Secondary"
+				Delay 0.5
+				Duration 0.5
+				Repeats 0
+				Cooldown 0.5
 			}
 		}
 	}
