@@ -4,11 +4,26 @@ WaveSchedule
     {
         GChargedMedicPT
         {
+            KeepAlive 1
+
+            RemoveIfKilled "GChargedMedicTarget"
+
             OnSpawnOutput
             {
                 Target GChargedMedicTarget
                 Action SetParent
                 Param !activator
+            }
+
+            OnParentKilledOutput
+            {
+                Target GChargedMedicDeathRelay
+                Action Trigger
+            }
+            OnParentKilledOutput
+            {
+                Target GChargedMedicTarget
+                Delay 0.1
             }
 
             info_target
@@ -33,6 +48,13 @@ WaveSchedule
 
                 "OnTrigger" "!activatorRunScriptCodePrecacheSound(`player/quickfix_invulnerable_on.wav`);EmitSoundEx({sound_name = `player/quickfix_invulnerable_on.wav`, channel = 6, filter_type = 5, entity = self, flags = 4})4.51"
             }
+            logic_relay
+            {
+                "targetname" "GChargedMedicDeathRelay"
+
+                "OnTrigger" "UberchargeRelay,CancelPending,,0,-1"
+                "OnTrigger" "!activatorRunScriptCodePrecacheSound(`weapons/medigun_charged.wav`);EmitSoundEx({sound_name = `weapons/medigun_charged.wav`, channel = 6, filter_type = 5, entity = self, flags = 4})01"
+            }
 
             info_particle_system
             {
@@ -53,7 +75,7 @@ WaveSchedule
 		{
 			Name "Giant Laser Scout"
 			Class Scout
-			ClassIcon scout_capper_flipped_lite_giant
+			ClassIcon scout_capper_lite_giant
 			Skill Expert
 			Health 1200
 			Attributes MiniBoss
@@ -91,7 +113,7 @@ WaveSchedule
         {
             Name "Giant Prismatic Soldier"
             Class Soldier
-            ClassIcon soldier_bison_prismatic
+            ClassIcon soldier_bison_prismatic_giant
             Skill Expert
             Health 4000
             Attributes MiniBoss
@@ -326,7 +348,7 @@ WaveSchedule
         {
             Name "Giant Phlogistinator Pyro"
 			Class Pyro
-			ClassIcon pyro_phlog_v2_giant
+			ClassIcon pyro_atomic_giant
 			Skill Expert
 			Health 3000
 			Attributes MiniBoss
@@ -391,7 +413,7 @@ WaveSchedule
 		{
 			Name "Giant Laser Heavy"
 			Class Heavy
-			ClassIcon heavy_atomic_v2
+			ClassIcon heavy_atomic_giant
 			Skill Expert
 			Health 5000
 			Attributes MiniBoss
@@ -445,8 +467,8 @@ WaveSchedule
             Name "Giant Widowmaker Engineer"
             Class Engineer
             ClassIcon engineer_widowmaker_nys_giant
-            Health 3000
             Skill Expert
+            Health 3000
             Attributes MiniBoss
             WeaponRestrictions PrimaryOnly
             Action FetchFlag
@@ -469,9 +491,9 @@ WaveSchedule
 		{
 			Name "Giant Pomson Engineer"
 			Class Engineer
-			ClassIcon engineer_pomson_v2_giant
-			Health 3000
+			ClassIcon engineer_atomic_giant
 			Skill Expert
+            Health 3000
 			Attributes MiniBoss
 			Attributes HoldFireUntilFullReload
             WeaponRestrictions PrimaryOnly
@@ -500,8 +522,6 @@ WaveSchedule
 				"faster reload rate" 0.2
 				"mult projectile count" 3
 				"projectile spread angle penalty" 2
-				"energy weapon penetration" 1
-				"projectile trail particle" "~drg_pomson_projectile"
 			}
 		}
 
@@ -510,8 +530,8 @@ WaveSchedule
 			Name "Giant Charged Engineer"
 			Class Engineer
 			ClassIcon engineer_ranger_nys_giant
-			Health 3000
 			Skill Expert
+            Health 3000
 			Attributes MiniBoss
             Attributes HoldFireUntilFullReload
             Attributes AlwaysCrit
@@ -548,7 +568,7 @@ WaveSchedule
         {
             Name "Doctor Barrage"
             Class Medic
-            ClassIcon medic_crossbow_barrage
+            ClassIcon medic_bow_barrage_giant
             Health 4000
             Skill Expert
             Attributes MiniBoss
@@ -582,7 +602,7 @@ WaveSchedule
 		{
 			Name "Giant Charged Medic"
 			Class Medic
-			ClassIcon medic_pop_giant
+			ClassIcon medic_popper_giant
 			Skill Expert
 			Health 4500
 			Attributes MiniBoss
@@ -591,12 +611,16 @@ WaveSchedule
 
             SpawnTemplate "GChargedMedicPT"
 
+            Tag dontdoublehp
+            Tag dontdoublehp_damageres
+
 			Item "The Quick-Fix"
 
 			CharacterAttributes
 			{
 				"health drain medic" -3
-                "bot medic uber health threshold" 0
+                "bot medic uber health threshold" 751
+                "bot medic uber deploy delay duration" 3
 				"move speed penalty" 0.5
 				"damage force reduction" 0.6
 				"airblast vulnerability multiplier" 0.6
@@ -617,48 +641,21 @@ WaveSchedule
 				"heal rate bonus" 200
 			}
 
-            ChangeAttributes
+            FireInput
             {
-                Name "ChargeTelegraph"
+                Target "@c@!activator"
+                Action "FireUser1"
                 Delay 0
                 Repeats 1
                 IfHealthBelow 751
             }
-
-            EventChangeAttributes
-            {
-                ChargeTelegraph [$SIGSEGV]
-                {
-                    ItemAttributes
-                    {
-                        ItemName "The Quick-Fix"
-
-                        "attach particle effect" "3045"
-                    }
-                    FireInput
-                    {
-                        Target "@c@!activator"
-                        Action "FireUser1"
-                        Delay 0
-                        Repeats 1
-                    }
-
-                    FireWeapon
-                    {
-                        Type "Secondary"
-                        Delay 3
-                        Repeats 1
-                        Duration 2
-                    }
-                }
-            }
-		}
+        }
 
         T_TFBot_Giant_Medic_Shield
         {
             Name "Giant Shield Medic"
             Class Medic
-            ClassIcon medic_shield_lite_giant
+            ClassIcon medic_shield_giant
             Skill Expert
 			Health 4500
 			Attributes MiniBoss
@@ -693,8 +690,8 @@ WaveSchedule
             FireWeapon
 			{
 				Type "Special"
+                Delay 0.5
 				Duration 0.5
-				Delay 0.5
 				Repeats 0
 				Cooldown 0.5
 			}
