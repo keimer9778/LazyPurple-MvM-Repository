@@ -25,27 +25,9 @@ There_Was_Nothing_There
 	StartingCurrency	400
 	RespawnWaveTime	4
 	CanBotsAttackWhileInSpawnRoom	no
-	FixedRespawnWaveTime	No
 	AddSentryBusterWhenDamageDealtExceeds	3000
 	AddSentryBusterWhenKillCountExceeds	20
 	Advanced	1
-
-	PointTemplates
-	{
-		MissionNamePT
-		{
-			OnSpawnOutput
-			{
-				Target BigNet
-				Action RunScriptCode
-				Param "
-						NetProps.SetPropString(Entities.FindByClassname(null, `tf_objective_resource`), `m_iszMvMPopfileName`, `(Advanced) Nemesis`)
-					  "
-			}
-		}
-	}
-
-	SpawnTemplate "MissionNamePT"
 	
 	Templates
 	{
@@ -186,7 +168,7 @@ There_Was_Nothing_There
 		{
 			Name "Cow Sniper"
 			Class Soldier
-			ClassIcon soldier_mangler_v2
+			ClassIcon soldier_atomic
 			WeaponRestrictions PrimaryOnly
 			Item "The Cow Mangler 5000"
 			Item "The Cross-Comm Crash Helmet"
@@ -246,7 +228,7 @@ There_Was_Nothing_There
 		{
 			Class Pyro
 			Skill Hard
-			ClassIcon pyro_powerjack_floro_blu
+			ClassIcon pyro_powerjack_kai
 			Name "Powerjack Pyro"
 			Health 900
 			WeaponRestrictions MeleeOnly
@@ -267,7 +249,7 @@ There_Was_Nothing_There
 			Skill Expert
 			Health 3400
 			Name "Giant Phlogistinator Pyro"
-			ClassIcon pyro_phlog_v2
+			ClassIcon pyro_atomic
 			Attributes MiniBoss
 			Item "PY-40 Incinibot"
 			Item "The Moonman Backpack"
@@ -330,7 +312,7 @@ There_Was_Nothing_There
 		{
 			Class Engineer
 			Name "Teleporter Engineer"
-			ClassIcon engineer_telein
+			ClassIcon engineer
 			Skill Expert
 			Health 500
 			Item "The Data Mining Light"
@@ -349,7 +331,7 @@ There_Was_Nothing_There
 		{
 			Name "Kritz Medic"
 			Class Medic
-			ClassIcon medic_kritz
+			ClassIcon medic_kritz_lite
 			Skill Expert
 			Attributes SpawnWithFullCharge
 			Item "Flatliner"
@@ -402,7 +384,7 @@ There_Was_Nothing_There
 		}
 		T_TFBot_Giant_Medic_Shield
 		{
-			ClassIcon	medic_shield_lite
+			ClassIcon	medic_shield
 			Health	4500
 			Name	"Giant Shield Medic"
 			Class	Medic
@@ -696,7 +678,7 @@ There_Was_Nothing_There
         {
             Class Engineer
 			Name "Teleporter Engineer"
-			ClassIcon engineer_telein
+			ClassIcon engineer
 			Skill Expert
 			Health 600
 			Item "The Data Mining Light"
@@ -720,16 +702,20 @@ There_Was_Nothing_There
 			Target	wave_start_relay
 			Action	Trigger
 		}
-		InitWaveOutput
-		{
-			Target gamerules
-            Action RunScriptFile
-            Param  cliffside
-        }
 		DoneOutput
 		{
 			Target	wave_finished_relay
 			Action	Trigger
+		}
+		InitWaveOutput
+		{
+			Target BigNet
+			Action RunScriptCode
+			Param "
+				IncludeScript(`cliffside`)
+				NetProps.SetPropString(Entities.FindByClassname(null, `tf_objective_resource`), `m_iszMvMPopfileName`, `(Advanced) Nemesis`)
+				
+			"
 		}
 		WaveSpawn
 		{
@@ -799,14 +785,11 @@ There_Was_Nothing_There
 			MaxActive 2
 			WaitBeforeStarting 10
 			WaitBetweenSpawns 35
-			Squad
+			TFBot
 			{
-				TFBot
-				{
-					Template T_TFBot_Giant_Demo_RapidFire
-					Item "Scotsman's Stove Pipe"
-					Name "Giant Demoman"
-				}
+				Template T_TFBot_Giant_Demo_RapidFire
+				Item "Scotsman's Stove Pipe"
+				Name "Giant Demoman"
 			}
 		}
 		WaveSpawn
@@ -1552,7 +1535,7 @@ There_Was_Nothing_There
 			{
 				Name "Rapid Fire Conch Soldier"
 				Class Soldier
-				ClassIcon soldier_conch_spammer
+				ClassIcon soldier_spammer_conch
 				Skill Expert
 				Item "The Concheror"
 				Attributes SpawnWithFullCharge
@@ -1708,30 +1691,27 @@ There_Was_Nothing_There
             }
 			RandomChoice
 			{
-				Squad
+				TFBot
 				{
-					TFBot
+					Class Heavy
+					Name "Nemesis Program MK1 Shell"
+					ClassIcon heavy_chief
+					Health 5000
+					Skill Expert
+					Item "War Head"
+					WeaponRestrictions MeleeOnly
+					Attributes MiniBoss
+					Item "Fists of Steel"
+					Scale 1.8
+					CharacterAttributes
 					{
-						Class Heavy
-						Name "Nemesis Program MK1 Shell"
-						ClassIcon heavy_chief
-						Health 5000
-						Skill Expert
-						Item "War Head"
-						WeaponRestrictions MeleeOnly
-						Attributes MiniBoss
-						Item "Fists of Steel"
-						Scale 1.8
-						CharacterAttributes
-						{
-							"Damage Bonus" 4
-							"move speed bonus"	0.5
-							"damage force reduction" 0.001
-							"airblast vulnerability multiplier" 0.001
-							"override footstep sound set" 5
-						}
-						Attributes UseBossHealthBar
+						"Damage Bonus" 4
+						"move speed bonus"	0.5
+						"damage force reduction" 0.001
+						"airblast vulnerability multiplier" 0.001
+						"override footstep sound set" 5
 					}
+					Attributes UseBossHealthBar
 				}
 			}
 		}
@@ -1775,7 +1755,7 @@ There_Was_Nothing_There
 				}
 				ItemAttributes
 				{
-					ItemName	"tyrantium helmet"
+					ItemName	"Armored Authority"
 					"set item tint RGB"	16514816
 				}
 				CharacterAttributes
@@ -1802,7 +1782,7 @@ There_Was_Nothing_There
 			{
 				Class Scout
 				Skill Normal
-				ClassIcon	scout_popper2_giant
+				ClassIcon	scout_popper_giant
 				Name "Soda Popper Scout"
 				Item "the soda popper"
 				Item "The Bottle Cap"
@@ -1967,7 +1947,7 @@ There_Was_Nothing_There
 					Template T_TFBot_Giant_Medic
 					Name "Giant Mega-Heal Medic"
 					Item "The Colonel's Coat"
-					ClassIcon medic_pop
+					ClassIcon medic_popper
 				}
 			}	
 		}
@@ -2038,7 +2018,7 @@ There_Was_Nothing_There
 				Skill Hard
 				Item "The Cow Mangler 5000"
 				Item "Lord Cockswain's Pith Helmet"
-				ClassIcon soldier_mangler_v2
+				ClassIcon soldier_atomic
 				ItemAttributes
 				{
 					ItemName "Lord Cockswain's Pith Helmet"
@@ -2422,131 +2402,128 @@ There_Was_Nothing_There
 			Spawncount 1
 			DoneWarningSound "ambient\explosions\explode_2.wav"
 			WaitBeforeStarting 0
-			Squad
+			TFBot
 			{
-				TFBot
+				Name "Nemesis Program MK2 Mimicry"
+				Tag bot_rangescript
+				Class Soldier
+				Skill Expert
+				ClassIcon soldier_head_nys
+				Health 55000
+				Scale 1.75
+				Attributes MiniBoss
+				Attributes UseBossHealthBar
+				EventChangeAttributes
 				{
-					Name "Nemesis Program MK2 Mimicry"
-					Tag bot_rangescript
-					Class Soldier
-					Skill Expert
-					ClassIcon tf2_lite_shadeless
-					Health 55000
-					Scale 1.75
-					Attributes MiniBoss
-					Attributes UseBossHealthBar
-					EventChangeAttributes
+					// phase 1
+					LongRange_FOS [$SIGSEGV]
 					{
-						// phase 1
-						LongRange_FOS
+						WeaponRestrictions MeleeOnly
+						Skill Expert
+						CharacterAttributes
 						{
-							WeaponRestrictions MeleeOnly
-							Skill Expert
-							CharacterAttributes
-							{
-								"override footstep sound set" 2
-								
-								"move speed bonus"	0.4
-								"dmg taken increased" 0.25
-								"deploy time decreased" 0.01
-								"damage force reduction" 0.01
-								"airblast vulnerability multiplier" 0.01
-								"airblast vertical vulnerability multiplier" 0.1
-								"rage giving scale" 0.1
-								"health from healers reduced" 2
-								"cancel falling damage" 1
-							}
+							"override footstep sound set" 2
+							
+							"move speed bonus"	0.4
+							"dmg taken increased" 0.25
+							"deploy time decreased" 0.01
+							"damage force reduction" 0.01
+							"airblast vulnerability multiplier" 0.01
+							"airblast vertical vulnerability multiplier" 0.1
+							"rage giving scale" 0.1
+							"health from healers reduced" 2
+							"cancel falling damage" 1
 						}
-						ShortRange_Pyro
+					}
+					ShortRange_Pyro [$SIGSEGV]
+					{
+						WeaponRestrictions PrimaryOnly
+						Skill Expert
+						CharacterAttributes
 						{
-							WeaponRestrictions PrimaryOnly
-							Skill Expert
-							CharacterAttributes
-							{
-								"override footstep sound set" 2
+							"override footstep sound set" 2
 
-								"move speed bonus"	0.52
-								"deploy time decreased" 0.01
-								"damage force reduction" 0.01
-								"airblast vulnerability multiplier" 0.01
-								"airblast vertical vulnerability multiplier" 0.1
-								"airblast disabled" 1
-								"rage giving scale" 0.1
-								"health from healers reduced" 2
-								"increased jump height" 2
-								"cancel falling damage" 1
-							}
+							"move speed bonus"	0.52
+							"deploy time decreased" 0.01
+							"damage force reduction" 0.01
+							"airblast vulnerability multiplier" 0.01
+							"airblast vertical vulnerability multiplier" 0.1
+							"airblast disabled" 1
+							"rage giving scale" 0.1
+							"health from healers reduced" 2
+							"increased jump height" 2
+							"cancel falling damage" 1
 						}
-						// phase 2
-						LongRange_DeflectorHeavy
+					}
+					// phase 2
+					LongRange_DeflectorHeavy [$SIGSEGV]
+					{
+						WeaponRestrictions PrimaryOnly
+						Skill Expert
+						CharacterAttributes
 						{
-							WeaponRestrictions PrimaryOnly
-							Skill Expert
-							CharacterAttributes
-							{
-								"move speed bonus"	0.4
-								"health regen" 200
-								"override footstep sound set" 2
-								"deploy time decreased" 0.01
-								"damage force reduction" 0.01
-								"airblast vulnerability multiplier" 0.01
-								"airblast vertical vulnerability multiplier" 0.1
-								"rage giving scale" 0.1
-								"health from healers reduced" 2
-								"cancel falling damage" 1
-							}
+							"move speed bonus"	0.4
+							"health regen" 200
+							"override footstep sound set" 2
+							"deploy time decreased" 0.01
+							"damage force reduction" 0.01
+							"airblast vulnerability multiplier" 0.01
+							"airblast vertical vulnerability multiplier" 0.1
+							"rage giving scale" 0.1
+							"health from healers reduced" 2
+							"cancel falling damage" 1
 						}
-						ShortRange_Soldier
+					}
+					ShortRange_Soldier [$SIGSEGV]
+					{
+						WeaponRestrictions PrimaryOnly
+						Skill Expert
+						CharacterAttributes
 						{
-							WeaponRestrictions PrimaryOnly
-							Skill Expert
-							CharacterAttributes
-							{
-								"move speed bonus"	0.5
-								"health regen" 200
-								"override footstep sound set" 3
-								"Projectile speed increased" 0.65
-								"deploy time decreased" 0.01
-								"damage force reduction" 0.01
-								"airblast vulnerability multiplier" 0.01
-								"airblast vertical vulnerability multiplier" 0.1
-								"rage giving scale" 0.1
-								"health from healers reduced" 2
-								"increased jump height" 2
-								"cancel falling damage" 1
-							}
+							"move speed bonus"	0.5
+							"health regen" 200
+							"override footstep sound set" 3
+							"Projectile speed increased" 0.65
+							"deploy time decreased" 0.01
+							"damage force reduction" 0.01
+							"airblast vulnerability multiplier" 0.01
+							"airblast vertical vulnerability multiplier" 0.1
+							"rage giving scale" 0.1
+							"health from healers reduced" 2
+							"increased jump height" 2
+							"cancel falling damage" 1
 						}
-						// phase 3
-						ConchSoldier
+					}
+					// phase 3
+					ConchSoldier [$SIGSEGV]
+					{
+						WeaponRestrictions PrimaryOnly
+						Attributes HoldFireUntilFullReload
+						Skill Expert
+						Item "Demo Kabuto"
+						Item "The Shogun's Shoulder Guard"
+						Item "PY-40 Incinibot"
+						Item "Alcoholic Automaton"
+						Item "The Concheror"
+						Attributes AlwaysCrit
+						ItemAttributes
 						{
-							WeaponRestrictions PrimaryOnly
-							Attributes HoldFireUntilFullReload
-							Skill Expert
-							Item "Demo Kabuto"
-							Item "The Shogun's Shoulder Guard"
-							Item "PY-40 Incinibot"
-							Item "Alcoholic Automaton"
-							Item "The Concheror"
-							Attributes AlwaysCrit
-							ItemAttributes
-							{
-								ItemName "The Concheror"
-								"increase buff duration" 999
-								"deploy time increased" 0.5
-								"mult_dmgtaken_active" 0.1
-							}
-							CharacterAttributes
-							{
-								"move speed bonus"	0.5
-								"override footstep sound set" 3
-								"damage force reduction" 0.01
-								"airblast vulnerability multiplier" 0.01
-								"airblast vertical vulnerability multiplier" 0.1
-								"rage giving scale" 0.1
-								"health from healers reduced" 2
-								"increased jump height" 1.5
-								"cancel falling damage" 1
-							}
+							ItemName "The Concheror"
+							"increase buff duration" 999
+							"deploy time increased" 0.5
+							"mult_dmgtaken_active" 0.1
+						}
+						CharacterAttributes
+						{
+							"move speed bonus"	0.5
+							"override footstep sound set" 3
+							"damage force reduction" 0.01
+							"airblast vulnerability multiplier" 0.01
+							"airblast vertical vulnerability multiplier" 0.1
+							"rage giving scale" 0.1
+							"health from healers reduced" 2
+							"increased jump height" 1.5
+							"cancel falling damage" 1
 						}
 					}
 				}
@@ -2613,7 +2590,7 @@ There_Was_Nothing_There
 					Name "Super-Charge Medic"
 					Tag bot_squad_member
 					Class Medic
-					ClassIcon medic_infpop
+					ClassIcon medic_popper_spammer
 					Skill Expert
 					Attributes IgnoreEnemies
 					Attributes SpawnWithFullCharge	

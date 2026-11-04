@@ -8,22 +8,6 @@ WaveSchedule
 	RespawnWaveTime 		7
 	CanBotsAttackWhileInSpawnRoom No
 
-	PointTemplates [$SIGSEGV]
-    {
-        MissionNamePT
-        {
-            OnSpawnOutput
-            {
-                Target BigNet
-                Action RunScriptCode
-                Param "
-                        NetProps.SetPropString(Entities.FindByClassname(null, `tf_objective_resource`), `m_iszMvMPopfileName`, `Click Expert: Carnage`)
-                      "
-            }
-        }
-    }
-    SpawnTemplate "MissionNamePT" [$SIGSEGV]
-
 	Mission
 	{
 		Objective	DestroySentries
@@ -242,15 +226,21 @@ WaveSchedule
 	Wave
 	{
 		StartWaveOutput
-			{
-				Target wave_start_relay
-				Action Trigger
-			}
+		{
+			Target wave_start_relay
+			Action Trigger
+		}
 		DoneOutput					
-			{
-				Target wave_finished_relay
-				Action trigger
-			}
+		{
+			Target wave_finished_relay
+			Action trigger
+		}
+		InitWaveOutput
+		{
+			Target BigNet
+			Action RunScriptCode
+			Param "NetProps.SetPropString(Entities.FindByClassname(null, `tf_objective_resource`), `m_iszMvMPopfileName`, `(Click Expert) Chaos`)"
+		}
 		Checkpoint Yes
 		WaitWhenDone 65
 		WaveSpawn
