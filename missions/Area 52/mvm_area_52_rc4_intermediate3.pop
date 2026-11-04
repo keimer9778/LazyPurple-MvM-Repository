@@ -15,26 +15,8 @@ WaveSchedule
 	StartingCurrency	400
 	RespawnWaveTime	2 //4
 	CanBotsAttackWhileInSpawnRoom	no
-	FixedRespawnWaveTime	 No
 	AddSentryBusterWhenDamageDealtExceeds	3000
 	AddSentryBusterWhenKillCountExceeds	20
-
-	PointTemplates
-	{
-		MissionNamePT
-		{
-			OnSpawnOutput
-			{
-				Target BigNet
-				Action RunScriptCode
-				Param "
-						NetProps.SetPropString(Entities.FindByClassname(null, `tf_objective_resource`), `m_iszMvMPopfileName`, `(Intermediate) Sting Operation`)
-					  "
-			}
-		}
-	}
-
-	SpawnTemplate "MissionNamePT"
 	
 	
 	///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -61,7 +43,7 @@ WaveSchedule
 						ItemName "TF_WEAPON_SCATTERGUN"
 					}
 				}
-				RevertGateBotsBehavior
+				RevertGateBotsBehavior [$SIGSEGV]
 				{
 					Item "MvM GateBot Light Scout"
 					ItemAttributes               // turn off light hat
@@ -83,7 +65,7 @@ WaveSchedule
 			Skill Expert
 			Health 3400
 			Name "Giant Phlogistinator Pyro"
-			ClassIcon pyro_phlog_v2_giant
+			ClassIcon pyro_atomic_giant
 			Attributes MiniBoss
 			Item "PY-40 Incinibot"
 			Item "The Moonman Backpack"
@@ -120,7 +102,7 @@ WaveSchedule
 					Item "MvM GateBot Light Pyro"
 					Skill Easy
 				}
-				RevertGateBotsBehavior
+				RevertGateBotsBehavior [$SIGSEGV]
 				{
 					Item "MvM GateBot Light Pyro"
 					ItemAttributes               // turn off light hat
@@ -139,7 +121,7 @@ WaveSchedule
 			WeaponRestrictions SecondaryOnly
 			Item "The Cross-Comm Crash Helmet"
 			Item "The Righteous Bison"
-			ClassIcon soldier_bison_a
+			ClassIcon soldier_bison
 			Skill Hard
 		}
 		T_TFBot_Phlog_Pyro
@@ -147,7 +129,7 @@ WaveSchedule
 			Class Pyro
 			Skill Expert
 			Name "Phlog Pyro"
-			ClassIcon pyro_phlog_v2
+			ClassIcon pyro_atomic
 			Item "PY-40 Incinibot"
 			Item "The Moonman Backpack"
 			Item "The Phlogistinator"
@@ -163,7 +145,7 @@ WaveSchedule
 			{
 				Class Pyro
 				Name "Phlog Pyro"
-				ClassIcon pyro_phlog_v2
+				ClassIcon pyro_atomic
 				EventChangeAttributes
 				{
 					Default
@@ -186,7 +168,7 @@ WaveSchedule
 							"airblast disabled" 0
 						}
 					}
-					RevertGateBotsBehavior
+					RevertGateBotsBehavior [$SIGSEGV]
 					{
 						Item "The Phlogistinator"
 						Item "The Moonman Backpack"
@@ -246,7 +228,7 @@ WaveSchedule
 						"override footstep sound set" 6
 					}
 				}
-				RevertGateBotsBehavior
+				RevertGateBotsBehavior [$SIGSEGV]
 				{
 					//Item "Old Guadalajara"
 					Item "The Flare Gun"
@@ -299,7 +281,7 @@ WaveSchedule
 			Name "Giant Death Ray Soldier"
 			
 			Item "The Cow Mangler 5000"
-			ClassIcon soldier_bison_a_spammer
+			ClassIcon soldier_bison_spammer
 			Skill Expert
 			Health 3800
 			Item "The Hellmet"
@@ -309,7 +291,7 @@ WaveSchedule
 			Tag bot_giant
 			ItemAttributes
 			{
-				ItemName "Frontline Field Recorder"
+				ItemName "The Hellmet"
 				"set item tint rgb" 5801378
 			}		
 			ItemAttributes
@@ -369,7 +351,7 @@ WaveSchedule
 						"override footstep sound set" 4
 					}
 				}
-				RevertGateBotsBehavior
+				RevertGateBotsBehavior [$SIGSEGV]
 				{
 					Item "MvM GateBot Light Demoman"
 					ItemAttributes               // turn off light hat
@@ -413,7 +395,6 @@ WaveSchedule
         TFBot
 		{
 			Template T_TFBot_SentryBuster
-			Item "EOTL Demopants"
 			Tag bot_sentrybuster
         }
 	}
@@ -459,8 +440,12 @@ WaveSchedule
 		}
 		InitWaveOutput
 		{
-			Target wave_finished_relay
-			Action trigger
+			Target BigNet
+			Action RunScriptCode
+			Param "
+				NetProps.SetPropString(Entities.FindByClassname(null, `tf_objective_resource`), `m_iszMvMPopfileName`, `(Intermediate) Sting Operation`)
+				EntFire(`wave_finished_relay`,`Trigger`)
+			"
 		}
 		WaveSpawn
 		{
@@ -569,13 +554,13 @@ WaveSchedule
 			TotalCount	4
 			MaxActive	4
 			SpawnCount	4
-			WaitForAllDead 1ab
+			WaitForAllDead 1ab [$SIGSEGV]
 			WaitForAllDead 1ac
 			WaitBeforeStarting	0
 			WaitBetweenSpawns	1
 			TFBot
 			{
-				Template T_TFGateBot_Soldier_Normal
+				Template T_TFGateBot_Soldier_Normal [$SIGSEGV]
 			}
 		}
 		WaveSpawn
@@ -586,7 +571,7 @@ WaveSchedule
 			TotalCount	6
 			MaxActive	6
 			SpawnCount	6
-			WaitForAllDead 1ab
+			WaitForAllDead 1ab [$SIGSEGV]
 			WaitForAllDead 1ac
 			WaitBeforeStarting	0
 			WaitBetweenSpawns	1
@@ -608,7 +593,7 @@ WaveSchedule
 			WaitBetweenSpawns	5
 			TFBot
 			{
-				Template T_TFGateBot_Soldier_Normal
+				Template T_TFGateBot_Soldier_Normal [$SIGSEGV]
 			}
 		}
 		WaveSpawn
@@ -648,7 +633,7 @@ WaveSchedule
 				Skill Normal
 				Item "The Cross-Comm Crash Helmet"
 				Item "The Cow Mangler 5000"
-				ClassIcon soldier_mangler_v2
+				ClassIcon soldier_atomic
 					
 			}
 		}
@@ -675,12 +660,9 @@ WaveSchedule
 			SpawnCount	1
 			WaitBeforeStarting	0
 			WaitBetweenSpawns	25
-			Squad
+			TFBot
 			{
-				TFBot
-				{
-					Template T_TFGateBot_Giant_Flaregun_Spammer
-				}
+				Template T_TFGateBot_Giant_Flaregun_Spammer
 			}
 		}
 		WaveSpawn
@@ -693,17 +675,14 @@ WaveSchedule
 			SpawnCount	3
 			WaitBeforeStarting	0
 			WaitBetweenSpawns	6
-			Squad
+			TFBot
 			{
-				TFBot
-				{
-					Template T_TFBot_Scout_Melee
-					Skill Hard
-					ClassIcon scout_bat_nys
-					Tag nav_prefer_main_2
-					Tag nav_prefer_main_4
-					Tag nav_prefer_main_5
-				}
+				Template T_TFBot_Scout_Melee
+				Skill Hard
+				ClassIcon scout_bat_nys
+				Tag nav_prefer_main_2
+				Tag nav_prefer_main_4
+				Tag nav_prefer_main_5
 			}
 		}
 		WaveSpawn
@@ -716,12 +695,9 @@ WaveSchedule
 			SpawnCount	6
 			WaitBeforeStarting	7
 			WaitBetweenSpawns	10
-			Squad
+			TFBot
 			{
-				TFBot
-				{
-					Template T_TFGateBot_Soldier_Normal
-				}
+				Template T_TFGateBot_Soldier_Normal [$SIGSEGV]
 			}
 		}
 		WaveSpawn
@@ -791,7 +767,7 @@ WaveSchedule
 								"heal on hit for rapidfire" 60
 							}
 						}
-						RevertGateBotsBehavior
+						RevertGateBotsBehavior [$SIGSEGV]
 						{
 							Item "Fancy Dress Uniform"
 							Item "The Black Box"
@@ -838,12 +814,9 @@ WaveSchedule
 			SpawnCount	1
 			WaitBeforeStarting	15
 			WaitBetweenSpawns	25
-			Squad
+			TFBot
 			{
-				TFBot
-				{
-					Template T_TFGateBot_Giant_Flaregun_Spammer
-				}
+				Template T_TFGateBot_Giant_Flaregun_Spammer
 			}
 		}
 		Wavespawn
@@ -966,7 +939,6 @@ WaveSchedule
 			TotalCount	20
 			MaxActive	8
 			SpawnCount	4
-			WaitForAllDead 2ba
 			WaitBeforeStarting	0
 			WaitBetweenSpawns	10
 			TFBot
@@ -985,13 +957,10 @@ WaveSchedule
 			Support 1
 			WaitBeforeStarting	10
 			WaitBetweenSpawns	12
-			Squad
+			TFBot
 			{
-				TFBot
-				{
-					Class Demoman
-					Skill Normal
-				}
+				Class Demoman
+				Skill Normal
 			}
 		}
 		WaveSpawn
@@ -1105,15 +1074,11 @@ WaveSchedule
 			TotalCount	6
 			MaxActive	6
 			SpawnCount	1
-			WaitForAllDead 3aa
 			WaitBeforeStarting	0
 			WaitBetweenSpawns	10
-			Squad
+			TFBot
 			{
-				TFBot
-				{
-					Template T_TFGateBot_Giant_Demo_RapidFire
-				}
+				Template T_TFGateBot_Giant_Demo_RapidFire
 			}
 		}
 		WaveSpawn
@@ -1133,7 +1098,6 @@ WaveSchedule
 				{
 					Template T_TFBot_Engineer_Sentry_Tele_Battle
 					Item "The Data Mining Light"
-					TeleportWhere spawnbot_fast
 					TeleportWhere spawnbot_invasion
 				}
 				TFBot
@@ -1155,30 +1119,27 @@ WaveSchedule
 			SpawnCount	4
 			WaitBeforeStarting	0
 			WaitBetweenSpawns	6
-			Squad
+			TFBot
 			{
-				TFBot
+				Class Scout
+				Skill Easy
+				Name "Crit-a-Cola Scout"
+				Item "Crit-a-Cola"
+				Item "Bonk Helm"
+				Item "The Atomizer"
+				WeaponRestrictions PrimaryOnly
+				ClassIcon scout_cola
+				Attributes SpawnWithFullCharge
+				Attributes DisableDodge
+				CharacterAttributes
 				{
-					Class Scout
-					Skill Easy
-					Name "Crit-a-Cola Scout"
-					Item "Crit-a-Cola"
-					Item "Bonk Helm"
-					Item "The Atomizer"
-					WeaponRestrictions PrimaryOnly
-					ClassIcon scout_cola_package
-					Attributes SpawnWithFullCharge
-					Attributes DisableDodge
-					CharacterAttributes
-					{
-						"deploy time increased" 0.5
-						"effect bar recharge rate increased" 0.5
-						"move speed bonus" 1.25
-					}
-					Tag nav_prefer_main_2
-					Tag nav_prefer_main_4
-					Tag nav_prefer_main_5
+					"deploy time increased" 0.5
+					"effect bar recharge rate increased" 0.5
+					"move speed bonus" 1.25
 				}
+				Tag nav_prefer_main_2
+				Tag nav_prefer_main_4
+				Tag nav_prefer_main_5
 			}
 		}
 		WaveSpawn
@@ -1245,7 +1206,7 @@ WaveSchedule
 			TFBot
 			{
 				Template T_TFBot_Giant_Demoman
-				ClassIcon demo_spammer_package
+				ClassIcon demo_spammer_giant
 				Tag bot_giant
 				Item "Scotsman's Stove Pipe"
 				Item "warbird_grenadelauncher_butcherbird"
@@ -1275,7 +1236,7 @@ WaveSchedule
 			TFBot
 			{
 				Template T_TFBot_Giant_Demoman
-				ClassIcon demo_spammer_package
+				ClassIcon demo_spammer_giant
 				Tag bot_giant
 				Item "Scotsman's Stove Pipe"
 				Item "warbird_grenadelauncher_butcherbird"
@@ -1346,12 +1307,9 @@ WaveSchedule
 			SpawnCount	2
 			WaitBeforeStarting	6
 			WaitBetweenSpawns	15
-			Squad
+			TFBot
 			{
-				TFBot
-				{
-					Template T_TFGateBot_Giant_Scout_FAN
-				}
+				Template T_TFGateBot_Giant_Scout_FAN [$SIGSEGV]
 			}
 		}
 		WaveSpawn
@@ -1401,7 +1359,7 @@ WaveSchedule
 						Item "MvM GateBot Light Heavy"
 						Skill Normal
 					}
-					RevertGateBotsBehavior
+					RevertGateBotsBehavior [$SIGSEGV]
 					{
 						Item "MvM GateBot Light Heavy"
 						ItemAttributes               // turn off light hat
@@ -1505,76 +1463,73 @@ WaveSchedule
 			WaitForAllSpawned 5ba
 			WaitBeforeStarting	8
 			WaitBetweenSpawns	8
-			Squad
+			TFBot
 			{
-				TFBot
+				Class Soldier
+				Name "Giant Charged Soldier"
+				ClassIcon soldier_crit
+				Health 3800
+
+				EventChangeAttributes
 				{
-					Class Soldier
-					Name "Giant Charged Soldier"
-					ClassIcon soldier_crit
-					Health 3800
-
-					EventChangeAttributes
+					Default
 					{
-						Default
-						{
-							BehaviorModifiers push
-							Attributes IgnoreFlag
-							Tag nav_prefer_gate1_flank
-							Tag bot_gatebot
+						BehaviorModifiers push
+						Attributes IgnoreFlag
+						Tag nav_prefer_gate1_flank
+						Tag bot_gatebot
 
-							Item "MvM GateBot Light Soldier"
-							Item "powerhouse_rocketlauncher_shellshocker"
-							Tag bot_giant
-							Skill Normal
-							Attributes AlwaysCrit
-							Attributes HoldFireUntilFullReload
-							Attributes MiniBoss
-							ItemAttributes
-							{
-								ItemName	"powerhouse_rocketlauncher_shellshocker"
-								"projectile speed decreased" 0.5
-								"faster reload rate" 0.2
-								"fire rate bonus" 2
-								"Set_item_texture_wear" 0
-							}
-							CharacterAttributes
-							{
-								"move speed bonus"	0.5
-								"damage force reduction" 0.4
-								"airblast vulnerability multiplier" 0.4
-								"override footstep sound set" 3
-							}
-						}
-						RevertGateBotsBehavior
+						Item "MvM GateBot Light Soldier"
+						Item "powerhouse_rocketlauncher_shellshocker"
+						Tag bot_giant
+						Skill Normal
+						Attributes AlwaysCrit
+						Attributes HoldFireUntilFullReload
+						Attributes MiniBoss
+						ItemAttributes
 						{
-							Item "MvM GateBot Light Soldier"
-							Item "powerhouse_rocketlauncher_shellshocker"
-							ItemAttributes
-							{
-								ItemName "MvM GateBot Light Soldier"
-								"item style override" 1
-							}
-							Tag bot_giant
-							Skill Normal
-							Attributes AlwaysCrit
-							Attributes HoldFireUntilFullReload
-							Attributes MiniBoss
-							ItemAttributes
-							{
-								ItemName	"powerhouse_rocketlauncher_shellshocker"
-								"projectile speed decreased" 0.5
-								"faster reload rate" 0.2
-								"fire rate bonus" 2
-								"Set_item_texture_wear" 0
-							}
-							CharacterAttributes
-							{
-								"move speed bonus"	0.5
-								"damage force reduction" 0.4
-								"airblast vulnerability multiplier" 0.4
-								"override footstep sound set" 3
-							}
+							ItemName	"powerhouse_rocketlauncher_shellshocker"
+							"projectile speed decreased" 0.5
+							"faster reload rate" 0.2
+							"fire rate bonus" 2
+							"Set_item_texture_wear" 0
+						}
+						CharacterAttributes
+						{
+							"move speed bonus"	0.5
+							"damage force reduction" 0.4
+							"airblast vulnerability multiplier" 0.4
+							"override footstep sound set" 3
+						}
+					}
+					RevertGateBotsBehavior [$SIGSEGV]
+					{
+						Item "MvM GateBot Light Soldier"
+						Item "powerhouse_rocketlauncher_shellshocker"
+						ItemAttributes
+						{
+							ItemName "MvM GateBot Light Soldier"
+							"item style override" 1
+						}
+						Tag bot_giant
+						Skill Normal
+						Attributes AlwaysCrit
+						Attributes HoldFireUntilFullReload
+						Attributes MiniBoss
+						ItemAttributes
+						{
+							ItemName	"powerhouse_rocketlauncher_shellshocker"
+							"projectile speed decreased" 0.5
+							"faster reload rate" 0.2
+							"fire rate bonus" 2
+							"Set_item_texture_wear" 0
+						}
+						CharacterAttributes
+						{
+							"move speed bonus"	0.5
+							"damage force reduction" 0.4
+							"airblast vulnerability multiplier" 0.4
+							"override footstep sound set" 3
 						}
 					}
 				}
@@ -1717,15 +1672,12 @@ WaveSchedule
 			SpawnCount	1
 			WaitBeforeStarting	0
 			WaitBetweenSpawns	25
-			Squad
+			TFBot
 			{
-				TFBot
-				{
-					Template T_TFBot_Giant_Soldier_Death_Ray_Weakened
-					Tag nav_prefer_main_2
-					Tag nav_prefer_main_4
-					Tag nav_prefer_main_5
-				}
+				Template T_TFBot_Giant_Soldier_Death_Ray_Weakened
+				Tag nav_prefer_main_2
+				Tag nav_prefer_main_4
+				Tag nav_prefer_main_5
 			}
 		}
 		WaveSpawn
@@ -1743,15 +1695,12 @@ WaveSchedule
 				Target boss_dead_addbomb1_relay
 				Action Trigger
 			}
-			Squad
+			TFBot
 			{
-				TFBot
-				{
-					Template T_TFBot_Giant_Soldier_Death_Ray_Weakened
-					Tag nav_prefer_main_2
-					Tag nav_prefer_main_4
-					Tag nav_prefer_main_5
-				}
+				Template T_TFBot_Giant_Soldier_Death_Ray_Weakened
+				Tag nav_prefer_main_2
+				Tag nav_prefer_main_4
+				Tag nav_prefer_main_5
 			}
 		}
 		WaveSpawn
@@ -1764,34 +1713,31 @@ WaveSchedule
 			SpawnCount	3
 			WaitBeforeStarting	10
 			WaitBetweenSpawns	6
-			Squad
+			TFBot
 			{
-				TFBot
+				Class Heavyweapons
+
+				EventChangeAttributes
 				{
-					Class Heavyweapons
-
-					EventChangeAttributes
+					Default
 					{
-						Default
-						{
-							BehaviorModifiers push			// having these will cause bots to run towards gates
-							Attributes IgnoreFlag			// having these will cause bots to run towards gates
-							Tag nav_prefer_gate1_flank 		// having these will cause bots to run towards gates
-							Tag bot_gatebot 				// having these will cause bots to run towards gates
+						BehaviorModifiers push			// having these will cause bots to run towards gates
+						Attributes IgnoreFlag			// having these will cause bots to run towards gates
+						Tag nav_prefer_gate1_flank 		// having these will cause bots to run towards gates
+						Tag bot_gatebot 				// having these will cause bots to run towards gates
 
-							Item "MvM GateBot Light Heavy"
-							Skill Hard
-						}
-						RevertGateBotsBehavior
+						Item "MvM GateBot Light Heavy"
+						Skill Hard
+					}
+					RevertGateBotsBehavior [$SIGSEGV]
+					{
+						Item "MvM GateBot Light Heavy"
+						ItemAttributes               // turn off light hat
 						{
-							Item "MvM GateBot Light Heavy"
-							ItemAttributes               // turn off light hat
-							{
-								ItemName "MvM GateBot Light Heavy"
-								"item style override" 1
-							}
-							Skill Hard
+							ItemName "MvM GateBot Light Heavy"
+							"item style override" 1
 						}
+						Skill Hard
 					}
 				}
 			}
@@ -1871,16 +1817,13 @@ WaveSchedule
 			WaitForAllDead 6aa
 			WaitBeforeStarting	4
 			WaitBetweenSpawns	1
-			Squad
+			TFBot
 			{
-				TFBot
-				{
-					Template T_TFBot_Giant_Scout_FAN
-					Tag nav_prefer_main_2
-					Tag nav_prefer_main_4
-					Tag nav_prefer_main_5
-					Tag bot_giant
-				}
+				Template T_TFBot_Giant_Scout_FAN
+				Tag nav_prefer_main_2
+				Tag nav_prefer_main_4
+				Tag nav_prefer_main_5
+				Tag bot_giant
 			}
 		}
 		WaveSpawn
@@ -1894,12 +1837,9 @@ WaveSchedule
 			WaitForAllDead 6aa
 			WaitBeforeStarting	16
 			WaitBetweenSpawns	1
-			Squad
+			TFBot
 			{
-				TFBot
-				{
-					Template T_TFGateBot_Giant_Scout_FAN
-				}
+				Template T_TFGateBot_Giant_Scout_FAN [$SIGSEGV]
 			}
 		}
 		WaveSpawn
@@ -1913,12 +1853,9 @@ WaveSchedule
 			WaitForAllDead 6aa
 			WaitBeforeStarting	32
 			WaitBetweenSpawns	1
-			Squad
+			TFBot
 			{
-				TFBot
-				{
-					Template T_TFGateBot_Giant_Scout_FAN
-				}
+				Template T_TFGateBot_Giant_Scout_FAN [$SIGSEGV]
 			}
 		}
 		WaveSpawn
@@ -1966,13 +1903,10 @@ WaveSchedule
 			WaitForAllDead 6bd
 			WaitBeforeStarting	4
 			WaitBetweenSpawns	1
-			Squad
+			TFBot
 			{
-				TFBot
-				{
-					Template T_TFBot_Giant_Scout_FAN
-					Tag bot_giant
-				}
+				Template T_TFBot_Giant_Scout_FAN
+				Tag bot_giant
 			}
 		}
 		WaveSpawn
@@ -1986,35 +1920,32 @@ WaveSchedule
 			WaitForAllDead 6bd
 			WaitBeforeStarting	2
 			WaitBetweenSpawns	15
-			Squad
+			TFBot
 			{
-				TFBot
+				Template T_TFBot_Giant_Heavyweapons_HealOnKill
+				Attributes UseBossHealthBar
+				Item "EOTL_sheavyshirt"
+				Health 5500
+				Name "Giant Heal-On-Kill Heavy"
+				Tag bot_giant
+				Item "The Tungsten Toque"
+				Item "gentlemanne_minigun_topshelf"
+				MaxVisionRange 1600
+				WeaponRestrictions PrimaryOnly
+				Attributes MiniBoss
+				ItemAttributes
 				{
-					Template T_TFBot_Giant_Heavyweapons_HealOnKill
-					Attributes UseBossHealthBar
-					Item "EOTL_sheavyshirt"
-					Health 5500
-					Name "Giant Heal-On-Kill Heavy"
-					Tag bot_giant
-					Item "The Tungsten Toque"
-					Item "gentlemanne_minigun_topshelf"
-					MaxVisionRange 1600
-					WeaponRestrictions PrimaryOnly
-					Attributes MiniBoss
-					ItemAttributes
-					{
-						ItemName "gentlemanne_minigun_topshelf"
-						"damage bonus"	1.2
-						"attack projectiles" 1
-						"heal on kill" 4000
-						"killstreak tier" 2            
-						"killstreak idleeffect" 2
-						"Set_item_texture_wear" 0
-					}
-					Tag nav_prefer_main_2
-					Tag nav_prefer_main_4
-					Tag nav_prefer_main_5
+					ItemName "gentlemanne_minigun_topshelf"
+					"damage bonus"	1.2
+					"attack projectiles" 1
+					"heal on kill" 4000
+					"killstreak tier" 2            
+					"killstreak idleeffect" 2
+					"Set_item_texture_wear" 0
 				}
+				Tag nav_prefer_main_2
+				Tag nav_prefer_main_4
+				Tag nav_prefer_main_5
 			}
 		}
 		WaveSpawn

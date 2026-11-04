@@ -7,23 +7,6 @@ WaveSchedule
 	RespawnWaveTime 		2
 	FixedRespawnWaveTime Yes
 	CanBotsAttackWhileInSpawnRoom no
-
-	PointTemplates
-	{
-		MissionNamePT
-		{
-			OnSpawnOutput
-			{
-				Target BigNet
-				Action RunScriptCode
-				Param "
-						NetProps.SetPropString(Entities.FindByClassname(null, `tf_objective_resource`), `m_iszMvMPopfileName`, `(Intermediate) Stacked Deck`)
-					  "
-			}
-		}
-	}
-
-	SpawnTemplate "MissionNamePT"
 	
 	Templates
 	{
@@ -50,7 +33,7 @@ WaveSchedule
 						"damage penalty" 0.5
 					}
 				}
-				RevertGateBotsBehavior
+				RevertGateBotsBehavior [$SIGSEGV]
 				{
 					Item "MvM GateBot Light Scout"
 					ItemAttributes               // turn off light hat
@@ -89,7 +72,7 @@ WaveSchedule
 					Skill Normal
 					WeaponRestrictions MeleeOnly
 				}
-				RevertGateBotsBehavior
+				RevertGateBotsBehavior [$SIGSEGV]
 				{
 					Item "the killing gloves of boxing"
 					Item "Pugilist's Protector"
@@ -153,7 +136,7 @@ WaveSchedule
 					Item "MvM GateBot Light Heavy"
 					Skill Normal
 				}
-				RevertGateBotsBehavior
+				RevertGateBotsBehavior [$SIGSEGV]
 				{
 					Item "MvM GateBot Light Heavy"
 					ItemAttributes               // turn off light hat
@@ -182,7 +165,7 @@ WaveSchedule
 					Item "MvM GateBot Light Pyro"
 					Skill Normal
 				}
-				RevertGateBotsBehavior
+				RevertGateBotsBehavior [$SIGSEGV]
 				{
 					Item "MvM GateBot Light Pyro"
 					ItemAttributes               // turn off light hat
@@ -299,7 +282,7 @@ WaveSchedule
 						"override footstep sound set" 2
 					}
 				}
-				RevertGateBotsBehavior
+				RevertGateBotsBehavior [$SIGSEGV]
 				{
 					Item "MvM GateBot Light Heavy"
 					ItemAttributes               // turn off light hat
@@ -350,7 +333,7 @@ WaveSchedule
 						"damage penalty" 0.5
 					}
 				}
-				RevertGateBotsBehavior
+				RevertGateBotsBehavior [$SIGSEGV]
 				{
 					Item "MvM GateBot Light Scout"
 					ItemAttributes               // turn off light hat
@@ -385,7 +368,7 @@ WaveSchedule
 					Item "MvM GateBot Light Soldier"
 					Skill Normal
 				}
-				RevertGateBotsBehavior
+				RevertGateBotsBehavior [$SIGSEGV]
 				{
 					Item "MvM GateBot Light Soldier"
 					ItemAttributes               // turn off light hat
@@ -424,7 +407,7 @@ WaveSchedule
 						"damage penalty" 0.5
 					}
 				}
-				RevertGateBotsBehavior
+				RevertGateBotsBehavior [$SIGSEGV]
 				{
 					Item "MvM GateBot Light Heavy"
 					ItemAttributes               // turn off light hat
@@ -490,7 +473,7 @@ WaveSchedule
 						"override footstep sound set" 5
 					}
 				}
-				RevertGateBotsBehavior
+				RevertGateBotsBehavior [$SIGSEGV]
 				{
 					// Item "The Fed-Fightin' Fedora"
 					Item "The Bolt Boy"
@@ -560,7 +543,7 @@ WaveSchedule
 		{
 			Class demoman
 			Name "One-man Orchestra"
-			ClassIcon joker_g
+			ClassIcon demo_spammer_giant
 			Attributes MiniBoss
 			Attributes UseBossHealthBar
 			Attributes AlwaysFireWeapon
@@ -579,7 +562,7 @@ WaveSchedule
 				"projectile spread angle penalty" 544 //need to find a value where he fires all around himself
 				"fuse bonus" -1.5 //does this accept negative values?
 				"Projectile speed increased" 1.5
-				"custom projectile model" "models/workshop/player/items/demo/bagpipes/bagpipes.mdl" // crash the game
+				// "custom projectile model" "models/workshop/player/items/demo/bagpipes/bagpipes.mdl" // crash the game
 				"clip size upgrade atomic" 7.0
 				
 			}
@@ -818,24 +801,24 @@ WaveSchedule
 		{
 			TFBot
 			{
+				ClassIcon sniper_sydneysleeper
 				Class Sniper
 				Item "Pestering Jester"
 				Skill Hard
-				ClassIcon joker
 				Name "Joker"
 			}
 			TFBot
 			{
 				Template T_TFBot_Sniper_Sydney_Sleeper
+				ClassIcon sniper_sydneysleeper
 				Item "Pestering Jester"
-				ClassIcon joker
 				Name "Joker"
 			}
 			TFBot
 			{
 				Template T_TFBot_Sniper_Razorback
+				ClassIcon sniper_sydneysleeper
 				Item "Pestering Jester"
-				ClassIcon joker
 				Name "Joker"
 			}
 		}
@@ -906,6 +889,14 @@ WaveSchedule
 			Target wave_finished_relay
 			Action trigger
 		}
+		InitWaveOutput
+		{
+			Target BigNet
+			Action RunScriptCode
+			Param "
+				NetProps.SetPropString(Entities.FindByClassname(null, `tf_objective_resource`), `m_iszMvMPopfileName`, `(Intermediate) Stacked Deck`)
+			"
+		}
 		WaitWhenDone 65
 		Checkpoint Yes
 		
@@ -968,15 +959,12 @@ WaveSchedule
 			WaitForAllDead "wave01a"
 			TotalCurrency 100		
 			
-			Squad
+			TFBot
 			{
-				TFBot
-				{
-					Class Pyro
-					Skill Normal
-					WeaponRestrictions PrimaryOnly
-					Name "Pyre O'Clubs"
-				}
+				Class Pyro
+				Skill Normal
+				WeaponRestrictions PrimaryOnly
+				Name "Pyre O'Clubs"
 			}
 		}
 		WaveSpawn
@@ -991,13 +979,10 @@ WaveSchedule
 			WaitForAllSpawned "wave01b"
 			TotalCurrency 100		
 			
-			Squad
+			TFBot
 			{
-				TFBot
-				{
-					Template T_TFBot_Heavyweapons_Fist
-					Name "Gauntlet of Clubs"
-				}
+				Template T_TFBot_Heavyweapons_Fist
+				Name "Gauntlet of Clubs"
 			}
 		}
 		WaveSpawn
@@ -1012,16 +997,13 @@ WaveSchedule
 			WaitForAllDead "wave01b"
 			TotalCurrency 100		
 			
-			Squad
+			TFBot
 			{
-				TFBot
-				{
-					Template T_TFBot_Giant_Scout
-					WeaponRestrictions MeleeOnly
-					Name "Jack of Clubs"
-					ClassIcon scout_bat
-					Tag bot_giant
-				}
+				Template T_TFBot_Giant_Scout
+				WeaponRestrictions MeleeOnly
+				Name "Jack of Clubs"
+				ClassIcon scout_bat_nys
+				Tag bot_giant
 			}
 		}
 		WaveSpawn
@@ -1256,7 +1238,7 @@ WaveSchedule
 			{
 				Class Soldier
 				Skill Normal
-				ClassIcon soldier_shovel
+				ClassIcon soldier_shovel_nys
 				WeaponRestrictions MeleeOnly
 				Item "Bobby Bonnet"
 				Name "Police of Spades"
@@ -1659,19 +1641,16 @@ WaveSchedule
 			WaitForAllDead "wave04c"
 			TotalCurrency 100		
 			
-			Squad
+			TFBot
 			{
-				TFBot
+				Template T_TFBot_Giant_Soldier_RocketShotgun
+				ItemAttributes
 				{
-					Template T_TFBot_Giant_Soldier_RocketShotgun
-					ItemAttributes
-					{
-						ItemName "The Black Box"
-						"heal on hit for rapidfire" 500
-					}
-					Name "King of Hearts"
-					Tag bot_giant
+					ItemName "The Black Box"
+					"heal on hit for rapidfire" 500
 				}
+				Name "King of Hearts"
+				Tag bot_giant
 			}
 		}
 		WaveSpawn
@@ -1725,7 +1704,7 @@ WaveSchedule
 			{
 				Class Soldier
 				Skill Normal
-				ClassIcon joker_g
+				ClassIcon soldier
 				WeaponRestrictions PrimaryOnly
 				Attributes UseBossHealthBar
 				Attributes MiniBoss
@@ -1765,7 +1744,7 @@ WaveSchedule
 				{
 					Class Scout
 					Skill Normal
-					ClassIcon joker
+					ClassIcon scout
 					Name "Joker"
 					Item "Pestering Jester"
 				}
@@ -1773,7 +1752,7 @@ WaveSchedule
 				{
 					Class Soldier
 					Skill Hard
-					ClassIcon joker
+					ClassIcon soldier
 					Name "Joker"
 					Item "Pestering Jester"
 				}
@@ -1781,7 +1760,7 @@ WaveSchedule
 				{
 					Class Pyro
 					Skill Normal
-					ClassIcon joker
+					ClassIcon pyro
 					Name "Joker"
 					Item "Pestering Jester"
 				}
@@ -1789,7 +1768,7 @@ WaveSchedule
 				{
 					Class Demoman
 					Skill Normal
-					ClassIcon joker
+					ClassIcon demo
 					Name "Joker"
 					Item "Pestering Jester"
 				}
@@ -1820,7 +1799,7 @@ WaveSchedule
 				TFBot
 				{
 					Template T_TFBot_Giant_Pyro
-					ClassIcon joker_g
+					ClassIcon pyro_giant
 					Name "Joker"
 					Item "Pestering Jester"
 				}
@@ -1832,14 +1811,14 @@ WaveSchedule
 						ItemName "TF_WEAPON_ROCKETLAUNCHER"
 						"faster reload rate" -0.8
 					}
-					ClassIcon joker_g
+					ClassIcon soldier_giant
 					Name "Joker"
 					Item "Pestering Jester"
 				}
 				TFBot
 				{
 					Template T_TFBot_Giant_Demo_RapidFire
-					ClassIcon joker_g
+					ClassIcon demo_spammer_giant
 					Name "Joker"
 					Item "Pestering Jester"
 				}
@@ -1863,7 +1842,7 @@ WaveSchedule
 				{
 					Class Scout
 					Skill Normal
-					ClassIcon joker
+					ClassIcon scout
 					Name "Joker"
 					Item "Pestering Jester"
 				}
@@ -1871,7 +1850,7 @@ WaveSchedule
 				{
 					Class Soldier
 					Skill Hard
-					ClassIcon joker
+					ClassIcon soldier
 					Name "Joker"
 					Item "Pestering Jester"
 				}
@@ -1879,7 +1858,7 @@ WaveSchedule
 				{
 					Class Pyro
 					Skill Normal
-					ClassIcon joker
+					ClassIcon pyro
 					Name "Joker"
 					Item "Pestering Jester"
 				}
@@ -1887,7 +1866,7 @@ WaveSchedule
 				{
 					Class Demoman
 					Skill Normal
-					ClassIcon joker
+					ClassIcon demo
 					Name "Joker"
 					Item "Pestering Jester"
 				}
@@ -1895,21 +1874,21 @@ WaveSchedule
 				{
 					Class Heavy
 					Skill Normal
-					ClassIcon joker
+					ClassIcon heavy
 					Name "Joker"
 					Item "Pestering Jester"
 				}
 				TFBot
 				{
 					Template T_TFBot_Medic_BigHeal
-					ClassIcon joker
+					ClassIcon medic
 					Name "Joker"
 					Item "Pestering Jester"
 				}
 				TFBot
 				{
 					Template T_TFBot_Sniper_Huntsman_Spammer
-					ClassIcon joker
+					ClassIcon sniper_bow_multi
 					Scale 1.25
 					Health 900
 					Name "Joker"
@@ -1936,7 +1915,7 @@ WaveSchedule
 				TFBot
 				{
 					Template T_TFBot_Giant_Pyro
-					ClassIcon joker_g
+					ClassIcon pyro_giant
 					Name "Joker"
 					Item "Pestering Jester"
 				}
@@ -1948,7 +1927,7 @@ WaveSchedule
 						ItemName "TF_WEAPON_ROCKETLAUNCHER"
 						"faster reload rate" -0.8
 					}
-					ClassIcon joker_g
+					ClassIcon soldier_giant
 					Name "Joker"
 					Item "Pestering Jester"
 				}
@@ -1961,42 +1940,42 @@ WaveSchedule
 						"faster reload rate" -0.8
 						"fire rate bonus" 1.2
 					}
-					ClassIcon joker_g
+					ClassIcon soldier_giant
 					Name "Joker"
 					Item "Pestering Jester"
 				}
 				TFBot
 				{
 					Template T_TFBot_Giant_Demoman
-					ClassIcon joker_g
+					ClassIcon demo_giant
 					Name "Joker"
 					Item "Pestering Jester"
 				}
 				TFBot
 				{
 					Template T_TFBot_Giant_Heavyweapons
-					ClassIcon joker_g
+					ClassIcon heavy_giant
 					Name "Joker"
 					Item "Pestering Jester"
 				}
 				TFBot
 				{
 					Template T_TFBot_Giant_Scout
-					ClassIcon joker_g
+					ClassIcon scout_giant_fast
 					Name "Joker"
 					Item "Pestering Jester"
 				}
 				TFBot
 				{
 					Template T_TFBot_Giant_Scout_Baseball
-					ClassIcon joker_g
+					ClassIcon scout_stun_giant
 					Name "Joker"
 					Item "Pestering Jester"
 				}
 				TFBot
 				{
 					Template T_TFBot_Giant_DemoMan_PrinceTavish
-					ClassIcon joker_g
+					ClassIcon demoknight_giant
 					Name "Joker"
 					Item "Pestering Jester"
 				}
@@ -2019,7 +1998,7 @@ WaveSchedule
 			{
 				Class Scout
 				Skill Hard
-				ClassIcon joker
+				ClassIcon scout
 				WeaponRestrictions MeleeOnly
 				Name "Joker"
 				Item "Pestering Jester"
@@ -2059,7 +2038,7 @@ WaveSchedule
 			{
 				Class Soldier
 				Skill Normal
-				ClassIcon joker
+				ClassIcon soldier
 				WeaponRestrictions MeleeOnly
 				Attributes AlwaysFireWeapon
 				Attributes MiniBoss
@@ -2068,6 +2047,7 @@ WaveSchedule
 				Scale 1.75
 				Health 1
 				Name "The air crackles with bagpipes"
+				HideIcon 1 [$SIGSEGV]
 				CharacterAttributes
 				{
 					"damage force reduction" 0.4
@@ -2098,7 +2078,7 @@ WaveSchedule
 			{
 				Class Soldier
 				Skill Normal
-				ClassIcon joker
+				ClassIcon soldier
 				WeaponRestrictions MeleeOnly
 				Attributes AlwaysFireWeapon
 				Attributes MiniBoss
@@ -2107,6 +2087,7 @@ WaveSchedule
 				Scale 1.75
 				Health 1
 				Name "Feast your ears on THIS!"
+				HideIcon 1 [$SIGSEGV]
 				CharacterAttributes
 				{
 					"damage force reduction" 0.4
@@ -2132,7 +2113,7 @@ WaveSchedule
 			TotalCurrency 0
 			
 			FirstSpawnWarningSound "MVM.GiantHeavyEntrance" // find the bagpipe sounds later
-			DoneWarningSound "mashed/orchestraending.mp3"
+			DoneWarningSound "mashed/orchestraending.mp3" [$SIGSEGV]
 			// ""items/taunts/badpipes/badpipes1.mp3"" // bless you nuke for looking these up first
 			
 			FirstSpawnOutput // no
@@ -2161,7 +2142,7 @@ WaveSchedule
 			TFBot
 			{
 				Class Scout
-				ClassIcon joker
+				ClassIcon scout
 			}
 		}
 		WaveSpawn
@@ -2182,7 +2163,7 @@ WaveSchedule
 			TFBot
 			{
 				Class Scout
-				ClassIcon joker
+				ClassIcon scout
 			}
 		}
 		WaveSpawn
@@ -2203,7 +2184,7 @@ WaveSchedule
 			TFBot
 			{
 				Class Scout
-				ClassIcon joker
+				ClassIcon scout
 			}
 		}
 		WaveSpawn
@@ -2224,7 +2205,7 @@ WaveSchedule
 			TFBot
 			{
 				Class Scout
-				ClassIcon joker
+				ClassIcon scout
 			}
 		}
 		WaveSpawn
@@ -2245,7 +2226,7 @@ WaveSchedule
 			TFBot
 			{
 				Class Scout
-				ClassIcon joker
+				ClassIcon scout
 			}
 		}
 		WaveSpawn
@@ -2266,7 +2247,7 @@ WaveSchedule
 			TFBot
 			{
 				Class Scout
-				ClassIcon joker
+				ClassIcon scout
 			}
 		}
 		WaveSpawn
@@ -2287,7 +2268,7 @@ WaveSchedule
 			TFBot
 			{
 				Class Scout
-				ClassIcon joker
+				ClassIcon scout
 			}
 		}
 		WaveSpawn
@@ -2308,7 +2289,7 @@ WaveSchedule
 			TFBot
 			{
 				Class Scout
-				ClassIcon joker
+				ClassIcon scout
 			}
 		}
 		WaveSpawn
@@ -2329,7 +2310,7 @@ WaveSchedule
 			TFBot
 			{
 				Class Scout
-				ClassIcon joker
+				ClassIcon scout
 			}
 		}
 		WaveSpawn
@@ -2350,7 +2331,7 @@ WaveSchedule
 			TFBot
 			{
 				Class Scout
-				ClassIcon joker
+				ClassIcon scout
 			}
 		}
 	}
