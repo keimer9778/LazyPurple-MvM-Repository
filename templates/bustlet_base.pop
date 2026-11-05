@@ -1,0 +1,143 @@
+wakeup
+{
+	PrecacheSound "nilvalue/bustlet_intro.mp3"
+	PrecacheSound "nilvalue/bustlet_stun.mp3"
+	PrecacheSound "nilvalue/bustlet_loop.wav"
+	CustomScriptSounds
+	{
+		"NilValue.Bustlet_Loop"
+		{
+			"channel" "CHAN_STATIC"
+			"soundlevel" "SNDLVL_100dB"
+			"volume" "1"
+			"pitch" "100"
+			"wave" "nilvalue/bustlet_loop.wav"
+		}
+		"NilValue.Bustlet_Intro"
+		{
+			"channel" "CHAN_WEAPON"
+			"soundlevel" "SNDLVL_105dB"
+			"volume" "1"
+			"pitch" "100"
+			"wave" "nilvalue/bustlet_intro.mp3"
+		}
+		"NilValue.Bustlet_Stun"
+		{
+			"channel" "CHAN_WEAPON"
+			"soundlevel" "SNDLVL_100dB"
+			"volume" "1"
+			"pitch" "98,102"
+			"wave" "nilvalue/bustlet_stun.mp3"
+		}
+		"NilValue.Bustlet_Explode"
+		{
+			"channel" "CHAN_WEAPON"
+			"soundlevel" "SNDLVL_80dB"
+			"volume" "0.9"
+			"pitch" "103,140"
+			"wave" "mvm/sentrybuster/mvm_sentrybuster_explode.wav"
+		}
+	}
+	CustomWeapon
+	{
+		Name "bustlet detonator"
+		OriginalItemName "tf_weapon_rocketlauncher"
+		"projectile detonate time" 0.015
+		"projectile speed increased" 0
+		"projectile no deflect" 1
+		"damage bonus" 2.777 //250 dmg
+		"blast radius increased" 2.04081632653 //300 hu
+		"blast radius decreased" 0.666
+		"custom kill icon" "ullapool_caber"
+		"custom projectile model" "models/empty.mdl"
+		"projectile trail particle" "~bot_eye_glow"
+		"custom weapon fire sound" "misc/null.wav"
+		"explosion particle" "rd_robot_explosion_smoke_linger"
+		"custom impact sound" "misc/null.wav"
+		"centerfire projectile" 1
+	}
+	LuaScriptFile "scripts/rats.lua"
+	PointTemplates
+	{
+		pt_main
+		{
+			NoFixup 1
+			logic_relay
+			{
+				"onspawn" "player,$setvar$bBustlet,0,0,-1"
+			}
+		}
+		pt_bustlet
+		{
+			OnSpawnOutput
+			{
+				Target !activator
+				Action $setvar$bBustlet
+				Param 1
+			}
+			OnSpawnOutput
+			{
+				Target bustletloop_point
+				Action $setprop$m_hOwnerEntity
+				Param !activator
+			}
+			info_target
+			{
+				"targetname" "bustletloop_point"
+				"spawnflags" "1"
+			}
+			ambient_generic
+			{
+				"targetname" "bustletloop"
+				"message" "NilValue.Bustlet_Loop"
+				"health" "10"
+				"radius" "5000"
+				"sourceentityname" "bustletloop_point"
+			}
+		}
+	}
+	SpawnTemplate pt_main
+	Templates
+	{
+		T_TFBot_Bustlet
+		{
+			Class Demoman
+			ClassIcon sentry_buster
+			Name "Bustlet"
+			Action Mobber
+			DesiredAttackRange 24
+			UseBusterModel 1
+			Health 1
+			Skill Expert
+			Attributes DisableDodge
+			UseMeleeThreatPrioritization 1
+			SpawnTemplate pt_bustlet
+			DeathSound "misc/null.wav"
+			Tag nav_prefer_top
+			Tag nav_prefer_side_left
+			Tag nav_prefer_side_right
+			Tag nav_avoid_bomb
+			FireInput
+			{
+				Target !self
+				Action $playsound
+				Param "NilValue.Bustlet_Intro"
+				Delay 0.1
+				Repeats 0
+				Cooldown 5
+			}
+			CustomWeaponModel
+			{
+				Slot 0
+				Model "models/empty.mdl"
+			}
+			CharacterAttributes
+			{
+				"voice pitch scale" 0
+				"no_attack" 1
+				"move speed bonus" 1.3
+				"cannot taunt" 1
+			}
+		}
+	}
+}
