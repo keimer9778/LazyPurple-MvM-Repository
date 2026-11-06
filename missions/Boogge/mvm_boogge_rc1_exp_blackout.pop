@@ -8,18 +8,16 @@
 WaveSchedule
 {
 	CanBotsAttackWhileInSpawnRoom no
-	RespawnWaveTime	2
+	RespawnWaveTime 2
 	StartingCurrency 800
-	Advanced 1
 	AddSentryBusterWhenDamageDealtExceeds 4000
-	AddSentryBusterWhenKillCountExceeds	20
+	AddSentryBusterWhenKillCountExceeds 20
 	EventPopFile Halloween
-
 
 	Templates
 	{
-	Boss
-	{
+		Boss
+		{
 			Class Heavyweapons
 			Name "Chief Heal Deflector Heavy"
 			ClassIcon heavy_deflector_healonkill
@@ -27,37 +25,39 @@ WaveSchedule
 			Health 45000
 			WeaponRestrictions PrimaryOnly
 			Attributes UseBossHealthBar
-			Attributes MiniBoss Tag bot_giant
+			Attributes MiniBoss
+			Tag bot_giant
 			Attributes AlwaysCrit
 			Tag bot_giant
-			Item "Deflector"
+			Item Deflector
 			Item "The Tungsten Toque"
+
 			ItemAttributes
 			{
-				ItemName "Deflector"
-				"damage bonus"	1.5
+				ItemName Deflector
+				"damage bonus" 1.5
 				"attack projectiles" 2
 				"heal on kill" 5000
 				"heal on hit for rapidfire" 10
 			}
+
 			CharacterAttributes
 			{
-				"move speed bonus"	0.35
+				"move speed bonus" 0.35
 				"damage force reduction" 0.3
 				"airblast vulnerability multiplier" 0.3
 				"override footstep sound set" 2
 				"health regen" 50
-				"jarate backstabber" 1 
+				"jarate backstabber" 1
 				"backstab shield" 1
 				"rage giving scale" 0.1
 			}
 		}
 	}
-	
+
 	Mission
 	{
 		Objective Spy
-
 		InitialCooldown 15
 		Where spawnbot
 		BeginAtWave 0
@@ -70,45 +70,45 @@ WaveSchedule
 			Template T_TFBot_Spy
 		}
 	}
-	
+
 	Mission
 	{
 		Objective Spy
-		
 		Where Anywhere
 		BeginAtWave 3
 		RunForThisManyWaves 1
 		InitialCooldown 5
 		CooldownTime 30
 		DesiredCount 1
-		
+
 		TFBot
 		{
 			Template T_TFBuilding_Sentry
 		}
 	}
-	
+
 	Mission
 	{
 		Objective Sniper
-		
 		Where spawnbot_void
 		BeginAtWave 1
 		RunForThisManyWaves 10
 		InitialCooldown 30
 		CooldownTime 30
 		DesiredCount 2
-		
+
 		TFBot
 		{
 			Template T_TFBot_Sniper_Huntsman_Spammer
 			Classicon sniper_bow
 			Attributes disabledodge
 			Name "Void Defender"
+
 			CharacterAttributes
 			{
 				"cancel falling damage" 1
 			}
+
 			ItemAttributes
 			{
 				ItemName "The Huntsman"
@@ -116,86 +116,95 @@ WaveSchedule
 			}
 		}
 	}
-	
+
 	Mission
 	{
 		Objective Engineer
-		
 		Where spawnbot
 		BeginAtWave 0
 		RunForThisManyWaves 1
 		InitialCooldown 60
 		CooldownTime 60
 		DesiredCount 1
+
 		TFBot
 		{
 			Template T_TFBot_Engineer_Sentry_Teleporter
 		}
 	}
-	
+
 	Mission
 	{
-		Objective	DestroySentries
-		
+		Objective DestroySentries
 		Where spawnbot_side
 		InitialCooldown 30
 		CooldownTime 30
 		BeginAtWave 1
 		RunForThisManyWaves 10
-		
+
 		RandomChoice
 		{
-		TFBot
-		{
-			Template T_TFBot_Fast_Buster
-		}
-		
-		TFBot
-		{
-			Template T_TFBot_Fast_Buster_Basher
-		}
-		
-		TFBot
-		{
-			Template T_TFBot_Fast_Buster_Basher
-		}
-		
-		TFBot
-		{
-			Template T_TFBot_Fast_Buster_Basher
-		}
-		
-		TFBot
-		{
-			Template T_TFBot_Buster_Mini
-		}
-		
-		TFBot
-		{
-			Template T_TFBot_Buster_Mini
-		}
-		
-		TFBot
-		{
-			Template T_TFBot_Buster_Mini
-		}
+			TFBot
+			{
+				Template T_TFBot_Fast_Buster
+			}
+
+			TFBot
+			{
+				Template T_TFBot_Fast_Buster_Basher
+			}
+
+			TFBot
+			{
+				Template T_TFBot_Fast_Buster_Basher
+			}
+
+			TFBot
+			{
+				Template T_TFBot_Fast_Buster_Basher
+			}
+
+			TFBot
+			{
+				Template T_TFBot_Buster_Mini
+			}
+
+			TFBot
+			{
+				Template T_TFBot_Buster_Mini
+			}
+
+			TFBot
+			{
+				Template T_TFBot_Buster_Mini
+			}
 		}
 	}
-	
-//WAVE 1 //////////CURRENCY 800///////////////////////////////////
+
+	//WAVE 1 //////////CURRENCY 800///////////////////////////////////
 	Wave
 	{
+		InitWaveOutput
+		{
+			Target BigNet
+			Action RunScriptCode
+			Param "
+					NetProps.SetPropString(Entities.FindByClassname(null, `tf_objective_resource`), `m_iszMvMPopfileName`, `(Expert) Blackout`)
+			
+				  "
+		}
 		StartWaveOutput
 		{
 			Target wave_start_relay
 			Action Trigger
 		}
+
 		DoneOutput
 		{
 			Target wave_finished_relay
 			Action trigger
 		}
-		
+
 		WaveSpawn
 		{
 			Name stage1
@@ -207,22 +216,21 @@ WaveSchedule
 			WaitBetweenSpawns 0
 			TotalCurrency 100
 			RandomSpawn 1
-			
-			
+
 			Squad
 			{
 				TFBot
 				{
 					Template T_TFBot_Giant_HeavyWeapons_HealOnAll
 				}
-				
+
 				TFBot
 				{
 					Template T_TFBot_Medic_Kritz_Randomguy
 				}
 			}
 		}
-		
+
 		WaveSpawn
 		{
 			Name stage2
@@ -235,16 +243,14 @@ WaveSchedule
 			WaitBeforeStarting 0
 			WaitBetweenSpawns 8
 			TotalCurrency 100
-			
-			
-			
-				TFBot
-				{
-					Template T_TFBot_HeavyWeapons_Deflector
-					Skill Easy
-				}
+
+			TFBot
+			{
+				Template T_TFBot_HeavyWeapons_Deflector
+				Skill Easy
+			}
 		}
-		
+
 		WaveSpawn
 		{
 			Name stage2
@@ -257,14 +263,13 @@ WaveSchedule
 			WaitBetweenSpawns 25
 			TotalCurrency 100
 			RandomSpawn 1
-			
-			
-				TFBot
-				{
-					Template T_TFBot_Giant_Pyro_HealOnKill
-				}
+
+			TFBot
+			{
+				Template T_TFBot_Giant_Pyro_HealOnKill
+			}
 		}
-		
+
 		WaveSpawn
 		{
 			Name stage2
@@ -277,30 +282,29 @@ WaveSchedule
 			WaitBetweenSpawns 25
 			TotalCurrency 100
 			RandomSpawn 1
-			
-			
+
 			Tank
 			{
 				Health 20000
 				Speed 75
-				Name "tankboss_underworld"
-				Skin 0									// 0 - normal skin, 1 - final wave skin
-				StartingPathTrackNode "tank_path_bridge1"		// if this is not here have fun with the hatch tank
+				Name tankboss_underworld
+				Skin 0	// 0 - normal skin, 1 - final wave skin
+				StartingPathTrackNode tank_path_bridge1	// if this is not here have fun with the hatch tank
 
-				OnKilledOutput							// output sent when the Tank is killed (almost never used)
+				OnKilledOutput	// output sent when the Tank is killed (almost never used)
 				{
 					Target boss_dead_relay_underworld
-					Action Trigger                         
+					Action Trigger
 				}
 
-				OnBombDroppedOutput						// output sent when the Tank drops its bomb once it reaches the end of its path 
+				OnBombDroppedOutput	// output sent when the Tank drops its bomb once it reaches the end of its path
 				{
 					Target boss_deploy_relay
-					Action Trigger                         
+					Action Trigger
 				}
 			}
 		}
-		
+
 		WaveSpawn
 		{
 			Name stage3
@@ -313,14 +317,13 @@ WaveSchedule
 			WaitBetweenSpawns 20
 			TotalCurrency 100
 			RandomSpawn 1
-			
-			
-				TFBot
-				{
-					Template T_TFBot_Giant_Scout_Pistol
-				}
+
+			TFBot
+			{
+				Template T_TFBot_Giant_Scout_Pistol
+			}
 		}
-		
+
 		WaveSpawn
 		{
 			Name stage3
@@ -333,14 +336,13 @@ WaveSchedule
 			WaitBetweenSpawns 25
 			TotalCurrency 100
 			RandomSpawn 1
-			
-			
-				TFBot
-				{
-					Template T_TFBot_Giant_Soldier_Crit
-				}
+
+			TFBot
+			{
+				Template T_TFBot_Giant_Soldier_Crit
+			}
 		}
-		
+
 		WaveSpawn
 		{
 			Name stage3
@@ -353,30 +355,29 @@ WaveSchedule
 			WaitBetweenSpawns 0
 			TotalCurrency 100
 			RandomSpawn 1
-			
-			
+
 			Tank
 			{
 				Health 10000
 				Speed 75
-				Name "tankboss_ghost"
-				Skin 0									// 0 - normal skin, 1 - final wave skin
-				StartingPathTrackNode "tank_path_ghost"		// if this is not here have fun with the hatch tank
+				Name tankboss_ghost
+				Skin 0	// 0 - normal skin, 1 - final wave skin
+				StartingPathTrackNode tank_path_ghost	// if this is not here have fun with the hatch tank
 
-				OnKilledOutput							// output sent when the Tank is killed (almost never used)
+				OnKilledOutput	// output sent when the Tank is killed (almost never used)
 				{
 					Target boss_dead_relay_ghost
-					Action Trigger                         
+					Action Trigger
 				}
 
-				OnBombDroppedOutput						// output sent when the Tank drops its bomb once it reaches the end of its path 
+				OnBombDroppedOutput	// output sent when the Tank drops its bomb once it reaches the end of its path
 				{
 					Target boss_deploy_relay
-					Action Trigger                         
+					Action Trigger
 				}
 			}
 		}
-		
+
 		WaveSpawn
 		{
 			Name stage3
@@ -390,30 +391,39 @@ WaveSchedule
 			TotalCurrency 100
 			RandomSpawn 1
 			Support 1
-			
-			
-				TFBot
-				{
-					Class Soldier
-					Skill Easy
-				}
+
+			TFBot
+			{
+				Class Soldier
+				Skill Easy
+			}
 		}
 	}
-	
+
 	//WAVE 2 //////////CURRENCY 900///////////////////////////////////
 	Wave
 	{
+		InitWaveOutput
+		{
+			Target BigNet
+			Action RunScriptCode
+			Param "
+					NetProps.SetPropString(Entities.FindByClassname(null, `tf_objective_resource`), `m_iszMvMPopfileName`, `(Expert) Blackout`)
+			
+				  "
+		}
 		StartWaveOutput
 		{
 			Target wave_start_relay
 			Action Trigger
 		}
+
 		DoneOutput
 		{
 			Target wave_finished_relay
 			Action trigger
 		}
-		
+
 		WaveSpawn
 		{
 			Name stage1
@@ -425,8 +435,7 @@ WaveSchedule
 			WaitBetweenSpawns 20
 			TotalCurrency 100
 			RandomSpawn 1
-			
-			
+
 			Squad
 			{
 				TFBot
@@ -434,19 +443,19 @@ WaveSchedule
 					Template T_TFBot_Pyro_Oil_Giant
 					Attributes AlwaysFireWeapon
 				}
-				
+
 				TFBot
 				{
 					Template T_TFBot_Medic_Kritz_Randomguy
 				}
-				
+
 				TFBot
 				{
 					Template T_TFBot_Medic
 				}
 			}
 		}
-		
+
 		WaveSpawn
 		{
 			Name stage1
@@ -458,30 +467,30 @@ WaveSchedule
 			WaitBetweenSpawns 7
 			TotalCurrency 150
 			RandomSpawn 1
-			
-			
+
 			Squad
 			{
-			ShouldPreserveSquad 1
-			Formationsize 100
+				ShouldPreserveSquad 1
+				Formationsize 100
+
 				TFBot
 				{
 					Class Soldier
 					Skill Expert
 				}
-				
+
 				TFBot
 				{
 					Class Scout
 					Skill Normal
 				}
-				
+
 				TFBot
 				{
 					Class Scout
 					Skill Normal
 				}
-				
+
 				TFBot
 				{
 					Class Scout
@@ -489,7 +498,7 @@ WaveSchedule
 				}
 			}
 		}
-		
+
 		WaveSpawn
 		{
 			Name support
@@ -503,27 +512,26 @@ WaveSchedule
 			TotalCurrency 0
 			RandomSpawn 1
 			Support 1
-			
-			
+
 			RandomChoice
 			{
 				TFBot
 				{
 					Template T_TFBot_Spy_Buff
 				}
-				
+
 				TFBot
 				{
 					Template T_TFBot_Spy_Conch
 				}
-				
+
 				TFBot
 				{
 					Template T_TFBot_Spy_Backup
 				}
 			}
 		}
-		
+
 		WaveSpawn
 		{
 			Name stage2
@@ -536,14 +544,13 @@ WaveSchedule
 			WaitBetweenSpawns 8
 			TotalCurrency 100
 			RandomSpawn 1
-			
-			
-				TFBot
-				{
-					Template T_TFBot_Giant_Demo_Burst
-				}
+
+			TFBot
+			{
+				Template T_TFBot_Giant_Demo_Burst
+			}
 		}
-		
+
 		WaveSpawn
 		{
 			Name stage2
@@ -556,15 +563,14 @@ WaveSchedule
 			WaitBetweenSpawns 10
 			TotalCurrency 150
 			RandomSpawn 1
-			
-			
-				TFBot
-				{
-					Template T_TFBot_Pyro_FlareGun
-					Skill Expert
-				}
+
+			TFBot
+			{
+				Template T_TFBot_Pyro_FlareGun
+				Skill Expert
+			}
 		}
-		
+
 		WaveSpawn
 		{
 			Name stage3
@@ -577,15 +583,14 @@ WaveSchedule
 			WaitBetweenSpawns 25
 			TotalCurrency 100
 			RandomSpawn 1
-			
-			
-				TFBot
-				{
-					Template T_TFBot_Giant_Scout_Pistol
-					Attributes AlwaysCrit
-				}
+
+			TFBot
+			{
+				Template T_TFBot_Giant_Scout_Pistol
+				Attributes AlwaysCrit
+			}
 		}
-		
+
 		WaveSpawn
 		{
 			Name stage3
@@ -598,15 +603,14 @@ WaveSchedule
 			WaitBetweenSpawns 7
 			TotalCurrency 150
 			RandomSpawn 1
-			
-			
-				TFBot
-				{
-					Class Demoman
-					Skill Hard
-				}
+
+			TFBot
+			{
+				Class Demoman
+				Skill Hard
+			}
 		}
-		
+
 		WaveSpawn
 		{
 			Name stage3
@@ -619,120 +623,119 @@ WaveSchedule
 			WaitBetweenSpawns 7
 			TotalCurrency 150
 			RandomSpawn 1
-			
-			
+
 			Tank
 			{
 				Health 30000
 				Speed 75
-				Name "tankboss_underworld"
-				Skin 0									// 0 - normal skin, 1 - final wave skin
-				StartingPathTrackNode "tank_path_bridge1"		// if this is not here have fun with the hatch tank
+				Name tankboss_underworld
+				Skin 0	// 0 - normal skin, 1 - final wave skin
+				StartingPathTrackNode tank_path_bridge1	// if this is not here have fun with the hatch tank
 
-				OnKilledOutput							// output sent when the Tank is killed (almost never used)
+				OnKilledOutput	// output sent when the Tank is killed (almost never used)
 				{
 					Target boss_dead_relay_underworld
-					Action Trigger                         
+					Action Trigger
 				}
 
-				OnBombDroppedOutput						// output sent when the Tank drops its bomb once it reaches the end of its path 
+				OnBombDroppedOutput	// output sent when the Tank drops its bomb once it reaches the end of its path
 				{
 					Target boss_deploy_relay
-					Action Trigger                         
+					Action Trigger
 				}
 			}
 		}
 	}
-	
+
 	//WAVE 3 //////////CURRENCY 900///////////////////////////////////
 	Wave
 	{
+		InitWaveOutput
+		{
+			Target BigNet
+			Action RunScriptCode
+			Param "
+					NetProps.SetPropString(Entities.FindByClassname(null, `tf_objective_resource`), `m_iszMvMPopfileName`, `(Expert) Blackout`)
+			
+				  "
+		}
 		StartWaveOutput
 		{
 			Target wave_start_relay
 			Action Trigger
 		}
+
 		DoneOutput
 		{
 			Target wave_finished_relay
 			Action trigger
 		}
-		
-		//WaveSpawn
-		//{
-			//Name stage1
-			//Where spawnbot
-			//TotalCount 1
-			//MaxActive 1
-			//SpawnCount 1
-			//WaitBeforeStarting 0
-			//WaitBetweenSpawns 0
-			//TotalCurrency 100
-			//RandomSpawn 1
-			
-			
-			//Tank
-			//{
-				//Health 40000
-				//Speed 75
-				//Name "tankboss_underworld"
-				//Skin 0									// 0 - normal skin, 1 - final wave skin
-				//StartingPathTrackNode "tank_path_bridge1"		// if this is not here have fun with the hatch tank
 
-				//OnKilledOutput							// output sent when the Tank is killed (almost never used)
-				//{
-					//Target boss_dead_relay_underworld
-					//Action Trigger                         
-				//}
-
-				//OnBombDroppedOutput						// output sent when the Tank drops its bomb once it reaches the end of its path 
-				//{
-					//Target boss_deploy_relay
-					//Action Trigger                         
-				//}
-			//}
-		//}
-		
 		//WaveSpawn
 		//{
-			//Name stage1
-			//Where spawnbot
-			//TotalCount 5
-			//MaxActive 5
-			//SpawnCount 1
-			//WaitBeforeStarting 20
-			//WaitBetweenSpawns 5
-			//TotalCurrency 100
-			//RandomSpawn 1
-			
-				///TFBot
-				//{
-					//Template T_TFBot_Giant_Scout_Baseball_Armored
-				//}
+		//Name stage1
+		//Where spawnbot
+		//TotalCount 1
+		//MaxActive 1
+		//SpawnCount 1
+		//WaitBeforeStarting 0
+		//WaitBetweenSpawns 0
+		//TotalCurrency 100
+		//RandomSpawn 1
+		//Tank
+		//{
+		//Health 40000
+		//Speed 75
+		//Name "tankboss_underworld"
+		//Skin 0									// 0 - normal skin, 1 - final wave skin
+		//StartingPathTrackNode "tank_path_bridge1"		// if this is not here have fun with the hatch tank
+		//OnKilledOutput							// output sent when the Tank is killed (almost never used)
+		//{
+		//Target boss_dead_relay_underworld
+		//Action Trigger
 		//}
-		
+		//OnBombDroppedOutput						// output sent when the Tank drops its bomb once it reaches the end of its path
+		//{
+		//Target boss_deploy_relay
+		//Action Trigger
+		//}
+		//}
+		//}
 		//WaveSpawn
 		//{
-			//Name engi_invasion
-			//Where spawnbot_side
-			//TotalCount 5
-			//MaxActive 5
-			//SpawnCount 5
-			//WaitBeforeStarting 25
-			//WaitBetweenSpawns 0
-			//TotalCurrency 50
-			//RandomSpawn 1
-			//Support Limited
-			
-			
-				//TFBot
-				//{
-					//Template T_TFBot_Engineer_Sentry_Battle
-					//Attributes AlwaysCrit
-					//Attributes IgnoreFlag
-				//} 
+		//Name stage1
+		//Where spawnbot
+		//TotalCount 5
+		//MaxActive 5
+		//SpawnCount 1
+		//WaitBeforeStarting 20
+		//WaitBetweenSpawns 5
+		//TotalCurrency 100
+		//RandomSpawn 1
+		///TFBot
+		//{
+		//Template T_TFBot_Giant_Scout_Baseball_Armored
 		//}
-		
+		//}
+		//WaveSpawn
+		//{
+		//Name engi_invasion
+		//Where spawnbot_side
+		//TotalCount 5
+		//MaxActive 5
+		//SpawnCount 5
+		//WaitBeforeStarting 25
+		//WaitBetweenSpawns 0
+		//TotalCurrency 50
+		//RandomSpawn 1
+		//Support Limited
+		//TFBot
+		//{
+		//Template T_TFBot_Engineer_Sentry_Battle
+		//Attributes AlwaysCrit
+		//Attributes IgnoreFlag
+		//}
+		//}
 		WaveSpawn
 		{
 			Name stage2
@@ -745,14 +748,14 @@ WaveSchedule
 			WaitBetweenSpawns 4.5
 			TotalCurrency 100
 			RandomSpawn 1
-			
-				TFBot
-				{
-					Class Heavy
-					Skill Hard
-				}
+
+			TFBot
+			{
+				Class Heavy
+				Skill Hard
+			}
 		}
-		
+
 		WaveSpawn
 		{
 			Name stage2
@@ -761,18 +764,18 @@ WaveSchedule
 			TotalCount 4
 			MaxActive 4
 			SpawnCount 1
-			WaitBeforeStarting 0 //5
+			WaitBeforeStarting 0	//5
 			WaitBetweenSpawns 20
 			TotalCurrency 100
 			RandomSpawn 1
-			
-				TFBot
-				{
-					Template T_TFBot_Giant_Soldier_SlowBarrage
-					Attributes AlwaysCrit
-				}
+
+			TFBot
+			{
+				Template T_TFBot_Giant_Soldier_SlowBarrage
+				Attributes AlwaysCrit
+			}
 		}
-		
+
 		WaveSpawn
 		{
 			Name engi_invasion
@@ -786,8 +789,7 @@ WaveSchedule
 			TotalCurrency 150
 			RandomSpawn 1
 			Support Limited
-			
-			
+
 			Squad
 			{
 				TFBot
@@ -795,16 +797,16 @@ WaveSchedule
 					Template T_TFBot_Engineer_Sentry_Battle
 					Attributes AlwaysCrit
 					Attributes IgnoreFlag
-				} 
-				
+				}
+
 				TFBot
 				{
 					Template T_TFBot_Medic
 					Attributes IgnoreFlag
-				} 
+				}
 			}
 		}
-		
+
 		WaveSpawn
 		{
 			Name stage3
@@ -817,16 +819,15 @@ WaveSchedule
 			WaitBetweenSpawns 20
 			TotalCurrency 150
 			RandomSpawn 1
-			
-			
-				TFBot
-				{
-					Template T_TFBot_Giant_Pyro_HealOnKill
-					Attributes AlwaysCrit
-					Attributes AlwaysFireWeapon
-				}
+
+			TFBot
+			{
+				Template T_TFBot_Giant_Pyro_HealOnKill
+				Attributes AlwaysCrit
+				Attributes AlwaysFireWeapon
+			}
 		}
-		
+
 		WaveSpawn
 		{
 			Name stage3
@@ -839,14 +840,13 @@ WaveSchedule
 			WaitBetweenSpawns 35
 			TotalCurrency 100
 			RandomSpawn 1
-			
-			
-				TFBot
-				{
-					Template T_TFBot_Giant_HeavyWeapons_BrassBeast
-				}
+
+			TFBot
+			{
+				Template T_TFBot_Giant_HeavyWeapons_BrassBeast
+			}
 		}
-		
+
 		WaveSpawn
 		{
 			Name stage3
@@ -859,29 +859,38 @@ WaveSchedule
 			WaitBetweenSpawns 10
 			TotalCurrency 100
 			RandomSpawn 1
-			
-			
-				TFBot
-				{
-					Template T_TFBot_Demo_Burst
-				}
+
+			TFBot
+			{
+				Template T_TFBot_Demo_Burst
+			}
 		}
 	}
-	
+
 	//WAVE 4 //////////CURRENCY 900///////////////////////////////////
 	Wave
 	{
+		InitWaveOutput
+		{
+			Target BigNet
+			Action RunScriptCode
+			Param "
+					NetProps.SetPropString(Entities.FindByClassname(null, `tf_objective_resource`), `m_iszMvMPopfileName`, `(Expert) Blackout`)
+			
+				  "
+		}
 		StartWaveOutput
 		{
 			Target wave_start_relay
 			Action Trigger
 		}
+
 		DoneOutput
 		{
 			Target wave_finished_relay
 			Action trigger
 		}
-		
+
 		WaveSpawn
 		{
 			Name stage1
@@ -893,25 +902,25 @@ WaveSchedule
 			WaitBetweenSpawns 3
 			TotalCurrency 100
 			RandomSpawn 1
-			
-			
+
 			Squad
 			{
-			ShouldPreserveSquad 1
-			Formationsize 100
+				ShouldPreserveSquad 1
+				Formationsize 100
+
 				TFBot
 				{
 					Template T_TFBot_Medic_Crossbow
 					Attributes AlwaysCrit
 					Skill Expert
 				}
-				
+
 				TFBot
 				{
 					Template T_TFBot_Spy_Revolver
 					Skill Expert
 				}
-				
+
 				TFBot
 				{
 					Template T_TFBot_Scout_Milk
@@ -919,7 +928,7 @@ WaveSchedule
 				}
 			}
 		}
-		
+
 		WaveSpawn
 		{
 			Name stage1
@@ -931,14 +940,13 @@ WaveSchedule
 			WaitBetweenSpawns 15
 			TotalCurrency 200
 			RandomSpawn 1
-			
-			
-				TFBot
-				{
-					Template T_TFBot_Soldier_BurstFire
-				}
+
+			TFBot
+			{
+				Template T_TFBot_Soldier_BurstFire
+			}
 		}
-		
+
 		WaveSpawn
 		{
 			Name stage2
@@ -951,23 +959,23 @@ WaveSchedule
 			WaitBetweenSpawns 4
 			TotalCurrency 300
 			RandomSpawn 1
-			
-			
+
 			Squad
 			{
-			ShouldPreserveSquad 1
-			Formationsize 100
+				ShouldPreserveSquad 1
+				Formationsize 100
+
 				TFBot
 				{
 					Template T_TFBot_Medic_Shield_Chad
 				}
-				
+
 				TFBot
 				{
 					Template T_TFBot_Engineer_Shotgun
 					Attributes AlwaysCrit
 				}
-				
+
 				TFBot
 				{
 					Class Soldier
@@ -975,7 +983,7 @@ WaveSchedule
 				}
 			}
 		}
-		
+
 		WaveSpawn
 		{
 			Name stage2
@@ -988,14 +996,13 @@ WaveSchedule
 			WaitBetweenSpawns 25
 			TotalCurrency 250
 			RandomSpawn 1
-			
-			
-				TFBot
-				{
-					Template T_TFBot_Giant_HeavyWeapons_HealOnAll
-				}
+
+			TFBot
+			{
+				Template T_TFBot_Giant_HeavyWeapons_HealOnAll
+			}
 		}
-		
+
 		WaveSpawn
 		{
 			Name stage2
@@ -1008,45 +1015,54 @@ WaveSchedule
 			WaitBetweenSpawns 20
 			TotalCurrency 50
 			RandomSpawn 1
-			
-			
+
 			Tank
 			{
 				Health 25000
 				Speed 75
-				Name "tankboss_underworld"
-				Skin 1									// 0 - normal skin, 1 - final wave skin
-				StartingPathTrackNode "tank_path_bridge1"		// if this is not here have fun with the hatch tank
+				Name tankboss_underworld
+				Skin 1	// 0 - normal skin, 1 - final wave skin
+				StartingPathTrackNode tank_path_bridge1	// if this is not here have fun with the hatch tank
 
-				OnKilledOutput							// output sent when the Tank is killed (almost never used)
+				OnKilledOutput	// output sent when the Tank is killed (almost never used)
 				{
 					Target boss_dead_relay_underworld
-					Action Trigger                         
+					Action Trigger
 				}
 
-				OnBombDroppedOutput						// output sent when the Tank drops its bomb once it reaches the end of its path 
+				OnBombDroppedOutput	// output sent when the Tank drops its bomb once it reaches the end of its path
 				{
 					Target boss_deploy_relay
-					Action Trigger                         
+					Action Trigger
 				}
 			}
 		}
 	}
-	
+
 	//WAVE 5 //////////CURRENCY 000///////////////////////////////////
 	Wave
 	{
+		InitWaveOutput
+		{
+			Target BigNet
+			Action RunScriptCode
+			Param "
+					NetProps.SetPropString(Entities.FindByClassname(null, `tf_objective_resource`), `m_iszMvMPopfileName`, `(Expert) Blackout`)
+			
+				  "
+		}
 		StartWaveOutput
 		{
 			Target wave_start_relay
 			Action Trigger
 		}
+
 		DoneOutput
 		{
 			Target wave_finished_relay
 			Action trigger
 		}
-		
+
 		WaveSpawn
 		{
 			Name stage1
@@ -1058,28 +1074,26 @@ WaveSchedule
 			WaitBeforeStarting 0
 			WaitBetweenSpawns 2
 			TotalCurrency 100
-			
-			
-			
+
 			RandomChoice
 			{
 				TFBot
 				{
 					Template T_TFBot_Pyro_DF
 				}
-				
+
 				TFBot
 				{
 					Template T_TFBot_Scout_Shortstop_Small
 				}
-				
+
 				TFBot
 				{
 					Template T_TFBot_Soldier_Extended_Concheror
 				}
 			}
 		}
-		
+
 		WaveSpawn
 		{
 			Name stage1
@@ -1091,8 +1105,7 @@ WaveSchedule
 			WaitBetweenSpawns 30
 			TotalCurrency 100
 			RandomSpawn 1
-			
-			
+
 			Squad
 			{
 				TFBot
@@ -1100,14 +1113,14 @@ WaveSchedule
 					Template T_TFBot_Giant_Soldier_Spammer_HealOnKill
 					Attributes AlwaysCrit
 				}
-				
+
 				TFBot
 				{
 					Template T_TFBot_Giant_Medic_Regen
 				}
 			}
 		}
-		
+
 		WaveSpawn
 		{
 			Name stage2
@@ -1120,14 +1133,13 @@ WaveSchedule
 			WaitBetweenSpawns 25
 			TotalCurrency 100
 			RandomSpawn 1
-			
-			
-				TFBot
-				{
-					Template T_TFBot_Giant_HeavyWeapons_HealOnAll
-				}
+
+			TFBot
+			{
+				Template T_TFBot_Giant_HeavyWeapons_HealOnAll
+			}
 		}
-		
+
 		WaveSpawn
 		{
 			Name stage2
@@ -1141,8 +1153,7 @@ WaveSchedule
 			WaitBetweenSpawns 3
 			TotalCurrency 100
 			RandomSpawn 1
-			
-			
+
 			Squad
 			{
 				TFBot
@@ -1150,14 +1161,14 @@ WaveSchedule
 					Class Soldier
 					Skill Expert
 				}
-				
+
 				TFBot
 				{
 					Template T_TFBot_Medic
 				}
 			}
 		}
-		
+
 		WaveSpawn
 		{
 			Name stage3
@@ -1170,16 +1181,15 @@ WaveSchedule
 			WaitBetweenSpawns 4
 			TotalCurrency 100
 			RandomSpawn 1
-			
-			
-				TFBot
-				{
-					Template T_TFBot_Scout_Shortstop_Small
-					Attributes AlwaysCrit
-					ClassIcon scout_shortstop_giant
-				}
+
+			TFBot
+			{
+				Template T_TFBot_Scout_Shortstop_Small
+				Attributes AlwaysCrit
+				ClassIcon scout_shortstop_giant
+			}
 		}
-		
+
 		WaveSpawn
 		{
 			Name stage3
@@ -1192,23 +1202,23 @@ WaveSchedule
 			WaitBetweenSpawns 35
 			TotalCurrency 300
 			RandomSpawn 1
-			
-			
+
 			Squad
 			{
-			ShouldPreserveSquad 1
+				ShouldPreserveSquad 1
+
 				TFBot
 				{
 					Template T_TFBot_Giant_Pyro_Buff
 					ClassIcon pyro_buff
 				}
-				
+
 				TFBot
 				{
 					Template T_TFBot_Giant_Pyro_Conch
 					ClassIcon pyro_conch
 				}
-				
+
 				TFBot
 				{
 					Template T_TFBot_Giant_Pyro_Backup
@@ -1216,7 +1226,7 @@ WaveSchedule
 				}
 			}
 		}
-		
+
 		WaveSpawn
 		{
 			Name boss
@@ -1229,105 +1239,104 @@ WaveSchedule
 			WaitBetweenSpawns 0
 			TotalCurrency 0
 			RandomSpawn 1
-			
-			
+
 			Squad
 			{
 				TFBot
 				{
 					Template Boss
 				}
-				
+
 				TFBot
 				{
 					Template T_TFBot_Medic
 				}
-				
+
 				TFBot
 				{
 					Template T_TFBot_Medic
 				}
-				
+
 				TFBot
 				{
 					Template T_TFBot_Medic
 				}
-				
+
 				TFBot
 				{
 					Template T_TFBot_Medic
 				}
-				
+
 				TFBot
 				{
 					Template T_TFBot_Medic
 				}
-				
+
 				TFBot
 				{
 					Template T_TFBot_Medic
 				}
-				
+
 				TFBot
 				{
 					Template T_TFBot_Medic
 				}
-				
+
 				TFBot
 				{
 					Template T_TFBot_Medic
 				}
-				
+
 				TFBot
 				{
 					Template T_TFBot_Medic
 				}
-				
+
 				TFBot
 				{
 					Template T_TFBot_Medic
 				}
-				
+
 				TFBot
 				{
 					Template T_TFBot_Medic
 				}
-				
+
 				TFBot
 				{
 					Template T_TFBot_Medic
 				}
-				
+
 				TFBot
 				{
 					Template T_TFBot_Medic
 				}
-				
+
 				TFBot
 				{
 					Template T_TFBot_Medic
 				}
-				
+
 				TFBot
 				{
 					Template T_TFBot_Medic
 				}
-				
+
 				TFBot
 				{
 					Template T_TFBot_Medic
 				}
-				
+
 				TFBot
 				{
 					Template T_TFBot_Medic
 				}
-				
+
 				TFBot
 				{
 					Template T_TFBot_Medic
 				}
-				
+
 				TFBot
 				{
 					Template T_TFBot_Medic

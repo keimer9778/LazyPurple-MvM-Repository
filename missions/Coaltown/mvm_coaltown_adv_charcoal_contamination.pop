@@ -2,48 +2,28 @@
 
 WaveSchedule
 {
-
 	StartingCurrency 400
 	RespawnWaveTime 3
 	CanBotsAttackWhileInSpawnRoom no
 
-	PointTemplates
-	{
-		MissionNamePT
-		{
-			OnSpawnOutput
-			{
-				Target BigNet
-				Action RunScriptCode
-				Param "
-						NetProps.SetPropString(Entities.FindByClassname(null, `tf_objective_resource`), `m_iszMvMPopfileName`, `(Advanced) Charcoal Contamination`)
-					  "
-			}
-		}
-	}
-
-	SpawnTemplate "MissionNamePT"
-	
-	Mission // sentry buster
+	Mission	// sentry buster
 	{
 		Objective DestroySentries
-
 		InitialCooldown 40
 		Where spawnbot
 		BeginAtWave 1
 		RunForThisManyWaves 8
-
 		CooldownTime 40
 
-            TFBot
-			{
-				Template T_TFBot_SentryBuster
-            }
+		TFBot
+		{
+			Template T_TFBot_SentryBuster
+		}
 	}
-	Mission // Sniper - wave boss
+
+	Mission	// Sniper - wave boss
 	{
 		Objective Sniper
-
 		InitialCooldown 5
 		Where spawnbot_mission_sniper
 		BeginAtWave 7
@@ -56,10 +36,10 @@ WaveSchedule
 			Template T_TFBot_Sniper_Sydney_Sleeper
 		}
 	}
-	Mission // Spy - wave boss
-	{
-		Objective Spy  
 
+	Mission	// Spy - wave boss
+	{
+		Objective Spy
 		InitialCooldown 0
 		Where spawnbot_mission_spy
 		BeginAtWave 7
@@ -73,13 +53,13 @@ WaveSchedule
 			Skill Expert
 			Name Spy
 		}
-	}	
-	
-Templates
-{
- T_TFBot_Boss_1
- {
-            Class Soldier
+	}
+
+	Templates
+	{
+		T_TFBot_Boss_1
+		{
+			Class Soldier
 			Skill Expert
 			WeaponRestrictions PrimaryOnly
 			Item "The Liberty Launcher"
@@ -90,6 +70,7 @@ Templates
 			Attributes AlwaysCrit
 			Health 45000
 			Name "Supreme Blast Soldier"
+
 			ItemAttributes
 			{
 				ItemName "The Liberty Launcher"
@@ -101,38 +82,47 @@ Templates
 				"projectile spread angle penalty" 6
 				"Projectile speed increased" 0.8
 			}
+
 			CharacterAttributes
 			{
-				"move speed bonus"	0.4
+				"move speed bonus" 0.4
 				"override footstep sound set" 3
 				"damage force reduction" 0.0
 				"airblast vulnerability multiplier" 0.0
 				"airblast vertical vulnerability multiplier" 0.0
-				"rage giving scale"	0.1
-				"health regen"	50 //150
+				"rage giving scale" 0.1
+				"health regen" 50	//150
 			}
- }
-}
+		}
+	}
+
 	//WAVE 1 //SMG snipers and Pyros > Giant soldier and scouts //Currency 700 ///////////////////////////////////////////////////////////////////////////////////////////////////////
 	Wave
 	{
+		InitWaveOutput
+		{
+			Target BigNet
+			Action RunScriptCode
+			Param "
+					NetProps.SetPropString(Entities.FindByClassname(null, `tf_objective_resource`), `m_iszMvMPopfileName`, `(Advanced) Charcoal Contamination`)
+					"
+		}
+
 		StartWaveOutput
 		{
 			Target wave_start_relay
 			Action Trigger
 		}
-		DoneOutput					
+
+		DoneOutput
 		{
 			Target wave_finished_relay
 			Action trigger
 		}
-		WaitWhenDone 65
-		Checkpoint Yes
-		
+
 		WaveSpawn
 		{
-			Name "primarywave"
-			
+			Name primarywave
 			Where spawnbot_invasion
 			TotalCount 30
 			MaxActive 10
@@ -140,19 +130,17 @@ Templates
 			WaitBeforeStarting 1
 			WaitBetweenSpawns 5
 			TotalCurrency 200
-			
 			Randomspawn 1
-			
-				TFBot
-				{
-					Template T_TFBot_Sniper_SMG
-				}
+
+			TFBot
+			{
+				Template T_TFBot_Sniper_SMG
+			}
 		}
-		
+
 		WaveSpawn
 		{
-			Name "primarywave"
-			
+			Name primarywave
 			Where spawnbot
 			TotalCount 20
 			MaxActive 10
@@ -160,20 +148,19 @@ Templates
 			WaitBeforeStarting 0
 			WaitBetweenSpawns 4
 			TotalCurrency 200
-			
 			Randomspawn 0
-			
-				TFBot
-				{
-					Class Pyro
-					Skill Normal
-				}
+
+			TFBot
+			{
+				Class Pyro
+				Skill Normal
+			}
 		}
-		
+
 		WaveSpawn
 		{
-			Name "secondarywave"
-			WaitForAllDead "primarywave"
+			Name secondarywave
+			WaitForAllDead primarywave
 			Where spawnbot
 			TotalCount 1
 			MaxActive 1
@@ -181,19 +168,18 @@ Templates
 			WaitBeforeStarting 0
 			WaitBetweenSpawns 0
 			TotalCurrency 100
-			
 			Randomspawn 0
-			
-				TFBot
-				{
-					Template T_TFBot_Giant_Soldier
-				}
+
+			TFBot
+			{
+				Template T_TFBot_Giant_Soldier
+			}
 		}
-		
+
 		WaveSpawn
 		{
-			Name "secondarywave"
-			WaitForAllDead "primarywave"
+			Name secondarywave
+			WaitForAllDead primarywave
 			Where spawnbot_invasion
 			TotalCount 30
 			MaxActive 15
@@ -201,37 +187,43 @@ Templates
 			WaitBeforeStarting 5
 			WaitBetweenSpawns 2
 			TotalCurrency 200
-			
 			Randomspawn 0
-			
-				TFBot
-				{
-					Class Scout
-					Skill Normal
-				}
+
+			TFBot
+			{
+				Class Scout
+				Skill Normal
+			}
 		}
 	}
-	
+
 	//WAVE 2 // Giant crit soldiers and alwaysfire backburners > heavy steel squad//Currency 800 ///////////////////////////////////////////////////////////////////////////////////////////////////////
 	Wave
 	{
+		InitWaveOutput
+		{
+			Target BigNet
+			Action RunScriptCode
+			Param "
+					NetProps.SetPropString(Entities.FindByClassname(null, `tf_objective_resource`), `m_iszMvMPopfileName`, `(Advanced) Charcoal Contamination`)
+					"
+		}
+
 		StartWaveOutput
 		{
 			Target wave_start_relay
 			Action Trigger
 		}
-		DoneOutput					
+
+		DoneOutput
 		{
 			Target wave_finished_relay
 			Action trigger
 		}
-		WaitWhenDone 65
-		Checkpoint Yes
-		
+
 		WaveSpawn
 		{
-			Name "primarywave"
-			
+			Name primarywave
 			Where spawnbot_giant
 			TotalCount 2
 			MaxActive 2
@@ -239,19 +231,17 @@ Templates
 			WaitBeforeStarting 0
 			WaitBetweenSpawns 15
 			TotalCurrency 200
-			
 			Randomspawn 0
-			
-				TFBot
-				{
-					Template T_TFBot_Giant_Soldier_Crit
-				}
+
+			TFBot
+			{
+				Template T_TFBot_Giant_Soldier_Crit
+			}
 		}
-		
+
 		WaveSpawn
 		{
-			Name "primarywave"
-			
+			Name primarywave
 			Where spawnbot
 			TotalCount 30
 			MaxActive 15
@@ -259,20 +249,19 @@ Templates
 			WaitBeforeStarting 5
 			WaitBetweenSpawns 5
 			TotalCurrency 200
-			
 			Randomspawn 0
-			
-				TFBot
-				{
-					Template T_TFBot_Pyro_BackBurner
-					Attributes AlwaysFireWeapon
-				}
+
+			TFBot
+			{
+				Template T_TFBot_Pyro_BackBurner
+				Attributes AlwaysFireWeapon
+			}
 		}
-		
+
 		WaveSpawn
 		{
-			Name "secondarywave"
-			WaitForAllDead "primarywave"
+			Name secondarywave
+			WaitForAllDead primarywave
 			Where spawnbot_giant
 			TotalCount 25
 			MaxActive 10
@@ -280,30 +269,33 @@ Templates
 			WaitBeforeStarting 0
 			WaitBetweenSpawns 15
 			TotalCurrency 300
-			
 			Randomspawn 0
-			
+
 			Squad
 			{
 				TFBot
 				{
 					Template T_TFBot_HeavyWeapons_Fist
 				}
+
 				TFBot
 				{
 					Class Soldier
 					Skill Easy
 				}
+
 				TFBot
 				{
 					Class Soldier
 					Skill Easy
 				}
+
 				TFBot
 				{
 					Class Soldier
 					Skill Easy
 				}
+
 				TFBot
 				{
 					Class Soldier
@@ -311,11 +303,11 @@ Templates
 				}
 			}
 		}
-		
+
 		WaveSpawn
 		{
-			Name "support"
-			WaitForAllDead "primarywave"
+			Name support
+			WaitForAllDead primarywave
 			Where spawnbot_invasion
 			TotalCount 50
 			MaxActive 10
@@ -323,37 +315,43 @@ Templates
 			WaitBeforeStarting 0
 			WaitBetweenSpawns 4
 			TotalCurrency 100
-			
 			Randomspawn 1
 			Support 1
-			
-				TFBot
-				{
-					Template T_TFBot_Scout_Crit_Cola_Melee
-				}
+
+			TFBot
+			{
+				Template T_TFBot_Scout_Crit_Cola_Melee
+			}
 		}
 	}
-	
+
 	//WAVE 3 // Super Scout rush > Scouts and Soldiers > Giant Heavy + Champ support //Currency 800 ///////////////////////////////////////////////////////////////////////////////////////////////////////
 	Wave
 	{
+		InitWaveOutput
+		{
+			Target BigNet
+			Action RunScriptCode
+			Param "
+					NetProps.SetPropString(Entities.FindByClassname(null, `tf_objective_resource`), `m_iszMvMPopfileName`, `(Advanced) Charcoal Contamination`)
+					"
+		}
+
 		StartWaveOutput
 		{
 			Target wave_start_relay
 			Action Trigger
 		}
-		DoneOutput					
+
+		DoneOutput
 		{
 			Target wave_finished_relay
 			Action trigger
 		}
-		WaitWhenDone 65
-		Checkpoint Yes
-		
+
 		WaveSpawn
 		{
-			Name "primarywave"
-			
+			Name primarywave
 			Where spawnbot
 			TotalCount 6
 			MaxActive 6
@@ -361,19 +359,18 @@ Templates
 			WaitBeforeStarting 0
 			WaitBetweenSpawns 7.5
 			TotalCurrency 100
-			
 			Randomspawn 0
-			
-				TFBot
-				{
-					Template T_TFBot_Giant_Scout_Fast
-				}
+
+			TFBot
+			{
+				Template T_TFBot_Giant_Scout_Fast
+			}
 		}
-		
+
 		WaveSpawn
 		{
-			Name "primarywave2"
-			WaitForAllSpawned "primarywave"
+			Name primarywave2
+			WaitForAllSpawned primarywave
 			Where spawnbot_giant
 			TotalCount 30
 			MaxActive 10
@@ -381,20 +378,19 @@ Templates
 			WaitBeforeStarting 10
 			WaitBetweenSpawns 3
 			TotalCurrency 150
-			
 			Randomspawn 0
-			
-				TFBot
-				{
-					Class Scout
-					Skill Hard
-				}
+
+			TFBot
+			{
+				Class Scout
+				Skill Hard
+			}
 		}
-		
+
 		WaveSpawn
 		{
-			Name "primarywave2"
-			WaitForAllSpawned "primarywave"
+			Name primarywave2
+			WaitForAllSpawned primarywave
 			Where spawnbot
 			TotalCount 30
 			MaxActive 10
@@ -402,20 +398,19 @@ Templates
 			WaitBeforeStarting 10
 			WaitBetweenSpawns 5
 			TotalCurrency 150
-			
 			Randomspawn 0
-			
-				TFBot
-				{
-					Class Soldier
-					Skill Normal
-				}
+
+			TFBot
+			{
+				Class Soldier
+				Skill Normal
+			}
 		}
-		
+
 		WaveSpawn
 		{
-			Name "secondarywave"
-			WaitForAllDead "primarywave2"
+			Name secondarywave
+			WaitForAllDead primarywave2
 			Where spawnbot
 			TotalCount 1
 			MaxActive 1
@@ -423,19 +418,18 @@ Templates
 			WaitBeforeStarting 0
 			WaitBetweenSpawns 0
 			TotalCurrency 100
-			
 			Randomspawn 0
-			
-				TFBot
-				{
-					Template T_TFBot_Giant_HeavyWeapons
-				}
+
+			TFBot
+			{
+				Template T_TFBot_Giant_HeavyWeapons
+			}
 		}
-		
+
 		WaveSpawn
 		{
-			Name "support"
-			WaitForAllDead "primarywave2"
+			Name support
+			WaitForAllDead primarywave2
 			Where spawnbot
 			TotalCount 100
 			MaxActive 15
@@ -443,74 +437,77 @@ Templates
 			WaitBeforeStarting 0
 			WaitBetweenSpawns 1
 			TotalCurrency 300
-			
 			Randomspawn 1
 			Support 1
-			
-				TFBot
-				{
-					Template T_TFBot_HeavyWeapons_HeavyWeight_Champ
-					Attributes AlwaysCrit
-				}
+
+			TFBot
+			{
+				Template T_TFBot_HeavyWeapons_HeavyWeight_Champ
+				Attributes AlwaysCrit
+			}
 		}
 	}
-	
+
 	//WAVE 4 // Tank and Demoknights > RF soldier + meds + support champ bois //Currency 00 ///////////////////////////////////////////////////////////////////////////////////////////////////////
 	Wave
 	{
+		InitWaveOutput
+		{
+			Target BigNet
+			Action RunScriptCode
+			Param "
+					NetProps.SetPropString(Entities.FindByClassname(null, `tf_objective_resource`), `m_iszMvMPopfileName`, `(Advanced) Charcoal Contamination`)
+					"
+		}
 		StartWaveOutput
 		{
 			Target wave_start_relay
 			Action Trigger
 		}
-		DoneOutput					
+
+		DoneOutput
 		{
 			Target wave_finished_relay
 			Action trigger
 		}
-		WaitWhenDone 65
-		Checkpoint Yes
-		
+
 		WaveSpawn
 		{
 			TotalCount 1
 			WaitBeforeStarting 0
 			TotalCurrency 150
-			Name "primarywave"
-			
-			FirstSpawnOutput                                                                                                                                                            
-			
+			Name primarywave
+
+			FirstSpawnOutput
 			{
-				Target boss_spawn_relay                                            
-				Action Trigger                         
+				Target boss_spawn_relay
+				Action Trigger
 			}
 
 			Tank
 			{
 				Health 25000
 				Speed 75
-				Name "tankboss"
-				StartingPathTrackNode "boss_path_a1"
+				Name tankboss
+				StartingPathTrackNode boss_path_a1
 
-				OnKilledOutput                                  
+				OnKilledOutput
 				{
 					Target boss_dead_relay
-					Action Trigger                         
-				}
-				
-				OnBombDroppedOutput                             
-				{
-					Target boss_deploy_relay 
-					Action Trigger                         
+					Action Trigger
 				}
 
-			}			
+				OnBombDroppedOutput
+				{
+					Target boss_deploy_relay
+					Action Trigger
+				}
+			}
 		}
-		
+
 		WaveSpawn
 		{
-			Name "primarywave"
-			
+			Name primarywave
 			Where spawnbot
 			TotalCount 45
 			MaxActive 15
@@ -518,19 +515,18 @@ Templates
 			WaitBeforeStarting 10
 			WaitBetweenSpawns 5
 			TotalCurrency 250
-			
 			Randomspawn 0
-			
-				TFBot
-				{
-					Template T_TFBot_Demoman_Knight
-				}
+
+			TFBot
+			{
+				Template T_TFBot_Demoman_Knight
+			}
 		}
-		
+
 		WaveSpawn
 		{
-			Name "secondarywave"
-			WaitForAllDead "primarywave"
+			Name secondarywave
+			WaitForAllDead primarywave
 			Where spawnbot
 			TotalCount 12
 			MaxActive 4
@@ -538,34 +534,36 @@ Templates
 			WaitBeforeStarting 0
 			WaitBetweenSpawns 0
 			TotalCurrency 200
-			
 			Randomspawn 0
-			
+
 			Squad
 			{
 				TFBot
 				{
 					Template T_TFBot_Giant_Soldier_Spammer
 				}
+
 				TFBot
 				{
 					Template T_TFBot_Medic
 				}
+
 				TFBot
 				{
 					Template T_TFBot_Medic
 				}
+
 				TFBot
 				{
 					Template T_TFBot_Medic
 				}
 			}
 		}
-		
+
 		WaveSpawn
 		{
-			Name "secondarywave"
-			WaitForAllDead "primarywave"
+			Name secondarywave
+			WaitForAllDead primarywave
 			Where spawnbot_invasion
 			TotalCount 50
 			MaxActive 15
@@ -573,10 +571,9 @@ Templates
 			WaitBeforeStarting 10
 			WaitBetweenSpawns 4
 			TotalCurrency 100
-			
 			Randomspawn 0
 			Support 1
-			
+
 			Randomchoice
 			{
 				TFBot
@@ -584,16 +581,19 @@ Templates
 					Template T_TFBot_HeavyWeapons_HeavyWeight_Champ_Fast
 					Attributes AlwaysCrit
 				}
+
 				TFBot
 				{
 					Template T_TFBot_HeavyWeapons_HeavyWeight_Champ_Fast
 					Attributes AlwaysCrit
 				}
+
 				TFBot
 				{
 					Template T_TFBot_HeavyWeapons_HeavyWeight_Champ_Fast
 					Attributes AlwaysCrit
 				}
+
 				TFBot
 				{
 					Template T_TFBot_HeavyWeapons_HeavyWeight_Champ
@@ -602,27 +602,33 @@ Templates
 			}
 		}
 	}
-	
+
 	//WAVE 5 // Super Scout rush + SMG > SMG + Giant RF bowman > giant brust demos + demos //Currency 800 ///////////////////////////////////////////////////////////////////////////////////////////////////////
 	Wave
 	{
+		InitWaveOutput
+		{
+			Target BigNet
+			Action RunScriptCode
+			Param "
+					NetProps.SetPropString(Entities.FindByClassname(null, `tf_objective_resource`), `m_iszMvMPopfileName`, `(Advanced) Charcoal Contamination`)
+					"
+		}
 		StartWaveOutput
 		{
 			Target wave_start_relay
 			Action Trigger
 		}
-		DoneOutput					
+
+		DoneOutput
 		{
 			Target wave_finished_relay
 			Action trigger
 		}
-		WaitWhenDone 65
-		Checkpoint Yes
-		
+
 		WaveSpawn
 		{
-			Name "primarywave"
-			
+			Name primarywave
 			Where spawnbot_invasion
 			TotalCount 50
 			MaxActive 10
@@ -630,21 +636,20 @@ Templates
 			WaitBeforeStarting 5
 			WaitBetweenSpawns 5
 			TotalCurrency 200
-			
 			Randomspawn 1
-			
-				TFBot
-				{
-					Template T_TFBot_Sniper_SMG
-					Attributes AlwaysCrit
-					Skill Normal
-				}
+
+			TFBot
+			{
+				Template T_TFBot_Sniper_SMG
+				Attributes AlwaysCrit
+				Skill Normal
+			}
 		}
-		
+
 		WaveSpawn
 		{
-			Name "primarywave"
-			WaitForAllDead "primarywave_ss"
+			Name primarywave
+			WaitForAllDead primarywave_ss
 			Where spawnbot_giant
 			TotalCount 12
 			MaxActive 8
@@ -652,34 +657,35 @@ Templates
 			WaitBeforeStarting 10
 			WaitBetweenSpawns 20
 			TotalCurrency 200
-			
 			Randomspawn 0
-			
+
 			Squad
 			{
 				TFBot
 				{
 					Template T_TFBot_Giant_Bowman_Rapid_Fire
 				}
+
 				TFBot
 				{
 					Template T_TFBot_Medic
 				}
+
 				TFBot
 				{
 					Template T_TFBot_Medic
 				}
+
 				TFBot
 				{
 					Template T_TFBot_Medic
 				}
 			}
 		}
-		
+
 		WaveSpawn
 		{
-			Name "primarywave_ss"
-			
+			Name primarywave_ss
 			Where spawnbot
 			TotalCount 10
 			MaxActive 10
@@ -687,19 +693,18 @@ Templates
 			WaitBeforeStarting 0
 			WaitBetweenSpawns 5
 			TotalCurrency 100
-			
 			Randomspawn 1
-			
-				TFBot
-				{
-					Template T_TFBot_Giant_Scout_Fast
-				}
+
+			TFBot
+			{
+				Template T_TFBot_Giant_Scout_Fast
+			}
 		}
-		
+
 		WaveSpawn
 		{
-			Name "secondarywave"
-			WaitForAllDead "primarywave"
+			Name secondarywave
+			WaitForAllDead primarywave
 			Where spawnbot_invasion
 			TotalCount 50
 			MaxActive 15
@@ -707,20 +712,19 @@ Templates
 			WaitBeforeStarting 10
 			WaitBetweenSpawns 3
 			TotalCurrency 200
-			
 			Randomspawn 1
-			
-				TFBot
-				{
-					Class Demoman
-					Skill Hard
-				}
+
+			TFBot
+			{
+				Class Demoman
+				Skill Hard
+			}
 		}
-		
+
 		WaveSpawn
 		{
-			Name "secondarywave"
-			WaitForAllDead "primarywave"
+			Name secondarywave
+			WaitForAllDead primarywave
 			Where spawnbot_giant
 			TotalCount 6
 			MaxActive 6
@@ -728,36 +732,42 @@ Templates
 			WaitBeforeStarting 0
 			WaitBetweenSpawns 15
 			TotalCurrency 100
-			
 			Randomspawn 1
-			
-				TFBot
-				{
-					Template T_TFBot_Giant_Demo_Burst
-				}
+
+			TFBot
+			{
+				Template T_TFBot_Giant_Demo_Burst
+			}
 		}
 	}
-	
+
 	//WAVE 6 // Heavys + scouts > Giant Deflector Heavies + Giant Quick fix and Krits medics + scout/med support //Currency 600 ///////////////////////////////////////////////////////////////////////////////////////////////////////
 	Wave
 	{
+		InitWaveOutput
+		{
+			Target BigNet
+			Action RunScriptCode
+			Param "
+					NetProps.SetPropString(Entities.FindByClassname(null, `tf_objective_resource`), `m_iszMvMPopfileName`, `(Advanced) Charcoal Contamination`)
+					"
+		}
+
 		StartWaveOutput
 		{
 			Target wave_start_relay
 			Action Trigger
 		}
-		DoneOutput					
+
+		DoneOutput
 		{
 			Target wave_finished_relay
 			Action trigger
 		}
-		WaitWhenDone 65
-		Checkpoint Yes
-		
+
 		WaveSpawn
 		{
-			Name "primarywave"
-			
+			Name primarywave
 			Where spawnbot
 			TotalCount 20
 			MaxActive 15
@@ -765,20 +775,18 @@ Templates
 			WaitBeforeStarting 1
 			WaitBetweenSpawns 10
 			TotalCurrency 100
-			
 			Randomspawn 1
-			
-				TFBot
-				{
-					Class Heavy
-					Skill Expert
-				}
+
+			TFBot
+			{
+				Class Heavy
+				Skill Expert
+			}
 		}
-		
+
 		WaveSpawn
 		{
-			Name "primarywave"
-			
+			Name primarywave
 			Where spawnbot_invasion
 			TotalCount 25
 			MaxActive 10
@@ -786,21 +794,20 @@ Templates
 			WaitBeforeStarting 0
 			WaitBetweenSpawns 4
 			TotalCurrency 100
-			
 			Randomspawn 1
-			
-				TFBot
-				{
-					Class Scout
-					Skill Hard
-					Attributes AlwaysCrit
-				}
+
+			TFBot
+			{
+				Class Scout
+				Skill Hard
+				Attributes AlwaysCrit
+			}
 		}
-		
+
 		WaveSpawn
 		{
-			Name "secondarywave"
-			WaitForAllDead "primarywave"
+			Name secondarywave
+			WaitForAllDead primarywave
 			Where spawnbot
 			TotalCount 6
 			MaxActive 6
@@ -808,30 +815,31 @@ Templates
 			WaitBeforeStarting 0
 			WaitBetweenSpawns 30
 			TotalCurrency 200
-			
 			Randomspawn 1
-			
+
 			Squad
 			{
 				TFBot
 				{
 					Template T_TFBot_Giant_HeavyWeapons_Deflector
 				}
+
 				TFBot
 				{
 					Template T_TFBot_Giant_Medic
 				}
+
 				TFBot
 				{
 					Template T_TFBot_Medic_Kritz_Giant_Randomguy
 				}
 			}
 		}
-		
+
 		WaveSpawn
 		{
-			Name "secondarywave"
-			WaitForAllDead "primarywave"
+			Name secondarywave
+			WaitForAllDead primarywave
 			Where spawnbot_invasion
 			TotalCount 50
 			MaxActive 10
@@ -839,10 +847,9 @@ Templates
 			WaitBeforeStarting 0
 			WaitBetweenSpawns 2
 			TotalCurrency 200
-			
 			Randomspawn 1
 			Support 1
-			
+
 			Squad
 			{
 				TFBot
@@ -852,6 +859,7 @@ Templates
 					ClassIcon scout_giant
 					Attributes AlwaysCrit
 				}
+
 				TFBot
 				{
 					Template T_TFBot_Medic_Bigheal
@@ -859,27 +867,34 @@ Templates
 			}
 		}
 	}
-	
+
 	//WAVE 6 // Heavys + scouts > Giant Deflector Heavies + Giant Quick fix and Krits medics + scout/med support //Currency 600 ///////////////////////////////////////////////////////////////////////////////////////////////////////
 	Wave
 	{
+		InitWaveOutput
+		{
+			Target BigNet
+			Action RunScriptCode
+			Param "
+					NetProps.SetPropString(Entities.FindByClassname(null, `tf_objective_resource`), `m_iszMvMPopfileName`, `(Advanced) Charcoal Contamination`)
+					"
+		}
+		
 		StartWaveOutput
 		{
 			Target wave_start_relay
 			Action Trigger
 		}
-		DoneOutput					
+
+		DoneOutput
 		{
 			Target wave_finished_relay
 			Action trigger
 		}
-		WaitWhenDone 65
-		Checkpoint Yes
-		
+
 		WaveSpawn
 		{
-			Name "primarywave"
-			
+			Name primarywave
 			Where spawnbot
 			TotalCount 1
 			MaxActive 1
@@ -887,13 +902,12 @@ Templates
 			WaitBeforeStarting 1
 			WaitBetweenSpawns 0
 			TotalCurrency 0
-			
 			Randomspawn 0
-			
-				TFBot
-				{
-					Template T_TFBot_Boss_1
-				}
+
+			TFBot
+			{
+				Template T_TFBot_Boss_1
+			}
 		}
 	}
 }
