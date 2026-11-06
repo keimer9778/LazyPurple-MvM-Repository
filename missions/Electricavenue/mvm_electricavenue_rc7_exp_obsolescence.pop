@@ -6,7 +6,7 @@
 population
 {
 	StartingCurrency	800
-	BodyPartScaleSpeed 99
+	BodyPartScaleSpeed 99 [$SIGSEGV]
 	RespawnWaveTime	4
 	CanBotsAttackWhileInSpawnRoom	no
 	AddSentryBusterWhenDamageDealtExceeds	3000
@@ -1548,23 +1548,6 @@ population
             }
 		}
 	}
-
-	PointTemplates
-	{
-		MissionNamePT
-		{
-			OnSpawnOutput
-			{
-				Target BigNet
-				Action RunScriptCode
-				Param "
-						NetProps.SetPropString(Entities.FindByClassname(null, `tf_objective_resource`), `m_iszMvMPopfileName`, `(Expert) Obsolescence`)
-					  "
-			}
-		}
-	}
-
-	SpawnTemplate "MissionNamePT"
 	
 	SpawnTemplate	MissionName
 	SpawnTemplate	trainwarningtemplate
@@ -1575,7 +1558,7 @@ population
 		{
 			Class	Soldier
 			Name	"Planned Obsolescence"
-			ClassIcon	soldier_head_nys_giant
+			ClassIcon	soldier_head_nys
 			Skill Expert
 			Health 120000
 			Scale 1.8
@@ -2251,7 +2234,7 @@ population
 					{
 						Target player
 						Action $SetProp$m_iszClassIcon
-						Param 		soldier_airstrike
+						Param 		soldier_airstrike_lite
 						Delay 0.1
 						Cooldown 0
 						Repeats 1
@@ -2578,7 +2561,7 @@ population
 					{
 						Target player
 						Action $SetProp$m_iszClassIcon
-						Param 		heavy_shotgun_burst_lite
+						Param 		heavy_shotgun_burstfire_lite
 						Delay 0
 						Cooldown 0
 						Repeats 1
@@ -2623,7 +2606,7 @@ population
 					{
 						Target player
 						Action $SetProp$m_iszClassIcon
-						Param 		soldier_nuke2
+						Param 		soldier_nuclear
 						Delay 0
 						Cooldown 0
 						Repeats 1
@@ -2732,7 +2715,7 @@ population
 					{
 						Target player
 						Action $SetProp$m_iszClassIcon
-						Param 		soldier_nuke2
+						Param 		soldier_nuclear
 						Delay 0
 						Cooldown 0
 						Repeats 1
@@ -3053,7 +3036,7 @@ population
 		{
 			Class Medic
 			Name "Giant Shield Medic"
-			ClassIcon medic_shield_lite
+			ClassIcon medic_shield
 			Skill Expert
 			Health 4500
 			Attributes SpawnWithFullCharge
@@ -3087,7 +3070,7 @@ population
 			Class	Soldier
 			Skill	Expert
 			Health 3800
-			ClassIcon	soldier_bison_spammer_giant
+			ClassIcon	soldier_bison_spammer
 			Attributes	"MiniBoss"
 			Name	"Giant Rapidfire Bison Soldier"
 			WeaponRestrictions	SecondaryOnly
@@ -3123,7 +3106,7 @@ population
 		{
 			Class	Scout
 			Health	125
-			ClassIcon	scout_conch_lite
+			ClassIcon	scout_conch
 			Name	"Concheror Bat Scout"
 			Item	"The Concheror"
 			Attributes	"SpawnWithFullCharge"
@@ -3132,7 +3115,7 @@ population
 		ConchMinigiant
 		{
 			Template	T_TFBot_Soldier_Extended_Concheror
-			ClassIcon	soldier_armored_conch
+			ClassIcon	soldier_conch_armored
 			Skill	Hard
 			Scale	1.4
 			Health	600
@@ -3142,7 +3125,7 @@ population
 			Class	Soldier
 			Name	"Direct Hit Soldier"
 			Item	"The Direct Hit"
-			ClassIcon	soldier_dh_lite_armored
+			ClassIcon	soldier_accurate
 			Skill	Hard
 			Scale	1.4
 			Health	600
@@ -3203,7 +3186,7 @@ population
 				"override footstep sound set" 3
 				"Projectile speed increased" 0.9
 			}
-			ClassIcon	soldier_burstfire_hyper_lite
+			ClassIcon	soldier_burstfire_hyper
 		}
 		GiantDemoBurstTrapper
 		{
@@ -3359,12 +3342,6 @@ population
 	{
 		WaitWhenDone	65
 		Checkpoint	Yes
-		InitWaveOutput
-		{
-			Target bombpath_2_relay
-			Action Trigger
-			Delay	1
-		}
 		StartWaveOutput
 		{
 			Target	wave_start_relay
@@ -3374,6 +3351,15 @@ population
 		{
 			Target	wave_finished_relay
 			Action	Trigger
+		}
+		InitWaveOutput
+		{
+			Target BigNet
+			Action RunScriptCode
+			Param "
+				NetProps.SetPropString(Entities.FindByClassname(null, `tf_objective_resource`), `m_iszMvMPopfileName`, `(Advanced) Machine Malfunction`)
+				EntFire(`bombpath_2_relay`,`Trigger`,,1)
+			"
 		}
 		WaveSpawn
 		{
@@ -3557,7 +3543,7 @@ population
 			TFBot
             {
                 Template T_TFBot_Demoman_Knight
-                ClassIcon	pyro_homewrecker_lite_armored
+                ClassIcon	pyro_homewrecker_armored_lite
                 Name    "Chargin' Mace"
                 Item	"The Homewrecker"
                 Item    "The Tide Turner"
@@ -4044,7 +4030,7 @@ population
 				}
 				TFBot
 				{
-					ClassIcon	soldier_directhit_lite
+					ClassIcon	soldier_accurate
 					Health	200
 					Name	"Direct Hit Soldier"
 					Class	Soldier
@@ -4061,7 +4047,7 @@ population
 				}
 				TFBot
 				{
-					ClassIcon	soldier_directhit_lite
+					ClassIcon	soldier_accurate
 					Health	200
 					Name	"Direct Hit Soldier"
 					Class	Soldier
@@ -4070,7 +4056,7 @@ population
 				}
 				TFBot
 				{
-					ClassIcon	soldier_directhit_lite
+					ClassIcon	soldier_accurate
 					Health	200
 					Name	"Direct Hit Soldier"
 					Class	Soldier
@@ -4104,7 +4090,7 @@ population
 			TFBot
 			{ 
 				Template T_TFBot_Heavy_IronFist_Airblast
-				ClassIcon heavy_steelfist_pusher
+				ClassIcon heavy_steelfist_blast
 			}
 		}
 		WaveSpawn
@@ -4146,7 +4132,7 @@ population
 			DoneWarningSound vo\mvm\norm\soldier_mvm_paincrticialdeath04.mp3
 			TFBot
 			{
-				ClassIcon 	soldier_gib_jumper_lite
+				ClassIcon 	soldier_head_gib_jumper_lite
 				Class	Soldier
 				Name	"barry"
 				Health 4000
@@ -4244,7 +4230,7 @@ population
 			DoneWarningSound vo\mvm\norm\soldier_mvm_paincrticialdeath04.mp3
 			TFBot
 			{
-				ClassIcon 	soldier_gib_jumper_lite
+				ClassIcon 	soldier_head_gib_jumper_lite
 				Class	Soldier
 				Name	"harry"
 				Health 4000
@@ -4374,7 +4360,7 @@ population
                 Template T_TFBot_Heavyweapons_Heavyweight_Champ
                 Item     "The Concheror"
                 Attributes      SpawnWithFullCharge
-                ClassIcon heavy_champ_conch2
+                ClassIcon heavy_champ_conch
                 Name "Extended Conch Punchie"
                 Attributes AlwaysCrit
                 CharacterAttributes
@@ -4728,7 +4714,7 @@ population
                     Class Medic
                     Name "Armored BigHeal Shield Medic"
                     Skill Expert
-                    ClassIcon 	medic_quickfix_armored_shield
+                    ClassIcon 	medic_shield_armored
                     WeaponRestrictions SecondaryOnly
                     Attributes SpawnWithFullCharge
                     Attributes ProjectileShield
@@ -4782,7 +4768,7 @@ population
 				Class Demoman
 				Name "Major Barrage"
 				Skill Expert
-				ClassIcon 		demo_scatter_giant
+				ClassIcon 		demo_grenaderain_giant
 				Health 4000
 				Attributes HoldFireUntilFullReload
 				Attributes MiniBoss
@@ -4964,7 +4950,7 @@ population
 				TFBot
 				{
 					Template T_TFBot_Demoman_Knight
-					ClassIcon	pyro_homewrecker_lite_armored
+					ClassIcon	pyro_homewrecker_armored_lite
 					Name    "Jumping n' Chargin' Mace"
 					Item	"The Homewrecker"
 					Item    "The Chargin' Targe"
@@ -4992,7 +4978,7 @@ population
 				TFBot
 				{
 					Template T_TFBot_Demoman_Knight
-					ClassIcon	pyro_homewrecker_lite_armored
+					ClassIcon	pyro_homewrecker_armored_lite
 					Name    "Kill People with Hammers"
 					Item	"The Homewrecker"
 					Item    "The Chargin' Targe"
@@ -5227,7 +5213,7 @@ population
             TotalCurrency 50
         
             TFBot
-            { Template T_TFBot_Engineer_Sentry_Teleporter ClassIcon engineer_battle TeleportWhere spawnbot_aggr TeleportWhere spawnbot_right }
+            { Template T_TFBot_Engineer_Sentry_Teleporter ClassIcon engineer TeleportWhere spawnbot_aggr TeleportWhere spawnbot_right }
         }
 		WaveSpawn // Tank # HP
 		{
@@ -5317,7 +5303,7 @@ population
 			{ 
 				Class Demoman
 				Name "Giant Burst Fire Sticky Demo"
-				ClassIcon 	demo_sticky_burst_giant
+				ClassIcon 	demo_sticky_burst_daan_giant
 				Skill Expert
 				Health 3800
 				Item "Bomb Beanie"
@@ -5477,11 +5463,11 @@ population
 		    {
 		        TFBot
 		        {
-		            ClassIcon soldier_homing_direct_burst_giant
+		            ClassIcon soldier_burstfire_homing_accurate_nys
 		        }
 		        TFBot
 		        {
-		            ClassIcon pyro_neon_lite_giant
+		            ClassIcon pyro_neon_lite
 		        }
 				TFBot
 		        {
@@ -5489,7 +5475,7 @@ population
 		        }
 				TFBot
 		        {
-		            ClassIcon trash_meme
+		            ClassIcon soldier_blast
 		        }
 				TFBot
 		        {
@@ -5501,11 +5487,11 @@ population
 		        }
 				TFBot
 		        {
-		            ClassIcon heavy_shotgun_burst_lite
+		            ClassIcon heavy_shotgun_burstfire_lite
 		        }
 				TFBot
 		        {
-		            ClassIcon soldier_nuclear_giant
+		            ClassIcon soldier_nuclear
 		        }
 		    }
 		}
@@ -5604,7 +5590,7 @@ population
 				TFBot
 				{
 					Template T_TFBot_Demoman_Knight
-					ClassIcon	pyro_homewrecker_lite_armored
+					ClassIcon	pyro_homewrecker_armored_lite
 					Name    "Chargin' Mace"
 					Item	"The Homewrecker"
 					Item    "The Tide Turner"

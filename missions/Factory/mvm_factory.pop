@@ -1,0 +1,736 @@
+#base robot_giant.pop
+#base robot_standard.pop
+#base robot_gatebot.pop
+#base robot_factory.pop
+population
+{
+	StartingCurrency						400
+	RespawnWaveTime							6
+	CanBotsAttackWhileInSpawnRoom			no
+	AddSentryBusterWhenDamageDealtExceeds	3000
+	AddSentryBusterWhenKillCountExceeds		15
+	
+	//MISSIONS
+	
+	//SENTRY BUSTAH
+	Mission
+	{
+		Objective DestroySentries
+		Where spawnbot
+		CooldownTime 30
+		TFBot
+		{
+			Template T_TFBot_SentryBuster
+		}
+	}
+	
+	
+	//Wave 3 jarate
+	Mission
+	{
+		Objective Sniper							// The mission objective. Available missions: 
+													//    "Sniper" (add harassing snipers)
+													//    "Spy" (add harassing spies)
+													//    "DestroySentries" (send in bots who focus on killing overly successful sentry guns)
+													//    "Engineer" (add harassing engineers who will build sentry nests on bot_hint_sentrygun entities)
+
+		Where					spawnbot			// Where the mission bots will spawn
+
+		BeginAtWave				3					// The wave number (1 to N) at which this mission becomes active
+		RunForThisManyWaves		1					// How many waves this mission is active. This example would have snipers active for waves 4, 5, and 6
+		InitialCooldown			5
+		
+		CooldownTime			30					// The minimum time between spawning mission sorties
+		DesiredCount			4					// How many copies of the spawner should be sent in
+
+		TFBot
+		{
+			Template	T_TFBot_Sniper_Sydney_Sleeper_Nerf
+		}
+	}
+	//Wave 4 Spies
+	Mission
+	{
+		Objective Spy								
+
+		Where					spawnbot
+
+		BeginAtWave				4					
+		RunForThisManyWaves		1
+		InitialCooldown			10
+		
+		CooldownTime			30
+		DesiredCount			4
+
+		TFBot
+		{
+			Template	T_TFBot_Spy
+		}
+	}
+	//Wave 5 snipers
+	Mission
+	{
+		Objective Sniper							// The mission objective. Available missions: 
+													//    "Sniper" (add harassing snipers)
+													//    "Spy" (add harassing spies)
+													//    "DestroySentries" (send in bots who focus on killing overly successful sentry guns)
+													//    "Engineer" (add harassing engineers who will build sentry nests on bot_hint_sentrygun entities)
+
+		Where					spawnbot			// Where the mission bots will spawn
+
+		BeginAtWave				5					// The wave number (1 to N) at which this mission becomes active
+		RunForThisManyWaves		1					// How many waves this mission is active. This example would have snipers active for waves 4, 5, and 6
+		
+		CooldownTime			30					// The minimum time between spawning mission sorties
+		DesiredCount			4					// How many copies of the spawner should be sent in
+
+		TFBot
+		{
+			Template	T_TFBot_Sniper_Sydney_Sleeper_Nerf
+		}
+	}
+	
+	//WAVES
+	
+	//Wave 1 - $850
+	Wave
+	{
+		WaitWhenDone	65
+		Checkpoint		Yes
+		StartWaveOutput
+		{
+			Target	wave_start_relay
+			Action	Trigger
+		}
+		DoneOutput
+		{
+			Target	wave_finished_relay
+			Action	Trigger
+		}
+		InitWaveOutput
+		{
+			Target BigNet
+			Action RunScriptCode
+			Param "
+				NetProps.SetPropString(Entities.FindByClassname(null, `tf_objective_resource`), `m_iszMvMPopfileName`, `Normal Mode`)
+				
+			"
+		}
+		WaveSpawn
+		{
+			Name				a1
+			TotalCurrency		200
+			TotalCount			18
+			MaxActive			4
+			SpawnCount			2
+			WaitBeforeStarting	0
+			WaitBetweenSpawns	10
+			Where				spawnbot
+			Squad
+			{
+				TFBot
+				{
+					Template	T_TFBot_Scout_Melee
+				}
+				TFBot
+				{
+					Template	T_TFBot_Medic_QuickFix
+				}
+			}
+		}
+		WaveSpawn
+		{
+			Name				a1b
+			TotalCurrency		200
+			TotalCount			18
+			MaxActive			4
+			SpawnCount			2
+			WaitBeforeStarting	5
+			WaitBetweenSpawns	10
+			Where				spawnbot
+			Squad
+			{
+				TFBot
+				{
+					Template	T_TFBot_Scout_Fish
+				}
+				TFBot
+				{
+					Template	T_TFBot_Medic_QuickFix
+				}
+			}
+		}
+		WaveSpawn
+		{
+			Name				a2
+			WaitForAllSpawned	a1b
+			WaitForAllDead		a1
+			TotalCurrency		200
+			TotalCount			20
+			MaxActive			10
+			SpawnCount			4
+			WaitBeforeStarting	0
+			WaitBetweenSpawns	10
+			Where				spawnbot
+			Squad
+			{
+				TFBot
+				{
+					Template	T_TFBot_Sniper_Huntsman
+				}
+				TFBot
+				{
+					Template	T_TFBot_Pyro_ArrowLighter
+				}
+			}
+		}
+		WaveSpawn	//Plague Doctors, with accompanying Raven Pyros
+		{
+			Name				a3
+			WaitForAllSpawned	a2
+			WaitForAllDead		a1b
+			TotalCurrency		250
+			TotalCount			35
+			MaxActive			14
+			SpawnCount			7
+			WaitBeforeStarting	0
+			WaitBetweenSpawns	10
+			Where				spawnbot
+			Squad
+			{
+				TFBot
+				{
+					Template	T_TFBot_Medic_Plague
+				}
+				TFBot
+				{
+					Template	T_TFBot_Pyro_Raven
+				}
+				TFBot
+				{
+					Template	T_TFBot_Pyro_Raven
+				}
+				TFBot
+				{
+					Template	T_TFBot_Pyro_Raven
+				}
+				TFBot
+				{
+					Template	T_TFBot_Pyro_Raven
+				}
+				TFBot
+				{
+					Template	T_TFBot_Pyro_Raven
+				}
+				TFBot
+				{
+					Template	T_TFBot_Pyro_Raven
+				}
+			}
+		}
+	}
+	
+	
+	
+	//Wave 2 - $600
+	Wave
+	{
+		WaitWhenDone	65
+		Checkpoint		Yes
+		StartWaveOutput
+		{
+			Target	wave_start_relay
+			Action	Trigger
+		}
+		DoneOutput
+		{
+			Target	wave_finished_relay
+			Action	Trigger
+		}
+		Wavespawn
+		{
+			Name				a1
+			TotalCurrency		450
+			TotalCount			75
+			MaxActive			25
+			SpawnCount			5
+			WaitBeforeStarting	0
+			WaitBetweenSpawns	6
+			Where				spawnbot
+			
+			Squad
+			{
+				TFBot
+				{
+					Template	T_TFBot_Scout_Melee
+				}
+			}
+		}
+		WaveSpawn	//support, aim for capture point
+		{
+			Name				a2
+			TotalCurrency		150
+			TotalCount			25
+			MaxActive			5
+			SpawnCount			5
+			WaitBeforeStarting	50
+			WaitBetweenSpawns	10
+			Where				spawngatebot
+			
+			Squad
+			{
+				TFBot
+				{
+					Template	T_TFGateBot_Scout_ResistCapBlocking
+				}
+			}
+		}
+	}
+	
+	
+	
+	//Wave 3 - $1000
+	Wave
+	{
+		WaitWhenDone	65
+		Checkpoint		Yes
+		StartWaveOutput
+		{
+			Target	wave_start_relay
+			Action	Trigger
+		}
+		DoneOutput
+		{
+			Target	wave_finished_relay
+			Action	Trigger
+		}
+		WaveSpawn
+		{
+			Name				a1
+			TotalCurrency		300
+			TotalCount			24
+			MaxActive			10
+			SpawnCount			4
+			WaitBeforeStarting	0
+			WaitBetweenSpawns	10
+			Where				spawnbot
+			Squad
+			{
+				TFBot
+				{
+					Template	T_TFBot_Pyro_Shark
+				}
+			}
+		}
+		WaveSpawn
+		{
+			Name				a2
+			TotalCurrency		400
+			TotalCount			8
+			WaitForAllSpawned	a1
+			MaxActive			2
+			SpawnCount			1
+			WaitBeforeStarting	0
+			WaitBetweenSpawns	10
+			Where				spawnbot
+			Squad
+			{
+				TFBot
+				{
+					Template	T_TFBot_Heavyweapons_Fist
+				}
+			}
+		}
+		WaveSpawn
+		{
+			Name				b1
+			TotalCurrency		300
+			TotalCount			30
+			MaxActive			8
+			SpawnCount			2
+			WaitBeforeStarting	40
+			WaitBetweenSpawns	6
+			Where				spawngatebot
+			Squad
+			{
+				TFBot
+				{
+					Template	T_TFGateBot_Soldier_Superman
+				}
+				TFBot
+				{
+					Template	T_TFGateBot_Demoman_Django
+				}
+			}
+		}
+	}
+	
+	
+	//Wave 4 - $800
+	Wave
+	{
+		WaitWhenDone	65
+		Checkpoint		Yes
+		StartWaveOutput
+		{
+			Target	wave_startTank_relay	//cap point opens at 30 instead of 60
+			Action	Trigger
+		}
+		DoneOutput
+		{
+			Target	wave_finished_relay
+			Action	Trigger
+		}
+		WaveSpawn
+		{
+			TotalCurrency		500
+			TotalCount			1
+			WaitBeforeStarting	0
+			Tank
+			{
+				Health 50000
+				Speed 75								//Note: map logic is dependant on a speed of 75!
+				Name "Sherman"
+				Skin 0									// 0 - normal skin, 1 - final wave skin
+				StartingPathTrackNode "boss_path_1"		
+
+				OnKilledOutput							// output sent when the Tank is killed
+				{
+					Target tank_died_relay
+					Action Trigger                         
+				}
+
+				OnBombDroppedOutput						// output sent when the Tank drops its bomb once it reaches the end of its path
+				{
+					Target bomb_dropped_relay
+					Action Trigger                         
+				}
+			}
+		}
+		WaveSpawn
+		{
+			Name				a1
+			TotalCurrency		150
+			TotalCount			30
+			MaxActive			14
+			TotalCount			35
+			MaxActive			14
+			SpawnCount			7
+			WaitBeforeStarting	0
+			WaitBetweenSpawns	10
+			Where				spawnbot
+			Squad
+			{
+				TFBot
+				{
+					Template	T_TFBot_Medic_Plague
+				}
+				TFBot
+				{
+					Template	T_TFBot_Pyro_Raven
+				}
+				TFBot
+				{
+					Template	T_TFBot_Pyro_Raven
+				}
+				TFBot
+				{
+					Template	T_TFBot_Pyro_Raven
+				}
+				TFBot
+				{
+					Template	T_TFBot_Pyro_Raven
+				}
+				TFBot
+				{
+					Template	T_TFBot_Pyro_Raven
+				}
+				TFBot
+				{
+					Template	T_TFBot_Pyro_Raven
+				}
+			}
+		}
+		WaveSpawn	//Gatebots
+		{
+			Name				capture1
+			TotalCurrency		150
+			TotalCount			30
+			MaxActive			8
+			SpawnCount			2
+			WaitBeforeStarting	40
+			WaitBetweenSpawns	6
+			Where				spawngatebot
+			Squad
+			{
+				TFBot
+				{
+					Template	T_TFGateBot_Soldier_Superman
+				}
+				TFBot
+				{
+					Template	T_TFGateBot_Demoman_Django
+				}
+			}
+		}
+	}
+		
+		
+	//Wave 5 - $900
+	Wave
+	{
+		WaitWhenDone	65
+		Checkpoint		Yes
+		StartWaveOutput
+		{
+			Target	wave_start_relay
+			Action	Trigger
+		}
+		DoneOutput
+		{
+			Target	wave_finished_relay
+			Action	Trigger
+		}
+		Wavespawn
+		{
+			Name				a1
+			TotalCurrency		450
+			TotalCount			18
+			MaxActive			6
+			SpawnCount			3
+			WaitBeforeStarting	0
+			WaitBetweenSpawns	6
+			Where				spawnbot
+			
+			Squad
+			{
+				TFBot
+				{
+					Template	T_TFBot_Scout_Melee
+				}
+			}
+		}
+		Wavespawn
+		{
+			Name				a1b
+			TotalCurrency		150
+			TotalCount			6
+			MaxActive			2
+			SpawnCount			1
+			WaitBeforeStarting	10
+			WaitBetweenSpawns	12
+			Where				spawnbot
+			
+			Squad
+			{
+				TFBot
+				{
+					Template	T_TFBot_Scout_Shortstop
+				}
+			}
+		}
+		WaveSpawn	//Gatebots
+		{
+			Name				capture1
+			TotalCurrency		150
+			TotalCount			45
+			MaxActive			8
+			SpawnCount			3
+			WaitBeforeStarting	40
+			WaitBetweenSpawns	6
+			Where				spawngatebot
+			Squad
+			{
+				TFBot
+				{
+					Template	T_TFGateBot_Soldier_Superman
+				}
+				TFBot
+				{
+					Template	T_TFGateBot_Demoman_Django
+				}
+				TFBot
+				{
+					Template	T_TFGateBot_Scout_Melee_ResistCapBlocking
+				}
+			}
+		}
+		WaveSpawn
+		{
+			Name				a2
+			TotalCurrency		50
+			TotalCount			16
+			WaitForAllSpawned	a1
+			MaxActive			6
+			SpawnCount			4
+			WaitBeforeStarting	0
+			WaitBetweenSpawns	10
+			Where				spawnbot
+			Squad
+			{
+				TFBot
+				{
+					Template	T_TFBot_Heavyweapons_Shotgun
+				}
+			}
+		}
+		WaveSpawn
+		{
+			Name				a3
+			TotalCurrency		50
+			TotalCount			8
+			WaitForAllSpawned	a2
+			MaxActive			2
+			SpawnCount			1
+			WaitBeforeStarting	0
+			WaitBetweenSpawns	10
+			Where				spawnbot
+			Squad
+			{
+				TFBot
+				{
+					Template	T_TFBot_Demo_Burst
+				}
+			}
+		}
+		WaveSpawn
+		{
+			Name				a4
+			TotalCurrency		50
+			TotalCount			8
+			WaitForAllSpawned	a2
+			MaxActive			2
+			SpawnCount			1
+			WaitBeforeStarting	0
+			WaitBetweenSpawns	10
+			Where				spawnbot
+			Squad
+			{
+				TFBot
+				{
+					Template	T_TFBot_Demoman_Samurai
+				}
+			}
+		}
+	}
+	
+	//Wave 6 - $700
+	Wave
+	{
+		WaitWhenDone	65
+		Checkpoint		Yes
+		StartWaveOutput
+		{
+			Target	wave_start2Tank_relay	//cap point opens at 30 instead of 60, tanks have specific paths to take
+			Action	Trigger
+		}
+		DoneOutput
+		{
+			Target	wave_finished_relay
+			Action	Trigger
+		}
+		WaveSpawn
+		{
+			TotalCurrency		350
+			TotalCount			1
+			WaitBeforeStarting	0
+			Tank
+			{
+				Health 50000
+				Speed 75								//Note: map logic is dependant on a speed of 75!
+				Name "Sherman"
+				Skin 1									// 0 - normal skin, 1 - final wave skin
+				StartingPathTrackNode "boss_path_1L"		// if this is omitted, the Tank will find the path_track with no previous node and start there
+
+				OnKilledOutput							// output sent when the Tank is killed
+				{
+					Target tank_died_relay
+					Action Trigger                         
+				}
+
+				OnBombDroppedOutput						// output sent when the Tank drops its bomb once it reaches the end of its path
+				{
+					Target bomb_dropped_relay
+					Action Trigger                         
+				}
+			}
+		}
+		WaveSpawn
+		{
+			TotalCurrency		350
+			TotalCount			1
+			WaitBeforeStarting	0
+			Tank
+			{
+				Health 50000
+				Speed 75								//Note: map logic is dependant on a speed of 75!
+				Name "Sherman"
+				Skin 1									// 0 - normal skin, 1 - final wave skin
+				StartingPathTrackNode "boss_path_1r"		// if this is omitted, the Tank will find the path_track with no previous node and start there
+
+				OnKilledOutput							// output sent when the Tank is killed
+				{
+					Target tank_died_relay
+					Action Trigger                         
+				}
+
+				OnBombDroppedOutput						// output sent when the Tank drops its bomb once it reaches the end of its path
+				{
+					Target bomb_dropped_relay
+					Action Trigger                         
+				}
+			}
+		}
+		WaveSpawn	//Tank support, aim for capture point
+		{
+			Name				a1
+			TotalCurrency		0
+			TotalCount			75
+			MaxActive			6
+			SpawnCount			6
+			WaitBeforeStarting	20
+			WaitBetweenSpawns	10
+			Where				spawngatebot
+			
+			Support				1		//Don't count towards wave end.
+			
+			Squad
+			{
+				TFBot
+				{
+					Template	T_TFGateBot_Scout_Melee_ResistCapBlocking
+				}
+				TFBot
+				{
+					Template	T_TFGateBot_Scout_ResistCapBlocking
+				}
+			}
+		}
+		WaveSpawn	//Tank support, aim for capture point
+		{
+			Name				b1
+			TotalCurrency		0
+			TotalCount			30
+			MaxActive			8
+			SpawnCount			2
+			WaitBeforeStarting	80
+			WaitBetweenSpawns	6
+			Where				spawngatebot
+			
+			Support				1
+			
+			Squad
+			{
+				TFBot
+				{
+					Template	T_TFGateBot_Soldier_Superman
+				}
+				TFBot
+				{
+					Template	T_TFGateBot_Demoman_Django
+				}
+			}
+		}
+		
+	}
+}
