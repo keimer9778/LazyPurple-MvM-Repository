@@ -6,23 +6,6 @@ WaveSchedule
 	RespawnWaveTime 6
 	CanBotsAttackWhileInSpawnRoom No
 
-	PointTemplates
-	{
-		MissionNamePT
-		{
-			OnSpawnOutput
-			{
-				Target BigNet
-				Action RunScriptCode
-				Param "
-						NetProps.SetPropString(Entities.FindByClassname(null, `tf_objective_resource`), `m_iszMvMPopfileName`, `(Intermediate) Rusty Sound Wave`)
-					  "
-			}
-		}
-	}
-
-	SpawnTemplate "MissionNamePT"
-
 	Templates
 	{
 		T_TFGateBot_Giant_Scout_Fast //unused
@@ -55,7 +38,7 @@ WaveSchedule
 						"override footstep sound set" 5
 					}
 				}
-				RevertGateBotsBehavior
+				RevertGateBotsBehavior [$SIGSEGV]
 				{
 					Item "MvM GateBot Light Scout"
 					ItemAttributes               // turn off light hat
@@ -132,7 +115,7 @@ WaveSchedule
 						"damage bonus" 0.5
 					}
 				}
-				RevertGateBotsBehavior
+				RevertGateBotsBehavior [$SIGSEGV]
 				{
 					Item "MvM GateBot Light Sniper"
 					ItemAttributes               // turn off light hat
@@ -173,7 +156,7 @@ WaveSchedule
 					Item "Crit-a-Cola"
 					Skill Hard
 				}
-				RevertGateBotsBehavior
+				RevertGateBotsBehavior [$SIGSEGV]
 				{
 					Item "The Sandman"
 					Item "The Caffeine Cooler"
@@ -213,7 +196,7 @@ WaveSchedule
 					WeaponRestrictions MeleeOnly
 					Item "Upgradeable TF_WEAPON_BAT"
 				}
-				RevertGateBotsBehavior
+				RevertGateBotsBehavior [$SIGSEGV]
 				{
 					Item "MvM GateBot Light Scout"
 					ItemAttributes               // turn off light hat
@@ -227,94 +210,11 @@ WaveSchedule
 				}
 			}
 		}
-		T_TFGateBot_pyro_dragon_flamer_conch
-		{
-			Class	Pyro
-			ClassIcon	pyro_dragon_fury_conch_v2
-			Health 	35000
-			Scale 	1.9
-			Name	"Dragon Flamer"
-			EventChangeAttributes
-			{
-				Default
-				{
-					Tag bot_gatebot 				
-					Tag nav_prefer_gate1_flank		
-					BehaviorModifiers push			
-					Attributes IgnoreFlag 
-			
-					Skill	Expert
-					Item	"The Dragon's Fury"
-					Item	"Fallen Angel"
-					Item	"The Concheror"
-					Item	"MvM GateBot Light Pyro"
-					WeaponRestrictions	PrimaryOnly
-					Attributes	MiniBoss
-					Attributes	UseBossHealthBar
-					Attributes  SpawnWithFullCharge
-					ItemAttributes
-					{
-						ItemName	"The Dragon's Fury"
-						"damage bonus"	1.5
-					}
-					ItemAttributes
-					{
-						ItemName	"The Concheror"
-						"increase buff duration"	9.0
-					}
-					CharacterAttributes
-					{
-						"move speed bonus"	0.35
-						"damage force reduction" 0.4
-						"airblast vulnerability multiplier" 0.0
-						"override footstep sound set" 3
-						"airblast vertical vulnerability multiplier" 0.0
-						"rage giving scale" 0.1
-					}
-				}
-				RevertGateBotsBehavior
-				{
-					Item "MvM GateBot Light Pyro"
-					ItemAttributes               // turn off light hat
-					{
-						ItemName "MvM GateBot Light Pyro"
-						"item style override" 1
-					}
-					Skill	Expert
-					Item	"The Dragon's Fury"
-					Item	"Fallen Angel"
-					Item	"The Concheror"
-					WeaponRestrictions	PrimaryOnly
-					Attributes	MiniBoss
-					Attributes	UseBossHealthBar
-					Attributes  SpawnWithFullCharge
-					ItemAttributes
-					{
-						ItemName	"The Dragon's Fury"
-						"heal on kill" 500
-					}
-					ItemAttributes
-					{
-						ItemName	"The Concheror"
-						"increase buff duration"	9.0
-					}
-					CharacterAttributes
-					{
-						"move speed bonus"	0.35
-						"damage force reduction" 0.4
-						"airblast vulnerability multiplier" 0.0
-						"override footstep sound set" 3
-						"airblast vertical vulnerability multiplier" 0.0
-						"rage giving scale" 0.1
-					}
-				}
-			}
-		}
 		T_TFBot_Giant_Soldier_Extended_Battalion_blast
 		{
 			Class Soldier
 			Name "Giant Battalion Blast Soldier"
-			ClassIcon soldier_backup_blast
+			ClassIcon soldier_libertylauncher_backup
 			Skill Expert
 			Health 3800
 			WeaponRestrictions PrimaryOnly
@@ -322,7 +222,7 @@ WaveSchedule
 			Attributes MiniBoss
 			Attributes SpawnWithFullCharge
 			Item 	"The Battalion's Backup"
-			Item	"Screamin' Eagle"
+			Item	"eotl_soldier_garrison"
 			Item	"concealedkiller_rocketlauncher_woodlandwarrior"
 			ItemAttributes
 			{
@@ -451,7 +351,8 @@ WaveSchedule
 		}
 	}
 
-	Wave	//=============================================
+	Wave	
+			//=============================================
 			// CASH DATA BY ADDICTED (850$)
 			//
 			// MAIN BOTS : 748$
@@ -473,10 +374,14 @@ WaveSchedule
             Action Trigger
         }
         InitWaveOutput
-        {
-            Target InitB
-            Action Trigger
-        }
+		{
+			Target BigNet
+			Action RunScriptCode
+			Param "
+				NetProps.SetPropString(Entities.FindByClassname(null, `tf_objective_resource`), `m_iszMvMPopfileName`, `(Intermediate) Rusty Soundwave`)
+				EntFire(`initB`,`Trigger`)
+			"
+		}
 
 
 		WaveSpawn   // SUBWAVE 1
@@ -506,7 +411,7 @@ WaveSchedule
 			TFBot
 			{
 				Template T_TFBot_Scout_Melee
-				ClassIcon	scout_bat_giant
+				ClassIcon scout_bat_nys_giant
 			}
 		}
 		WaveSpawn
@@ -529,7 +434,7 @@ WaveSchedule
 			{
 				Class	Scout
 				WeaponRestrictions	MeleeOnly
-				ClassIcon	scout_bat
+				ClassIcon scout_bat_nys
 			}
 		}
 		WaveSpawn
@@ -652,7 +557,7 @@ WaveSchedule
 			{
 				Template T_TFBot_Scout_Melee
 				Skill Expert  
-				ClassIcon	scout_bat
+				ClassIcon scout_bat_nys
 			}
 		}
 
@@ -733,10 +638,14 @@ WaveSchedule
             Action Trigger
         }
         InitWaveOutput
-        {
-            Target InitA
-            Action Trigger
-        }
+		{
+			Target BigNet
+			Action RunScriptCode
+			Param "
+				NetProps.SetPropString(Entities.FindByClassname(null, `tf_objective_resource`), `m_iszMvMPopfileName`, `(Intermediate) Rusty Soundwave`)
+				EntFire(`initA`,`Trigger`)
+			"
+		}
 		WaveSpawn  // SUBWAVE 1
 				   // TOTAL : 250$
 				   // MAIN : 170$
@@ -894,7 +803,7 @@ WaveSchedule
 			TFBot
 			{
 				Template T_TFBot_Scout_Melee
-				ClassIcon	scout_bat
+				ClassIcon scout_bat_nys
 			}
 		}
 
@@ -942,10 +851,14 @@ WaveSchedule
             Action Trigger
         }
         InitWaveOutput
-        {
-            Target InitMain
-            Action Trigger
-        }
+		{
+			Target BigNet
+			Action RunScriptCode
+			Param "
+				NetProps.SetPropString(Entities.FindByClassname(null, `tf_objective_resource`), `m_iszMvMPopfileName`, `(Intermediate) Rusty Soundwave`)
+				EntFire(`initMain`,`Trigger`)
+			"
+		}
 		WaveSpawn
         {
 			Name	3S
@@ -1192,10 +1105,14 @@ WaveSchedule
             Action Trigger
         }
         InitWaveOutput
-        {
-            Target InitMain
-            Action Trigger
-        }
+		{
+			Target BigNet
+			Action RunScriptCode
+			Param "
+				NetProps.SetPropString(Entities.FindByClassname(null, `tf_objective_resource`), `m_iszMvMPopfileName`, `(Intermediate) Rusty Soundwave`)
+				EntFire(`initMain`,`Trigger`)
+			"
+		}
 		WaveSpawn
         {
 			Name	4S
@@ -1217,7 +1134,7 @@ WaveSchedule
 			{
 				Class	Scout
 				WeaponRestrictions	MeleeOnly
-				ClassIcon	scout_bat
+				ClassIcon scout_bat_nys
 			}
 		}
 		WaveSpawn
@@ -1413,10 +1330,14 @@ WaveSchedule
             Action Trigger
         }
         InitWaveOutput
-        {
-            Target InitMain
-            Action Trigger
-        }
+		{
+			Target BigNet
+			Action RunScriptCode
+			Param "
+				NetProps.SetPropString(Entities.FindByClassname(null, `tf_objective_resource`), `m_iszMvMPopfileName`, `(Intermediate) Rusty Soundwave`)
+				EntFire(`initMain`,`Trigger`)
+			"
+		}
 		WaveSpawn
 		{
 			Name	5A
@@ -1622,7 +1543,7 @@ WaveSchedule
 			{
 				Class Scout
 				WeaponRestrictions	MeleeOnly
-				ClassIcon	scout_bat
+				ClassIcon scout_bat_nys
 			}
 		}
 		WaveSpawn
@@ -1694,10 +1615,14 @@ WaveSchedule
             Action Trigger
         }
         InitWaveOutput
-        {
-            Target InitMain
-            Action Trigger
-        }
+		{
+			Target BigNet
+			Action RunScriptCode
+			Param "
+				NetProps.SetPropString(Entities.FindByClassname(null, `tf_objective_resource`), `m_iszMvMPopfileName`, `(Intermediate) Rusty Soundwave`)
+				EntFire(`initMain`,`Trigger`)
+			"
+		}
 		WaveSpawn
 		{
 			Name	Support
@@ -1931,7 +1856,7 @@ WaveSchedule
 				{
 					Template	T_TFBot_Giant_Soldier_Spammer
 					Name	"Chief Rapid Fire Buff Soldier"
-					ClassIcon	soldier_buff_spammer
+					ClassIcon	soldier_spammer_buff
 					Health	30000
 					Attributes SpawnWithFullCharge
 					Item "The Buff Banner"

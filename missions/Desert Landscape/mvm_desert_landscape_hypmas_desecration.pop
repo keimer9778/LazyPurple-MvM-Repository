@@ -24,25 +24,9 @@ WaveSchedule
 {
 
 	StartingCurrency				1200
-	RespawnWaveTime 				7
+	RespawnWaveTime 				2
 	CanBotsAttackWhileInSpawnRoom	No
 
-	PointTemplates [$SIGSEGV]
-	{
-		MissionNamePT
-		{
-			OnSpawnOutput
-			{
-				Target BigNet
-				Action RunScriptCode
-				Param "
-						NetProps.SetPropString(Entities.FindByClassname(null, `tf_objective_resource`), `m_iszMvMPopfileName`, `(Hypermaster) Desecration`)
-					  "
-			}
-		}
-	}
-
-	SpawnTemplate "MissionNamePT" [$SIGSEGV]
 
 	Mission // Spy - wave 4
 	{
@@ -69,17 +53,26 @@ WaveSchedule
 	Wave
 	{
 		StartWaveOutput
-			{
-				Target wave_start_relay
-				Action Trigger
-			}
+		{
+			Target wave_start_relay
+			Action Trigger
+		}
 		DoneOutput
-			{
-				Target wave_finished_relay
-				Action trigger
-			}
-		WaitWhenDone 65
-		Checkpoint Yes
+		{
+			Target wave_finished_relay
+			Action trigger
+		}
+		InitWaveOutput
+		{
+			Target BigNet
+			Action RunScriptCode
+			Param "
+				NetProps.SetPropString(Entities.FindByClassname(null, `tf_objective_resource`), `m_iszMvMPopfileName`, `(Hypermaster) Desecration`)
+				
+			"
+		}
+		
+		
 
 		WaveSpawn	// Create space for the robots to jump down
 					// ECT: 14s * 3g = 42s
@@ -261,10 +254,18 @@ WaveSchedule
 				Target wave_finished_relay
 				Action trigger
 			}
-		WaitWhenDone 65
-		Checkpoint Yes
+		InitWaveOutput
+		{
+			Target BigNet
+			Action RunScriptCode
+			Param "
+				NetProps.SetPropString(Entities.FindByClassname(null, `tf_objective_resource`), `m_iszMvMPopfileName`, `(Hypermaster) Desecration`)
+				
+			"
+		}
+		
 
-	WaveSpawn	// Create breathing space for robots
+		WaveSpawn	// Create breathing space for robots
 		{
 			Name "wave02boss"
 			Where spawnbot
@@ -281,7 +282,7 @@ WaveSchedule
 				{
 					Template T_TFBot_Giant_Pyro
 					Name "Frontline Disruptor"
-					ClassIcon pyro_armored2
+					ClassIcon pyro_armored
 					Health 15000
 					CharacterAttributes
 					{
@@ -344,12 +345,12 @@ WaveSchedule
 					// Counts: 2 + 8 + 8 + 6 = 24
 		{
 			Name "wave02b"
-			WaitForAllDead "wave02a"
+			WaitForAllSpawned "wave02a"
 			Where spawnbot
 			TotalCount 2
 			MaxActive 2
 			SpawnCount 1
-			WaitBeforeStarting 0
+			WaitBeforeStarting 6
 			WaitBetweenSpawns 12
 			TotalCurrency 50
 
@@ -362,12 +363,12 @@ WaveSchedule
 		WaveSpawn	// Bots serving as damage sponges for the Giant Concheror Soldier
 		{
 			Name "wave02b"
-			WaitForAllDead "wave02a"
+			WaitForAllSpawned "wave02a"
 			Where spawnbot
 			TotalCount 16
 			MaxActive 8
 			SpawnCount 4
-			WaitBeforeStarting 0
+			WaitBeforeStarting 6
 			WaitBetweenSpawns 4
 			TotalCurrency 50
 
@@ -379,12 +380,12 @@ WaveSchedule
 		WaveSpawn	// Heavies for common robots
 		{
 			Name "wave02bHeavy"
-			WaitForAllDead "wave02a"
+			WaitForAllSpawned "wave02a"
 			Where spawnbot
 			TotalCount 16
 			MaxActive 8
 			SpawnCount 4
-			WaitBeforeStarting 8
+			WaitBeforeStarting 10
 			WaitBetweenSpawns 0
 		
 			TFBot
@@ -395,12 +396,12 @@ WaveSchedule
 		WaveSpawn	// Bonk Scouts to keep people occupied
 		{
 			Name "wave02bBonk"
-			WaitForAllDead "wave02a"
+			WaitForAllSpawned "wave02a"
 			Where spawnbot
 			TotalCount 26
 			MaxActive 6
 			SpawnCount 2
-			WaitBeforeStarting 0
+			WaitBeforeStarting 8
 			WaitBetweenSpawns 3
 		
 			TFBot
@@ -414,12 +415,12 @@ WaveSchedule
 					// Counts: 2 + 4 + [6 + 8 + 3] = 23
 		{
 			Name "wave02c"
-			WaitForAllDead "wave02b"
+			WaitForAllSpawned "wave02b"
 			Where spawnbot
 			TotalCount 3
 			MaxActive 2
 			SpawnCount 1
-			WaitBeforeStarting 8
+			WaitBeforeStarting 14
 			WaitBetweenSpawns 8
 			TotalCurrency 200
 		
@@ -445,8 +446,8 @@ WaveSchedule
 			Support 1
 			MaxActive 4
 			SpawnCount 2
-			WaitBeforeStarting 20
-			WaitBetweenSpawns 25
+			WaitBeforeStarting 0
+			WaitBetweenSpawns 8
 			TotalCurrency 100
 		
 			TFBot
@@ -462,7 +463,7 @@ WaveSchedule
 			Support 1
 			MaxActive 8
 			SpawnCount 4
-			WaitBeforeStarting 10
+			WaitBeforeStarting 0
 			WaitBetweenSpawns 5
 
 			TFBot
@@ -478,7 +479,7 @@ WaveSchedule
 			Support 1
 			MaxActive 3
 			SpawnCount 3
-			WaitBeforeStarting 8
+			WaitBeforeStarting 0
 			WaitBetweenSpawns 3
 		
 			TFBot
@@ -501,8 +502,16 @@ WaveSchedule
 				Target wave_finished_relay
 				Action trigger
 			}
-		WaitWhenDone 65
-		Checkpoint Yes
+		InitWaveOutput
+		{
+			Target BigNet
+			Action RunScriptCode
+			Param "
+				NetProps.SetPropString(Entities.FindByClassname(null, `tf_objective_resource`), `m_iszMvMPopfileName`, `(Hypermaster) Desecration`)
+				
+			"
+		}
+		
 		
 		WaveSpawn	// First tank of the mission, spawns immediately
 		{
@@ -720,7 +729,7 @@ WaveSchedule
 			{
 				TFBot
 				{
-					Template T_TFBot_Giant_Soldier_Spammer_Reload
+					Template T_TFBot_Giant_Soldier_Burst_Spammer
 					CharacterAttributes
 					{
 						"airblast vertical vulnerability multiplier" 0.1
@@ -758,10 +767,18 @@ WaveSchedule
 				Target wave_finished_relay
 				Action trigger
 			}
-		WaitWhenDone 65
-		Checkpoint Yes
+		InitWaveOutput
+		{
+			Target BigNet
+			Action RunScriptCode
+			Param "
+				NetProps.SetPropString(Entities.FindByClassname(null, `tf_objective_resource`), `m_iszMvMPopfileName`, `(Hypermaster) Desecration`)
+				
+			"
+		}
+		
 
-	WaveSpawn	// Create breathing space for robots
+			WaveSpawn	// Create breathing space for robots
 				// Counts: 6 + 18 = 24
 		{
 			Name "wave04a"
@@ -995,8 +1012,16 @@ WaveSchedule
 				Target wave_finished_relay
 				Action trigger
 			}
-		WaitWhenDone 65
-		Checkpoint Yes
+		InitWaveOutput
+		{
+			Target BigNet
+			Action RunScriptCode
+			Param "
+				NetProps.SetPropString(Entities.FindByClassname(null, `tf_objective_resource`), `m_iszMvMPopfileName`, `(Hypermaster) Desecration`)
+				
+			"
+		}
+		
 
 		WaveSpawn	// Create breathing space for robots
 					// Counts: 2
@@ -1027,7 +1052,7 @@ WaveSchedule
 				{
 					Template T_TFBot_Giant_Medic_Regen
 					Name		"Giant Armored Medic"
-					ClassIcon 	medic_quickfix_armored_giant
+					ClassIcon 	medic_armored_giant
 					Health		10000
 					Item		"Coldfront Carapace"
 					CharacterAttributes
@@ -1133,6 +1158,7 @@ WaveSchedule
 			TFBot
 			{
 				Template T_TFBot_Giant_Scout_Jumping_Sandman
+				Attributes	AlwaysCrit
 				CharacterAttributes
 				{
 					"airblast vertical vulnerability multiplier" 0.3
@@ -1259,8 +1285,16 @@ WaveSchedule
 				Target wave_finished_relay
 				Action trigger
 			}
-		WaitWhenDone 65
-		Checkpoint Yes
+		InitWaveOutput
+		{
+			Target BigNet
+			Action RunScriptCode
+			Param "
+				NetProps.SetPropString(Entities.FindByClassname(null, `tf_objective_resource`), `m_iszMvMPopfileName`, `(Hypermaster) Desecration`)
+				
+			"
+		}
+		
 
 		WaveSpawn	// John Marauder's money is intercepted by RED!
 					// Counts: 1
@@ -1273,12 +1307,12 @@ WaveSchedule
 			WaitBeforeStarting 0
 			WaitBetweenSpawns 0
 			TotalCurrency 1500
+			Support	Limited
 			
 			TFBot
 			{
 				Class Scout
 				Name "John's Ransom Money"
-				ClassIcon cash_lite
 				Attributes MiniBoss
 				Item "Bonk! Atomic Punch"
 				ItemAttributes
@@ -1424,7 +1458,7 @@ WaveSchedule
 			TFBot
 			{
 
-				ClassIcon	heavy_shotgun_burst_hyper
+				ClassIcon	heavy_shotgun_burstfire_hyper_lite
 				Name	"Marauder Raider"
 				Class	Heavy
 				Skill	Expert
@@ -1456,7 +1490,7 @@ WaveSchedule
 		
 			TFBot
 			{
-				ClassIcon heavy_gauntlet_hyper_nys
+				ClassIcon heavy_steelfist_hyper
 				Health	900
 				Name	"Marauder Brawler"
 				Class	Heavyweapons
@@ -1488,7 +1522,7 @@ WaveSchedule
 		
 			TFBot	
 			{
-				ClassIcon sniper_bow_multi_penetrator_hyper
+				ClassIcon sniper_bow_multi_penetrate_hyper
 				Health	1200
 				Name	"Hyper Bowman Rapid Fire"
 				Class	Sniper

@@ -481,7 +481,7 @@ MakeMapChanges()
         // {
         //     SINS.ChangeIconByName("soldier_directhit_buff_lite","powerup_strength_lite")
         //     SINS.ChangeIconByName("medic_giant","powerup_agility_lite")
-        //     SINS.ChangeIconByName("heavy_shotgun_burst_lite","powerup_precision_lite")
+        //     SINS.ChangeIconByName("heavy_shotgun_burstfire_lite","powerup_precision_lite")
         //     SINS.ChangeIconByName("soldier_barrage","powerup_haste_lite")
         //     SINS.ChangeIconByName("scout_bat_nys","powerup_agility_lite")
         //     //SINS.ChangeIconByName("soldier","powerup_strength_lite") //cut

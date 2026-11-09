@@ -11,24 +11,7 @@ WaveSchedule
 	StartingCurrency 800
 	CanBotsAttackWhileInSpawnRoom No
 	RespawnWaveTime 8
-	Advanced	1
-
-	PointTemplates
-	{
-		MissionNamePT
-		{
-			OnSpawnOutput
-			{
-				Target BigNet
-				Action RunScriptCode
-				Param "
-						NetProps.SetPropString(Entities.FindByClassname(null, `tf_objective_resource`), `m_iszMvMPopfileName`, `(Advanced) Force Restart`)
-					  "
-			}
-		}
-	}
-
-	SpawnTemplate "MissionNamePT"
+	
 
 	Templates
 	{
@@ -66,7 +49,7 @@ WaveSchedule
 						"override footstep sound set" 2
 					}
 				}
-				RevertGateBotsBehavior
+				RevertGateBotsBehavior [$SIGSEGV]
 				{
 					Item "MvM GateBot Light Heavy"
 					ItemAttributes               // turn off light hat
@@ -98,13 +81,13 @@ WaveSchedule
 			Class Soldier
 			Skill Normal
 			Item "The Direct Hit"
-			ClassIcon soldier_directhit
+			ClassIcon soldier_accurate
 		}
 		T_TFGateBot_Soldier_Normal_DirectHit
 		{
 			Class Soldier
 			Name "Direct Hit Soldier"
-			ClassIcon soldier_directhit
+			ClassIcon soldier_accurate
 			EventChangeAttributes
 			{
 				Default
@@ -118,7 +101,7 @@ WaveSchedule
 					Item "The Direct Hit"
 					Skill Normal
 				}
-				RevertGateBotsBehavior
+				RevertGateBotsBehavior [$SIGSEGV]
 				{
 					Item "MvM GateBot Light Soldier"
 					ItemAttributes               // turn off light hat
@@ -181,7 +164,7 @@ WaveSchedule
 						"rage giving scale"	0.15
 					}
 				}
-				RevertGateBotsBehavior
+				RevertGateBotsBehavior [$SIGSEGV]
 				{
 					Item "MvM GateBot Light Soldier"
 					ItemAttributes               // turn off light hat
@@ -231,7 +214,7 @@ WaveSchedule
 		{
 			Class Medic
 			Name "Kritz Medic"
-			ClassIcon medic_kritz
+			ClassIcon medic_kritz_lite
 			Skill Expert
 			Item "The Kritzkrieg"
 			Item "Medic Goggles"
@@ -257,7 +240,7 @@ WaveSchedule
 		{
 			Class Medic
 			Name "Giant Kritz Medic"
-			ClassIcon medic_kritz_giant
+			ClassIcon medic_kritz_lite_giant
 			Skill Expert
 			Health 4500
 			Attributes SpawnWithFullCharge
@@ -312,7 +295,7 @@ WaveSchedule
 						"deploy time increased" 0.5			//Fixed by Canteen Crasher Team
 					}
 				}
-				RevertGateBotsBehavior
+				RevertGateBotsBehavior [$SIGSEGV]
 				{
 					Item "MvM GateBot Light Soldier"
 					ItemAttributes               // turn off light hat
@@ -372,7 +355,7 @@ WaveSchedule
 						"deploy time increased" 0.5			//Fixed by Canteen Crasher Team
 					}
 				}
-				RevertGateBotsBehavior
+				RevertGateBotsBehavior [$SIGSEGV]
 				{
 					Item "MvM GateBot Light Soldier"
 					ItemAttributes               // turn off light hat
@@ -403,7 +386,7 @@ WaveSchedule
 		{
 			Class Spy
 			Name "Enforcer Spy"
-			ClassIcon spy_enforcer
+			ClassIcon spy_enforcer_nys
 			Skill Expert
 			Item "The Enforcer"
 			Item "The Stealth Steeler"
@@ -416,7 +399,7 @@ WaveSchedule
 		{
 			Class Spy
 			Name "Enforcer Spy"
-			ClassIcon spy_enforcer
+			ClassIcon spy_enforcer_nys
 			
 			EventChangeAttributes
 			{
@@ -435,7 +418,7 @@ WaveSchedule
 						"cannot disguise" 1
 					}						
 				}
-				RevertGateBotsBehavior
+				RevertGateBotsBehavior [$SIGSEGV]
 				{
 					Item "MvM GateBot Light Spy"
 					ItemAttributes               // turn off light hat
@@ -456,7 +439,7 @@ WaveSchedule
 		{
 			Class Spy
 			Name "Giant Enforcer Spy"
-			ClassIcon spy_enforcer_giant
+			ClassIcon	spy_enforcer_nys_giant
 			Skill Expert
 			Health 3000
 			MaxVisionRange 2000
@@ -484,7 +467,7 @@ WaveSchedule
 		{
 			Class Spy
 			Name "Giant Enforcer Spy"
-			ClassIcon spy_enforcer_giant
+			ClassIcon	spy_enforcer_nys_giant
 			Health 3000
 			MaxVisionRange 2000
 			Attributes MiniBoss
@@ -517,7 +500,7 @@ WaveSchedule
 						"override footstep sound set" 6
 					}
 				}
-				RevertGateBotsBehavior
+				RevertGateBotsBehavior [$SIGSEGV]
 				{
 					Item "MvM GateBot Light Spy"
 					ItemAttributes               // turn off light hat
@@ -548,7 +531,7 @@ WaveSchedule
 		{
 			Class Spy
 			Name "The Spy with the Golden Gun"
-			ClassIcon spy_goldengun
+			ClassIcon spy_revolver_ambassador_lite
 			Skill Expert
 			Health 15000
 			//WeaponRestrictions PrimaryOnly
@@ -751,9 +734,9 @@ WaveSchedule
 	}
 	Wave	//Wave01 - 700 credits - Starts at B
 	{
-		WaitWhenDone 60
-		Sound "Announcer.IncomingMob"
-		Checkpoint Yes
+		
+		
+		
 
 		StartWaveOutput
 		{
@@ -762,8 +745,12 @@ WaveSchedule
 		}
 		InitWaveOutput
 		{
-			Target initB
-			Action Trigger
+			Target BigNet
+			Action RunScriptCode
+			Param "
+				NetProps.SetPropString(Entities.FindByClassname(null, `tf_objective_resource`), `m_iszMvMPopfileName`, `(Advanced) Force Restart`)
+				EntFire(`initB`,`Trigger`)
+			"
 		}
 		WaveSpawn // Push out flag with a big boy
 		{
@@ -1099,19 +1086,23 @@ WaveSchedule
 	}
 	Wave	// Wave02 - 800 credits - Starts at A
 	{
-		WaitWhenDone 60
-		Sound "Announcer.IncomingMob"
-		Checkpoint Yes
+		
+		
+		
 
 		StartWaveOutput
 		{
 			Target wave_start_relayA
 			Action Trigger
 		}
-		InitWaveOutput
+		nitWaveOutput
 		{
-			Target initA
-			Action Trigger
+			Target BigNet
+			Action RunScriptCode
+			Param "
+				NetProps.SetPropString(Entities.FindByClassname(null, `tf_objective_resource`), `m_iszMvMPopfileName`, `(Advanced) Force Restart`)
+				EntFire(`initA`,`Trigger`)
+			"
 		}
 		WaveSpawn // Big boy soldier
 		{
@@ -1403,9 +1394,9 @@ WaveSchedule
 	}
 	Wave	//Wave03 - 1000 credits - Starts at main
 	{
-		WaitWhenDone 60
-		Sound "Announcer.IncomingMob"
-		Checkpoint Yes
+		
+		
+		
 
 		StartWaveOutput
 		{
@@ -1414,8 +1405,12 @@ WaveSchedule
 		}
 		InitWaveOutput
 		{
-			Target initMain
-			Action Trigger
+			Target BigNet
+			Action RunScriptCode
+			Param "
+				NetProps.SetPropString(Entities.FindByClassname(null, `tf_objective_resource`), `m_iszMvMPopfileName`, `(Advanced) Force Restart`)
+				EntFire(`initMain`,`Trigger`)
+			"
 		}
 		WaveSpawn // Start with a bang of giant scouts
 		{
@@ -1819,9 +1814,9 @@ WaveSchedule
 	}
 	Wave	// Wave04 - 1200 - Chief Pushgate
 	{
-		WaitWhenDone 60
-		Sound "Announcer.IncomingMob"
-		Checkpoint Yes
+		
+		
+		
 
 		StartWaveOutput
 		{
@@ -1830,8 +1825,12 @@ WaveSchedule
 		}
 		InitWaveOutput
 		{
-			Target initMain
-			Action Trigger
+			Target BigNet
+			Action RunScriptCode
+			Param "
+				NetProps.SetPropString(Entities.FindByClassname(null, `tf_objective_resource`), `m_iszMvMPopfileName`, `(Advanced) Force Restart`)
+				EntFire(`initMain`,`Trigger`)
+			"
 		}
 		WaveSpawn // Engineers for annoying
 		{
@@ -1965,13 +1964,10 @@ WaveSchedule
 			WaitBeforeStarting 5
 			RandomSpawn 1
 
-			Squad
+			TFBot
 			{
-				TFBot
-				{
-					Template T_TFBot_Demoman_Samurai
-					Tag bot_giant
-				}
+				Template T_TFBot_Demoman_Samurai
+				Tag bot_giant
 			}
 		}
 		WaveSpawn // demogate
@@ -2148,9 +2144,9 @@ WaveSchedule
 	}
 	Wave	// Wave05 - 1200 - Private pushgates
 	{
-		WaitWhenDone 60
-		Sound "Announcer.IncomingMob"
-		Checkpoint Yes
+		
+		
+		
 
 		StartWaveOutput
 		{
@@ -2159,8 +2155,12 @@ WaveSchedule
 		}
 		InitWaveOutput
 		{
-			Target initMain
-			Action Trigger
+			Target BigNet
+			Action RunScriptCode
+			Param "
+				NetProps.SetPropString(Entities.FindByClassname(null, `tf_objective_resource`), `m_iszMvMPopfileName`, `(Advanced) Force Restart`)
+				EntFire(`initMain`,`Trigger`)
+			"
 		}
 		WaveSpawn // kritz spammer
 		{
@@ -2703,9 +2703,9 @@ WaveSchedule
 	}
 	Wave	//Wave06 - 1000 credits - Resistance is futile
 	{
-		WaitWhenDone 60
-		Sound "Announcer.IncomingMob"
-		Checkpoint Yes
+		
+		
+		
 		
 		StartWaveOutput
 		{
@@ -2714,8 +2714,12 @@ WaveSchedule
 		}
 		InitWaveOutput
 		{
-			Target initMain
-			Action Trigger
+			Target BigNet
+			Action RunScriptCode
+			Param "
+				NetProps.SetPropString(Entities.FindByClassname(null, `tf_objective_resource`), `m_iszMvMPopfileName`, `(Advanced) Force Restart`)
+				EntFire(`initMain`,`Trigger`)
+			"
 		}
 		WaveSpawn	//start with natascha
 		{
