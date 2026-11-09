@@ -9,23 +9,6 @@ population
 	RespawnWaveTime	6
 	CanBotsAttackWhileInSpawnRoom	no
 
-	PointTemplates
-	{
-		MissionNamePT
-		{
-			OnSpawnOutput
-			{
-				Target BigNet
-				Action RunScriptCode
-				Param "
-						NetProps.SetPropString(Entities.FindByClassname(null, `tf_objective_resource`), `m_iszMvMPopfileName`, `(Hypermaster) Wrath of the Lamb`)
-					  "
-			}
-		}
-	}
-
-	SpawnTemplate "MissionNamePT"
-
 	Mission
 	{
 		Objective	Spy
@@ -271,8 +254,8 @@ population
 	}
 	Wave
 	{
-		
-		
+		WaitWhenDone	65
+		Checkpoint	Yes
 		StartWaveOutput
 		{
 			Target	wave_start_relay_classic
@@ -282,6 +265,15 @@ population
 		{
 			Target	wave_finished_relay
 			Action	Trigger
+		}
+		InitWaveOutput
+		{
+			Target BigNet
+			Action RunScriptCode
+			Param "
+				NetProps.SetPropString(Entities.FindByClassname(null, `tf_objective_resource`), `m_iszMvMPopfileName`, `(Master) Wrath of the Lamb`)
+				ClientPrint(null,3,`\x08FF54F1FF\nWARNING: This mission takes nearly 2 hours to finish. You have been warned.`)
+			"
 		}
 		WaveSpawn
 		{
