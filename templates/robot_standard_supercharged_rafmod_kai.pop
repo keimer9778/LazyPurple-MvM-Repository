@@ -4,6 +4,8 @@ WaveSchedule
 
 	PrecacheModel "models/weapons/c_models/c_critbanner/c_critbanner.mdl"
 
+	PrecacheModel "models/weapons/w_models/w_rocketbullet.mdl"
+
 	//// POINT TEMPLATES ////
 
 	//// ROBOT TEMPLATES ////
@@ -18,7 +20,7 @@ WaveSchedule
 		{
 			Name "Supercharged Soldier"
 			Class Soldier
-			ClassIcon soldier_hyper_lite
+			ClassIcon soldier_hyper
 			Skill Expert
 			Attributes AlwaysCrit
 			WeaponRestrictions PrimaryOnly
@@ -189,7 +191,7 @@ WaveSchedule
 		{
 			Name "Firebrand Pyro"
 			Class Pyro
-			ClassIcon pyro_hot
+			ClassIcon pyro_hotflame
 			Skill Expert
 			Health 525
 			Scale 1.4
@@ -269,7 +271,7 @@ WaveSchedule
 		{
 			Name "Supercharged Demoman"
 			Class Demoman
-			ClassIcon demo_hyper_lite
+			ClassIcon demo_hyper
 			Skill Expert
 			Attributes AlwaysCrit
 			WeaponRestrictions PrimaryOnly
@@ -293,7 +295,7 @@ WaveSchedule
 		{
 			Name "Supercharged Ranger Engineer"
 			Class Engineer
-			ClassIcon engineer_ranger_penetrate_hyper
+			ClassIcon engineer_ranger_penetrate_hyper_nys
 			Skill Expert
 			Health 250
 			Attributes HoldFireUntilFullReload
@@ -319,7 +321,7 @@ WaveSchedule
 		{
 			Name "Burst Fire Pomson Engineer"
 			Class Engineer
-			ClassIcon heavy_shotgun_burst_lite_atomic2
+			ClassIcon heavy_shotgun_burstfire_atomic_lite
 			Skill Expert
 			Health 750
 			Scale 1.4
@@ -395,18 +397,17 @@ WaveSchedule
 			FireWeapon
 			{
 				Type "Special"
-				Duration 0.5
 				Delay 0.5
+				Duration 0.5
 				Repeats 0
 				Cooldown 0.5
 			}
 			FireWeapon
 			{
 				Type "Action"
-				Duration 0.5
 				Delay 0
+				Duration 0.5
 				Repeats 1
-				Cooldown -1
 				IfHealthBelow 54
 			}
 		}
@@ -416,7 +417,7 @@ WaveSchedule
 		{
 			Name "Bulwark Medic"
 			Class Medic
-			ClassIcon medic_shield_anchored_lite
+			ClassIcon medic_shield_anchored
 			Skill Expert
 			Health 750
 			Scale 1.5
@@ -450,16 +451,16 @@ WaveSchedule
 			FireWeapon
 			{
 				Type "Secondary"
-				Duration 0.5
 				Delay 0.5
+				Duration 0.5
 				Repeats 0
 				Cooldown 0.5
 			}
 			FireWeapon
 			{
 				Type "Special"
-				Duration 0.5
 				Delay 0.5
+				Duration 0.5
 				Repeats 0
 				Cooldown 0.5
 			}
@@ -468,6 +469,72 @@ WaveSchedule
 		//// SNIPER TEMPLATES ////
 
 		// Common
+
+		T_TFBot_Sniper_Anti_Materiel
+		{
+			Name "Anti-Materiel Sniper"
+			Class Sniper
+			ClassIcon sniper_machina_penetrate_nys
+			Skill Expert
+			Health 375
+			Scale 1.4
+			Attributes SuppressFire
+			WeaponRestrictions PrimaryOnly
+
+			MaxVisionRange 2500
+
+			Item "The Machina"
+
+			ItemAttributes
+			{
+				ItemName "The Machina"
+
+				"damage bonus" 1.5
+
+				"override projectile type" 8
+				"projectile speed increased" 75
+				"projectile gravity" -1
+				"projectile no deflect" 1
+				"penetrate teammates" 1
+				"projectile penetration" 1
+
+				"custom projectile model" "models/weapons/w_models/w_rocketbullet.mdl"
+				"mult projectile scale" 1.5
+				"custom projectile size" 10
+			}
+
+			FireWeapon
+			{
+				Type "Primary"
+				Delay 0
+				Cooldown 2.5
+				Duration 0.1
+				IfSeeTarget 1
+				IfLeftSpawn 1
+			}
+
+			FireInput
+			{
+				Target !self
+				Action $AddCond
+				Param 1
+				Delay 0.1
+				Cooldown 0.1
+				IfSeeTarget 1
+				IfLeftSpawn 1
+			}
+
+			FireInput
+			{
+				Target !self
+				Action $RemoveCond
+				Param 1
+				Delay 2
+				Cooldown 1
+				IfNoTarget 1
+				IfLeftSpawn 1
+			}
+		}
 
 		T_TFBot_Sniper_Huntsman_Supercharged
 		{
@@ -495,7 +562,7 @@ WaveSchedule
 		{
 			Name "Ballista Bowman"
 			Class Sniper
-			ClassIcon sniper_bow_multi_penetrator
+			ClassIcon sniper_bow_multi_penetrate
 			Skill Expert
 			Health 1200
 			Scale 1.5

@@ -729,7 +729,7 @@ if (!("UnendingBloodlustBlacklistedClients" in ROOT))
 				break
 			case 3:
 				AlternateWaves.AddWaveIcons([
-					[ "tank_tele", 1, MVM_CLASS_FLAG_MINIBOSS ],
+					[ "tank_tele_entropy", 1, MVM_CLASS_FLAG_MINIBOSS ],
 					[ "scout_stun_giant_armored", 3, MVM_CLASS_FLAG_MINIBOSS ],
 					[ "medic_crossbow_penetration", 4, MVM_CLASS_FLAG_MINIBOSS ],
 					[ "soldier_giant", 2, MVM_CLASS_FLAG_MINIBOSS | MVM_CLASS_FLAG_ALWAYSCRIT ],
@@ -748,7 +748,7 @@ if (!("UnendingBloodlustBlacklistedClients" in ROOT))
 					[ "soldier_conch_spammer_giant", 1, MVM_CLASS_FLAG_MINIBOSS ],
 					[ "demo_spammer_package", 2, MVM_CLASS_FLAG_MINIBOSS ],
 					[ "heavy_hyper", 1, MVM_CLASS_FLAG_MINIBOSS ],
-					[ "tank_targe", 3, MVM_CLASS_FLAG_MINIBOSS ],
+					[ "tank_charge", 3, MVM_CLASS_FLAG_MINIBOSS ],
 					[ "heavy_deflector", 12, MVM_CLASS_FLAG_NORMAL ],
 					[ "demoknight_persian_nys", 16, MVM_CLASS_FLAG_NORMAL ],
 					[ "scout_bonk_stun", 32, MVM_CLASS_FLAG_NORMAL | MVM_CLASS_FLAG_ALWAYSCRIT ],
@@ -764,9 +764,9 @@ if (!("UnendingBloodlustBlacklistedClients" in ROOT))
 				break
 			case 5:
 				AlternateWaves.AddWaveIcons([
-					[ "tank_tele", 1, MVM_CLASS_FLAG_MINIBOSS ],
+					[ "tank_tele_entropy", 1, MVM_CLASS_FLAG_MINIBOSS ],
 					[ "soldier_bison_spammer_hyper_mentrillum", 3, MVM_CLASS_FLAG_MINIBOSS ],
-					[ "tank_targe", 2, MVM_CLASS_FLAG_MINIBOSS ],
+					[ "tank_charge", 2, MVM_CLASS_FLAG_MINIBOSS ],
 					[ "demo_spammer_package", 9, MVM_CLASS_FLAG_MINIBOSS ],
 					[ "heavy_shotgun_burst_lite", 3, MVM_CLASS_FLAG_MINIBOSS ],
 					[ "heavy_steelfist_yoovy_giant", 6, MVM_CLASS_FLAG_MINIBOSS ],
@@ -781,14 +781,14 @@ if (!("UnendingBloodlustBlacklistedClients" in ROOT))
 					[ "medic_kritz2_armored_lite", 8, MVM_CLASS_FLAG_NORMAL ],
 					[ "heavy_deflector", 12, MVM_CLASS_FLAG_NORMAL ],
 					[ "soldier_crit", 1, MVM_CLASS_FLAG_NORMAL | MVM_CLASS_FLAG_ALWAYSCRIT | MVM_CLASS_FLAG_SUPPORT ],
-					[ "demo_charged", 1, MVM_CLASS_FLAG_NORMAL | MVM_CLASS_FLAG_ALWAYSCRIT | MVM_CLASS_FLAG_SUPPORT ],
+					[ "demo_crit", 1, MVM_CLASS_FLAG_NORMAL | MVM_CLASS_FLAG_ALWAYSCRIT | MVM_CLASS_FLAG_SUPPORT ],
 					[ "soldier_bazooka", 6, MVM_CLASS_FLAG_NORMAL | MVM_CLASS_FLAG_SUPPORT ],
 					[ "pyro", 6, MVM_CLASS_FLAG_NORMAL | MVM_CLASS_FLAG_SUPPORT ],
 				])
 				break
 			case 6:
 				AlternateWaves.AddWaveIcons([
-					[ "tank_targe", 3, MVM_CLASS_FLAG_MINIBOSS ],
+					[ "tank_charge", 3, MVM_CLASS_FLAG_MINIBOSS ],
 					[ "demo_burst_giant", 2, MVM_CLASS_FLAG_MINIBOSS ],
 					[ "soldier_burstfire", 2, MVM_CLASS_FLAG_MINIBOSS ],
 					[ "pyro_dragonfury_giant", 2, MVM_CLASS_FLAG_MINIBOSS ],
@@ -802,7 +802,7 @@ if (!("UnendingBloodlustBlacklistedClients" in ROOT))
 					[ "scout_stun_giant_armored", 7, MVM_CLASS_FLAG_MINIBOSS ],
 					[ "heavy_mittens", 4, MVM_CLASS_FLAG_NORMAL | MVM_CLASS_FLAG_ALWAYSCRIT | MVM_CLASS_FLAG_SUPPORT],
 					[ "soldier_crit", 1, MVM_CLASS_FLAG_NORMAL | MVM_CLASS_FLAG_ALWAYSCRIT | MVM_CLASS_FLAG_SUPPORT ],
-					[ "demo_charged", 1, MVM_CLASS_FLAG_NORMAL | MVM_CLASS_FLAG_ALWAYSCRIT | MVM_CLASS_FLAG_SUPPORT ],
+					[ "demo_crit", 1, MVM_CLASS_FLAG_NORMAL | MVM_CLASS_FLAG_ALWAYSCRIT | MVM_CLASS_FLAG_SUPPORT ],
 					[ "scout", 6, MVM_CLASS_FLAG_NORMAL | MVM_CLASS_FLAG_SUPPORT ],
 					[ "pyro", 3, MVM_CLASS_FLAG_NORMAL | MVM_CLASS_FLAG_SUPPORT ]
 				])
