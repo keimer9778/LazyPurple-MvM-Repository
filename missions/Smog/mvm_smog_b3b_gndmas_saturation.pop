@@ -24,23 +24,6 @@ WaveSchedule
 	CanBotsAttackWhileInSpawnRoom	No
     RobotLimit 26 [$SIGSEGV]
 
-	PointTemplates [$SIGSEGV]
-	{
-		MissionNamePT
-		{
-			OnSpawnOutput
-			{
-				Target BigNet
-				Action RunScriptCode
-				Param "
-						NetProps.SetPropString(Entities.FindByClassname(null, `tf_objective_resource`), `m_iszMvMPopfileName`, `(Grandmaster) Saturation`)
-					  "
-			}
-		}
-	}
-
-	SpawnTemplate "MissionNamePT" [$SIGSEGV]
-
 	Wave
 	{
 		StartWaveOutput
@@ -53,14 +36,22 @@ WaveSchedule
 			Target wave_finished_relay
 			Action Trigger
 		}
+		InitWaveOutput
+		{
+			Target BigNet
+			Action RunScriptCode
+			Param "
+				NetProps.SetPropString(Entities.FindByClassname(null, `tf_objective_resource`), `m_iszMvMPopfileName`, `(Grandmaster) Saturation`)
+			"
+		}
 		// InitWaveOutput
 		// {
 		// 	Target BigNet
 		// 	Action RunScriptCode
 		// 	Param "ClientPrint(null, 3,`\x07E7B53BNOTICE: This mission is in a very early state of testing. Please be patient with its balancing!`)"
 		// }
-		
-		
+		WaitWhenDone 65
+		Checkpoint Yes
 
         // Subwave 1 (maxActive: 26)
         // Giant Rapid Buff Soldier + Uber Medic (8)
@@ -266,7 +257,7 @@ WaveSchedule
 			MaxActive 2
 			SpawnCount 2
             WaitForAllSpawned "wave01aGiant2"
-			WaitBeforeStarting 32
+			WaitBeforeStarting 40
 			WaitBetweenSpawns 0
 			TotalCurrency 100
 		
@@ -368,8 +359,16 @@ WaveSchedule
 			Target wave_finished_relay
 			Action Trigger
 		}
-		
-		
+		InitWaveOutput
+		{
+			Target BigNet
+			Action RunScriptCode
+			Param "
+				NetProps.SetPropString(Entities.FindByClassname(null, `tf_objective_resource`), `m_iszMvMPopfileName`, `(Grandmaster) Saturation`)
+			"
+		}
+		WaitWhenDone 65
+		Checkpoint Yes
 
         // Subwave 1 (maxActive: 26)
 		// Giant Pyro + Giant Sturdy Medic (4)
@@ -674,8 +673,16 @@ WaveSchedule
 			Target wave_finished_relay
 			Action Trigger
 		}
-		
-		
+		InitWaveOutput
+		{
+			Target BigNet
+			Action RunScriptCode
+			Param "
+				NetProps.SetPropString(Entities.FindByClassname(null, `tf_objective_resource`), `m_iszMvMPopfileName`, `(Grandmaster) Saturation`)
+			"
+		}
+		WaitWhenDone 65
+		Checkpoint Yes
 
         // Subwave 1 (maxActive: 26)
 		// Tank
@@ -929,17 +936,17 @@ WaveSchedule
 		}
 
 		// Subwave 3 (maxActive: 26)
-		// Giant Burst Fire Soldier + Armored Uber Medic (8)
+		// Giant Burst Fire Soldier + Armored Uber Medic (12)
 		// Giant Sturdy FaN Scout (4)
 		// Strong Burst Shotgun Heavy (8)
 		// Armored Blaster Scout [8] -> Replaces Strong Burst Shotgun Heavy
-		// Penetrator Huntsman [6] -> [10] Replaces Giant Sturdy FaN Scout 
+		// Penetrator Huntsman [6]
 		WaveSpawn	// 
 		{
 			Name "wave03cGiant"
 			Where spawnbot
 			TotalCount 12
-			MaxActive 8
+			MaxActive 12
 			SpawnCount 4
 			WaitForAllSpawned "wave03bGiant"
 			WaitBeforeStarting 6
@@ -1055,23 +1062,6 @@ WaveSchedule
 				Template T_TFBot_Sniper_Huntsman_Penetration
 			}
 		}
-		WaveSpawn	// 
-		{
-			Name "wave03cSupport"
-			Where spawnbot_flank
-			MaxActive 4
-			SpawnCount 1
-			WaitForAllSpawned "wave03cGiantScout"
-			WaitBeforeStarting 0
-			WaitBetweenSpawns 2
-			TotalCurrency 50
-			Support 1
-		
-			TFBot
-			{
-				Template T_TFBot_Sniper_Huntsman_Penetration
-			}
-		}
 	}
 	
 	Wave
@@ -1086,8 +1076,16 @@ WaveSchedule
 			Target wave_finished_relay
 			Action Trigger
 		}
-		
-		
+		InitWaveOutput
+		{
+			Target BigNet
+			Action RunScriptCode
+			Param "
+				NetProps.SetPropString(Entities.FindByClassname(null, `tf_objective_resource`), `m_iszMvMPopfileName`, `(Grandmaster) Saturation`)
+			"
+		}
+		WaitWhenDone 65
+		Checkpoint Yes
 
         // Subwave 1 (maxActive: 26)
 		// Giant Deflector HoK Heavy + Giant Uber Medic (4)
@@ -1491,8 +1489,8 @@ WaveSchedule
 			Target wave_finished_relay
 			Action Trigger
 		}
-		
-		
+		WaitWhenDone 65
+		Checkpoint Yes
 
 		// Subwave 1 (maxActive: 20)
 		// Giant Hyper Shotgun Soldier (6)
@@ -1701,6 +1699,11 @@ WaveSchedule
 			TFBot
 			{
 				Template T_TFBot_Pyro_Dragon_Hyper
+				ItemAttributes
+				{
+					ItemName	"The Dragon's Fury"
+					"mult_item_meter_charge_rate" 0.85
+				}
 			}
 		}
 		WaveSpawn	// 
@@ -1808,7 +1811,7 @@ WaveSchedule
 		{
 			Name "wave05c"
 			Where spawnbot
-			TotalCount 12
+			TotalCount 8
 			MaxActive 8
 			SpawnCount 2
 			WaitForAllSpawned "wave05b"
@@ -1825,7 +1828,7 @@ WaveSchedule
 		{
 			Name "wave05c"
 			Where spawnbot
-			TotalCount 12
+			TotalCount 8
 			MaxActive 8
 			SpawnCount 2
 			WaitForAllSpawned "wave05b"
