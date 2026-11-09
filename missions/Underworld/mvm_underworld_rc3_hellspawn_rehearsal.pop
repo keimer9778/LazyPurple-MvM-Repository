@@ -11,23 +11,6 @@ WaveSchedule
     RespawnWaveTime 3
     CanBotsAttackWhileInSpawnRoom No
 
-    PointTemplates [$SIGSEGV]
-	{
-		MissionNamePT
-		{
-			OnSpawnOutput
-			{
-				Target BigNet
-				Action RunScriptCode
-				Param "
-						NetProps.SetPropString(Entities.FindByClassname(null, `tf_objective_resource`), `m_iszMvMPopfileName`, `(Hypermaster) Hellspawn Rehearsal`)
-					  "
-			}
-		}
-	}
-
-	SpawnTemplate "MissionNamePT" [$SIGSEGV]
-
     Templates
     {
         // Nerfed templates by keimer9778
@@ -437,13 +420,15 @@ WaveSchedule
     }
     Wave
     {
-        Initwaveoutput
-        {
-            Target bignet
-            Action RunScriptCode
-            Param "
-                EntFire(`wave_init_relay`, `Trigger`)"
-        }
+        InitWaveOutput
+		{
+			Target BigNet
+			Action RunScriptCode
+			Param "
+				NetProps.SetPropString(Entities.FindByClassname(null, `tf_objective_resource`), `m_iszMvMPopfileName`, `(Hypermaster) Hellspawn Rehearsal`)
+				EntFire(`wave_init_relay`,`Trigger`)
+			"
+		}
         StartWaveOutput
         {
 	        Target wave_start_relay_boss
@@ -454,14 +439,14 @@ WaveSchedule
 	        Target wave_finished_relay
 	        Action trigger
         }
-        Wavespawn
+        WaveSpawn
         {
             Name "Wave1_a1"
             Where Spawnbot
             TotalCount 60
             SpawnCount 2
             MaxActive 6
-            Waitbetweenspawns 5
+            WaitBetweenSpawns 5
             WaitBeforeStarting 5
             TotalCurrency 75
             TFBot
@@ -470,7 +455,7 @@ WaveSchedule
                 Skill Expert
             }
         }
-        Wavespawn
+        WaveSpawn
         {
             Support 1
             Name "Wave1_a1_support"
@@ -478,7 +463,7 @@ WaveSchedule
             TotalCount 60
             SpawnCount 2
             MaxActive 4
-            Waitbetweenspawns 8
+            WaitBetweenSpawns 8
             WaitBeforeStarting 0
             Waitforalldead "Wave1_a1"
             TotalCurrency 25
@@ -492,14 +477,14 @@ WaveSchedule
                 BehaviorModifiers Push
             }
         }
-        Wavespawn
+        WaveSpawn
         {
             Name "Wave1_a2"
             Where Spawnbot_Giant
             TotalCount 4
             SpawnCount 2
             MaxActive 2
-            Waitbetweenspawns 40
+            WaitBetweenSpawns 40
             WaitBeforeStarting 0
             TotalCurrency 125
             Squad
@@ -516,14 +501,14 @@ WaveSchedule
                 }
             }
         }
-        Wavespawn
+        WaveSpawn
         {
             Name "Wave1_a3" 
             Where Spawnbot_Giant_Side
             TotalCount 10
             SpawnCount 1
             MaxActive 3
-            Waitbetweenspawns 18
+            WaitBetweenSpawns 18
             WaitBeforeStarting 3
             TotalCurrency 100
             TFBot
@@ -536,14 +521,14 @@ WaveSchedule
                 Skill Expert
             }
         }
-        Wavespawn
+        WaveSpawn
         {
             Name "Wave1_a4"
             Where Spawnbot
             TotalCount 1
             SpawnCount 1
             MaxActive 1
-            Waitbetweenspawns 0 
+            WaitBetweenSpawns 0 
             WaitBeforeStarting 20
             TotalCurrency 350
             FirstSpawnOutput 			
@@ -569,14 +554,14 @@ WaveSchedule
                 }
             }
         }
-        Wavespawn
+        WaveSpawn
         {
             Name "Wave1_b2"
             Where Spawnbot_Invasion
             TotalCount 20
             SpawnCount 1
             MaxActive 6
-            Waitbetweenspawns 6
+            WaitBetweenSpawns 6
             WaitBeforeStarting 30
             Waitforallspawned "Wave1_a2"
             TotalCurrency 50
@@ -618,14 +603,14 @@ WaveSchedule
                 }
             }
         }
-        Wavespawn
+        WaveSpawn
         {
             Name "Wave1_b3"
             Where Spawnbot_Giant
             TotalCount 4
             SpawnCount 1
             MaxActive 2
-            Waitbetweenspawns 15
+            WaitBetweenSpawns 15
             WaitBeforeStarting 0
             Waitforalldead "Wave1_a2" 
             TotalCurrency 125
@@ -634,7 +619,7 @@ WaveSchedule
                 Template T_TFBot_Giant_Soldier_Spreader
             }
         }
-        Wavespawn
+        WaveSpawn
         {
             Support 1
             Name "Wave1_b4"
@@ -642,7 +627,7 @@ WaveSchedule
             TotalCount 69
             SpawnCount 2
             MaxActive 6
-            Waitbetweenspawns 4
+            WaitBetweenSpawns 4
             WaitBeforeStarting 0
             Waitforalldead "Wave1_a4"
             TotalCurrency 50
@@ -661,14 +646,14 @@ WaveSchedule
                 }
             }
         }
-        Wavespawn
+        WaveSpawn
         {
             Name "Wave1_c1"
             Where Spawnbot_Giant
             TotalCount 4
             SpawnCount 2
             MaxActive 2
-            Waitbetweenspawns 30
+            WaitBetweenSpawns 30
             WaitBeforeStarting 0
             Waitforalldead "Wave1_b3"
             TotalCurrency 100
@@ -735,14 +720,22 @@ WaveSchedule
 	        Target wave_finished_relay
 	        Action trigger
         }
-        Wavespawn
+		InitWaveOutput
+		{
+			Target BigNet
+			Action RunScriptCode
+			Param "
+				NetProps.SetPropString(Entities.FindByClassname(null, `tf_objective_resource`), `m_iszMvMPopfileName`, `(Hypermaster) Hellspawn Rehearsal`)
+			"
+		}
+        WaveSpawn
         {
             Name "Wave2_a_rush"
             Where Spawnbot_Invasion
             TotalCount 10
             SpawnCount 1
             MaxActive 10
-            Waitbetweenspawns 2
+            WaitBetweenSpawns 2
             WaitBeforeStarting 0
             TotalCurrency 225
             RandomChoice
@@ -767,7 +760,7 @@ WaveSchedule
                 }
             }
         }
-        Wavespawn
+        WaveSpawn
         {
             Support 1
             Name "Wave2_a_support"
@@ -775,7 +768,7 @@ WaveSchedule
             TotalCount 69
             SpawnCount 1
             MaxActive 2
-            Waitbetweenspawns 45
+            WaitBetweenSpawns 45
             WaitBeforeStarting 0
             WaitForAllDead "Wave2_a_rush"
             RandomChoice
@@ -832,14 +825,14 @@ WaveSchedule
                 }
             }
         }
-        Wavespawn
+        WaveSpawn
         {
             Name "Wave2_b1"
             Where Spawnbot
             TotalCount 20
             SpawnCount 8
             MaxActive 12
-            Waitbetweenspawns 8 
+            WaitBetweenSpawns 8 
             WaitBeforeStarting 0
             Waitforalldead "Wave2_a_rush"
             TotalCurrency 75
@@ -850,14 +843,14 @@ WaveSchedule
                 Health 450
             }
         }
-        Wavespawn
+        WaveSpawn
         {
             Name "Wave2_b2" 
             Where Spawnbot_Side
             TotalCount 10
             SpawnCount 2
             MaxActive 3
-            Waitbetweenspawns 12
+            WaitBetweenSpawns 12
             WaitBeforeStarting 10
             WaitForAllDead "Wave2_a_rush"
             TotalCurrency 75
@@ -882,7 +875,7 @@ WaveSchedule
             TotalCount 3
             SpawnCount 1
             MaxActive 3
-            Waitbetweenspawns 15
+            WaitBetweenSpawns 15
             WaitBeforeStarting 20
             Waitforalldead "Wave2_a_rush"
             TotalCurrency 200
@@ -909,14 +902,14 @@ WaveSchedule
                 }
             }
         }
-        Wavespawn
+        WaveSpawn
         {
             Name "Wave2_c1"
             Where Spawnbot
             TotalCount 20
             SpawnCount 8
             MaxActive 12
-            Waitbetweenspawns 8
+            WaitBetweenSpawns 8
             WaitBeforeStarting 0
             Waitforalldead "Wave2_b1"
             TotalCurrency 75
@@ -927,14 +920,14 @@ WaveSchedule
                 Health 450
             }
         }
-        Wavespawn
+        WaveSpawn
         {
             Name "Wave2_c2"
             Where Spawnbot_Giant
             TotalCount 2
             SpawnCount 2
             MaxActive 2
-            Waitbetweenspawns 0
+            WaitBetweenSpawns 0
             WaitBeforeStarting 0
             Waitforalldead "Wave2_b1"
             TotalCurrency 150
@@ -960,7 +953,7 @@ WaveSchedule
                 }
             }
         }
-        Wavespawn
+        WaveSpawn
         {
             Support 1
             Name "Wave2_d1"
@@ -968,7 +961,7 @@ WaveSchedule
             TotalCount 69
             SpawnCount 2
             MaxActive 6
-            Waitbetweenspawns 4
+            WaitBetweenSpawns 4
             WaitBeforeStarting 0
             Waitforallspawned "Wave2_b2"
             TotalCurrency 50
@@ -981,14 +974,14 @@ WaveSchedule
                 BehaviorModifiers Push
             }
         }
-        Wavespawn
+        WaveSpawn
         {
             Name "Wave2_d2"
             Where Spawnbot_Giant
             TotalCount 2
             SpawnCount 2
             MaxActive 2
-            Waitbetweenspawns 0
+            WaitBetweenSpawns 0
             WaitBeforeStarting 0
             Waitforallspawned "Wave2_c1"
             TotalCurrency 150
@@ -1079,14 +1072,22 @@ WaveSchedule
 	        Target wave_finished_relay
 	        Action trigger
         }
-        Wavespawn
+		InitWaveOutput
+		{
+			Target BigNet
+			Action RunScriptCode
+			Param "
+				NetProps.SetPropString(Entities.FindByClassname(null, `tf_objective_resource`), `m_iszMvMPopfileName`, `(Hypermaster) Hellspawn Rehearsal`)
+			"
+		}
+        WaveSpawn
         {
             Name "w3_demo_scatterhyper"
             Where spawnbot_giant
             TotalCount 20
             SpawnCount 1
             MaxActive 4
-            Waitbetweenspawns 8 
+            WaitBetweenSpawns 8 
             WaitBeforeStarting 0
             TotalCurrency 300
             TFBot
@@ -1094,7 +1095,7 @@ WaveSchedule
                 Template T_TFBot_Giant_Demo_Scatter_Hyper
             }
         }
-        Wavespawn
+        WaveSpawn
         {
             Support Limited
             Randomspawn 1
@@ -1103,7 +1104,7 @@ WaveSchedule
             TotalCount 60
             SpawnCount 2
             MaxActive 4
-            Waitbetweenspawns 10
+            WaitBetweenSpawns 10
             WaitBeforeStarting 5
             TotalCurrency 300
             RandomChoice
@@ -1132,7 +1133,7 @@ WaveSchedule
                 }
             }
         }
-        Wavespawn
+        WaveSpawn
         {
             Support 1
             Name "w3_publicenemy" 
@@ -1140,7 +1141,7 @@ WaveSchedule
             TotalCount 69
             SpawnCount 1
             MaxActive 2
-            Waitbetweenspawns 5
+            WaitBetweenSpawns 5
             WaitBeforeStarting 0
             Waitforallspawned "w3_hyperknight1"
             TotalCurrency 50
@@ -1149,7 +1150,7 @@ WaveSchedule
                 Template T_TFBot_Scout_Blaster_Hyper_Nerfed
             }
         }
-        Wavespawn
+        WaveSpawn
         {
             Support 1
             Name "w3_tankbuster"
@@ -1157,7 +1158,7 @@ WaveSchedule
             TotalCount 69
             SpawnCount 2
             MaxActive 2
-            Waitbetweenspawns 5
+            WaitBetweenSpawns 5
             WaitBeforeStarting 0
             TotalCurrency 100
             TFBot
@@ -1177,7 +1178,7 @@ WaveSchedule
                 }
             }
         }
-        Wavespawn
+        WaveSpawn
         {
             RandomSpawn 1
             Support 1
@@ -1186,7 +1187,7 @@ WaveSchedule
             TotalCount 10
             SpawnCount 2
             MaxActive 2
-            Waitbetweenspawns 20 
+            WaitBetweenSpawns 20 
             WaitBeforeStarting 0
             TotalCurrency 150
             RandomChoice
@@ -1232,14 +1233,22 @@ WaveSchedule
 	        Target wave_finished_relay
 	        Action trigger
         }
-        Wavespawn
+		InitWaveOutput
+		{
+			Target BigNet
+			Action RunScriptCode
+			Param "
+				NetProps.SetPropString(Entities.FindByClassname(null, `tf_objective_resource`), `m_iszMvMPopfileName`, `(Hypermaster) Hellspawn Rehearsal`)
+			"
+		}
+        WaveSpawn
         {
             Name "w4_disruption_blast"
             Where Spawnbot_Giant
             TotalCount 4
             SpawnCount 1
             MaxActive 4
-            Waitbetweenspawns 8
+            WaitBetweenSpawns 8
             WaitBeforeStarting 8
             TotalCurrency 250
             TFBot
@@ -1247,14 +1256,14 @@ WaveSchedule
                 Template T_TFBot_Giant_Soldier_Blast_Spammer_Hyper
             }
         }        
-        Wavespawn
+        WaveSpawn
         {
             Name "w4_disruption_rusher"
             Where Spawnbot_invasion
             Totalcount 5
             Spawncount 1
             MaxActive 2
-            Waitbetweenspawns 10
+            WaitBetweenSpawns 10
             WaitBeforeStarting 24
             TotalCurrency 250
             TFBot
@@ -1267,14 +1276,14 @@ WaveSchedule
                 Health 2500
             }
         }
-        Wavespawn
+        WaveSpawn
         {
             Name "w4_disruption_smoke"
             Where Spawnbot_Giant_Side
             TotalCount 2
             SpawnCount 1
             MaxActive 2
-            Waitbetweenspawns 12
+            WaitBetweenSpawns 12
             WaitBeforeStarting 0
             TotalCurrency 250
             TFBot
@@ -1285,14 +1294,14 @@ WaveSchedule
                 Tag nav_prefer_flank_front
             }
         }
-        Wavespawn
+        WaveSpawn
         {
             Name "w4_tank1"
             Where spawnbot
             TotalCount 1
             SpawnCount 1
             MaxActive 1
-            Waitbetweenspawns 30
+            WaitBetweenSpawns 30
             WaitBeforeStarting 0
             Waitforallspawned "w4_disruption_rusher"
             TotalCurrency 200
@@ -1319,7 +1328,7 @@ WaveSchedule
                 }
             }
         }        
-        Wavespawn
+        WaveSpawn
         {
             Support 1
             Name "w4_HeavyCombo_support"
@@ -1327,7 +1336,7 @@ WaveSchedule
             TotalCount 69
             SpawnCount 2
             MaxActive 2
-            Waitbetweenspawns 120
+            WaitBetweenSpawns 120
             WaitBeforeStarting 60
             Waitforalldead "w4_disruption_smoke"
             TotalCurrency 100
@@ -1343,7 +1352,7 @@ WaveSchedule
                 }
             }
         }
-        Wavespawn
+        WaveSpawn
         {
             Support 1
             Name "w4_Batsaber_Support"
@@ -1351,7 +1360,7 @@ WaveSchedule
             TotalCount 69
             SpawnCount 1 
             MaxActive 4
-            Waitbetweenspawns 4
+            WaitBetweenSpawns 4
             WaitBeforeStarting 30
             TotalCurrency 100
             RandomChoice
@@ -1384,7 +1393,7 @@ WaveSchedule
                 }
             }
         }
-        Wavespawn
+        WaveSpawn
         {
             Support 1
             Name "w4_HyperPyro"
@@ -1392,7 +1401,7 @@ WaveSchedule
             TotalCount 69
             SpawnCount 1
             MaxActive 5
-            Waitbetweenspawns 10
+            WaitBetweenSpawns 10
             WaitBeforeStarting 0
             Waitforallspawned "w4_disruption_smoke"
             TotalCurrency 100
@@ -1458,14 +1467,14 @@ WaveSchedule
                 }
             }
         }
-        Wavespawn
+        WaveSpawn
         {
             Name "w4_DemoSpammer"
             Where spawnbot_giant_side
             TotalCount 4
             SpawnCount 2
             MaxActive 2
-            Waitbetweenspawns 15 
+            WaitBetweenSpawns 15 
             WaitBeforeStarting 15
             Waitforalldead "w4_disruption_blast"
             TotalCurrency 250
@@ -1476,14 +1485,14 @@ WaveSchedule
                 Tag nav_prefer_flank_front
             }
         }
-        Wavespawn
+        WaveSpawn
         {
             Name "w4_HeavyCombo"
             Where spawnbot_invasion
             TotalCount 30
             SpawnCount 2
             MaxActive 6
-            Waitbetweenspawns 3
+            WaitBetweenSpawns 3
             WaitBeforeStarting 0
             Waitforalldead "w4_disruption_smoke"
             TotalCurrency 100
@@ -1505,14 +1514,14 @@ WaveSchedule
                 }
             }
         }
-        Wavespawn
+        WaveSpawn
         {
             Name "w4_Public" 
             Where spawnbot_giant
             TotalCount 6
             SpawnCount 1
             MaxActive 2
-            Waitbetweenspawns 10
+            WaitBetweenSpawns 10
             WaitBeforeStarting 10
             Waitforalldead "w4_disruption_rusher"
             TotalCurrency 200
@@ -1526,14 +1535,14 @@ WaveSchedule
                 }
             }
         }
-        Wavespawn
+        WaveSpawn
         {
             Name "w4_tank2"
             Where spawnbot
             TotalCount 1
             SpawnCount 1
             MaxActive 1
-            Waitbetweenspawns 0 
+            WaitBetweenSpawns 0 
             WaitBeforeStarting 60
             Waitforalldead "w4_disruption_blast"
             TotalCurrency 300
@@ -1653,14 +1662,22 @@ WaveSchedule
 	        Target wave_finished_relay
 	        Action trigger
         }
-        Wavespawn
+		InitWaveOutput
+		{
+			Target BigNet
+			Action RunScriptCode
+			Param "
+				NetProps.SetPropString(Entities.FindByClassname(null, `tf_objective_resource`), `m_iszMvMPopfileName`, `(Hypermaster) Hellspawn Rehearsal`)
+			"
+		}
+        WaveSpawn
         {
             Name "w5_bulletvac_combo"
             Where spawnbot_giant
             TotalCount 6
             SpawnCount 2
             MaxActive 4
-            Waitbetweenspawns 70
+            WaitBetweenSpawns 70
             WaitBeforeStarting 5
             TotalCurrency 150
             Squad
@@ -1679,14 +1696,14 @@ WaveSchedule
                 }
             }
         }
-        Wavespawn
+        WaveSpawn
         {
             Name "w5_Firevac_combo"
             Where spawnbot_giant
             TotalCount 6
             SpawnCount 2
             MaxActive 4
-            Waitbetweenspawns 70
+            WaitBetweenSpawns 70
             WaitBeforeStarting 0
             TotalCurrency 150
             Squad
@@ -1703,14 +1720,14 @@ WaveSchedule
                 }
             }
         }
-        Wavespawn
+        WaveSpawn
         {
             Name "w5_blastvac_combo"
             Where spawnbot_giant_side
             TotalCount 6
             SpawnCount 2
             MaxActive 4
-            Waitbetweenspawns 70
+            WaitBetweenSpawns 70
             WaitBeforeStarting 7
             TotalCurrency 150
             Squad
@@ -1727,14 +1744,14 @@ WaveSchedule
                 }
             }
         }
-        Wavespawn
+        WaveSpawn
         {
             Name "w5_hyperdemo"
             Where spawnbot_invasion
             TotalCount 30
             SpawnCount 1
             MaxActive 8
-            Waitbetweenspawns 2 
+            WaitBetweenSpawns 2 
             WaitBeforeStarting 0
             TotalCurrency 150
             RandomChoice
@@ -1763,14 +1780,14 @@ WaveSchedule
                 }
             }
         }
-        Wavespawn
+        WaveSpawn
         {
             Name "w5_soldier_hyper"
             Where spawnbot_invasion
             TotalCount 30
             SpawnCount 1
             MaxActive 8
-            Waitbetweenspawns 2 
+            WaitBetweenSpawns 2 
             WaitBeforeStarting 5
             WaitForAllSpawned "w5_hyperdemo" 
             TotalCurrency 150
@@ -1800,14 +1817,14 @@ WaveSchedule
                 }
             }
         }
-        Wavespawn
+        WaveSpawn
         {
             Name "w5_scout_hyper"
             Where spawnbot_invasion
             TotalCount 30
             SpawnCount 1
             MaxActive 8
-            Waitbetweenspawns 1 
+            WaitBetweenSpawns 1 
             WaitBeforeStarting 5
             WaitForAllSpawned "w5_soldier_hyper" 
             TotalCurrency 150
@@ -1837,7 +1854,7 @@ WaveSchedule
                 }
             }
         }
-        Wavespawn
+        WaveSpawn
         {
             Support 1
             Name "w5_moonman_support"
@@ -1845,7 +1862,7 @@ WaveSchedule
             TotalCount 69
             SpawnCount 1
             MaxActive 10
-            Waitbetweenspawns 2 
+            WaitBetweenSpawns 2 
             WaitBeforeStarting 0
             TotalCurrency 100
             RandomChoice
@@ -1955,14 +1972,22 @@ WaveSchedule
 	        Target wave_finished_relay
 	        Action trigger
         }
-        Wavespawn
+		InitWaveOutput
+		{
+			Target BigNet
+			Action RunScriptCode
+			Param "
+				NetProps.SetPropString(Entities.FindByClassname(null, `tf_objective_resource`), `m_iszMvMPopfileName`, `(Hypermaster) Hellspawn Rehearsal`)
+			"
+		}
+        WaveSpawn
         {
             Name "w6_SoldierBoss"
             Where spawnbot_giant_side
             TotalCount 1
             SpawnCount 1
             MaxActive 1
-            Waitbetweenspawns 0  
+            WaitBetweenSpawns 0  
             WaitBeforeStarting 60
             TotalCurrency 500
             FirstSpawnWarningSound "vo/mvm/mght/soldier_mvm_m_laughevil02.mp3"
@@ -1983,14 +2008,14 @@ WaveSchedule
             Waitforalldead "w6_SoldierBoss"
             WaitBeforeStarting 0
         }
-        Wavespawn
+        WaveSpawn
         {
             Name "w6_HeavyBoss"
             Where spawnbot_giant
             TotalCount 1
             SpawnCount 1
             MaxActive 1
-            Waitbetweenspawns 0  
+            WaitBetweenSpawns 0  
             WaitBeforeStarting 62.4
             TotalCurrency 500
             FirstSpawnWarningSound "vo/mvm/mght/heavy_mvm_m_laughlong01.mp3"
@@ -2011,7 +2036,7 @@ WaveSchedule
             Waitforalldead "w6_HeavyBoss"
             WaitBeforeStarting 0
         }
-        Wavespawn
+        WaveSpawn
         {
             Support Limited
             Name "w6_EoI"
@@ -2019,7 +2044,7 @@ WaveSchedule
             TotalCount 3
             SpawnCount 1
             MaxActive 1
-            Waitbetweenspawns 40
+            WaitBetweenSpawns 40
             WaitBeforeStarting 30
             TotalCurrency 100
             TFBot
@@ -2029,7 +2054,7 @@ WaveSchedule
                 Health 4000
             }
         }
-        Wavespawn
+        WaveSpawn
         {
             Support 1
             Name "w6_brass_combo"
@@ -2037,7 +2062,7 @@ WaveSchedule
             TotalCount 4
             SpawnCount 2
             MaxActive 2
-            Waitbetweenspawns 60
+            WaitBetweenSpawns 60
             WaitBeforeStarting 15
             TotalCurrency 100
             FirstSpawnWarningSound "Hellspawn_Boss.mp3"
@@ -2064,7 +2089,7 @@ WaveSchedule
                 }
             }
         }
-        Wavespawn
+        WaveSpawn
         {
             Support 1
             Name "w6_support_engineer"
@@ -2072,7 +2097,7 @@ WaveSchedule
             TotalCount 5
             SpawnCount 1
             MaxActive 1
-            Waitbetweenspawns 10
+            WaitBetweenSpawns 10
             WaitBeforeStarting 0
             TotalCurrency 0
             TFBot
@@ -2087,7 +2112,7 @@ WaveSchedule
                 TeleportWhere spawnbot_invasion
             }
         }
-        Wavespawn
+        WaveSpawn
         {
             Support 1
             Name "w6_juggernaut"
@@ -2095,7 +2120,7 @@ WaveSchedule
             TotalCount 69
             SpawnCount 1
             MaxActive 5
-            Waitbetweenspawns 4
+            WaitBetweenSpawns 4
             WaitBeforeStarting 0
             TotalCurrency 200
             RandomChoice
@@ -2128,7 +2153,7 @@ WaveSchedule
                 }
             }
         }
-        Wavespawn // keimer9778 note: I kept AlwaysFireWeapon so they don't airblast.
+        WaveSpawn // keimer9778 note: I kept AlwaysFireWeapon so they don't airblast.
         {
             Support 1
             Name "w6_hyperpyro"
@@ -2136,7 +2161,7 @@ WaveSchedule
             TotalCount 69
             SpawnCount 1
             MaxActive 4
-            Waitbetweenspawns 4
+            WaitBetweenSpawns 4
             WaitBeforeStarting 0
             TotalCurrency 100
             RandomChoice

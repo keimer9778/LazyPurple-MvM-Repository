@@ -12,23 +12,6 @@ WaveSchedule
 	CanBotsAttackWhileInSpawnRoom no
 	FixedRespawnWaveTime Yes
 	EventPopfile Halloween
-
-	PointTemplates
-	{
-		MissionNamePT
-		{
-			OnSpawnOutput
-			{
-				Target BigNet
-				Action RunScriptCode
-				Param "
-						NetProps.SetPropString(Entities.FindByClassname(null, `tf_objective_resource`), `m_iszMvMPopfileName`, `Advanced Mode`)
-					  "
-			}
-		}
-	}
-
-	SpawnTemplate "MissionNamePT"
 	
 	Mission // sentry buster
 	{
@@ -133,8 +116,16 @@ WaveSchedule
 				Target wave_finished_relay
 				Action trigger
 			}
-		
-		
+		InitWaveOutput
+		{
+			Target BigNet
+			Action RunScriptCode
+			Param "
+				NetProps.SetPropString(Entities.FindByClassname(null, `tf_objective_resource`), `m_iszMvMPopfileName`, `Advanced Mode`)
+			"
+		}
+		WaitWhenDone 65
+		Checkpoint Yes
 		
 		WaveSpawn //WAVE 01a: 27 total, 9 active, Scout (melee only)
 		{
@@ -251,7 +242,6 @@ WaveSchedule
 					Template T_TFBot_Demoman_Battleaxe
 					Skill Expert
 					//Attributes AlwaysCrit
-					Item "Horsemann's Hand-Me-Down"
 					Item "The Bootlegger"
 					Item "Forgotten King's Restless Head"
 				}
@@ -443,7 +433,7 @@ WaveSchedule
 				Skill Hard
 				WeaponRestrictions MeleeOnly
 				Attributes AlwaysCrit
-				//ClassIcon scout_bat //wave bar is full
+				//ClassIcon scout_bat_nys //wave bar is full
 			}
 		}
 		WaveSpawn //WAVE 01a: 27 total, 9 active, Scout (melee only)
