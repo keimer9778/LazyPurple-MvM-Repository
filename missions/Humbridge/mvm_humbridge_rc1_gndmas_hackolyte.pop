@@ -19,43 +19,10 @@ WaveSchedule
 	RespawnWaveTime 				2
 	FixedRespawnWaveTime			Yes
 	CanBotsAttackWhileInSpawnRoom	No
-	RobotLimit 22 [$SIGSEGV]
 
 	// This section uses PointTemplates to utilize TankExtensions
 	// throughout the mission without needing to call it each wave.
-	PointTemplates [$SIGSEGV]
-	{
-		Scripts
-		{
-			OnSpawnOutput
-			{
-				Target bignet
-				Action RunScriptCode
-				Param
-					"IncludeScript(`tankextensions_main`)
-					IncludeScript(`tankextensions/combattank`)
-					IncludeScript(`tankextensions/combattank_weapons/minigun`)
-					IncludeScript(`tankextensions/combattank_weapons/rocketpod`)
-					IncludeScript(`tankextensions/combattank_weapons/railgun`)
-					IncludeScript(`tankextensions/combattank_weapons/fireball`)
-				"
-			}
-		}
-		MissionNamePT
-		{
-			OnSpawnOutput
-			{
-				Target BigNet
-				Action RunScriptCode
-				Param "
-						NetProps.SetPropString(Entities.FindByClassname(null, `tf_objective_resource`), `m_iszMvMPopfileName`, `(Grandmaster) Hackolyte`)
-					  "
-			}
-		}
-	}
 	// Directly call the script when the mission loads.
-	SpawnTemplate Scripts [$SIGSEGV]
-	SpawnTemplate "MissionNamePT" [$SIGSEGV]
 
 	Mission
 	{
@@ -108,13 +75,15 @@ WaveSchedule
 			Target bignet
     		Action RunScriptCode
 			Param "
-					EntFire(`wave_a_init`, `Trigger`)
-					EntFire(`radio_music_stop`, `Trigger`)
-					Convars.SetValue(`tf_playergib`, 0)
-				"
+				EntFire(`wave_a_init`, `Trigger`)
+				EntFire(`radio_music_stop`, `Trigger`)
+				Convars.SetValue(`tf_playergib`, 0)
+				NetProps.SetPropString(Entities.FindByClassname(null, `tf_objective_resource`), `m_iszMvMPopfileName`, `(Grandmaster) Hackolyte`)
+
+			"
 		}
-		
-		
+		WaitWhenDone 65
+		Checkpoint Yes
 
 		// Subwave 1 (maxActive = 20 - 22)
 		// Giant Crit Battleaxe Demoknight (4 - 6)
@@ -683,12 +652,19 @@ WaveSchedule
 		}
 		InitWaveOutput
 		{
-			Target wave_a_init
-			Action Trigger
+			Target BigNet
+			Action RunScriptCode
+			Param "
+				IncludeScript(`tankextensions_main`)
+				IncludeScript(`tankextensions/combattank`)
+				IncludeScript(`tankextensions/combattank_weapons/railgun`)
+				EntFire(`wave_a_init`,`Trigger`)
+				NetProps.SetPropString(Entities.FindByClassname(null, `tf_objective_resource`), `m_iszMvMPopfileName`, `(Grandmaster) Hackolyte`)
+			"
 		}
 		
-		
-		
+		WaitWhenDone 65
+		Checkpoint Yes
 
 		// Subwave 1 (maxActive: 22)
 		// Giant Crit Rapid Demo + Uber Medic (2)
@@ -1103,13 +1079,17 @@ WaveSchedule
 			Target wave_finished_relay
 			Action Trigger
 		}
-		InitWaveOutput	// Take bridge path
+		InitWaveOutput
 		{
-			Target wave_a_init
-    		Action Trigger
+			Target BigNet
+			Action RunScriptCode
+			Param "
+				EntFire(`wave_a_init`,`Trigger`)
+				NetProps.SetPropString(Entities.FindByClassname(null, `tf_objective_resource`), `m_iszMvMPopfileName`, `(Grandmaster) Hackolyte`)
+			"
 		}
-		
-		
+		WaitWhenDone 65
+		Checkpoint Yes
 
 		// Subwave 1 (maxActive: 18)
 		// Giant Crit Fast Pyro + Giant Armored Medic (4)
@@ -1331,13 +1311,13 @@ WaveSchedule
 		// Subwave 3 (maxActive: 20)
 		// Colonel Barrage + Giant Armored Medic (2)
 		// Armored Blaster Pusher Scout [5]
-		// Penetrator Bowman [4]
+		// Bowman [4]
 		// Extended Buff Soldier [9]
 
 		// The Colonel Barrage and Giant Armored Medic serve
 		// as a spearhead force to dish out damage while
 		// pushing up to RED's defending line. The Armored
-		// Blaster Pusher Scout, Penetrator Bowman, and
+		// Blaster Pusher Scout, Bowmen, and
 		// Extended Buff Soldier serve as additional sources
 		// of damage or to draw attention.
 
@@ -1415,7 +1395,7 @@ WaveSchedule
 		
 			TFBot
 			{
-				Template T_TFBot_Sniper_Huntsman_Penetration
+				Template T_TFBot_Sniper_Huntsman
 			}
 		}
 		WaveSpawn	// 
@@ -1427,7 +1407,7 @@ WaveSchedule
 			WaitForAllSpawned "wave03c"
 			WaitBeforeStarting 10
 			WaitBetweenSpawns 2
-			TotalCurrency 25
+			TotalCurrency 50
 			Support 1
 		
 			TFBot
@@ -1448,13 +1428,20 @@ WaveSchedule
 			Target wave_finished_relay
 			Action Trigger
 		}
-		InitWaveOutput		// Bots will take bomb on path A (bridge)
+		InitWaveOutput
 		{
-			Target wave_a_init
-    		Action Trigger
+			Target BigNet
+			Action RunScriptCode
+			Param "
+				IncludeScript(`tankextensions_main`)
+				IncludeScript(`tankextensions/combattank`)
+				IncludeScript(`tankextensions/combattank_weapons/railgun`)
+				EntFire(`wave_a_init`,`Trigger`)
+				NetProps.SetPropString(Entities.FindByClassname(null, `tf_objective_resource`), `m_iszMvMPopfileName`, `(Grandmaster) Hackolyte`)
+			"
 		}
-		
-		
+		WaitWhenDone 65
+		Checkpoint Yes
 
 		// Subwave 1
 		// Tank (1)
@@ -1891,15 +1878,20 @@ WaveSchedule
 		}
 		InitWaveOutput
 		{
-			Target wave_a_init
-			Action Trigger
+			Target BigNet
+			Action RunScriptCode
+			Param "
+				EntFire(`wave_a_init`,`Trigger`)
+				ClientPrint(null,3,`\x08FF54F1FF\nWARNING: Giant Medics will pop Ubercharge at 5000 HP.\nPlan accordingly.`)
+				NetProps.SetPropString(Entities.FindByClassname(null, `tf_objective_resource`), `m_iszMvMPopfileName`, `(Grandmaster) Hackolyte`)
+			"
 		}
-		
-		
+		WaitWhenDone 65
+		Checkpoint Yes
 
 		// Subwave 1 (maxActive: 22)
-		// Giant Hyper Pyro  + Giant Uber Shield Medic (2)
-			// Hyper Colonel Barrage (2)
+		// Giant Hyper Pyro  + Giant Armored Uber Medic (2)
+		// Hyper Colonel Barrage (2)
 		// Hyper Shortstop Scout (6)
 		// Armored Penetrator Rapid Fire Bowman (14)
 
@@ -1938,12 +1930,16 @@ WaveSchedule
 				}
 				TFBot
 				{
-					Template T_TFBot_Giant_Medic_Shield_Uber
+					Template T_TFBot_Giant_Medic_Uber_Armored
+					Name	"Armored Uber Shield Medic"
+					Health	10000
 					CharacterAttributes
 					{
 						"damage force reduction" 0.25
 						"airblast vulnerability multiplier" 0.25
 						"airblast vertical vulnerability multiplier" 0.25
+						"bot medic uber health threshold" 5000
+						"uber duration bonus"  -2
 					}
 				}
 			}
@@ -2006,7 +2002,7 @@ WaveSchedule
 		}
 
 		// Subwave 2 (maxActive: 13)
-		// Giant Hyper Pyro + Giant Armored Megaheal Medic (2)
+		// Giant Hyper Pyro + Giant Armored Uber Medic (2)
 		// Hyper Colonel Barrage (3)
 		// Strong Shortstop Scout (8)
 
@@ -2040,12 +2036,16 @@ WaveSchedule
 				}
 				TFBot
 				{
-					Template T_TFBot_Giant_Medic_Shield_Uber
+					Template T_TFBot_Giant_Medic_Uber_Armored
+					Name	"Armored Uber Shield Medic"
+					Health	10000
 					CharacterAttributes
 					{
 						"damage force reduction" 0.25
 						"airblast vulnerability multiplier" 0.25
 						"airblast vertical vulnerability multiplier" 0.25
+						"bot medic uber health threshold" 5000
+						"uber duration bonus"  -2
 					}
 				}
 			}
@@ -2092,7 +2092,7 @@ WaveSchedule
 		}
 
 		// Subwave 3 (maxActive: 20)
-		// Giant Deflector Heavy + Giant Shield Uber Medic (4)
+		// Giant Deflector Heavy + Giant Armored Uber Medic (4)
 		// Crit Concheror Soldier [12]
 		// Hyper Pyro [4]
 
@@ -2128,12 +2128,16 @@ WaveSchedule
 				}
 				TFBot
 				{
-					Template T_TFBot_Giant_Medic_Shield_Uber
+					Template T_TFBot_Giant_Medic_Uber_Armored
+					Name	"Armored Uber Shield Medic"
+					Health	10000
 					CharacterAttributes
 					{
 						"damage force reduction" 0.25
 						"airblast vulnerability multiplier" 0.25
 						"airblast vertical vulnerability multiplier" 0.25
+						"bot medic uber health threshold" 5000
+						"uber duration bonus"  -2
 					}
 				}
 			}
